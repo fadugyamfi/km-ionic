@@ -22,11 +22,27 @@ import '@ionic/vue/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import './theme/app.scss';
+
+import { createPinia } from 'pinia';
+import VOtpInput from "vue3-otp-input";
+
+import axios from 'axios';
+
+axios.defaults.baseURL = 'https://api-staging.kola.market/api';
+axios.defaults.baseURL = 'http://api.kolamarket.local/api';
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+// axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;
+
+const pinia = createPinia();
 
 const app = createApp(App)
+  .component("v-otp-input", VOtpInput)
   .use(IonicVue)
+  .use(pinia)
   .use(router);
-  
+
 router.isReady().then(() => {
   app.mount('#app');
 });
