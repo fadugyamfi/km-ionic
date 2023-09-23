@@ -6,23 +6,30 @@
             </IonToolbar>
         </IonHeader>
 
-        <IonContent class="ion-padding">
+        <IonContent class="ion-padding" :scroll-y="false">
             <h3 class="header">Good To See You Again</h3>
             <p class="subtext"><small>Please provide you Phone Number and PIN to login</small></p>
 
             <div class="ion-margin-top">
                 <section class="ion-padding-top ion-padding-bottom">
-                    <KolaInputField :label="'Phone Number'" v-model="phoneNumber"></KolaInputField>
+                    <IonInput class="kola-input" label="Phone Number" v-model="phoneNumber" fill="outline" label-placement="floating"></IonInput>
                 </section>
 
                 <section>
-                    <KolaInputField :label="'PIN'" type="password" v-model="pin"></KolaInputField>
+                    <IonInput class="kola-input" label="PIN" type="password" inputmode="numeric" fill="outline" label-placement="floating" v-model="pin"></IonInput>
                 </section>
 
                 <div class="ion-padding-top ion-padding-bottom">
                     <IonText router-link="/auth/forgot-pin" color="dark" style="font-weight: bold;">Forgot Your PIN?</IonText>
                 </div>
             </div>
+
+            <IonText router-link="/signup">
+                <p class="ion-text-center ion-padding login-prompt" >
+                    Don't have an account?
+                    <IonText color="primary" class="trigger">Sign Up</IonText>
+                </p>
+            </IonText>
         </IonContent>
 
         <IonFooter class="ion-padding ion-no-border">
@@ -34,43 +41,62 @@
     </IonPage>
 </template>
 
-<script setup lang="ts">
-import { IonBackButton, IonButtons, IonContent, IonFooter, IonHeader, IonItem, IonLabel, IonPage, IonSpinner, IonText, IonToolbar, toastController } from '@ionic/vue';
-import KolaInputField from '@/components/KolaInputField.vue';
+<script lang="ts">
+import { IonBackButton, IonContent, IonFooter, IonHeader, IonInput, IonPage, IonSpinner, IonText, IonToolbar, toastController } from '@ionic/vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
-import { Ref, ref } from 'vue';
+import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/UserStore';
+import { mapStores } from 'pinia';
 
-const router = useRouter();
-const userStore = useUserStore();
-const phoneNumber: Ref<string> = ref('');
-const pin: Ref<string> = ref('');
-let fetching: Ref<boolean> = ref(false);
+export default defineComponent({
 
-const login = async () => {
-    fetching.value = true;
+    components: {
+        KolaYellowButton,
+        IonBackButton, IonContent, IonFooter, IonHeader, IonInput, IonPage, IonSpinner, IonText, IonToolbar
+    },
 
-    userStore.login({
-        phone_number: phoneNumber.value,
-        pin: pin.value
-    })
+    data() {
+        return {
+            fetching: false,
+            phoneNumber: '',
+            pin: ''
+        }
+    },
 
-    .then(() => router.push('/shopper/home'))
+    computed: {
+        ...mapStores( useUserStore )
+    },
 
-    .catch(async (error: Error) => {
-        const toast = await toastController.create({
-          message: error.message,
-          duration: 1500,
-          position: 'bottom',
-        });
+    methods: {
 
-        await toast.present();
-    })
+        login() {
+            const router = useRouter();
 
-    .finally(() => fetching.value = false);
+            this.fetching = true;
 
-}
+            this.userStore.login({
+                phone_number: this.phoneNumber,
+                pin: this.pin
+            })
+
+            .then(() => router.push('/shopper/home'))
+
+            .catch(async (error: Error) => {
+                const toast = await toastController.create({
+                    message: error.message,
+                    duration: 1500,
+                    position: 'bottom',
+                });
+
+                await toast.present();
+            })
+
+            .finally(() => this.fetching = false);
+        }
+    }
+})
+
 </script>
 
 <style lang="scss">
@@ -82,5 +108,14 @@ const login = async () => {
     font-size: 1.05em;
     padding: 0px;
     margin: 0px;
+}
+
+.login-prompt {
+    font-size: 1em;
+}
+
+.login-prompt .trigger {
+    font-weight: bold;
+    color: #333;
 }
 </style>

@@ -17,7 +17,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="css">
+<style scoped lang="css">
 .kola-yellow-button {
     --background: #F5AA29 !important;
     --padding-top: 16px;

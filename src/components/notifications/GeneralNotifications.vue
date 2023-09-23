@@ -18,6 +18,8 @@ import NotificationItem from './NotificationItem.vue';
 
 export default defineComponent({
 
+    props: ['notifications'],
+
     components: {
         IonList,
         IonItem,
@@ -32,10 +34,6 @@ export default defineComponent({
             checkmark,
             checkmarkCircle,
             warningOutline,
-            notifications: [
-                { id: 1, title: 'Your account was approved', type: 'order', created_at: '2023-09-17 22:20:20' },
-                { id: 2, title: 'Your next order is on the way', type: 'error', created_at: '2023-09-17 20:25:20' }
-            ]
         }
     }
 })

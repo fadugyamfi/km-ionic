@@ -49,7 +49,7 @@ const userStore = useUserStore();
 const viewing = ref('personal');
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 // See @/theme/profile.scss for global styles
 
 

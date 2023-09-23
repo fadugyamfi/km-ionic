@@ -1,3 +1,5 @@
+import { Preferences } from '@capacitor/preferences';
+
 const meta = (key:string) => {
     const meta = document.querySelector(`meta[name="${key}"]`);
     return meta ? meta.getAttribute('content') : null;
@@ -27,12 +29,13 @@ export function handleAxiosRequestError(error:any) {
 
 export async function refreshAuth() {
     try {
-        if( !localStorage.getItem('auth') ) {
+        const authResult = await Preferences.get({ key: 'auth' });
+        if( !authResult.value ) {
             // Swal.fire('Unauthorized', "Please try again", "error");
             return;
         }
 
-        const stored = localStorage.getItem('auth') || '';
+        const stored = authResult.value || '';
         const auth = JSON.parse(stored);
 
         const response = await fetch('/api/auth/refresh', {
@@ -50,7 +53,7 @@ export async function refreshAuth() {
         const json = await response.json();
 
         if( json && json.access_token ) {
-            localStorage.setItem("auth", JSON.stringify(json));
+            Preferences.set({ key: "auth", value: JSON.stringify(json) });
             window.location.reload();
         }
     } catch(e) {

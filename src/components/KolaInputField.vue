@@ -19,8 +19,8 @@
 </template>
 
 <script lang="ts">
-import { IonInput, IonItem, IonLabel, IonText } from '@ionic/vue';
-import { defineComponent } from 'vue';
+import { IonInput } from '@ionic/vue';
+import { PropType, defineComponent } from 'vue';
 
 export default defineComponent({
     props: {
@@ -32,8 +32,11 @@ export default defineComponent({
         },
         type: {
             default: 'text',
+            type: String
         },
-        modelValue: { required: false },
+        modelValue: {
+            required: false
+        },
         required: {
             default: false
         },
@@ -51,7 +54,7 @@ export default defineComponent({
         }
     },
 
-    components: { IonInput, IonItem, IonLabel, IonText },
+    components: { IonInput },
 
     emits: ['update:modelValue'],
 
@@ -63,7 +66,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .kola-input {
     --background: #F6F6F6;
     --color: #74787C;

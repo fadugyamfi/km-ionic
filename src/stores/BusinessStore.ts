@@ -2,55 +2,68 @@ import axios from "axios";
 import {defineStore} from "pinia";
 import {useUserStore} from "./UserStore";
 import {handleAxiosRequestError} from "@/utilities";
+import { Preferences } from "@capacitor/preferences";
 
-const selectedBusiness = localStorage.getItem("kola.business");
-const storedBusinesses = localStorage.getItem('kola.store.businesses');
+class Business {
+
+    public id: number|null = null;
+    public name: string|null = null;
+    public location: string|null = null;
+    public phone_number: string|null = null;
+
+    constructor(data: object) {
+        Object.assign(this, data);
+    }
+}
 
 export const useBusinessStore = defineStore("business", {
     state: () => ({
-        businesses: (typeof storedBusinesses == 'string' && JSON.parse(storedBusinesses)) || null,
-        selected_business: (typeof selectedBusiness == 'string' && JSON.parse(selectedBusiness)) || null,
-        nextLink: null,
+        businesses: null as Business[] | null,
+        selectedBusiness: null as Business | null,
     }),
 
     getters: {
         selectedBusiness: (state) => {
-            return state.selected_business;
+            return state.selectedBusiness;
         }
     },
 
     actions: {
-        getCacheBusinessData() {
-            let data = localStorage.getItem('businessInfo');
+        async loadCachedBusinesses() {
+            let { value } = await Preferences.get({ key: 'kola.business' });
+            this.businesses = value != null ? JSON.parse(value) : Array.of([]);
 
-            if (data === 'undefined') {
+            let results = await Preferences.get({ key: 'kola.store.business' });
+            this.selectedBusiness = results.value != null ? JSON.parse(results.value) : null;
+        },
+
+        async getCacheBusinessData() {
+            let { value } = await Preferences.get({ key: 'businessInfo' });
+
+            if (value === 'undefined') {
                 return null
             }
 
-            return JSON.parse(data || '')
+            return JSON.parse(value || '')
         },
 
-        cacheBusinessData(data: object) {
+        async cacheBusinessData(data: object) {
             let formData = this.getCacheBusinessData()
 
             if (formData !== null) {
                 Object.assign(formData, data)
-                localStorage.setItem('businessInfo', JSON.stringify(formData))
+                await Preferences.set({ key: 'businessInfo', value: JSON.stringify(formData)});
                 return;
             }
 
-            localStorage.setItem('businessInfo', JSON.stringify(data))
+            await Preferences.set({ key: 'businessInfo', value: JSON.stringify(data) })
         },
 
         async getBusinesses(search_key?: string|null) {
             const userStore = useUserStore();
 
-            if (search_key) {
-                this.nextLink = null;
-            }
-
             try {
-                const link = this.nextLink || "/v2/businesses";
+                const link = "/v2/businesses";
                 const response = await axios.get(link, {
                     params: {
                         name_like: search_key,
@@ -58,8 +71,7 @@ export const useBusinessStore = defineStore("business", {
                 });
                 if (response) {
                     const {data, links} = response.data;
-                    this.businesses = [...this.businesses, ...data];
-                    this.nextLink = links.next;
+                    this.businesses = [...(this.businesses || []), ...data];
 
                     if (!this.hasSelectedBusiness() && !userStore.user?.isSuperAdmin()) {
                         this.selectDefaultBusiness();
@@ -71,48 +83,51 @@ export const useBusinessStore = defineStore("business", {
             }
         },
 
-        storeBusinesses() {
-            localStorage.setItem('store.businesses', JSON.stringify(this.businesses));
+        async storeBusinesses() {
+            await Preferences.set({ key: 'store.businesses', value: JSON.stringify(this.businesses) });
         },
 
         clearBusinesses() {
             this.businesses = [];
-            this.nextLink = null;
         },
 
         getSelectedBusiness() {
-            return this.selected_business;
+            return this.selectedBusiness;
         },
 
         hasSelectedBusiness() {
-            return this.selected_business != null;
+            return this.selectedBusiness != null;
         },
 
-        clearSelectedBusiness() {
-            this.selected_business = null;
-            localStorage.removeItem('kola.business')
+        async clearSelectedBusiness() {
+            this.selectedBusiness = null;
+            await Preferences.remove({ key:'kola.business' })
         },
 
-        setSelectedBusiness(business: any) {
-            this.selected_business = business;
-            const data = localStorage.getItem('kola.business');
+        async setSelectedBusiness(business: any) {
+            this.selectedBusiness = business;
+            const { value } = await Preferences.get({ key: 'kola.business' });
 
-            if (typeof data == 'string') {
-                localStorage.removeItem('kola.business')
+            if (typeof value == 'string') {
+                await Preferences.remove({ key:'kola.business'})
             }
 
-            localStorage.setItem('kola.business', JSON.stringify(business));
+            await Preferences.set({ key: 'kola.business', value: JSON.stringify(business) });
         },
 
         selectDefaultBusiness() {
-            this.setSelectedBusiness(this.businesses[0]);
+            this.setSelectedBusiness(this.businesses != null ? this.businesses[0] : null);
         },
 
         async createBusinessAsShopper(postData: object) {
             return axios.post('/v2/businesses', postData)
                 .then(response => {
+                    const userStore = useUserStore();
                     const data = response.data.data;
+
                     this.setSelectedBusiness(data.business);
+                    userStore.storeOnboarded(true);
+
                     return data.business;
                 })
                 .catch(error => handleAxiosRequestError(error))
@@ -133,7 +148,7 @@ export const useBusinessStore = defineStore("business", {
         async setupBusinessLocation(postData: object) {
             this.cacheBusinessData(postData)
 
-            return axios.put(`/api/business-info-setup/${this.selectedBusiness.id}/location`, postData)
+            return axios.put(`/api/business-info-setup/${this.selectedBusiness?.id}/location`, postData)
                 .then(response => {
                     const business = response.data.data
                     this.setSelectedBusiness(business)
@@ -145,7 +160,7 @@ export const useBusinessStore = defineStore("business", {
         async setupBusinessBrand(postData: object) {
             this.cacheBusinessData(postData)
 
-            return axios.put(`/api/business-info-setup/${this.selectedBusiness.id}/brand`, postData)
+            return axios.put(`/api/business-info-setup/${this.selectedBusiness?.id}/brand`, postData)
                 .then(response => {
                     const business = response.data.data
                     this.setSelectedBusiness(business)
@@ -156,7 +171,7 @@ export const useBusinessStore = defineStore("business", {
         async setupBusinessAttributes(postData: object) {
             this.cacheBusinessData(postData)
 
-            return axios.put(`/api/business-info-setup/${this.selectedBusiness.id}/attributes`, postData)
+            return axios.put(`/api/business-info-setup/${this.selectedBusiness?.id}/attributes`, postData)
                 .then(response => {
                     const business = response.data.data
                     this.setSelectedBusiness(business)
@@ -168,7 +183,7 @@ export const useBusinessStore = defineStore("business", {
         async businessImageUpload(postData: object) {
             this.cacheBusinessData(postData)
 
-            return axios.put(`/api/business-info-setup/${this.selectedBusiness.id}/profile-image-upload`, postData)
+            return axios.put(`/api/business-info-setup/${this.selectedBusiness?.id}/profile-image-upload`, postData)
                 .then(response => {
                     const business = response.data.data
                     this.setSelectedBusiness(business)

@@ -10,7 +10,7 @@
         </ion-content>
 
         <IonFooter class="ion-no-border ion-color-light ion-padding">
-            <KolaYellowButton router-link="/signup">
+            <KolaYellowButton @click="getStarted()">
                 Get Started
             </KolaYellowButton>
         </IonFooter>
@@ -20,6 +20,16 @@
 <script setup lang="ts">
 import { IonPage, IonContent, IonFooter } from '@ionic/vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '../../stores/UserStore';
+
+const router = useRouter();
+const userStore = useUserStore();
+
+const getStarted = () => {
+    userStore.storeOnboarded(true);
+    router.push("/signup");
+}
 </script>
 
 <style lang="css">

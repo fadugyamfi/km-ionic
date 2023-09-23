@@ -17,7 +17,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="css">
+<style scoped lang="css">
 .kola-white-button {
     --background: #FFF !important;
     --padding-top: 16px;

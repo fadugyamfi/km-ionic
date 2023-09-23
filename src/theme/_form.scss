@@ -1,0 +1,13 @@
+.kola-input {
+    --background: #F6F6F6;
+    --color: #74787C;
+    --border-color: #E7E6E6;
+    --highlight-color-focused: #74787c;
+    --border-radius: 8px;
+
+    &:not(.has-focus):not(.input-label-placement-stacked) {
+        .label-text-wrapper {
+            bottom: 2.5em;
+        }
+    }
+}

@@ -10,10 +10,11 @@ const routes: Array<RouteRecordRaw> = [
   // },
   {
     path: '/',
-    redirect: '/overview'
+    redirect: '/onboarding'
   },
   {
-    path: '/overview',
+    name: 'Onboarding',
+    path: '/onboarding',
     component: () => import('@/views/Onboarding/Onboarding.vue'),
   },
   {
@@ -22,14 +23,17 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Auth/Login.vue'),
   },
   {
+    name: 'Verify OTP',
     path: '/auth/verify-otp',
     component: () => import('@/views/Auth/ValidateOTP.vue'),
   },
   {
+    name: 'Verify Number',
     path: '/auth/verify-number',
     component: () => import('@/views/Auth/PhoneNumberVerify.vue'),
   },
   {
+    name: 'Forgot PIN',
     path: '/auth/forgot-pin',
     component: () => import('@/views/Auth/ForgotPIN.vue'),
   },
@@ -68,7 +72,8 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'profile',
-        component: () => import('@/views/Shopper/Profile.vue')
+        component: () => import('@/views/Shopper/Profile.vue'),
+
       }
     ]
   }
@@ -80,18 +85,18 @@ const router = createRouter({
 });
 
 
-router.beforeEach(async (to, from) => {
-  const userStore = useUserStore();
+// router.beforeEach(async (to, from) => {
+//   const userStore = useUserStore();
 
-  if (
-    // make sure the user is authenticated
-    !userStore.user &&
-    // ❗️ Avoid an infinite redirect
-    to.name !== 'Login'
-  ) {
-    // redirect the user to the login page
-    return { name: 'Login' }
-  }
-})
+//   // handle first open use case
+//   if ( !userStore.onboarded && to.name !== 'Onboarding' ) {
+//     return { name: 'Onboarding' }
+//   }
+
+//   // handle returning user use case
+//   if ( !userStore.user && to.name !== 'Login') {
+//     return { name: 'Login' }
+//   }
+// })
 
 export default router

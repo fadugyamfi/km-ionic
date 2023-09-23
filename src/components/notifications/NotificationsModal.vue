@@ -9,31 +9,45 @@
         </ion-buttons>
         <ion-title size="small"><b>Notifications</b></ion-title>
         <ion-buttons slot="end">
-          <ion-button>
-            &nbsp; &nbsp;
+          <ion-button @click="refresh()">
+            <IonIcon :icon="refreshOutline"></IonIcon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding-top" :fullscreen="true">
 
-      <IonSegment value="personal" mode="ios" v-model="viewing">
-        <IonSegmentButton value="general">
-          <IonLabel>General</IonLabel>
-        </IonSegmentButton>
-        <IonSegmentButton value="orders">
-          <ion-label>Orders</ion-label>
-        </IonSegmentButton>
-      </IonSegment>
+      <div class="ion-padding ion-text-center" v-if="notificationsStore.fetching">
+        <IonSpinner name="crescent"></IonSpinner>
+      </div>
 
-      <GeneralNotifications v-if="viewing == 'general'"></GeneralNotifications>
-      <OrderNotifications v-if="viewing == 'orders'"></OrderNotifications>
+      <main v-else>
+        <EmptyNotifications v-if="notificationsStore.notifications.length == 0"></EmptyNotifications>
+
+        <section v-else>
+          <IonSegment value="personal" mode="ios" v-model="viewing">
+            <IonSegmentButton value="general">
+              <IonLabel>General</IonLabel>
+            </IonSegmentButton>
+            <IonSegmentButton value="orders">
+              <ion-label>Orders</ion-label>
+            </IonSegmentButton>
+          </IonSegment>
+
+
+          <GeneralNotifications v-if="viewing == 'general'" :notifications="notificationsStore.getGeneralNotifications()">
+          </GeneralNotifications>
+          <OrderNotifications v-if="viewing == 'orders'" :notifications="notificationsStore.getOrderNotifications()">
+          </OrderNotifications>
+        </section>
+      </main>
+
 
     </ion-content>
   </section>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 import {
   IonButtons,
   IonButton,
@@ -45,31 +59,75 @@ import {
   modalController,
   IonIcon,
   IonSegment,
-  IonSegmentButton
+  IonSegmentButton,
+IonSpinner,
 } from '@ionic/vue';
-import { arrowBack, close } from 'ionicons/icons'
+import { defineComponent } from 'vue';
+import { arrowBack, close, refreshOutline } from 'ionicons/icons'
 import { OverlayEventDetail } from '@ionic/core/components';
-import { ref } from 'vue';
 import GeneralNotifications from './GeneralNotifications.vue';
 import OrderNotifications from './OrderNotifications.vue';
+import { useNotificationStore } from '@/stores/NotificationStore';
+import { mapStores } from 'pinia';
+import EmptyNotifications from './EmptyNotifications.vue';
 
-const viewing = ref('general');
-const input = ref();
-const name = ref();
+export default defineComponent({
 
-const cancel = () => modalController.dismiss(null, 'cancel');
-const confirm = () => modalController.dismiss(name.value, 'confirm');
+  components: {
+    IonButtons,
+    IonButton,
+    IonHeader,
+    IonContent,
+    IonToolbar,
+    IonTitle,
+    IonLabel,
+    IonIcon,
+    IonSegment,
+    IonSegmentButton,
+    GeneralNotifications,
+    OrderNotifications,
+    EmptyNotifications,
+    IonSpinner
+},
 
+  data() {
+    return {
+      viewing: 'general',
+      name: null,
+      close,
+      refreshOutline
+    }
+  },
 
-const onWillDismiss = (ev: CustomEvent<OverlayEventDetail>) => {
-  if (ev.detail.role === 'confirm') {
+  computed: {
+    ...mapStores(useNotificationStore)
+  },
 
+  methods: {
+    refresh() {
+      this.notificationsStore.fetchNotifications();
+    },
+
+    cancel() {
+      modalController.dismiss(null, 'cancel');
+    },
+
+    onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
+      if (ev.detail.role === 'confirm') {
+
+      }
+    }
+  },
+
+  mounted() {
+    const notificationStore = useNotificationStore();
+    notificationStore.fetchNotifications();
   }
-};
+})
 
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 ion-segment {
   ion-segment-button {
     padding-top: 0.4em;

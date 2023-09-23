@@ -30,7 +30,7 @@ import VOtpInput from "vue3-otp-input";
 import axios from 'axios';
 
 axios.defaults.baseURL = 'https://api-staging.kola.market/api';
-axios.defaults.baseURL = 'http://api.kolamarket.local/api';
+// axios.defaults.baseURL = 'http://api.kolamarket.local/api';
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 // axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;

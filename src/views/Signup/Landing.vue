@@ -10,7 +10,7 @@
         </ion-header>
 
 
-        <ion-content :fullscreen="true" class="ion-padding">
+        <ion-content :fullscreen="true" class="ion-padding" :scroll-y="false">
             <h3>The best way to grow your sales</h3>
             <p>
                 We help you to sell, buy, manage your customers and inventory simply and securely in one app!
@@ -34,10 +34,12 @@
                 </IonCardContent>
             </IonCard>
 
-            <p class="ion-text-center ion-padding login-prompt">
-                Already have an account?
-                <IonText color="primary" router-link="/auth/login" class="trigger">Log In</IonText>
-            </p>
+            <IonText router-link="/auth/login">
+                <p class="ion-text-center ion-padding login-prompt">
+                    Already have an account?
+                    <IonText color="primary"  class="trigger">Log In</IonText>
+                </p>
+            </IonText>
         </ion-content>
 
         <IonFooter class="ion-padding ion-no-border">
@@ -82,7 +84,7 @@ const redirectToSignup = () => {
 }
 </script>
 
-<style lang="css">
+<style scoped lang="css">
 .option-card {
     margin-top: 50px;
     --background: #F6F6F6;
