@@ -1,6 +1,6 @@
 <template>
     <ion-page>
-        <ion-content :fullscreen="true" class="ion-padding">
+        <ion-content :fullscreen="true" class="ion-padding" :scroll-y="false">
             <h1>Welcome To Kola Wholesale Market</h1>
             <p>
                 We help you to buy and sell wholesale, manage your customers and inventory, simply and securely in one app!

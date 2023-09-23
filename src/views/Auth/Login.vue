@@ -12,15 +12,30 @@
 
             <div class="ion-margin-top">
                 <section class="ion-padding-top ion-padding-bottom">
-                    <IonInput class="kola-input" label="Phone Number" v-model="phoneNumber" fill="outline" label-placement="floating"></IonInput>
+                    <IonLabel class="input-label">Phone Number</IonLabel>
+                    <PhoneInput v-model="phoneNumber"/>
                 </section>
 
-                <section>
-                    <IonInput class="kola-input" label="PIN" type="password" inputmode="numeric" fill="outline" label-placement="floating" v-model="pin"></IonInput>
+                <section class="pin-entry">
+                    <IonLabel class="input-label">PIN</IonLabel>
+                    <v-otp-input
+                        ref="otpInput"
+                        v-model:value="pin"
+                        class="otp-input"
+                        :conditionalClass="['one', 'two', 'three', 'four']"
+                        :num-inputs="4"
+                        :placeholder="['*', '*', '*', '*', '*', '*', '*', '*']"
+                        :should-auto-focus="true"
+                        input-classes="otp-input-field"
+                        input-type="number"
+                        required
+                        separator="&nbsp; &nbsp; "
+                        @on-change="handleOnChange"
+                        @on-complete="handleOnComplete"></v-otp-input>
                 </section>
 
                 <div class="ion-padding-top ion-padding-bottom">
-                    <IonText router-link="/auth/forgot-pin" color="dark" style="font-weight: bold;">Forgot Your PIN?</IonText>
+                    <IonText router-link="/auth/forgot-pin" color="dark" style="font-weight: bold; font-size: 0.9em;">Forgot Your PIN?</IonText>
                 </div>
             </div>
 
@@ -42,18 +57,21 @@
 </template>
 
 <script lang="ts">
-import { IonBackButton, IonContent, IonFooter, IonHeader, IonInput, IonPage, IonSpinner, IonText, IonToolbar, toastController } from '@ionic/vue';
+import { IonBackButton, IonContent, IonFooter, IonHeader, IonInput, IonLabel, IonPage, IonSpinner, IonText, IonToolbar, toastController } from '@ionic/vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/UserStore';
 import { mapStores } from 'pinia';
+import PhoneInput from '@/components/forms/PhoneInput.vue';
 
 export default defineComponent({
 
     components: {
         KolaYellowButton,
-        IonBackButton, IonContent, IonFooter, IonHeader, IonInput, IonPage, IonSpinner, IonText, IonToolbar
+        IonBackButton, IonContent, IonFooter, IonHeader, IonInput, IonPage, IonSpinner, IonText, IonToolbar,
+        PhoneInput,
+        IonLabel
     },
 
     data() {
@@ -71,8 +89,6 @@ export default defineComponent({
     methods: {
 
         login() {
-            const router = useRouter();
-
             this.fetching = true;
 
             this.userStore.login({
@@ -80,7 +96,7 @@ export default defineComponent({
                 pin: this.pin
             })
 
-            .then(() => router.push('/shopper/home'))
+            .then(() => this.$router.push('/shopper/home'))
 
             .catch(async (error: Error) => {
                 const toast = await toastController.create({
@@ -93,7 +109,10 @@ export default defineComponent({
             })
 
             .finally(() => this.fetching = false);
-        }
+        },
+
+        handleOnChange() {},
+        handleOnComplete() {}
     }
 })
 
@@ -117,5 +136,32 @@ export default defineComponent({
 .login-prompt .trigger {
     font-weight: bold;
     color: #333;
+}
+
+.input-label {
+    font-size: 0.8em;
+    color: #919191;
+}
+
+.pin-entry {
+    // margin-top: 10px;
+}
+
+.otp-input {
+    display: flex;
+    justify-content: space-around;
+
+    .otp-input-field {
+        text-align: center;
+        font-size: 1em;
+        font-weight: bold;
+        border-radius: 5px;
+        border: solid 1px #d7d7d7;
+        vertical-align: middle;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 7px;
+        padding-right: 7px;
+    }
 }
 </style>

@@ -143,11 +143,14 @@ export const useUserStore = defineStore("user", {
 
             if (userResult.value && userResult.value != 'undefined') {
                 user = new User(JSON.parse(userResult.value));
+                console.log("user loaded from cache")
             }
 
             if( authResult.value && typeof authResult.value == 'string' ) {
                 const auth = JSON.parse(authResult.value);
                 axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;
+                console.log("axios defaults set")
+                console.log(axios.defaults.headers.common);
             }
         },
 

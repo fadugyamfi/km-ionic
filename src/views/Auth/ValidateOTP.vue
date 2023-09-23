@@ -49,7 +49,7 @@ const userStore = useUserStore();
 const onContinue = async () => {
     validating.value = true;
     userStore.verifyOtp({
-        phone_number: userStore.verification.phone_number,
+        phone_number: userStore.verification.phone_number as string,
         code: otp.value
     })
     .then(response => {

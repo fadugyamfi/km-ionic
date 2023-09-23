@@ -19,18 +19,19 @@ import '@ionic/vue/css/text-alignment.css';
 import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
+import "intl-tel-input/build/css/intlTelInput.css";
 
 /* Theme variables */
 import './theme/variables.css';
 import './theme/app.scss';
 
+import axios from 'axios';
 import { createPinia } from 'pinia';
 import VOtpInput from "vue3-otp-input";
 
-import axios from 'axios';
-
-axios.defaults.baseURL = 'https://api-staging.kola.market/api';
-// axios.defaults.baseURL = 'http://api.kolamarket.local/api';
+// console.log(process?.env);
+console.log(import.meta?.env);
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'https://api-staging.kola.market/api';
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 // axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;

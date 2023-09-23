@@ -22,12 +22,6 @@ export const useBusinessStore = defineStore("business", {
         selectedBusiness: null as Business | null,
     }),
 
-    getters: {
-        selectedBusiness: (state) => {
-            return state.selectedBusiness;
-        }
-    },
-
     actions: {
         async loadCachedBusinesses() {
             let { value } = await Preferences.get({ key: 'kola.business' });

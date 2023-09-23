@@ -1,0 +1,71 @@
+<template>
+    <input type="text" ref="phone-input" class="form-control phone-input kola-input" :class="classes"
+           placeholder="020 000 0000" :value="modelValue" @change="onChange($event)" />
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import intlTelInput from "intl-tel-input";
+
+export default defineComponent({
+    props: {
+        modelValue: { required: false },
+        output: { required: false, default: 'intl' },
+        classes: { required: false }
+    },
+
+    emits: ['update:modelValue'],
+
+    methods: {
+        onChange(event) {
+            const value = event.target.value;
+
+            const intlNumber = this.intlInput.getNumber();
+            const nationalNumber = this.intlInput.getNumber(intlTelInputUtils.numberFormat.NATIONAL);
+            const country = this.intlInput.getSelectedCountryData();
+            const loginNumber = country.dialCode + nationalNumber.replaceAll(" ", "");
+console.log(intlNumber, nationalNumber, country, loginNumber);
+            if (this.output === 'login') {
+                return this.$emit('update:modelValue', loginNumber);
+            }
+
+            if (this.output === 'national') {
+                return this.$emit('update:modelValue', nationalNumber);
+            }
+
+            return this.$emit('update:modelValue', intlNumber);
+        }
+    },
+
+    mounted() {
+        const input = this.$el;
+
+        this.intlInput = intlTelInput(this.$el, {
+            initialCountry: 'GH',
+            preferredCountries: ['GH', 'NG'],
+            separateDialCode: false,
+            utilsScript: "vendor/intl-tel-input/build/js/utils.js"
+        });
+    }
+})
+</script>
+
+<style lang="scss">
+.iti {
+    width: 100%;
+
+    .phone-input {
+        background: #F6F6F6;
+        color: #74787C;
+        border: solid 1px #E7E6E6;
+        border-radius: 4px;
+        padding: 10px 30px;
+        padding-left: 60px;
+        width: 100%;
+
+    }
+    &:focus {
+        border-color: #74787c;
+    }
+}
+</style>
