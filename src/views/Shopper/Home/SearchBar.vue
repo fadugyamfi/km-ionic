@@ -2,9 +2,9 @@
     <section class="ion-no-border">
         <IonSearchbar placeholder="Search..." class=""></IonSearchbar>
 
-        <Swiper :slides-per-view="3">
+        <Swiper :slides-per-view="4">
             <SwiperSlide v-for="category of categories" :key="category.id">
-                <CategoryPill :category="category"></CategoryPill>
+                <CategoryPill :category="category" @click="viewCategory(category)"></CategoryPill>
             </SwiperSlide>
         </Swiper>
 
@@ -22,8 +22,9 @@ import { IonSearchbar } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import CategoryPill from './CategoryPill.vue';
-import axios from 'axios';
-import { useUserStore } from '@/stores/UserStore';
+import { useProductCategoryStore } from '@/stores/ProductCategoryStore';
+import ProductCategory from '@/models/ProductCategory.ts';
+import { mapStores } from 'pinia';
 
 export default defineComponent({
 
@@ -37,24 +38,21 @@ export default defineComponent({
     data() {
         return {
             backOff: 1,
-            categories: []
+            categories: [] as ProductCategory[]
         }
+    },
+
+    computed: {
+        ...mapStores( useProductCategoryStore ),
     },
 
     methods: {
         async fetchCategories() {
-            const userStore = useUserStore();
+            this.categories = await this.productCategoryStore.getCategories();
+        },
 
-            try {
-                const response = await axios.get("/v2/product-categories");
-                this.categories = response.data.data;
-            } catch(error) {
-                console.log(error);
-                setTimeout(() => {
-                    this.fetchCategories();
-                    this.backOff += 1;
-                }, 100 * this.backOff);
-            }
+        viewCategory(category: ProductCategory) {
+            this.$router.push(`/shopper/home/categories/${category.id}`);
         }
     },
 

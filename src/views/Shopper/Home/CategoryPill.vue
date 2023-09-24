@@ -14,6 +14,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { IonAvatar } from '@ionic/vue';
+import ProductCategory from '@/models/ProductCategory';
 
 
 export default defineComponent({
@@ -21,7 +22,7 @@ export default defineComponent({
     props: {
         category: {
             required: true,
-            type: Object
+            type: ProductCategory
         }
     },
 

@@ -1,5 +1,5 @@
 <template>
-    <section class="suppliers-near-you">
+    <section class="suppliers-near-you shopper-home-section">
         <header class="ion-padding-horizontal">
             <h6>Suppliers Near You</h6>
 
@@ -10,10 +10,10 @@
 
         <main>
             <Swiper :slides-per-view="2">
-            <SwiperSlide v-for="supplier of suppliers" :key="supplier">
-                <SupplierCard :supplier="supplier"></SupplierCard>
-            </SwiperSlide>
-        </Swiper>
+                <SwiperSlide v-for="supplier of suppliers" :key="supplier">
+                    <SupplierCard :supplier="supplier"></SupplierCard>
+                </SwiperSlide>
+            </Swiper>
         </main>
     </section>
 </template>
@@ -26,6 +26,7 @@ import axios from 'axios';
 import { defineComponent } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import SupplierCard from '@/components/cards/SupplierCard.vue';
+import Business from '@/models/Business';
 
 export default defineComponent({
 
@@ -37,24 +38,32 @@ export default defineComponent({
 
     data() {
         return {
+            backOff: 1,
             suppliers: []
         }
     },
 
     methods: {
-        fetchSuppliers() {
+        async fetchSuppliers() {
             const params = {
                 business_types_id: 3,
                 limit: 6
             }
 
-            return axios.get('/v2/businesses', { params })
-                .then((response) => {
-                    this.suppliers = response.data.data;
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+            try {
+                const response = await axios.get('/v2/businesses', { params });
+                const suppliers = response.data.data;
+
+                this.suppliers = suppliers.map((element: any) => {
+                    return new Business(element);
+                });;
+            } catch (error) {
+                console.log(error);
+                setTimeout(() => {
+                    this.fetchSuppliers();
+                    this.backOff += 1;
+                }, 100 * this.backOff);
+            }
         }
     },
 
@@ -63,24 +72,3 @@ export default defineComponent({
     }
 });
 </script>
-
-<style lang="scss">
-.suppliers-near-you {
-    header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 0.9em;
-
-        h6 {
-            font-weight: bold;
-            font-size: 0.9em;
-            margin: 0px;
-        }
-
-        a {
-            padding: 3px 10px;
-        }
-    }
-}
-</style>

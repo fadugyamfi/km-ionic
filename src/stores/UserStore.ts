@@ -5,6 +5,7 @@ import { handleAxiosRequestError } from "@/utilities";
 import { useBusinessStore } from "./BusinessStore";
 import axios from 'axios';
 import { Preferences } from "@capacitor/preferences";
+import User from "@/models/User";
 
 const meta = (key: string) => {
     const meta = document.querySelector(`meta[name="${key}"]`);
@@ -29,39 +30,6 @@ type Auth = {
     access_token: String,
 }
 
-class User {
-
-    public id_cms_privileges: number | null = null;
-    public phone_number: string | null = null;
-    public name: string | null = null;
-    public parent_users_id: number | null = null;
-    public location: string | null = null;
-    public id: number | null = null;
-
-    constructor(data: Object) {
-        Object.assign(this, data)
-    }
-
-    firstName() {
-        return this.name?.split(' ')[0];
-    }
-
-    isSuperAdmin() {
-        return this.id_cms_privileges == 1;
-    }
-
-    isSaleAgent() {
-        return this.id_cms_privileges == 5;
-    }
-
-    isSalesManager() {
-        return this.id_cms_privileges == 2; // Sales Manager
-    }
-
-    isOwner() {
-        return this.id_cms_privileges == 4; // Owner
-    }
-}
 
 export const useUserStore = defineStore("user", {
 
@@ -136,6 +104,10 @@ export const useUserStore = defineStore("user", {
 
     actions: {
         async loadStoredData() {
+            if( this.user && this.auth ) {
+                return;
+            }
+
             let user = null;
             const userResult = await Preferences.get({ key: 'kola.user' });
             const authResult = await Preferences.get({ key: 'kola.auth' });
@@ -143,14 +115,14 @@ export const useUserStore = defineStore("user", {
 
             if (userResult.value && userResult.value != 'undefined') {
                 user = new User(JSON.parse(userResult.value));
-                console.log("user loaded from cache")
+                this.user = user;
+                this.onboarded = true;
             }
 
             if( authResult.value && typeof authResult.value == 'string' ) {
                 const auth = JSON.parse(authResult.value);
                 axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;
-                console.log("axios defaults set")
-                console.log(axios.defaults.headers.common);
+                this.auth = auth;
             }
         },
 

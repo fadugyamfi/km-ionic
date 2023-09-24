@@ -10,7 +10,6 @@ import { useUserStore } from './stores/UserStore';
 import { onMounted, onBeforeMount } from 'vue';
 
 onBeforeMount(async () => {
-  console.log("[App] onBeforeMount called");
   const userStore = useUserStore();
   await userStore.loadStoredData();
 })

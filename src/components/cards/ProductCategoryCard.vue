@@ -1,27 +1,11 @@
 <template>
-    <section class="supplier-card">
+    <section class="product-category-card" :class="{ 'tall': tall == true }">
         <ion-card>
-            <img :alt="supplier.name"
-            :src="supplier.logo || 'https://ionicframework.com/docs/img/demos/card-media.png'" />
+            <img :alt="category.name" :src="category.image || 'https://ionicframework.com/docs/img/demos/card-media.png'" />
 
             <IonCardHeader>
-                <IonCardTitle>{{ supplier.name }}</IonCardTitle>
-                <IonCardSubtitle>
-                    {{ supplier.currency?.symbol }} {{ supplier.min_order_amount || 0 }} minimum
-                </IonCardSubtitle>
+                <IonCardTitle class="ion-text-center">{{ category.name }}</IonCardTitle>
             </IonCardHeader>
-
-            <IonCardContent>
-                <section class="rating">
-                    <span>5</span>
-                    <span>⭐</span>
-                    <span class="reviews">({{ supplier.reviews_count }})</span>
-                </section>
-                <section class="distance ion-align-items-center" style="display: flex;">
-                    <IonIcon :icon="locationOutline"></IonIcon>
-                    0 km
-                </section>
-            </IonCardContent>
         </ion-card>
     </section>
 </template>
@@ -31,12 +15,18 @@ import Business from '@/models/Business';
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { locationOutline } from 'ionicons/icons';
+import ProductCategory from '../../models/ProductCategory';
 
 export default defineComponent({
     props: {
-        supplier: {
+        category: {
             required: true,
-            type: Business
+            type: ProductCategory
+        },
+
+        tall: {
+            default: false,
+            type: Boolean
         }
     },
 
@@ -51,10 +41,17 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.supplier-card {
+.product-category-card {
+
     ion-card {
-        max-width: 165px;
-        max-height: 180px;
+        width: 96%;
+        margin: 15px auto;
+
+        img {
+            width: 165px;
+            height: 120px;
+            object-fit: cover;
+        }
 
         ion-card-header {
             text-align: left;
@@ -91,5 +88,13 @@ export default defineComponent({
             }
         }
     }
+
+    &.tall {
+        img {
+            height: 180px;
+            object-fit: cover;
+        }
+    }
+
 }
 </style>

@@ -1,29 +1,11 @@
 import axios from "axios";
 import { defineStore } from "pinia";
-
-export class Notification {
-
-    public id: number | null = null;
-    public title: string | null = null;
-    public content: string | null = null;
-    public type: string | null = null;
-    public type_id: number | null = null;
-    public category: string | null = null;
-    public created_at: string | null = null;
-    public notifiable: object | null = null;
-
-    constructor(data: object) {
-        Object.assign(this, data)
-    }
-};
+import Notification from "@/models/Notification";
 
 export const useNotificationStore = defineStore('notifications', {
 
-    state: () => (<{
-        notifications: Notification[],
-        fetching: boolean
-    }>{
-        notifications: [],
+    state: () => ({
+        notifications: [] as Notification[],
         fetching: false
     }),
 

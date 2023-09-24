@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import TabsPage from '../views/Shopper/TabsPage.vue'
+import TabsPage from '../views/Shopper/TabsPage.vue';
+import HomePage from '../views/Shopper/HomePage.vue';
 import { useUserStore } from '../stores/UserStore';
 
 const routes: Array<RouteRecordRaw> = [
@@ -56,7 +57,21 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'home',
-        component: () => import('@/views/Shopper/Home.vue')
+        component: HomePage,
+        children: [
+          {
+            path: '',
+            component: () => import('@/views/Shopper/Home/Home.vue')
+          },
+          {
+            path: 'categories',
+            component: () => import('@/views/Shopper/Categories/Categories.vue'),
+          },
+          {
+            path: 'categories/:id',
+            component: () => import('@/views/Shopper/Categories/CategoryDetails.vue'),
+          }
+        ],
       },
       {
         path: 'orders',
@@ -74,7 +89,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'profile',
         component: () => import('@/views/Shopper/Profile.vue'),
 
-      }
+      },
     ]
   }
 ]
@@ -87,6 +102,7 @@ const router = createRouter({
 
 // router.beforeEach(async (to, from) => {
 //   const userStore = useUserStore();
+//   await userStore.loadStoredData();
 
 //   // handle first open use case
 //   if ( !userStore.onboarded && to.name !== 'Onboarding' ) {
@@ -97,6 +113,8 @@ const router = createRouter({
 //   if ( !userStore.user && to.name !== 'Login') {
 //     return { name: 'Login' }
 //   }
+
+//   return to;
 // })
 
 export default router

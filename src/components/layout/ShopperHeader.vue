@@ -6,9 +6,7 @@
       </IonTitle>
 
       <IonButtons slot="end">
-        <IonButton @click="showNotifications()">
-          <IonIcon :icon="notifications"></IonIcon>
-        </IonButton>
+        <NotificationButton></NotificationButton>
       </IonButtons>
     </ion-toolbar>
   </IonHeader>
@@ -19,8 +17,7 @@ import { IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonTex
 import { defineComponent } from 'vue';
 import { mapStores } from 'pinia';
 import { useUserStore } from '@/stores/UserStore';
-import { notifications } from 'ionicons/icons';
-import NotificationsModal from '@/components/notifications/NotificationsModal.vue';
+import NotificationButton from '../notifications/NotificationButton.vue';
 
 export default defineComponent({
 
@@ -32,34 +29,13 @@ export default defineComponent({
     IonButton,
     IonIcon,
     IonText,
-    NotificationsModal
+    NotificationButton
   },
 
   computed: {
     ...mapStores(useUserStore)
   },
 
-  data() {
-    return {
-      notifications
-    }
-  },
-
-  methods: {
-    async showNotifications() {
-      const modal = await modalController.create({
-        component: NotificationsModal,
-      });
-
-      modal.present();
-
-      const { data, role } = await modal.onWillDismiss();
-
-      if (role === 'confirm') {
-        // message.value = `Hello, ${data}!`;
-      }
-    }
-  }
 })
 </script>
 

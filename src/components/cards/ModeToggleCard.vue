@@ -18,7 +18,7 @@
             </section>
 
             <section>
-                <IonToggle @ion-change="onToggle()"></IonToggle>
+                <IonToggle mode="ios" @ion-change="onToggle()"></IonToggle>
             </section>
         </IonCardContent>
     </IonCard>
