@@ -16,6 +16,7 @@ type UserStoreState = {
     onboarded: Boolean,
     user?: User|null,
     fetching: Boolean,
+    appMode: string | null,
     registering: Boolean,
     registrationFlow?: String,
     auth?: object|null,
@@ -36,6 +37,7 @@ export const useUserStore = defineStore("user", {
     state: (): UserStoreState => {
         return {
             onboarded: false,
+            appMode: 'shopping',
             fetching: false,
             registering: false,
             registrationFlow: '',
@@ -112,11 +114,15 @@ export const useUserStore = defineStore("user", {
             const userResult = await Preferences.get({ key: 'kola.user' });
             const authResult = await Preferences.get({ key: 'kola.auth' });
             const onboardedResult = await Preferences.get({ key: 'kola.onboarded' });
+            const appModeResult = await Preferences.get({ key: 'kola.app-mode' });
+
+            if( onboardedResult ) {
+                this.onboarded = !!onboardedResult.value;
+            }
 
             if (userResult.value && userResult.value != 'undefined') {
                 user = new User(JSON.parse(userResult.value));
                 this.user = user;
-                this.onboarded = true;
             }
 
             if( authResult.value && typeof authResult.value == 'string' ) {
@@ -124,6 +130,13 @@ export const useUserStore = defineStore("user", {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;
                 this.auth = auth;
             }
+
+            this.appMode = appModeResult?.value || 'shopping';
+        },
+
+        async toggleAppMode() {
+            this.appMode = this.appMode == 'shopping' ? 'vendor' : 'shopping';
+            await Preferences.set({ key: 'kola.app-mode', value: this.appMode });
         },
 
         async storeUser(user: User) {

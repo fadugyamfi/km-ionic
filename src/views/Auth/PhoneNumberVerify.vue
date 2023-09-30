@@ -11,13 +11,7 @@
             <p style="font-size: 14px;">Please Enter Your Phone Number To Proceed</p>
 
             <div style="margin-top: 50px;">
-                <KolaInputField
-                    v-model="phoneNumber"
-                    :label="'Phone Number'"
-                    :required="true"
-                    :error-text="'Required'"
-                    :has-error="inputValidated()"
-                ></KolaInputField>
+                <PhoneInput v-model="phoneNumber"/>
             </div>
         </IonContent>
 
@@ -38,6 +32,7 @@ import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useUserStore } from '@/stores/UserStore';
+import PhoneInput from '../../components/forms/PhoneInput.vue';
 
 let validating = ref(false);
 const userStore = useUserStore();

@@ -72,3 +72,18 @@ export default defineComponent({
     }
 });
 </script>
+
+<style lang="scss">
+
+.suppliers-near-you {
+
+    .swiper-wrapper {
+        display: inline-flex;
+        gap: 15px;
+    }
+
+    main {
+        padding: 0px 10px;
+    }
+}
+</style>

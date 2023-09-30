@@ -24,11 +24,15 @@ export const useBusinessStore = defineStore("business", {
 
     actions: {
         async loadCachedBusinesses() {
-            let { value } = await Preferences.get({ key: 'kola.business' });
-            this.businesses = value != null ? JSON.parse(value) : Array.of([]);
+            if( !this.businesses ) {
+                let { value } = await Preferences.get({ key: 'kola.business' });
+                this.businesses = value != null ? JSON.parse(value) : Array.of([]);
+            }
 
-            let results = await Preferences.get({ key: 'kola.store.business' });
-            this.selectedBusiness = results.value != null ? JSON.parse(results.value) : null;
+            if( !this.selectedBusiness ) {
+                let results = await Preferences.get({ key: 'kola.store.business' });
+                this.selectedBusiness = results.value != null ? JSON.parse(results.value) : null;
+            }
         },
 
         async getCacheBusinessData() {

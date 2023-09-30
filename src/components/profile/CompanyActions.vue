@@ -4,7 +4,7 @@
             <IonAvatar slot="start">
                 <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
             </IonAvatar>
-            <IonLabel>{{ userStore.user?.name }}</IonLabel>
+            <IonLabel>{{ businessStore.getSelectedBusiness()?.name }}</IonLabel>
             <IonIcon slot="end" :icon="createOutline"></IonIcon>
         </IonItem>
 
@@ -13,54 +13,61 @@
                 <IonAvatar slot="start">
                     <img src="/images/ic_location.svg" class="action-img" />
                 </IonAvatar>
-                <IonLabel>Address</IonLabel>
+                <IonLabel>Company Profile</IonLabel>
             </IonItem>
 
             <IonItem :detail="true" class="profile-item">
                 <IonAvatar slot="start">
                     <img src="/images/ic_password.svg" class="action-img" />
                 </IonAvatar>
-                <IonLabel>Password</IonLabel>
+                <IonLabel>Customers</IonLabel>
             </IonItem>
 
             <IonItem :detail="true" class="profile-item">
                 <IonAvatar slot="start">
                     <img src="/images/ic_notification.svg" class="action-img" />
                 </IonAvatar>
-                <IonLabel>Notifications</IonLabel>
+                <IonLabel>Stock</IonLabel>
             </IonItem>
 
             <IonItem :detail="true" class="profile-item">
                 <IonAvatar slot="start">
                     <img src="/images/ic_user.svg" class="action-img" />
                 </IonAvatar>
-                <IonLabel>Account Activity</IonLabel>
+                <IonLabel>Team</IonLabel>
             </IonItem>
 
             <IonItem :detail="true" class="profile-item">
                 <IonAvatar slot="start">
                     <img src="/images/ic_help_support.svg" class="action-img" />
                 </IonAvatar>
-                <IonLabel>Help & Support</IonLabel>
+                <IonLabel>Agents</IonLabel>
             </IonItem>
 
-            <IonItem :detail="true" class="profile-item" @click="logout()">
+            <IonItem :detail="true" class="profile-item">
                 <IonAvatar slot="start">
                     <img src="/images/ic_help_support.svg" class="action-img" />
                 </IonAvatar>
-                <IonLabel>Log Out</IonLabel>
+                <IonLabel>Add Sale</IonLabel>
+            </IonItem>
+
+            <IonItem :detail="true" class="profile-item">
+                <IonAvatar slot="start">
+                    <img src="/images/ic_help_support.svg" class="action-img" />
+                </IonAvatar>
+                <IonLabel>Switch Business</IonLabel>
             </IonItem>
         </IonList>
     </section>
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonIcon, IonButton, IonSegment, IonSegmentButton, IonLabel, IonCard, IonCardContent, IonItem, IonAvatar, IonList } from '@ionic/vue';
+import { IonIcon, IonLabel, IonItem, IonAvatar, IonList } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
+import { useBusinessStore } from '@/stores/BusinessStore';
 import { mapStores } from 'pinia';
 import { search, createOutline } from 'ionicons/icons';
-import { useRouter } from 'vue-router';
 
 
 export default defineComponent({
@@ -68,24 +75,13 @@ export default defineComponent({
     components: { IonList, IonAvatar, IonItem, IonLabel, IonIcon },
 
     computed: {
-        ...mapStores( useUserStore )
+        ...mapStores( useUserStore, useBusinessStore )
     },
 
     data() {
-        const router = useRouter();
-
         return {
             createOutline,
-            search,
-            router
-        }
-    },
-
-    methods: {
-        logout() {
-            this.userStore.logout().then(response => {
-                this.router.push('/auth/login');
-            });
+            search
         }
     }
 });

@@ -1,7 +1,7 @@
 <template>
     <IonCard>
         <IonCardContent>
-            <section v-if="mode == 'shopping'">
+            <section v-if="userStore.appMode == 'shopping'">
                 <IonCardTitle>Shopping Mode</IonCardTitle>
                 <IonCardSubtitle>
                     You are currently in shopping mode.
@@ -9,7 +9,7 @@
                 </IonCardSubtitle>
             </section>
 
-            <section v-if="mode == 'vendor'">
+            <section v-if="userStore.appMode == 'vendor'">
                 <IonCardTitle>Vendor Mode</IonCardTitle>
                 <IonCardSubtitle>
                     You are currently in Vendor mode.
@@ -18,7 +18,7 @@
             </section>
 
             <section>
-                <IonToggle mode="ios" @ion-change="onToggle()"></IonToggle>
+                <IonToggle mode="ios" @ion-change="onToggle()" :checked="isVendorMode"></IonToggle>
             </section>
         </IonCardContent>
     </IonCard>
@@ -27,21 +27,37 @@
 <script lang="ts">
 import { IonCard, IonCardContent, IonCardSubtitle, IonCardTitle, IonText, IonToggle } from '@ionic/vue';
 import { defineComponent } from 'vue';
+import { mapStores } from 'pinia';
+import { useUserStore } from '@/stores/UserStore';
 
 export default defineComponent({
     data() {
         return {
-            mode: 'shopping'
+
         };
+    },
+
+    computed: {
+        ...mapStores( useUserStore ),
+
+        isVendorMode(): boolean {
+            return this.userStore.appMode == 'vendor';
+        }
     },
 
     components: { IonCard, IonCardContent, IonText, IonCardTitle, IonCardSubtitle, IonToggle },
 
     methods: {
-        onToggle() {
-            this.mode = this.mode == 'shopping' ? 'vendor' : 'shopping';
+        async onToggle() {
+            await this.userStore.toggleAppMode();
+
+            if( this.userStore.appMode == 'vendor' ) {
+                this.$router.replace('/vendor/home');
+            } else {
+                this.$router.replace('/shopper/home');
+            }
         }
-    }
+    },
 });
 </script>
 

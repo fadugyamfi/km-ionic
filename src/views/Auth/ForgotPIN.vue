@@ -11,13 +11,7 @@
             <p style="font-size: 14px;">Please Enter Your Phone Number To Proceed</p>
 
             <div style="margin-top: 50px;">
-                <KolaInputField
-                    v-model="phoneNumber"
-                    :label="'Phone Number'"
-                    :required="true"
-                    :error-text="'Required'"
-                    :has-error="inputValidated()"
-                ></KolaInputField>
+                <PhoneInput v-model="phoneNumber" :required="true" />
             </div>
         </IonContent>
 
@@ -31,10 +25,11 @@
 
 <script setup lang="ts">
 import { Ref, computed, ref } from 'vue';
-import { IonBackButton, IonButtons, IonHeader, IonPage, IonToolbar, IonContent, IonFooter } from '@ionic/vue';
+import { IonBackButton, IonButtons, IonHeader, IonPage, IonToolbar, IonContent, IonFooter, IonLabel } from '@ionic/vue';
 import KolaInputField from '@/components/KolaInputField.vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { useRouter } from 'vue-router';
+import PhoneInput from '@/components/forms/PhoneInput.vue';
 
 const router = useRouter();
 const phoneNumber: Ref<String | null> = ref(null);

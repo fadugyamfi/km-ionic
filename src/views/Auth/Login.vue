@@ -18,7 +18,8 @@
 
                 <section class="pin-entry">
                     <IonLabel class="input-label">PIN</IonLabel>
-                    <v-otp-input
+                    <IonInput v-model="pin" class="kola-input" type="password" placeholder="****" :maxlength="4" :counter="true" fill="outline"></IonInput>
+                    <!-- <v-otp-input
                         ref="otpInput"
                         v-model:value="pin"
                         class="otp-input"
@@ -31,7 +32,7 @@
                         required
                         separator="&nbsp; &nbsp; "
                         @on-change="handleOnChange"
-                        @on-complete="handleOnComplete"></v-otp-input>
+                        @on-complete="handleOnComplete"></v-otp-input> -->
                 </section>
 
                 <div class="ion-padding-top ion-padding-bottom">
@@ -100,7 +101,7 @@ export default defineComponent({
 
             .catch(async (error: Error) => {
                 const toast = await toastController.create({
-                    message: error.message,
+                    message: error.message || 'Authentication Failed Unknown',
                     duration: 1500,
                     position: 'bottom',
                 });

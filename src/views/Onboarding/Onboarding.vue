@@ -21,7 +21,7 @@
 import { IonPage, IonContent, IonFooter } from '@ionic/vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '../../stores/UserStore';
+import { useUserStore } from '@/stores/UserStore';
 
 const router = useRouter();
 const userStore = useUserStore();

@@ -44,11 +44,12 @@ export default defineComponent({
 .product-category-card {
 
     ion-card {
-        width: 96%;
+        width: 100%;
         margin: 15px auto;
+        position: relative;
 
         img {
-            width: 165px;
+            width: 100%;
             height: 120px;
             object-fit: cover;
         }

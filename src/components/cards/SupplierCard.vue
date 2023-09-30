@@ -53,8 +53,10 @@ export default defineComponent({
 <style scoped lang="scss">
 .supplier-card {
     ion-card {
-        max-width: 165px;
-        max-height: 180px;
+        width: 170px;
+        max-height: 200px;
+        box-shadow: none;
+        border: solid 1px #f1f1f1;
 
         ion-card-header {
             text-align: left;

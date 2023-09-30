@@ -1,6 +1,6 @@
 <template>
     <section class="product-category-list d-flex">
-        <section v-if="leftColumnItems.length > 0" class="d-flex flex-column ion-align-items-center">
+        <section v-if="leftColumnItems.length > 0" class="d-flex flex-column ion-align-items-stretch">
           <ProductCategoryCard
                 v-for="(category, index) of leftColumnItems"
                 :key="category.id"
@@ -10,7 +10,7 @@
             ></ProductCategoryCard>
         </section>
 
-        <section v-if="rightColumnItems.length > 0" class="d-flex flex-column ion-align-items-center">
+        <section v-if="rightColumnItems.length > 0" class="d-flex flex-column ion-align-items-stretch">
            <ProductCategoryCard
                 v-for="(category, index) of rightColumnItems"
                 :key="category.id"
@@ -74,8 +74,12 @@ export default defineComponent({
 .product-category-list {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     padding-left: 10px;
     padding-right: 10px;
+
+    .flex-column {
+        width: 48%;
+    }
 }
 </style>
