@@ -12,13 +12,9 @@
 
       <TopCategories></TopCategories>
 
-      <section class="ion-padding">
-        top brands
-      </section>
+      <TopBrands></TopBrands>
 
-      <section class="ion-padding">
-        recently viewed
-      </section>
+      <RecentlyViewedProducts></RecentlyViewedProducts>
     </ion-content>
   </ion-page>
 </template>
@@ -30,6 +26,8 @@ import SearchBar from "@/views/Shopper/Home/SearchBar.vue";
 import SuppliersNearYou from '@/views/Shopper/Home/SuppliersNearYou.vue';
 import ModeToggleCard from '@/components/cards/ModeToggleCard.vue';
 import TopCategories from './TopCategories.vue';
+import TopBrands from './TopBrands.vue';
+import RecentlyViewedProducts from './RecentlyViewedProducts.vue';
 </script>
 
 <style lang="scss">

@@ -3,18 +3,7 @@ import {defineStore} from "pinia";
 import {useUserStore} from "./UserStore";
 import {handleAxiosRequestError} from "@/utilities";
 import { Preferences } from "@capacitor/preferences";
-
-class Business {
-
-    public id: number|null = null;
-    public name: string|null = null;
-    public location: string|null = null;
-    public phone_number: string|null = null;
-
-    constructor(data: object) {
-        Object.assign(this, data);
-    }
-}
+import Business from "@/models/Business";
 
 export const useBusinessStore = defineStore("business", {
     state: () => ({
@@ -104,12 +93,6 @@ export const useBusinessStore = defineStore("business", {
 
         async setSelectedBusiness(business: any) {
             this.selectedBusiness = business;
-            const { value } = await Preferences.get({ key: 'kola.business' });
-
-            if (typeof value == 'string') {
-                await Preferences.remove({ key:'kola.business'})
-            }
-
             await Preferences.set({ key: 'kola.business', value: JSON.stringify(business) });
         },
 

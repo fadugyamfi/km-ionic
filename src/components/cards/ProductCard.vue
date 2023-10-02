@@ -1,6 +1,6 @@
 <template>
     <section class="product-card">
-        <ion-card>
+        <ion-card @click="viewProduct()">
             <img
                 class="product-image"
                 :alt="product.product_name"
@@ -30,7 +30,7 @@
                     </span>
                 </section>
 
-                <section v-if="product.product_description" class="product-description">
+                <section v-if="showDescription && product.product_description" class="product-description">
                     <p class="ion-no-margin">{{ product.product_description }}</p>
                 </section>
             </IonCardHeader>
@@ -55,6 +55,11 @@ export default defineComponent({
         tall: {
             default: false,
             type: Boolean
+        },
+
+        showDescription: {
+            default: true,
+            type: Boolean
         }
     },
 
@@ -71,6 +76,10 @@ export default defineComponent({
     methods: {
         onError(event: Event) {
             (event.target as HTMLImageElement).src = this.noImage;
+        },
+
+        viewProduct() {
+            this.$router.push(`/shopper/products/${this.product.id}`);
         }
     }
 });
@@ -95,7 +104,7 @@ export default defineComponent({
 
             .product-title {
                 font-size: 0.9em;
-                font-weight: bold;
+                font-weight: normal;
                 margin-top: 0px;
                 margin-bottom: 5px;
                 text-overflow: ellipsis;
@@ -103,7 +112,7 @@ export default defineComponent({
             }
 
             .pricing {
-                font-size: 0.85em;
+                font-size: 0.9em;
                 font-weight: 600;
             }
 

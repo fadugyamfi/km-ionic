@@ -17,14 +17,14 @@ export default class Product {
     public weight_value?: string | number;
     public volume_value?: string | number;
     public group_quantity?: number;
-    private _currency?: Currency;
+    private _currency?: Currency | null;
 
 
     constructor(data: object) {
         Object.assign(this, data);
     }
 
-    get currency(): Currency {
+    get currency(): Currency | null | undefined {
         return this._currency
     }
 

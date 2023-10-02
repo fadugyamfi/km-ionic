@@ -1,6 +1,12 @@
 <template>
     <section class="ion-no-border">
-        <IonSearchbar placeholder="Search..." class=""></IonSearchbar>
+        <IonSearchbar
+            placeholder="Search..."
+            class="search-input"
+            :debounce="2000"
+            @ion-input="onSearch($event)"
+            @ion-change="onSearch($event)"
+        ></IonSearchbar>
 
         <Swiper :slides-per-view="4">
             <SwiperSlide v-for="category of categories" :key="category.id">
@@ -23,8 +29,9 @@ import { defineComponent } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import CategoryPill from './CategoryPill.vue';
 import { useProductCategoryStore } from '@/stores/ProductCategoryStore';
-import ProductCategory from '@/models/ProductCategory.ts';
+import ProductCategory from '@/models/ProductCategory';
 import { mapStores } from 'pinia';
+import { useProductStore } from '@/stores/ProductStore';
 
 export default defineComponent({
 
@@ -32,7 +39,7 @@ export default defineComponent({
         IonSearchbar,
         CategoryPill,
         Swiper,
-        SwiperSlide,
+        SwiperSlide
     },
 
     data() {
@@ -53,6 +60,12 @@ export default defineComponent({
 
         viewCategory(category: ProductCategory) {
             this.$router.push(`/shopper/home/categories/${category.id}`);
+        },
+
+        onSearch(event: any) {
+            const productStore = useProductStore();
+            productStore.searchTerm = event.target.value;
+            this.$router.push('/shopper/search-results')
         }
     },
 
@@ -61,3 +74,7 @@ export default defineComponent({
     }
 })
 </script>
+
+<style lang="scss" scoped>
+
+</style>

@@ -2,7 +2,10 @@ import { defineStore } from "pinia";
 import ProductCategory from "@/models/ProductCategory";
 import Product from "@/models/Product";
 import axios from "axios";
+import AppStorage from "./AppStorage";
 
+const storage = new AppStorage();
+const KOLA_CATEGORIES = 'kola.product-categories';
 
 export const useProductCategoryStore = defineStore("productCategory", {
 
@@ -16,10 +19,27 @@ export const useProductCategoryStore = defineStore("productCategory", {
 
     actions: {
 
+        async loadFromStorage(): Promise<ProductCategory[]> {
+            const categories = await storage.get(KOLA_CATEGORIES);
+
+            if( categories ) {
+                this.categories = categories.map((el:object) => new ProductCategory(el));
+            }
+
+            return this.categories
+        },
+
         async fetchCategories() {
+            await this.loadFromStorage();
+
+            if( this.categories.length > 0 ) {
+                return this.categories;
+            }
+
             return axios.get('/v2/product-categories')
                 .then(response => {
                     this.categories = response.data.data.map((el: object) => new ProductCategory(el));
+                    storage.set(KOLA_CATEGORIES, this.categories);
                 })
                 .catch(error => {
                     console.log(error)
@@ -60,6 +80,7 @@ export const useProductCategoryStore = defineStore("productCategory", {
                 return this.categoryProducts
             } catch(error) {
                 console.log(error);
+                return [];
             }
         }
     }

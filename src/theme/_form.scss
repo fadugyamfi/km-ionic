@@ -11,3 +11,15 @@
         }
     }
 }
+
+
+.search-input {
+    --border: none;
+    --border-radius: 10px;
+    --box-shadow: 0px 4px 24px 0px #000B2B12;
+    font-size: 0.9em;
+
+    &::placeholder {
+        font-size: 0.9em;
+    }
+}

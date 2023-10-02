@@ -112,7 +112,7 @@ h4 {
 }
 
 .login-prompt {
-    font-size: 1em;
+    font-size: 0.9em;
 }
 
 .login-prompt .trigger {

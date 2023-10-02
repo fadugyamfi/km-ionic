@@ -85,8 +85,24 @@ const routes: Array<RouteRecordRaw> = [
           {
             path: 'categories/:id',
             component: () => import('@/views/Shopper/Categories/CategoryDetails.vue'),
+          },
+          {
+            path: 'brands',
+            component: () => import('@/views/Shopper/Categories/Categories.vue'),
+          },
+          {
+            path: 'brands/:id',
+            component: () => import('@/views/Shopper/Categories/CategoryDetails.vue'),
           }
         ],
+      },
+      {
+        path: 'products/:id',
+        component: () => import('@/views/Shopper/ProductDetails.vue')
+      },
+      {
+        path: 'search-results',
+        component: () => import('@/views/Shopper/ProductSearchResults.vue')
       },
       {
         path: 'orders',

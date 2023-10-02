@@ -6,9 +6,9 @@
             </IonToolbar>
         </IonHeader>
 
-        <IonContent class="ion-padding" :scroll-y="false">
+        <IonContent class="ion-padding">
             <h3 class="header">Good To See You Again</h3>
-            <p class="subtext"><small>Please provide you Phone Number and PIN to login</small></p>
+            <p class="subtext">Enter your details below to login</p>
 
             <div class="ion-margin-top">
                 <section class="ion-padding-top ion-padding-bottom">
@@ -18,25 +18,13 @@
 
                 <section class="pin-entry">
                     <IonLabel class="input-label">PIN</IonLabel>
-                    <IonInput v-model="pin" class="kola-input" type="password" placeholder="****" :maxlength="4" :counter="true" fill="outline"></IonInput>
-                    <!-- <v-otp-input
-                        ref="otpInput"
-                        v-model:value="pin"
-                        class="otp-input"
-                        :conditionalClass="['one', 'two', 'three', 'four']"
-                        :num-inputs="4"
-                        :placeholder="['*', '*', '*', '*', '*', '*', '*', '*']"
-                        :should-auto-focus="true"
-                        input-classes="otp-input-field"
-                        input-type="number"
-                        required
-                        separator="&nbsp; &nbsp; "
-                        @on-change="handleOnChange"
-                        @on-complete="handleOnComplete"></v-otp-input> -->
+                    <IonInput v-model="pin" class="kola-input" type="password" placeholder="Enter 4 digit PIN" :maxlength="4" fill="outline"></IonInput>
                 </section>
 
-                <div class="ion-padding-top ion-padding-bottom">
-                    <IonText router-link="/auth/forgot-pin" color="dark" style="font-weight: bold; font-size: 0.9em;">Forgot Your PIN?</IonText>
+                <div class="forgot-pin-wrapper ion-padding-bottom">
+                    <IonText router-link="/auth/forgot-pin" color="dark" class="forgot-pin-link">
+                        Forgot Your PIN?
+                    </IonText>
                 </div>
             </div>
 
@@ -122,16 +110,28 @@ export default defineComponent({
 <style lang="scss">
 .header {
     margin-bottom: 2px;
+    margin-top: 0px;
 }
 
 .subtext {
-    font-size: 1.05em;
+    font-size: 0.8em;
     padding: 0px;
     margin: 0px;
+    color: #555;
+}
+
+
+.forgot-pin-wrapper {
+    padding-top: 5px;
+
+    .forgot-pin-link {
+        font-weight: bold;
+        font-size: 0.9em;
+    }
 }
 
 .login-prompt {
-    font-size: 1em;
+    font-size: 0.9em;
 }
 
 .login-prompt .trigger {
@@ -144,9 +144,6 @@ export default defineComponent({
     color: #919191;
 }
 
-.pin-entry {
-    // margin-top: 10px;
-}
 
 .otp-input {
     display: flex;
