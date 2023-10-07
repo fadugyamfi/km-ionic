@@ -2,7 +2,7 @@
   <IonHeader class="ion-no-border">
     <ion-toolbar>
       <IonTitle>
-        <IonText class="welcome">Welcome {{ userStore.user?.firstName() }} 👋</IonText>
+        <IonText class="welcome">Welcome {{ businessStore.selectedBusiness?.name }} 👋</IonText>
       </IonTitle>
 
       <IonButtons slot="end">
@@ -17,6 +17,7 @@ import { IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonTex
 import { defineComponent } from 'vue';
 import { mapStores } from 'pinia';
 import { useUserStore } from '@/stores/UserStore';
+import { useBusinessStore } from '@/stores/BusinessStore';
 import NotificationButton from '../notifications/NotificationButton.vue';
 
 export default defineComponent({
@@ -33,9 +34,12 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useUserStore)
+    ...mapStores(useUserStore, useBusinessStore)
   },
 
+  mounted() {
+    console.log(this.businessStore);
+  }
 })
 </script>
 

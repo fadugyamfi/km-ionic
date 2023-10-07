@@ -1,10 +1,7 @@
 <template>
     <section class="category-pill">
         <IonAvatar>
-            <img alt="category name"
-                :src="category.image || '/images/no-image.png'"
-                @error="onError($event)"
-            />
+            <Image alt="category name" :src="category.image" />
         </IonAvatar>
         <p>{{ category.name }}</p>
 
@@ -15,6 +12,7 @@
 import { defineComponent } from 'vue';
 import { IonAvatar } from '@ionic/vue';
 import ProductCategory from '@/models/ProductCategory';
+import Image from '@/components/Image.vue';
 
 
 export default defineComponent({
@@ -26,7 +24,7 @@ export default defineComponent({
         }
     },
 
-    components: { IonAvatar },
+    components: { IonAvatar, Image },
 
     data() {
         return {
@@ -34,11 +32,6 @@ export default defineComponent({
         }
     },
 
-    methods: {
-        onError(event: Event) {
-            (event.target as HTMLImageElement).src = '/images/no-image.png';
-        }
-    }
 })
 </script>
 
@@ -51,8 +44,8 @@ export default defineComponent({
     padding: 10px;
 
     ion-avatar {
-        max-width: 60px;
-        max-height: 60px;
+        width: 60px;
+        height: 60px;
 
         img {
             width: 60px !important;

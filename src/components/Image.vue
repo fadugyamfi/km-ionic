@@ -1,38 +1,124 @@
 <template>
-    <img :src="src || noImage" @error="onLoadError($event)" />
+    <IonImg :src="imageData || noImgSrc" @ion-error="onLoadError($event)" @ion-img-did-load="onLoaded()"></IonImg>
 </template>
 
 <script lang="ts">
+import { IonImg, IonSkeletonText } from '@ionic/vue';
 import { defineComponent, PropType } from 'vue';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import AppStorage from '@/stores/AppStorage';
+import axios from 'axios';
 
+const storage = new AppStorage();
 
 export default defineComponent({
 
+    components: { IonImg, IonSkeletonText },
+
     props: {
         src: {
-            type: String as PropType<string|undefined>
+            type: String as PropType<string | undefined>
+        },
+
+        noImgSrc: {
+            default: '/images/no-image.png',
+            type: String as PropType<string>
         }
     },
 
     data() {
         return {
-            noImage: '/images/no-image.png'
+            loaded: false,
+            imageData: null as string|null
         }
     },
 
+    emits: ['loaded'],
+
     methods: {
         onLoadError(event: Event) {
-            (event.target as HTMLImageElement).src = this.noImage;
+            (event.target as HTMLImageElement).src = this.noImgSrc;
+        },
+
+        onLoaded() {
+            this.loaded = true;
+            this.$emit('loaded');
+        },
+
+        async convertBlobToBase64(blob: Blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onerror = reject;
+                reader.onload = () => {
+                    resolve(reader.result);
+                };
+                reader.readAsDataURL(blob);
+            });
+        },
+
+        async loadImage() {
+            if( !this.src ) {
+                return;
+            }
+
+            if( this.src.includes(';base64') ) {
+                this.imageData = this.src;
+                return;
+            }
+
+            const url = this.src;
+
+            const imageName = url.split('/').pop() || crypto?.randomUUID() || 'img-' + (new Date()).getTime();
+            const imageType = imageName?.split('.').pop();
+
+            const cachedImage = await storage.get(`image:${url}`);
+
+            if( cachedImage ) {
+                const file = await Filesystem.readFile({
+                    path: cachedImage.filepath,
+                    directory: Directory.Cache,
+                });
+
+                if( file ) {
+                    this.imageData = `${file.data}`; // `data:image/${imageType || 'jpeg'};base64,${file.data}`;
+                    return;
+                }
+            }
+
+            const response = await this.saveImage(url, imageName);
+
+            this.imageData = `${response.base64Data}`; // `data:image/${imageType || 'jpeg'};base64,${response.base64Data}`;
+
+            storage.set(`image:${url}`, { filepath: response.filepath, webviewPath: response.webviewPath }, 1, 'year');
+        },
+
+        async saveImage(url: string, fileName: string) {
+            // Fetch the photo, read as a blob, then convert to base64 format
+            const response = await fetch(url)
+
+            const blob = await response.blob();
+
+            const base64Data = (await this.convertBlobToBase64(blob)) as string;
+
+            const savedFile = await Filesystem.writeFile({
+                path: fileName,
+                data: base64Data,
+                directory: Directory.Cache,
+            });
+
+            // Use webPath to display the new image instead of base64 since it's
+            // already loaded into memory
+            return {
+                filepath: fileName,
+                webviewPath: url,
+                base64Data
+            };
         }
+    },
+
+    mounted() {
+        //this.loadImage();
+        this.imageData = this.src as string;
     }
 });
 </script>
-
-<style scoped lang="scss">
-img {
-    max-width: 100%;
-    max-height: 100%;
-    width: 100%;
-    object-fit: cover;
-}
-</style>

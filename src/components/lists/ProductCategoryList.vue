@@ -7,6 +7,7 @@
                 :category="category"
                 :tall="index % 2 == 0"
                 @click="onCategorySelected(category)"
+                :data-index="index"
             ></ProductCategoryCard>
         </section>
 
@@ -17,6 +18,7 @@
                 :category="category"
                 :tall="index % 2 != 0"
                 @click="onCategorySelected(category)"
+                :data-index="index"
             ></ProductCategoryCard>
         </section>
     </section>

@@ -50,37 +50,37 @@ import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import KolaWhiteButton from '@/components/KolaWhiteButton.vue';
 import Image from '@/components/Image.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import ProductCard from '../../components/cards/ProductCard.vue';
+import ProductCard from '@/components/cards/ProductCard.vue';
 
 export default defineComponent({
 
     components: {
-    IonPage,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonBackButton,
-    IonTitle,
-    IonButton,
-    IonIcon,
-    IonContent,
-    IonFooter,
-    KolaYellowButton,
-    KolaWhiteButton,
-    Image,
-    Swiper,
-    SwiperSlide,
-    IonAvatar,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonSearchbar,
-    IonSkeletonText,
-    ProductCard,
-    IonGrid,
-    IonRow,
-    IonCol
-},
+        IonPage,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonBackButton,
+        IonTitle,
+        IonButton,
+        IonIcon,
+        IonContent,
+        IonFooter,
+        KolaYellowButton,
+        KolaWhiteButton,
+        Image,
+        Swiper,
+        SwiperSlide,
+        IonAvatar,
+        IonList,
+        IonItem,
+        IonLabel,
+        IonSearchbar,
+        IonSkeletonText,
+        ProductCard,
+        IonGrid,
+        IonRow,
+        IonCol
+    },
 
     data() {
 

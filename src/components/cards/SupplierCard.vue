@@ -1,8 +1,7 @@
 <template>
     <section class="supplier-card">
         <ion-card>
-            <img :alt="supplier.name"
-            :src="supplier.logo || 'https://ionicframework.com/docs/img/demos/card-media.png'" />
+            <Image :alt="supplier.name" :src="supplier.logo" />
 
             <IonCardHeader>
                 <IonCardTitle>{{ supplier.name }}</IonCardTitle>
@@ -12,15 +11,7 @@
             </IonCardHeader>
 
             <IonCardContent>
-                <section class="rating">
-                    <span>5</span>
-                    <span>⭐</span>
-                    <span class="reviews">({{ supplier.reviews_count }})</span>
-                </section>
-                <section class="distance ion-align-items-center" style="display: flex;">
-                    <IonIcon :icon="locationOutline"></IonIcon>
-                    0 km
-                </section>
+                <BusinessRatingAndReviews :business="supplier"></BusinessRatingAndReviews>
             </IonCardContent>
         </ion-card>
     </section>
@@ -31,6 +22,8 @@ import Business from '@/models/Business';
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { locationOutline } from 'ionicons/icons';
+import Image from '@/components/Image.vue';
+import BusinessRatingAndReviews from '@/components/modules/business/BusinessRatingAndReviews.vue';
 
 export default defineComponent({
     props: {
@@ -46,7 +39,16 @@ export default defineComponent({
         };
     },
 
-    components: { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonIcon }
+    components: {
+        IonCard,
+        IonCardHeader,
+        IonCardContent,
+        IonCardTitle,
+        IonCardSubtitle,
+        IonIcon,
+        Image,
+        BusinessRatingAndReviews
+    }
 });
 </script>
 
@@ -54,16 +56,17 @@ export default defineComponent({
 .supplier-card {
     ion-card {
         width: 170px;
-        max-height: 200px;
-        box-shadow: none;
-        border: solid 1px #f1f1f1;
+        max-height: 250px;
+        // box-shadow: 0px 2px 12px #68686f14;
+        // border: solid 1px #f1f1f1;
+        // border-radius: 8px;
 
         ion-card-header {
             text-align: left;
             padding: 10px;
 
             ion-card-title {
-                font-size: 1em;
+                font-size: 0.9em;
                 font-weight: bold;
                 margin-bottom: 0px;
                 text-wrap: nowrap;
@@ -79,17 +82,6 @@ export default defineComponent({
                 text-wrap: nowrap;
                 text-overflow: ellipsis;
                 overflow: hidden;
-            }
-        }
-
-        ion-card-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.8em;
-
-            .distance {
-                color: #666EED;
             }
         }
     }

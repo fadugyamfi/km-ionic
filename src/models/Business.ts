@@ -1,4 +1,4 @@
-import { NullableNumber, NullableString, NullableStringOrNumber } from "../utilities/Types";
+import { NullableNumber, NullableString, NullableStringOrNumber } from "@/utilities/Types";
 import Currency from "./Currency";
 
 
@@ -17,6 +17,8 @@ export default class Business {
     public _currency?: Currency;
     public logo?: string;
     public reviews_count?: number = 0;
+    public rating?: number = 1;
+    public distance?: number = 0;
 
     constructor(data: object | null) {
         Object.assign(this, data);

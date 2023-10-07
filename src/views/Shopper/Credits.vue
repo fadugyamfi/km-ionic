@@ -3,7 +3,7 @@
     <ShopperHeader></ShopperHeader>
 
     <ion-content :fullscreen="true">
-      <ExploreContainer name="Tab 3 page" />
+      <ExploreContainer name="Credits Received" />
     </ion-content>
   </ion-page>
 </template>

@@ -30,5 +30,6 @@ export default defineComponent({
     --box-shadow: none;
     text-transform: none;
     font-weight: 600;
+    font-size: 0.75em;
 }
 </style>

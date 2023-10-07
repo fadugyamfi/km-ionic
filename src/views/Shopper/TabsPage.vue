@@ -37,12 +37,23 @@ import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouter
 import { ellipse, square, triangle } from 'ionicons/icons';
 </script>
 
-<style scoped>
-ion-label {
-  font-weight: bold;
-}
-
+<style scoped lang="scss">
 img {
   height: 24px;
+}
+
+ion-tabs {
+  ion-tab-bar {
+    background-color: #ffffff;
+    border: none;
+    box-shadow: -4px 0px 8px rgba(0, 0, 0, 0.12);
+
+    ion-tab-button {
+      ion-label {
+        font-weight: bold;
+        color: #003366;
+      }
+    }
+  }
 }
 </style>

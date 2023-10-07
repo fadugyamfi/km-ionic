@@ -1,4 +1,5 @@
 import { Preferences } from '@capacitor/preferences';
+import { useToastStore } from '../stores/ToastStore';
 
 const meta = (key:string) => {
     const meta = document.querySelector(`meta[name="${key}"]`);
@@ -8,30 +9,34 @@ const meta = (key:string) => {
 
 
 export function handleAxiosRequestError(error:any) {
+    const toastStore = useToastStore();
+
     if( error.response?.status == 401 ) {
         return refreshAuth();
     }
 
     else if( error.response?.status == 422 ) {
         const message = Array.isArray(error.response.data.message) ? error.response.data.message.join('<br />') : error.response.data.message;
-        // Swal.fire("Validation Error", message, "error");
+        toastStore.showError(message, 'Validation Error');
     }
 
     else if( error.response?.status >= 400 && error.response?.status < 500 ) {
         const message = Array.isArray(error.response.data.message) ? error.response.data.message.join('<br />') : error.response.data.message;
-        // Swal.fire("Invalid Request", message, "error");
+        toastStore.showError(message, 'Invalid Request');
     }
 
     else if( error.response?.status >= 500 ) {
-        // Swal.fire("Server Error", error.response.data.message, "error");
+        toastStore.showError(error.response.data.message, 'Server Error');
     }
 }
 
 export async function refreshAuth() {
+    const toastStore = useToastStore();
+
     try {
         const authResult = await Preferences.get({ key: 'auth' });
         if( !authResult.value ) {
-            // Swal.fire('Unauthorized', "Please try again", "error");
+            toastStore.showError('Unauthorized. Please try again');
             return;
         }
 
@@ -57,7 +62,7 @@ export async function refreshAuth() {
             window.location.reload();
         }
     } catch(e) {
-        console.log('Auth Refresh Failed')
+        toastStore.showError('Auth Refresh Failed')
         console.log(e);
     }
 }

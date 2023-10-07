@@ -6,6 +6,7 @@ import { useBusinessStore } from "./BusinessStore";
 import axios from 'axios';
 import { Preferences } from "@capacitor/preferences";
 import User from "@/models/User";
+import Business from "@/models/Business";
 
 const meta = (key: string) => {
     const meta = document.querySelector(`meta[name="${key}"]`);
@@ -21,6 +22,7 @@ type UserStoreState = {
     registrationFlow?: String,
     auth?: object|null,
     apiHeaders?: object|null,
+    userBusinesses?: Business[],
     verification: {
         phone_number: String,
         response: object
@@ -44,6 +46,7 @@ export const useUserStore = defineStore("user", {
             user: null as User | null,
             auth: null as Auth | null,
             apiHeaders: null,
+            userBusinesses: [] as Business[],
             verification: {
                 phone_number: '',
                 response: {
@@ -231,12 +234,12 @@ export const useUserStore = defineStore("user", {
         async fetchUserBusinesses() {
             return axios.get(`/v2/users/${this.user?.id}/businesses`)
                 .then(response => {
-                    const businessStore = useBusinessStore();
                     const businesses = response.data.data;
-                    businessStore.businesses = businesses;
+                    this.userBusinesses = businesses.map((el: any) => new Business(el.business));
 
-                    if( businesses?.length > 0 ) {
-                        businessStore.setSelectedBusiness(businesses[0].business)
+                    const businessStore = useBusinessStore();
+                    if( typeof this.userBusinesses != 'undefined' && this.userBusinesses.length > 0 ) {
+                        businessStore.setSelectedBusiness(this.userBusinesses[0])
                     }
                 })
         },

@@ -1,6 +1,6 @@
 <template>
     <section class="shopper-home-section ion-padding-top">
-        <header class="ion-padding-horizontal">
+        <header class="ion-padding-horizontal ion-padding-bottom">
             <h6>Recently View Products</h6>
 
             <!-- <IonText color="primary" router-link="/shopper/home/recent-products">
@@ -50,7 +50,7 @@ export default defineComponent({
             const products = await storage.get(RECENTLY_VIEWED);
 
             if( products ) {
-                this.products = products;
+                this.products = products.map((el: object) => new Product(el));
                 return;
             }
 

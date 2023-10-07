@@ -1,6 +1,9 @@
 import { defineStore } from "pinia";
 import Product from "@/models/Product";
 import axios from "axios";
+import { useToastStore } from "./ToastStore";
+import { handleAxiosRequestError } from "../utilities";
+import { FavoritedProduct } from "../models/types";
 
 
 export const useProductStore = defineStore("product", {
@@ -37,7 +40,7 @@ export const useProductStore = defineStore("product", {
 
                 return this.products;
             } catch(error) {
-                console.log(error);
+                handleAxiosRequestError(error);
 
                 return [];
             }
@@ -52,7 +55,7 @@ export const useProductStore = defineStore("product", {
                 const response = await axios.get('/v2/products/recently-viewed', { params });
                 this.recentlyViewedProducts = response.data.data.map((el: { product: any; }) => new Product(el.product));
             } catch(error) {
-                console.log(error);
+                handleAxiosRequestError(error);
             }
 
             return this.recentlyViewedProducts;
@@ -78,7 +81,7 @@ export const useProductStore = defineStore("product", {
 
                 return product;
             } catch(error) {
-                console.log(error);
+                handleAxiosRequestError(error);
 
                 return null;
             }
@@ -87,5 +90,34 @@ export const useProductStore = defineStore("product", {
         setSelectedProduct(product: Product) {
             this.selectedProduct = product;
         },
+
+        async addProductToFavorites(product: Product) {
+            const toastStore = useToastStore();
+            product.addToFavorites();
+
+            try {
+                const response = await axios.post(`/v2/products/${product.id}/favorites`);
+                const favoriteData = response.data.data;
+                product.addToFavorites({ products_id: product.id as number, cms_users_id: favoriteData.cms_users_id });
+
+                toastStore.showSuccess('Added To Favorites');
+            } catch(error) {
+                handleAxiosRequestError(error);
+                product.unfavorite();
+            }
+        },
+
+        async removeFromFavorites(product: Product) {
+            const toastStore = useToastStore();
+            product.unfavorite();
+
+            try {
+                const response = await axios.delete(`/v2/products/${product.id}/favorites`);
+                toastStore.showError('Removed From Favorites');
+            } catch(error) {
+                handleAxiosRequestError(error);
+                product.addToFavorites();
+            }
+        }
     }
 });

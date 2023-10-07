@@ -1,5 +1,5 @@
 body {
-    background-color: #FEFEFE;
+    background-color: var(--ion-background-color);
 }
 
 .d-flex {
@@ -24,4 +24,57 @@ body {
 
 .fw-semibold {
     font-weight: 600;
+}
+
+ion-card {
+    box-shadow: 0px 2px 12px #68686f14;
+    border: solid 1px #f1f1f1;
+    border-radius: 8px;
+}
+
+.app-toast {
+    --border-radius: 16px;
+    --border-style: solid;
+    --border-width: 1px;
+    --box-shadow: 0px 2px 12px #68686f14;
+    --color: #111;
+    font-size: 0.85em;
+}
+
+.toast-success {
+    --background: #C1FCD2;
+    --border-color: #0398554D;
+    --border-width: 1px;
+    --border-style: solid;
+
+    &::part(icon) {
+        padding: 4px;
+        border-radius: 50%;
+        background-color: #A9F1BE;
+        color: #039855;
+    }
+}
+
+.toast-error {
+    --background: #FDF0ED;
+    --border-color: #EF3E3233;
+
+    &::part(icon) {
+        padding: 4px;
+        border-radius: 50%;
+        background-color: #fa2b3928;
+        color: #D92D20;
+    }
+}
+
+.toast-info {
+    --background: #b6deff;
+    --border-color: #44b1ec;
+
+    &::part(icon) {
+        padding: 4px;
+        border-radius: 50%;
+        background-color: #2b9dfa28;
+        color: #2073d9;
+    }
 }

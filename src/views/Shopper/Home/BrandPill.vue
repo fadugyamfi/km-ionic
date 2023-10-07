@@ -1,10 +1,7 @@
 <template>
     <section class="brand-pill">
         <IonAvatar>
-            <img alt="brand name"
-                :src="brand.logo || '/images/no-image.png'"
-                @error="onError($event)"
-            />
+            <Image alt="brand name" :src="brand.logo " />
         </IonAvatar>
         <p>{{ brand.name }}</p>
 
@@ -15,6 +12,7 @@
 import { defineComponent } from 'vue';
 import { IonAvatar } from '@ionic/vue';
 import Brand from '@/models/Brand';
+import Image from '@/components/Image.vue';
 
 
 export default defineComponent({
@@ -26,7 +24,7 @@ export default defineComponent({
         }
     },
 
-    components: { IonAvatar },
+    components: { IonAvatar, Image },
 
     data() {
         return {
@@ -34,11 +32,6 @@ export default defineComponent({
         }
     },
 
-    methods: {
-        onError(event: Event) {
-            (event.target as HTMLImageElement).src = '/images/no-image.png';
-        }
-    }
 })
 </script>
 

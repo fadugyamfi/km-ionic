@@ -9,12 +9,10 @@
                 <IonTitle size="small">Product Details</IonTitle>
 
                 <IonButtons slot="end">
-                    <IonButton slot="icon-only">
-                        <IonIcon :icon="heartOutline"></IonIcon>
-                    </IonButton>
-                    <IonButton slot="icon-only">
-                        <IonIcon :icon="cartOutline"></IonIcon>
-                    </IonButton>
+                    <FavoriteButton :product="product || undefined"></FavoriteButton>
+
+                    <CartStatusButton :product="product || undefined"></CartStatusButton>
+
                     <IonButton slot="icon-only">
                         <IonIcon :icon="shareOutline"></IonIcon>
                     </IonButton>
@@ -22,41 +20,75 @@
             </IonToolbar>
         </IonHeader>
 
-        <IonContent class="ion-padding">
+        <IonContent class="ion-padding" v-if="product">
             <header>
                 <Swiper>
                     <SwiperSlide>
-                        <Image :src="product?.image" style="max-height: 200px; border-radius: 10px;"></Image>
+                        <Image :src="product?.image" style="max-height: 200px; border-radius: 10px; overflow: hidden;"></Image>
                     </SwiperSlide>
                 </Swiper>
             </header>
 
             <main>
-                <section class="title-section d-flex ion-align-items-center ion-justify-content-between">
+                <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
                     <span class="product-name">{{  product?.product_name }}</span>
                     <span class="price">{{ product?.currency?.symbol }} {{  product?.product_price }}</span>
                 </section>
 
-                <section class="business-section d-flex ion-align-items-center">
-                    <IonAvatar size="small">
-                        <img src="/images/no-image.png" />
-                    </IonAvatar>
-                    Business Name
+                <section class="section business-section ">
+                    <section class="d-flex ion-align-items-center">
+                        <IonAvatar>
+                            <img src="/images/no-image.png" />
+                        </IonAvatar>
+                        <IonLabel>{{ product?.business?.name }}</IonLabel>
+                    </section>
+                    <BusinessRatingAndReviews :business="product?.business"></BusinessRatingAndReviews>
                 </section>
 
-                <section class="review-section"></section>
+                <section class="section description-section">
+                    <IonText color="medium">{{ product?.product_description || 'No Description Available' }}</IonText>
+                </section>
+
+                <section class="section min-order-section">
+                    <BusinessMinimumOrder :business="product?.business"></BusinessMinimumOrder>
+                </section>
+
+                <section class="section product-quantity-selection">
+                    <ProductQuantitySelector @change="updateQuantity($event)"></ProductQuantitySelector>
+                </section>
+
+                <section class="section tags">
+                    <ProductTags :product="product"></ProductTags>
+                </section>
             </main>
         </IonContent>
 
-        <IonFooter class="ion-padding">
+        <IonSkeletonText v-if="!product" style="height: 300px" :animated="true"></IonSkeletonText>
+
+        <IonFooter class="ion-padding ion-no-border">
             <KolaYellowButton class="ion-margin-bottom">Buy Now</KolaYellowButton>
-            <KolaWhiteButton>Add To Cart</KolaWhiteButton>
+            <KolaWhiteButton @click="addToCart()" :disabled="cartHasProduct">Add To Cart</KolaWhiteButton>
         </IonFooter>
     </IonPage>
 </template>
 
 <script lang="ts">
-import { IonAvatar, IonBackButton, IonButton, IonButtons, IonContent, IonFooter, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import {
+    IonAvatar,
+    IonBackButton,
+    IonButton,
+    IonButtons,
+    IonContent,
+    IonFooter,
+    IonHeader,
+    IonIcon,
+    IonPage,
+    IonSkeletonText,
+    IonTitle,
+    IonToolbar,
+    IonLabel,
+    IonText
+} from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { close, heartOutline, heart, cart, cartOutline, shareOutline } from 'ionicons/icons'
 import Product from '@/models/Product';
@@ -66,6 +98,14 @@ import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import KolaWhiteButton from '@/components/KolaWhiteButton.vue';
 import Image from '@/components/Image.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import BusinessRatingAndReviews from '@/components/modules/business/BusinessRatingAndReviews.vue';
+import BusinessMinimumOrder from '@/components/modules/business/BusinessMinimumOrder.vue';
+import ProductTags from '@/components/modules/products/ProductTags.vue';
+import ProductQuantitySelector from '@/components/modules/products/ProductQuantitySelector.vue';
+import FavoriteButton from '@/components/modules/products/FavoriteButton.vue';
+import CartStatusButton from '../../components/modules/products/CartStatusButton.vue';
+import { useCartStore } from '../../stores/CartStore';
+import { handleAxiosRequestError } from '../../utilities';
 
 export default defineComponent({
 
@@ -85,7 +125,16 @@ export default defineComponent({
         Image,
         Swiper,
         SwiperSlide,
-        IonAvatar
+        IonAvatar,
+        IonSkeletonText,
+        IonLabel,
+        BusinessRatingAndReviews,
+        BusinessMinimumOrder,
+        IonText,
+        ProductTags,
+        ProductQuantitySelector,
+        FavoriteButton,
+        CartStatusButton
     },
 
     data() {
@@ -93,12 +142,17 @@ export default defineComponent({
         return {
             close, heartOutline, cartOutline, shareOutline, cart, heart,
             product: null as Product | null,
+            quantity: 0,
             defaultBanner: '/images/vendor/banner.png'
         }
     },
 
     computed: {
-        ...mapStores( useProductStore )
+        ...mapStores( useProductStore, useCartStore ),
+
+        cartHasProduct() {
+            return this.cartStore.hasProduct(this.product as Product);
+        }
     },
 
     methods: {
@@ -106,13 +160,27 @@ export default defineComponent({
             const productId = +this.$route.params.id;
             try {
                 this.product = await this.productStore.fetchProduct(productId);
+
+                if( this.cartHasProduct ) {
+                    this.quantity = this.cartStore.getProductItem(this.product as Product)?.quantity as number;
+                }
             } catch(error) {
-                console.log(error)
+                handleAxiosRequestError(error);
             }
         },
 
         onLoadError(event: Event) {
             (event.target as HTMLImageElement).src = this.defaultBanner;
+        },
+
+        updateQuantity(amount: number) {
+            this.quantity = amount;
+
+            this.cartStore.updateQuantity(this.product as Product, this.quantity);
+        },
+
+        async addToCart() {
+            await this.cartStore.addProduct(this.product as Product, this.quantity);
         }
     },
 
@@ -129,20 +197,43 @@ ion-content::part(background) {
 }
 
 main {
-        border-radius: 10px;
-        background-color: white;
-        margin-top: 15px;
-        border: solid #f9f9f9 1px;
-        padding: 10px;
+    border-radius: 10px;
+    background-color: white;
+    margin-top: 15px;
+    padding: 10px;
 
-        .title-section {
-            font-size: 0.8em;
-            font-weight: bold;
+    .section {
+        padding: 4px 5px;
+        font-size: 0.8em;
+    }
+    .title-section {
+        font-weight: bold;
 
-            .price {
-                text-align: right;
-                min-width: 80px;
-            }
+        .price {
+            text-align: right;
+            min-width: 80px;
         }
     }
+
+    .business-section {
+        margin-left: -3px;
+
+        ion-avatar {
+            height: 24px;
+            width: 24px;
+            margin-right: 5px;
+        }
+
+        .rating-and-reviews {
+            padding: 10px 5px;
+        }
+    }
+
+    .section.tags {
+        border-top: solid 1px #F1F1F1;
+        padding-top: 5px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
 </style>

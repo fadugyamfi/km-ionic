@@ -1,7 +1,7 @@
 <template>
-    <section class="product-category-card" :class="{ 'tall': tall == true }">
+    <section class="product-category-card" :class="{ 'tall': tall === true }">
         <ion-card>
-            <img :alt="category.name" :src="category.image || 'https://ionicframework.com/docs/img/demos/card-media.png'" />
+            <Image :alt="category.name" :src="category.image" />
 
             <IonCardHeader>
                 <IonCardTitle class="ion-text-center">{{ category.name }}</IonCardTitle>
@@ -16,6 +16,7 @@ import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, 
 import { defineComponent } from 'vue';
 import { locationOutline } from 'ionicons/icons';
 import ProductCategory from '../../models/ProductCategory';
+import Image from '@/components/Image.vue';
 
 export default defineComponent({
     props: {
@@ -36,7 +37,7 @@ export default defineComponent({
         };
     },
 
-    components: { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonIcon }
+    components: { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonIcon, Image }
 });
 </script>
 
@@ -45,10 +46,13 @@ export default defineComponent({
 
     ion-card {
         width: 100%;
-        margin: 15px auto;
+        margin: 5px auto;
         position: relative;
+        // border: solid 1px #f4f4f4;
+        // border-radius: 8px;
+        // box-shadow: 1px 2px 9px #f9f9f9;
 
-        img {
+        ion-img {
             width: 100%;
             height: 120px;
             object-fit: cover;
@@ -59,7 +63,7 @@ export default defineComponent({
             padding: 10px;
 
             ion-card-title {
-                font-size: 1em;
+                font-size: 0.9em;
                 font-weight: bold;
                 margin-bottom: 0px;
                 text-wrap: nowrap;
@@ -91,7 +95,7 @@ export default defineComponent({
     }
 
     &.tall {
-        img {
+        ion-img {
             height: 180px;
             object-fit: cover;
         }
