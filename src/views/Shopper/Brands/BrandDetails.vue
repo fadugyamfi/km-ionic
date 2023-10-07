@@ -26,7 +26,7 @@
             <IonGrid v-if="!fetching">
                 <IonRow>
                     <IonCol size="6" v-for="product in products" :key="product.id">
-                        <ProductCard :product="product" :showDescription="false"></ProductCard>
+                        <ProductCard :product="product"></ProductCard>
                     </IonCol>
                 </IonRow>
             </IonGrid>

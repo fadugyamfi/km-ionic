@@ -29,7 +29,7 @@ export const useCartStore = defineStore("cart", {
             return items;
         },
 
-        getProductItem(product: Product) {
+        getProductItem(product: Product): CartItem|undefined {
             return this.items.find(el => el.product.id == product.id);
         },
 
@@ -78,16 +78,17 @@ export const useCartStore = defineStore("cart", {
             return this;
         },
 
-        updateQuantity(product: Product, quantity: number = null) {
+        updateQuantity(product: Product, quantity: number = 0) {
             if( !this.hasProduct(product)) {
                 return;
             }
 
             const item = this.getProductItem(product);
 
-            item.quantity = quantity ? quantity : item.quantity++;
-
-            this.persist();
+            if( item ) {
+                item.quantity = quantity ? quantity : item.quantity++;
+                this.persist();
+            }
 
             return this;
         },

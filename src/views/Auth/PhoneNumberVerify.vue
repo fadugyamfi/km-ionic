@@ -32,7 +32,9 @@ import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useUserStore } from '@/stores/UserStore';
-import PhoneInput from '../../components/forms/PhoneInput.vue';
+import PhoneInput from '@/components/forms/PhoneInput.vue';
+import { useToastStore } from '@/stores/ToastStore';
+import { handleAxiosRequestError } from '../../utilities';
 
 let validating = ref(false);
 const userStore = useUserStore();
@@ -44,6 +46,8 @@ const inputValidated = () => {
     return phoneNumber.value == null || phoneNumber.value.length == 0;
 }
 
+const toastStore = useToastStore();
+
 const onContinue = async () => {
     validating.value = true;
 
@@ -54,12 +58,13 @@ const onContinue = async () => {
         const json = response.data;
         if( !json.two_factor_auth_sent && json.has_pin_number ) {
             router.push('/auth/login');
+            toastStore.showError("Account already exists. Please login to continue");
         } else {
             router.push('/auth/verify-otp');
         }
     })
     .catch(error => {
-        console.log(error)
+        handleAxiosRequestError(error)
     })
     .finally(() => validating.value = false);
 }

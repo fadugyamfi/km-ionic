@@ -1,5 +1,5 @@
 <template>
-    <section class="top-categories shopper-home-section ion-margin-top">
+    <section class="top-categories shopper-home-section ion-padding-top">
         <header class="ion-padding-horizontal">
             <h6>Top Categories</h6>
 

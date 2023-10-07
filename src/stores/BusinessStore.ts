@@ -2,8 +2,10 @@ import axios from "axios";
 import {defineStore} from "pinia";
 import {useUserStore} from "./UserStore";
 import {handleAxiosRequestError} from "@/utilities";
-import { Preferences } from "@capacitor/preferences";
 import Business from "@/models/Business";
+import AppStorage from "./AppStorage";
+
+const storage = new AppStorage();
 
 export const useBusinessStore = defineStore("business", {
     state: () => ({
@@ -14,24 +16,16 @@ export const useBusinessStore = defineStore("business", {
     actions: {
         async loadCachedBusinesses() {
             if( !this.businesses ) {
-                let { value } = await Preferences.get({ key: 'kola.business' });
-                this.businesses = value != null ? JSON.parse(value) : Array.of([]);
+                this.businesses = await storage.get('kola.businesses') || [];
             }
 
             if( !this.selectedBusiness ) {
-                let results = await Preferences.get({ key: 'kola.store.business' });
-                this.selectedBusiness = results.value != null ? JSON.parse(results.value) : null;
+                this.selectedBusiness = await storage.get('kola.store.business') as Business;
             }
         },
 
         async getCacheBusinessData() {
-            let { value } = await Preferences.get({ key: 'businessInfo' });
-
-            if (value === 'undefined') {
-                return null
-            }
-
-            return JSON.parse(value || '')
+            return await storage.get('businessInfo');
         },
 
         async cacheBusinessData(data: object) {
@@ -39,11 +33,11 @@ export const useBusinessStore = defineStore("business", {
 
             if (formData !== null) {
                 Object.assign(formData, data)
-                await Preferences.set({ key: 'businessInfo', value: JSON.stringify(formData)});
+                await storage.set('businessInfo', formData);
                 return;
             }
 
-            await Preferences.set({ key: 'businessInfo', value: JSON.stringify(data) })
+            await storage.set('businessInfo', data);
         },
 
         async getBusinesses(search_key?: string|null) {
@@ -71,7 +65,7 @@ export const useBusinessStore = defineStore("business", {
         },
 
         async storeBusinesses() {
-            await Preferences.set({ key: 'store.businesses', value: JSON.stringify(this.businesses) });
+            await storage.set('store.businesses', this.businesses);
         },
 
         clearBusinesses() {
@@ -88,12 +82,12 @@ export const useBusinessStore = defineStore("business", {
 
         async clearSelectedBusiness() {
             this.selectedBusiness = null;
-            await Preferences.remove({ key:'kola.business' })
+            await storage.remove('kola.store.business');
         },
 
         async setSelectedBusiness(business: any) {
             this.selectedBusiness = business;
-            await Preferences.set({ key: 'kola.business', value: JSON.stringify(business) });
+            await storage.set('kola.store.business', business);
         },
 
         selectDefaultBusiness() {
@@ -107,6 +101,7 @@ export const useBusinessStore = defineStore("business", {
                     const data = response.data.data;
 
                     this.setSelectedBusiness(data.business);
+                    userStore.setActiveBusiness(data.business);
                     userStore.storeOnboarded(true);
 
                     return data.business;

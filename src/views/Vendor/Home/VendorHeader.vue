@@ -1,7 +1,7 @@
 <template>
     <section class="banner">
         <img
-            :src="businessStore.selectedBusiness?.logo || defaultBanner"
+            :src="userStore.activeBusiness?.logo || defaultBanner"
             @error="onLoadError($event)"
         />
 
@@ -18,6 +18,7 @@ import { IonAvatar } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { mapStores } from 'pinia';
 import { useBusinessStore } from '@/stores/BusinessStore';
+import { useUserStore } from '@/stores/UserStore';
 
 export default defineComponent({
 
@@ -30,7 +31,7 @@ export default defineComponent({
     components: { IonAvatar },
 
     computed: {
-        ...mapStores( useBusinessStore )
+        ...mapStores( useBusinessStore, useUserStore )
     },
 
     methods: {
@@ -40,7 +41,7 @@ export default defineComponent({
     },
 
     mounted() {
-        this.businessStore.loadCachedBusinesses();
+
     }
 })
 </script>

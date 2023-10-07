@@ -3,6 +3,8 @@ import Brand from "@/models/Brand";
 import Product from "@/models/Product";
 import axios from "axios";
 import AppStorage from "./AppStorage";
+import { handleAxiosRequestError } from "../utilities";
+import { useToastStore } from "./ToastStore";
 
 const storage = new AppStorage();
 const KOLA_BRANDS = 'kola.brands';
@@ -18,6 +20,10 @@ export const useBrandStore = defineStore("brand", {
     },
 
     actions: {
+
+        async persist() {
+            storage.set(KOLA_BRANDS, this.brands);
+        },
 
         async loadFromStorage(): Promise<Brand[]> {
             const brands = await storage.get(KOLA_BRANDS);
@@ -39,7 +45,7 @@ export const useBrandStore = defineStore("brand", {
             return axios.get('/v2/brands')
                 .then(response => {
                     this.brands = response.data.data.map((el: object) => new Brand(el));
-                    storage.set(KOLA_BRANDS, this.brands);
+                    this.persist();
                 })
                 .catch(error => {
                     console.log(error)
@@ -74,13 +80,44 @@ export const useBrandStore = defineStore("brand", {
                     sort: 'latest'
                 };
 
-                const response = await axios.get('/v2/products', { params });
+                const response = await axios.get('/v2/brands', { params });
                 this.brandProducts = response.data.data.map((el: object) => new Product(el))
 
                 return this.brandProducts
             } catch(error) {
-                console.log(error);
+                handleAxiosRequestError(error);
                 return [];
+            }
+        },
+
+        async addToFavorites(brand: Brand) {
+            const toastStore = useToastStore();
+            brand.addToFavorites();
+
+            try {
+                const response = await axios.post(`/v2/brands/${brand.id}/favorites`);
+                const favoriteData = response.data.data;
+                brand.addToFavorites({ brands_id: brand.id as number, cms_users_id: favoriteData.cms_users_id });
+
+                toastStore.showSuccess('Added To Favorites');
+                this.persist();
+            } catch(error) {
+                handleAxiosRequestError(error);
+                brand.unfavorite();
+            }
+        },
+
+        async removeFromFavorites(brand: Brand) {
+            const toastStore = useToastStore();
+            brand.unfavorite();
+
+            try {
+                const response = await axios.delete(`/v2/brands/${brand.id}/favorites`);
+                toastStore.showError('Removed From Favorites');
+                this.persist();
+            } catch(error) {
+                handleAxiosRequestError(error);
+                brand.addToFavorites();
             }
         }
     }

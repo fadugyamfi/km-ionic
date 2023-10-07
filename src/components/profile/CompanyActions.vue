@@ -4,7 +4,7 @@
             <IonAvatar slot="start">
                 <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
             </IonAvatar>
-            <IonLabel>{{ businessStore.getSelectedBusiness()?.name }}</IonLabel>
+            <IonLabel>{{ userStore.activeBusiness?.name }}</IonLabel>
             <IonIcon slot="end" :icon="createOutline"></IonIcon>
         </IonItem>
 
@@ -65,7 +65,6 @@
 import { IonIcon, IonLabel, IonItem, IonAvatar, IonList } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
-import { useBusinessStore } from '@/stores/BusinessStore';
 import { mapStores } from 'pinia';
 import { search, createOutline } from 'ionicons/icons';
 
@@ -75,7 +74,7 @@ export default defineComponent({
     components: { IonList, IonAvatar, IonItem, IonLabel, IonIcon },
 
     computed: {
-        ...mapStores( useUserStore, useBusinessStore )
+        ...mapStores( useUserStore )
     },
 
     data() {

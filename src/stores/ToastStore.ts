@@ -7,7 +7,9 @@ export const useToastStore = defineStore('toast', {
 
     state() {
         return {
-
+            showUIBlock: false,
+            defaultText: 'Hang on. We are processing your action',
+            blockText: 'Hang on. We are processing your action'
         }
     },
 
@@ -23,6 +25,15 @@ export const useToastStore = defineStore('toast', {
             }
         },
 
+        blockUI(text?: string) {
+            this.showUIBlock = true;
+            this.blockText = text || this.defaultText
+        },
+
+        unblockUI() {
+            this.showUIBlock = false;
+        },
+
         async showToast(
             message: string,
             title?: string,
@@ -33,7 +44,7 @@ export const useToastStore = defineStore('toast', {
             const toast = await toastController.create({
                 header: title,
                 message: message,
-                duration: 2000,
+                duration: 2500,
                 position: position,
                 animated: true,
                 cssClass: `app-toast toast-${type}`,

@@ -1,5 +1,7 @@
-import { Preferences } from '@capacitor/preferences';
 import { useToastStore } from '../stores/ToastStore';
+import AppStorage from '../stores/AppStorage';
+
+const storage = new AppStorage();
 
 const meta = (key:string) => {
     const meta = document.querySelector(`meta[name="${key}"]`);
@@ -34,13 +36,13 @@ export async function refreshAuth() {
     const toastStore = useToastStore();
 
     try {
-        const authResult = await Preferences.get({ key: 'auth' });
-        if( !authResult.value ) {
+        const authResult = await storage.get('auth');
+        if( !authResult ) {
             toastStore.showError('Unauthorized. Please try again');
             return;
         }
 
-        const stored = authResult.value || '';
+        const stored = authResult || '';
         const auth = JSON.parse(stored);
 
         const response = await fetch('/api/auth/refresh', {
@@ -58,7 +60,7 @@ export async function refreshAuth() {
         const json = await response.json();
 
         if( json && json.access_token ) {
-            Preferences.set({ key: "auth", value: JSON.stringify(json) });
+            storage.set("auth", json);
             window.location.reload();
         }
     } catch(e) {

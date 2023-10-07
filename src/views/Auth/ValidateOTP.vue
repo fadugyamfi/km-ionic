@@ -8,8 +8,10 @@
 
         <IonContent class="ion-padding">
             <h3>Verify Number</h3>
+
             <p style="font-size: 14px;">
-                A code was sent <b>{{ userStore.verification.response?.phone_number }}</b>. Please enter code below to proceed
+                A code was sent <b>{{ userStore.verification.response?.phone_number }}</b>.
+                Please enter code below to proceed
             </p>
 
             <div class="ion-justify-content-center" style="display: flex; margin-top: 50px;">
@@ -63,7 +65,7 @@ const onContinue = async () => {
             return;
         }
 
-        return router.push('/signup/vendor');
+        return router.push('/signup/vendor/summary');
     })
     .finally(() => { validating.value = false });
 }

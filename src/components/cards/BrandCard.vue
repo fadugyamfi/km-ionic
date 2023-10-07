@@ -1,10 +1,17 @@
 <template>
-    <section class="product-category-card" :class="{ 'tall': tall === true }">
+    <section class="brand-card">
         <ion-card>
-            <Image :alt="category.name" :src="category.image" />
+            <FavoriteButton
+                class="favorite-button"
+                :brand="brand"
+                color="dark"
+            >
+            </FavoriteButton>
+
+            <Image :alt="brand.name" :src="brand.logo" />
 
             <IonCardHeader>
-                <IonCardTitle class="ion-text-center">{{ category.name }}</IonCardTitle>
+                <IonCardTitle class="ion-text-center">{{ brand.name }}</IonCardTitle>
             </IonCardHeader>
         </ion-card>
     </section>
@@ -14,20 +21,16 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { locationOutline } from 'ionicons/icons';
-import ProductCategory from '../../models/ProductCategory';
+import Brand from '@/models/Brand';
 import Image from '@/components/Image.vue';
+import FavoriteButton from '@/components/modules/brands/FavoriteButton.vue';
 
 export default defineComponent({
     props: {
-        category: {
+        brand: {
             required: true,
-            type: ProductCategory
+            type: Brand
         },
-
-        tall: {
-            default: false,
-            type: Boolean
-        }
     },
 
     data() {
@@ -36,25 +39,23 @@ export default defineComponent({
         };
     },
 
-    components: { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonIcon, Image }
+    components: { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonIcon, Image, FavoriteButton }
 });
 </script>
 
 <style scoped lang="scss">
-.product-category-card {
+.brand-card {
 
     ion-card {
         width: 100%;
         margin: 5px auto;
         position: relative;
-        // border: solid 1px #f4f4f4;
-        // border-radius: 8px;
-        // box-shadow: 1px 2px 9px #f9f9f9;
 
         ion-img {
             width: 100%;
-            height: 120px;
-            object-fit: cover;
+            height: 90px;
+            object-fit: contain;
+            padding: 5px;
         }
 
         ion-card-header {
@@ -93,12 +94,19 @@ export default defineComponent({
         }
     }
 
-    &.tall {
-        ion-img {
-            height: 180px;
-            object-fit: cover;
-        }
+    .favorite-button {
+        --padding-start: 2px;
+        --padding-end: 2px;
+        --padding-top: 2px;
+        --padding-bottom: 2px;
+        position: absolute;
+        top: 0px;
+        right: 5px;
+        min-height: 24px;
+        font-size: 12px;
+        border-radius: 50%;
+        background: white;
+        border: solid 1px #f1f1f1;
     }
-
 }
 </style>

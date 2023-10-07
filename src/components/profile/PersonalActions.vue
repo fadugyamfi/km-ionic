@@ -46,7 +46,7 @@
 
             <IonItem :detail="true" class="profile-item" @click="logout()">
                 <IonAvatar slot="start">
-                    <img src="/images/ic_help_support.svg" class="action-img" />
+                    <IonIcon :icon="powerOutline" style="font-size: 21px;"></IonIcon>
                 </IonAvatar>
                 <IonLabel>Log Out</IonLabel>
             </IonItem>
@@ -59,8 +59,9 @@ import { IonIcon, IonLabel, IonItem, IonAvatar, IonList } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
 import { mapStores } from 'pinia';
-import { search, createOutline } from 'ionicons/icons';
+import { search, createOutline, powerOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
+import { useToastStore } from '../../stores/ToastStore';
 
 
 export default defineComponent({
@@ -76,6 +77,7 @@ export default defineComponent({
 
         return {
             createOutline,
+            powerOutline,
             search,
             router
         }
@@ -83,8 +85,12 @@ export default defineComponent({
 
     methods: {
         logout() {
+            const toastStore = useToastStore();
+            toastStore.blockUI("Logging Out...");
+
             this.userStore.logout().then(response => {
                 this.router.push('/auth/login');
+                toastStore.unblockUI();
             });
         }
     }

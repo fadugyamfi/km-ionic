@@ -10,7 +10,8 @@
 
         <Swiper :slides-per-view="3">
             <SwiperSlide v-for="brand of brands" :key="brand.id">
-                <BrandPill :brand="brand" @click="viewBrand(brand)"></BrandPill>
+                <BrandCard :brand="brand" style="width: 110px;"></BrandCard>
+                <!-- <BrandPill :brand="brand" @click="viewBrand(brand)"></BrandPill> -->
             </SwiperSlide>
         </Swiper>
     </section>
@@ -24,6 +25,7 @@ import { useBrandStore } from '@/stores/BrandStore';
 import { mapStores } from 'pinia';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { IonText } from '@ionic/vue';
+import BrandCard from '../../../components/cards/BrandCard.vue';
 
 
 export default defineComponent({
@@ -32,7 +34,7 @@ export default defineComponent({
             brands: [] as Brand[]
         };
     },
-    components: { BrandPill, Swiper, SwiperSlide, IonText },
+    components: { BrandPill, Swiper, SwiperSlide, IonText, BrandCard },
 
     computed: {
         ...mapStores( useBrandStore )

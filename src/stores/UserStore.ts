@@ -2,16 +2,17 @@
 
 import { defineStore } from "pinia";
 import { handleAxiosRequestError } from "@/utilities";
-import { useBusinessStore } from "./BusinessStore";
 import axios from 'axios';
-import { Preferences } from "@capacitor/preferences";
 import User from "@/models/User";
 import Business from "@/models/Business";
+import AppStorage from "./AppStorage";
 
 const meta = (key: string) => {
     const meta = document.querySelector(`meta[name="${key}"]`);
     return meta ? meta.getAttribute('content') : null;
 };
+
+const storage = new AppStorage();
 
 type UserStoreState = {
     onboarded: Boolean,
@@ -23,9 +24,10 @@ type UserStoreState = {
     auth?: object|null,
     apiHeaders?: object|null,
     userBusinesses?: Business[],
+    activeBusiness?: Business | null,
     verification: {
         phone_number: String,
-        response: object
+        response: any
     }
 }
 
@@ -47,6 +49,7 @@ export const useUserStore = defineStore("user", {
             auth: null as Auth | null,
             apiHeaders: null,
             userBusinesses: [] as Business[],
+            activeBusiness: null,
             verification: {
                 phone_number: '',
                 response: {
@@ -65,13 +68,13 @@ export const useUserStore = defineStore("user", {
     getters: {
 
         async getCachedUser(state): Promise<User | null> {
-            const userResult = await Preferences.get({ key: 'kola.user'});
+            const userResult = await storage.get('kola.user');
 
-            if (userResult.value && userResult.value != 'undefined') {
-                return new User(JSON.parse(userResult.value));
+            if (userResult && userResult != 'undefined') {
+                return new User(userResult);
             }
 
-            await Preferences.remove({ key: 'kola.user' })
+            await storage.remove('kola.user')
             return null;
         },
 
@@ -113,48 +116,50 @@ export const useUserStore = defineStore("user", {
                 return;
             }
 
-            let user = null;
-            const userResult = await Preferences.get({ key: 'kola.user' });
-            const authResult = await Preferences.get({ key: 'kola.auth' });
-            const onboardedResult = await Preferences.get({ key: 'kola.onboarded' });
-            const appModeResult = await Preferences.get({ key: 'kola.app-mode' });
+            const userResult = await storage.get('kola.user');
+            const authResult = await storage.get('kola.auth');
+            const onboardedResult = await storage.get('kola.onboarded');
+            const appModeResult = await storage.get('kola.app-mode');
+            const userBusinesses = await storage.get('kola.user-businesses');
+            const activeBusiness = await storage.get('kola.active-business');
 
             if( onboardedResult ) {
-                this.onboarded = !!onboardedResult.value;
+                this.onboarded = !!onboardedResult;
             }
 
-            if (userResult.value && userResult.value != 'undefined') {
-                user = new User(JSON.parse(userResult.value));
+            if (userResult && userResult != 'undefined') {
+                const user = new User(userResult);
                 this.user = user;
             }
 
-            if( authResult.value && typeof authResult.value == 'string' ) {
-                const auth = JSON.parse(authResult.value);
-                axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;
-                this.auth = auth;
+            if( authResult ) {
+                axios.defaults.headers.common['Authorization'] = `Bearer ${authResult?.access_token}`;
+                this.auth = authResult;
             }
 
-            this.appMode = appModeResult?.value || 'shopping';
+            this.appMode = appModeResult || 'shopping';
+            this.userBusinesses = userBusinesses || [];
+            this.activeBusiness = activeBusiness || null;
         },
 
         async toggleAppMode() {
             this.appMode = this.appMode == 'shopping' ? 'vendor' : 'shopping';
-            await Preferences.set({ key: 'kola.app-mode', value: this.appMode });
+            await storage.set('kola.app-mode', this.appMode );
         },
 
         async storeUser(user: User) {
             this.user = user;
-            await Preferences.set({ key: 'kola.user', value: JSON.stringify(this.user)});
+            await storage.set('kola.user', this.user);
         },
 
         async storeAuth(auth: object) {
             this.auth = auth;
-            await Preferences.set({ key: 'kola.auth', value: JSON.stringify(this.auth)});
+            await storage.set('kola.auth', this.auth);
         },
 
         async storeOnboarded(onboarded: boolean) {
             this.onboarded = onboarded;
-            await Preferences.set({key: 'kola.onboarded', value: this.onboarded ? 'true' : 'false'});
+            await storage.set('kola.onboarded', this.onboarded ? 'true' : 'false');
         },
 
         async verifyPhoneNumber(credentials: { phone_number: string }) {
@@ -190,6 +195,11 @@ export const useUserStore = defineStore("user", {
                 .post('/v2/auth/update-verification', { phone_number })
                 .then((response) => response.data)
                 .catch(error => handleAxiosRequestError(error))
+        },
+
+        async setActiveBusiness(business: Business) {
+            this.activeBusiness = business;
+            await storage.set('kola.active-business', business);
         },
 
         async fetchUserInfo() {
@@ -233,26 +243,25 @@ export const useUserStore = defineStore("user", {
 
         async fetchUserBusinesses() {
             return axios.get(`/v2/users/${this.user?.id}/businesses`)
-                .then(response => {
+                .then(async (response) => {
                     const businesses = response.data.data;
                     this.userBusinesses = businesses.map((el: any) => new Business(el.business));
 
-                    const businessStore = useBusinessStore();
                     if( typeof this.userBusinesses != 'undefined' && this.userBusinesses.length > 0 ) {
-                        businessStore.setSelectedBusiness(this.userBusinesses[0])
+                        await storage.set('kola.user-businesses', this.userBusinesses);
+                        this.setActiveBusiness(this.userBusinesses[0])
                     }
                 })
         },
 
         async logout() {
             return axios.post("/v2/auth/logout").then(async (response) => {
-                await Preferences.remove({ key: "kola.business" });
-                await Preferences.remove({ key: 'kola.user' });
-                await Preferences.remove({ key: 'kola.auth' });
-                await Preferences.remove({ key: 'kola.step' })
-
-                const businessStore = useBusinessStore();
-                businessStore.clearSelectedBusiness();
+                await storage.remove('kola.active-business');
+                await storage.remove('kola.user-businesses');
+                await storage.remove("kola.business");
+                await storage.remove('kola.user');
+                await storage.remove('kola.auth');
+                await storage.remove('kola.step');
 
                 return response?.data;
             });

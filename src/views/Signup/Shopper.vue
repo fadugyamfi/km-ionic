@@ -11,8 +11,9 @@
 
         <IonContent class="ion-padding">
             <h3>You Are Almost There</h3>
-            <p class="ion-margin-bottom" style="font-size: 0.8em;">Please enter your details below to finish setting up your
-                account</p>
+            <p class="ion-margin-bottom" style="font-size: 0.8em;">
+                Please enter your details below to finish setting up your account
+            </p>
 
             <form>
                 <KolaInputField v-model="name" :label="'Full Name'" :required="true" class="ion-margin-bottom">

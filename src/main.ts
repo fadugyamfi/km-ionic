@@ -28,17 +28,19 @@ import './theme/app.scss';
 import axios from 'axios';
 import { createPinia } from 'pinia';
 import VOtpInput from "vue3-otp-input";
-import { Preferences } from "@capacitor/preferences";
+import AppStorage from './stores/AppStorage';
+
+const storage = new AppStorage();
 
 async function configureAxios() {
   axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'https://api-staging.kola.market/api';
   axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-  const authResult = await Preferences.get({ key: 'kola.auth' });
+  const authResult = await storage.get('kola.auth');
 
-  if( authResult.value && typeof authResult.value == 'string' ) {
-      const auth = JSON.parse(authResult.value);
+  if( authResult && typeof authResult== 'string' ) {
+      const auth = JSON.parse(authResult);
       axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;
   }
 }

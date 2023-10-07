@@ -1,14 +1,16 @@
 <template>
   <ion-page>
 
-    <ShopperHeader></ShopperHeader>
+    <ShopperHeader :show-search="true"></ShopperHeader>
 
     <ion-content :fullscreen="true">
-      <SearchBar></SearchBar>
+      <CategoryPills></CategoryPills>
 
       <SuppliersNearYou></SuppliersNearYou>
 
-      <ModeToggleCard></ModeToggleCard>
+      <section class="shopper-home-section">
+        <ModeToggleCard></ModeToggleCard>
+      </section>
 
       <TopCategories></TopCategories>
 
@@ -22,17 +24,20 @@
 <script setup lang="ts">
 import { IonPage, IonContent } from '@ionic/vue';
 import ShopperHeader from '@/components/layout/ShopperHeader.vue';
-import SearchBar from "@/views/Shopper/Home/SearchBar.vue";
 import SuppliersNearYou from '@/views/Shopper/Home/SuppliersNearYou.vue';
 import ModeToggleCard from '@/components/cards/ModeToggleCard.vue';
 import TopCategories from './TopCategories.vue';
 import TopBrands from './TopBrands.vue';
 import RecentlyViewedProducts from './RecentlyViewedProducts.vue';
+import CategoryPills from './CategoryPills.vue';
 </script>
 
 <style lang="scss">
 
 .shopper-home-section {
+    margin-bottom: 10px;
+    margin-top: 10px;
+
     header {
         display: flex;
         align-items: center;

@@ -21,12 +21,23 @@
                     <h4>How do you intend to use Kola?</h4>
 
                     <div class="ion-padding">
-                        <IonButton :class="{ selected: selectedOption == 'buy' }" expand="block" class="ion-margin-bottom option-button" fill="outline"
-                                   @click="selectOption('buy')">
+                        <IonButton
+                            :class="{ selected: selectedOption == 'buy' }"
+                            expand="block"
+                            class="ion-margin-bottom option-button"
+                            fill="outline"
+                            @click="selectOption('buy')"
+                        >
                             To Buy
                         </IonButton>
 
-                        <IonButton :class="{ selected: selectedOption == 'sell' }" expand="block" class="option-button" fill="outline" @click="selectOption('sell')">
+                        <IonButton
+                            :class="{ selected: selectedOption == 'sell' }"
+                            expand="block"
+                            class="option-button"
+                            fill="outline"
+                            @click="selectOption('sell')"
+                        >
                             To Sell
                         </IonButton>
                     </div>
@@ -37,7 +48,7 @@
             <IonText router-link="/auth/login">
                 <p class="ion-text-center ion-padding login-prompt">
                     Already have an account?
-                    <IonText color="primary"  class="trigger">Log In</IonText>
+                    <IonText color="primary" class="trigger">Log In</IonText>
                 </p>
             </IonText>
         </ion-content>
@@ -68,7 +79,7 @@ IonText
 import { Ref, computed, ref } from 'vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '../../stores/UserStore';
+import { useUserStore } from '@/stores/UserStore';
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -80,7 +91,11 @@ const redirectToSignup = () => {
     userStore.registering = true;
     userStore.registrationFlow = selectedOption.value as string;
 
-    router.push('/auth/verify-number');
+    if( selectedOption.value == 'buy' ) {
+        router.push('/auth/verify-number');
+    } else {
+        router.push('/signup/vendor');
+    }
 }
 </script>
 

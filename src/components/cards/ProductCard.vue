@@ -2,9 +2,9 @@
     <section class="product-card">
         <ion-card @click="viewProduct()">
             <FavoriteButton
+                class="favorite-button"
                 :product="product"
                 color="dark"
-                style="position: absolute; top: 0px; right: 5px; --padding-start: 2px; --padding-end: 2px; --padding-top: 2px; --padding-bottom: 2px; min-height: 24px; font-size: 12px; border-radius: 50%; background: white; border: solid 1px #f1f1f1;"
             >
             </FavoriteButton>
 
@@ -123,6 +123,7 @@ export default defineComponent({
 
     ion-card {
         width: 96%;
+        min-width: 148px;
         margin: 0px auto;
         // border: solid 1px #f4f4f4;
         // border-radius: 8px;
@@ -131,6 +132,7 @@ export default defineComponent({
         .product-image {
             height: 100px;
             object-fit: contain;
+            padding: 5px;
 
             &.float {
                 position: absolute;
@@ -185,5 +187,19 @@ export default defineComponent({
         }
     }
 
+    .favorite-button {
+        --padding-start: 2px;
+        --padding-end: 2px;
+        --padding-top: 2px;
+        --padding-bottom: 2px;
+        position: absolute;
+        top: 0px;
+        right: 5px;
+        min-height: 24px;
+        font-size: 12px;
+        border-radius: 50%;
+        background: white;
+        border: solid 1px #f1f1f1;
+    }
 }
 </style>

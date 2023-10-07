@@ -6,7 +6,12 @@
             <IonCardHeader>
                 <IonCardTitle>{{ supplier.name }}</IonCardTitle>
                 <IonCardSubtitle>
-                    {{ supplier.currency?.symbol }} {{ supplier.min_order_amount || 0 }} minimum
+                    <span v-if="supplier.min_order_amount">
+                        {{ supplier.currency?.symbol }} {{ supplier.min_order_amount }} minimum
+                    </span>
+                    <span v-else>
+                        No Order Minimums
+                    </span>
                 </IonCardSubtitle>
             </IonCardHeader>
 

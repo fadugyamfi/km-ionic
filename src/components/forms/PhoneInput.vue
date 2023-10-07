@@ -7,6 +7,8 @@
 import { defineComponent } from 'vue';
 import intlTelInput from "intl-tel-input";
 
+let intlInput: any = null;
+
 export default defineComponent({
     props: {
         modelValue: { required: false },
@@ -17,30 +19,28 @@ export default defineComponent({
     emits: ['update:modelValue'],
 
     methods: {
-        onChange(event) {
-            const value = event.target.value;
-
-            const intlNumber = this.intlInput.getNumber();
-            const nationalNumber = this.intlInput.getNumber(intlTelInputUtils.numberFormat.NATIONAL);
-            const country = this.intlInput.getSelectedCountryData();
+        onChange() {
+            const intlNumber = intlInput.getNumber();
+            const nationalNumber = intlInput.getNumber(intlTelInputUtils.numberFormat.NATIONAL);
+            const country = intlInput.getSelectedCountryData();
             const loginNumber = country.dialCode + nationalNumber.replaceAll(" ", "");
-console.log(intlNumber, nationalNumber, country, loginNumber);
+
             if (this.output === 'login') {
-                return this.$emit('update:modelValue', loginNumber);
+                this.$emit('update:modelValue', loginNumber);
+                return;
             }
 
             if (this.output === 'national') {
-                return this.$emit('update:modelValue', nationalNumber);
+                this.$emit('update:modelValue', nationalNumber);
+                return;
             }
 
-            return this.$emit('update:modelValue', intlNumber);
+            this.$emit('update:modelValue', intlNumber);
         }
     },
 
     mounted() {
-        const input = this.$el;
-
-        this.intlInput = intlTelInput(this.$el, {
+        intlInput = intlTelInput(this.$el, {
             initialCountry: 'GH',
             preferredCountries: ['GH', 'NG'],
             separateDialCode: false,

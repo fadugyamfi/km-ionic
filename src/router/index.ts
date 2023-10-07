@@ -1,15 +1,10 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-import TabsPage from '../views/Shopper/TabsPage.vue';
-import VendorTabsPage from '../views/Vendor/TabsPage.vue';
-import HomePage from '../views/Shopper/HomePage.vue';
-import { useUserStore } from '../stores/UserStore';
+import { VendorSignupRoutes } from './vendor-signup.routes';
+import { ShopperModeRoutes } from './shopper-mode.routes';
+import { VendorModeRoutes } from './vendor-mode.routes';
 
 const routes: Array<RouteRecordRaw> = [
-  // {
-  //   path: '/',
-  //   redirect: '/tabs/tab1'
-  // },
   {
     path: '/',
     redirect: '/shopper/home'
@@ -50,129 +45,14 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Signup/Shopper.vue'),
   },
 
-  {
-    path: '/shopper/',
-    component: TabsPage,
-    beforeEnter: async function(to, from) {
-      const userStore = useUserStore();
-      await userStore.loadStoredData()
+  // Vendor Signup Routes
+  ...VendorSignupRoutes,
 
-      if( !userStore.user && !userStore.onboarded ) {
-        return { name: 'Onboarding' };
-      }
+  // Shopper Mode Routes
+  ...ShopperModeRoutes,
 
-      if( !userStore.user && userStore.onboarded ) {
-        return { name: 'Login' };
-      }
-    },
-    children: [
-      {
-        path: '',
-        redirect: '/shopper/home'
-      },
-      {
-        path: 'home',
-        component: HomePage,
-        children: [
-          {
-            path: '',
-            component: () => import('@/views/Shopper/Home/Home.vue')
-          },
-          {
-            path: 'categories',
-            component: () => import('@/views/Shopper/Categories/Categories.vue'),
-          },
-          {
-            path: 'categories/:id',
-            component: () => import('@/views/Shopper/Categories/CategoryDetails.vue'),
-          },
-          {
-            path: 'brands',
-            component: () => import('@/views/Shopper/Categories/Categories.vue'),
-          },
-          {
-            path: 'brands/:id',
-            component: () => import('@/views/Shopper/Categories/CategoryDetails.vue'),
-          }
-        ],
-      },
-      {
-        path: 'products/:id',
-        component: () => import('@/views/Shopper/ProductDetails.vue')
-      },
-      {
-        path: 'search-results',
-        component: () => import('@/views/Shopper/ProductSearchResults.vue')
-      },
-      {
-        path: 'orders',
-        component: () => import('@/views/Shopper/Orders.vue')
-      },
-      {
-        path: 'cart',
-        component: () => import('@/views/Shopper/Cart.vue')
-      },
-      {
-        path: 'credits',
-        component: () => import('@/views/Shopper/Credits.vue')
-      },
-      {
-        path: 'profile',
-        component: () => import('@/views/Shopper/Profile.vue'),
-
-      },
-    ]
-  },
-
-  {
-    path: '/vendor/',
-    component: VendorTabsPage,
-    beforeEnter: async function(to, from) {
-      const userStore = useUserStore();
-      await userStore.loadStoredData()
-
-      if( !userStore.user && !userStore.onboarded ) {
-        return { name: 'Onboarding' };
-      }
-
-      if( !userStore.user && userStore.onboarded ) {
-        return { name: 'Login' };
-      }
-    },
-    children: [
-      {
-        path: '',
-        redirect: '/vendor/home'
-      },
-      {
-        path: 'home',
-        component: HomePage,
-        children: [
-          {
-            path: '',
-            component: () => import('@/views/Vendor/Home/Home.vue')
-          },
-        ],
-      },
-      {
-        path: 'orders',
-        component: () => import('@/views/Vendor/Orders.vue')
-      },
-      {
-        path: 'sales',
-        component: () => import('@/views/Vendor/Sales.vue')
-      },
-      {
-        path: 'credits',
-        component: () => import('@/views/Vendor/Credits.vue')
-      },
-      {
-        path: 'profile',
-        component: () => import('@/views/Vendor/Profile.vue'),
-
-      },
-    ]
-  }
+  // Vendor Mode Routes
+  ...VendorModeRoutes
 ]
 
 const router = createRouter({
@@ -180,22 +60,5 @@ const router = createRouter({
   routes
 });
 
-
-// router.beforeEach(async (to, from) => {
-//   const userStore = useUserStore();
-//   await userStore.loadStoredData();
-
-//   // handle first open use case
-//   if ( !userStore.onboarded && to.name !== 'Onboarding' ) {
-//     return { name: 'Onboarding' }
-//   }
-
-//   // handle returning user use case
-//   if ( !userStore.user && to.name !== 'Login') {
-//     return { name: 'Login' }
-//   }
-
-//   return to;
-// })
 
 export default router
