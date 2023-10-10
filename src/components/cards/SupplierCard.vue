@@ -62,16 +62,13 @@ export default defineComponent({
     ion-card {
         width: 170px;
         max-height: 250px;
-        // box-shadow: 0px 2px 12px #68686f14;
-        // border: solid 1px #f1f1f1;
-        // border-radius: 8px;
 
         ion-card-header {
             text-align: left;
             padding: 10px;
 
             ion-card-title {
-                font-size: 0.9em;
+                font-size: 1em;
                 font-weight: bold;
                 margin-bottom: 0px;
                 text-wrap: nowrap;
@@ -80,7 +77,7 @@ export default defineComponent({
             }
 
             ion-card-subtitle {
-                font-size: 0.8em;
+                font-size: 0.9em;
                 padding: 0px;
                 margin: 0px;
                 color: #BDBDBD;

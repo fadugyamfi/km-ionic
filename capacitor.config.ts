@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'kola-market-ionic',
+  appId: 'market.kola.app',
+  appName: 'Kola Market',
   webDir: 'dist',
   server: {
     androidScheme: 'https'

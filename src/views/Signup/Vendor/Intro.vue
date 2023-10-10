@@ -20,11 +20,9 @@
                         <IonText v-else>Start Selling</IonText>
                     </KolaYellowButton>
 
-                    <p>
-                        <IonLabel class="ion-margin-top" router-link="/auth/login">
-                            Already Have An Account? <IonText color="warning" class="fw-bold">Log in</IonText>
-                        </IonLabel>
-                    </p>
+                    <IonButton class="ion-margin-top login-prompt" fill="clear" expand="block" router-link="/auth/login">
+                        Already Have An Account? &nbsp;<IonText color="warning" class="fw-bold">Log in</IonText>
+                    </IonButton>
                 </section>
             </header>
 
@@ -145,7 +143,6 @@ export default defineComponent({
         background-color: #000000ea;
         padding: 15px;
         color: #fff;
-        font-size: 0.85em;
         position: relative;
 
         &::before {
@@ -175,8 +172,15 @@ export default defineComponent({
         }
 
         .join-text {
-            font-size: 0.85em;
+            font-size: 0.75em;
             margin-bottom: 30px;
+        }
+
+        .login-prompt {
+            font-size: 0.8em;
+            text-transform: none;
+            color: white;
+            font-weight: normal;
         }
     }
 

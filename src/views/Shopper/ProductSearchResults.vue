@@ -132,20 +132,29 @@ ion-content::part(background) {
 }
 
 main {
-        border-radius: 10px;
-        background-color: white;
-        margin-top: 15px;
-        border: solid #f9f9f9 1px;
-        padding: 10px;
+    border-radius: 10px;
+    background-color: white;
+    margin-top: 15px;
+    border: solid #f9f9f9 1px;
+    padding: 10px;
 
-        .title-section {
-            font-size: 0.8em;
-            font-weight: bold;
+    .title-section {
+        font-size: 0.8em;
+        font-weight: bold;
 
-            .price {
-                text-align: right;
-                min-width: 80px;
-            }
+        .price {
+            text-align: right;
+            min-width: 80px;
         }
     }
+}
+
+ion-grid {
+    --ion-grid-padding: 2px;
+
+    ion-col {
+        padding-left: 1px;
+        padding-right: 1px;
+    }
+}
 </style>

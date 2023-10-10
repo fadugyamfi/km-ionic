@@ -1,6 +1,6 @@
 <template>
     <IonButton @click="showNotifications()">
-        <IonIcon :icon="notifications"></IonIcon>
+        <IonIcon :icon="notificationsOutline"></IonIcon>
     </IonButton>
 </template>
 
@@ -8,7 +8,7 @@
 import { defineComponent } from 'vue';
 import NotificationsModal from './NotificationsModal.vue';
 import { IonButton, IonIcon, modalController } from '@ionic/vue';
-import { notifications } from 'ionicons/icons';
+import { notificationsOutline } from 'ionicons/icons';
 
 export default defineComponent({
 
@@ -20,7 +20,7 @@ export default defineComponent({
 
     data() {
         return {
-            notifications
+            notificationsOutline
         }
     },
 

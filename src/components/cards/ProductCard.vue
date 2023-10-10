@@ -20,21 +20,23 @@
 
             <IonCardHeader>
                 <section style="position: relative; padding-top: 30px;">
-                    <IonButton
-                        fill="clear"
-                        color="medium"
-                        style="--padding-start: 0px; --padding-end: 0px; position: absolute; right: 0px; top: -5px;"
-                        @click.prevent.stop="addToCart()"
-                    >
-                        <IonIcon
-                            size="large"
-                            slot="icon-only"
-                            :icon="addCircleOutline"
-                        ></IonIcon>
-                    </IonButton>
+
 
                     <p class="product-title fw-semibold line-clamp">
                         {{ product.product_name }}
+
+                        <IonButton
+                            fill="clear"
+                            color="medium"
+                            style="--padding-start: 0px; --padding-end: 0px; position: absolute; right: 0px; top: -5px;"
+                            @click.prevent.stop="addToCart()"
+                        >
+                            <IonIcon
+                                size="large"
+                                slot="icon-only"
+                                :icon="addCircleOutline"
+                            ></IonIcon>
+                        </IonButton>
                     </p>
                 </section>
 
@@ -125,9 +127,6 @@ export default defineComponent({
         width: 96%;
         min-width: 148px;
         margin: 0px auto;
-        // border: solid 1px #f4f4f4;
-        // border-radius: 8px;
-        // box-shadow: 1px 2px 9px #f9f9f9;
 
         .product-image {
             height: 100px;
@@ -145,23 +144,26 @@ export default defineComponent({
             padding: 10px 10px;
 
             .product-title {
-                font-size: 0.9em;
-                font-weight: normal;
+                font-size: 0.95em;
+                font-weight: 600;
                 margin-top: 0px;
                 margin-bottom: 5px;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 height: 40px;
+                color:#111;
             }
 
             .pricing {
-                font-size: 0.9em;
-                font-weight: 600;
+                font-size: 0.93em;
+                font-weight: normal;
+                color: #212121;
             }
 
             .product-description {
                 font-size: 0.85em;
                 margin-top: 5px;
+                color: #9E9E9E;
             }
 
             ion-card-subtitle {

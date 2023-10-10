@@ -42,11 +42,12 @@ import CategoryPills from './CategoryPills.vue';
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size: 0.9em;
+        font-size: 14px;
+        padding-bottom: 10px;
 
         h6 {
             font-weight: bold;
-            font-size: 0.9em;
+            font-size: 1em;
             margin: 0px;
         }
 
