@@ -62,6 +62,7 @@ export default defineComponent({
     ion-card {
         width: 170px;
         max-height: 250px;
+        min-height: 150px;
 
         ion-card-header {
             text-align: left;

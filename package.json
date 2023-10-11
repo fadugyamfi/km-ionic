@@ -1,16 +1,16 @@
 {
   "name": "kola-market-ionic",
-  "private": true,
   "version": "0.0.1",
-  "type": "module",
+  "private": true,
+  "description": "Kola Market App",
   "scripts": {
-    "dev": "vite",
     "build": "vue-tsc && vite build",
-    "build-staging": "vue-tsc && vite build --mode staging",
-    "preview": "vite preview",
-    "test:e2e": "cypress run",
     "test:unit": "vitest",
-    "lint": "eslint"
+    "test:e2e": "cypress run",
+    "lint": "eslint",
+    "build-staging": "vue-tsc && vite build --mode staging",
+    "dev": "vite",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@capacitor/android": "5.4.0",
@@ -29,6 +29,7 @@
     "ionicons": "^7.0.0",
     "libphonenumber-js": "^1.10.13",
     "pinia": "^2.1.6",
+    "register-service-worker": "^1.7.1",
     "swiper": "^10.3.0",
     "vue": "^3.2.45",
     "vue-i18n": "^9.4.1",
@@ -40,6 +41,7 @@
     "@capacitor/cli": "5.4.0",
     "@vitejs/plugin-legacy": "^4.0.2",
     "@vitejs/plugin-vue": "^4.0.0",
+    "@vue/cli-plugin-pwa": "~4.5.9",
     "@vue/eslint-config-typescript": "^11.0.2",
     "@vue/test-utils": "^2.3.0",
     "cypress": "^12.7.0",
@@ -54,5 +56,5 @@
     "vitest": "^0.32.2",
     "vue-tsc": "^1.0.24"
   },
-  "description": "An Ionic project"
+  "type": "module"
 }
