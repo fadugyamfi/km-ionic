@@ -28,10 +28,12 @@ import "intl-tel-input/build/css/intlTelInput.css";
 import './theme/variables.css';
 import './theme/app.scss';
 
+import VOtpInput from "vue3-otp-input";
 import axios from 'axios';
 import { createPinia } from 'pinia';
-import VOtpInput from "vue3-otp-input";
+import { createI18n } from 'vue-i18n';
 import AppStorage from './stores/AppStorage';
+import messages from './locales';
 
 const storage = new AppStorage();
 
@@ -48,6 +50,11 @@ async function configureAxios() {
   }
 }
 
+const i18n = createI18n({
+  locale: "en", // set locale
+  fallbackLocale: "en", // set fallback locale
+  messages, // set locale messages
+});
 
 configureAxios()
 
@@ -56,6 +63,7 @@ const pinia = createPinia();
 const app = createApp(App)
   .component("v-otp-input", VOtpInput)
   .use(IonicVue)
+  .use(i18n)
   .use(pinia)
   .use(router);
 

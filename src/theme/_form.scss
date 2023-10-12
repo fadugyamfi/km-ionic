@@ -23,3 +23,29 @@
         font-size: 0.9em;
     }
 }
+
+.kola-white-button {
+    --background: #FFF !important;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    --color: #101828;
+    --border-style: solid;
+    --border-color: #101828;
+    --border-width: 1px;
+    --border-radius: 0.8em;
+    --box-shadow: none;
+    text-transform: none;
+    font-weight: 600;
+    font-size: 0.75em;
+}
+
+.kola-yellow-button {
+    --background: #F5AA29 !important;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    --color: #101828;
+    --border-radius: 0.8em;
+    text-transform: none;
+    font-weight: 600;
+    font-size: 0.75em;
+}

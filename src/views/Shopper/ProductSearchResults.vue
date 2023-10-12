@@ -127,10 +127,6 @@ export default defineComponent({
 
 <style scoped lang="scss">
 
-ion-content::part(background) {
-    background-color: #fefefe;
-}
-
 main {
     border-radius: 10px;
     background-color: white;

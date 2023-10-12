@@ -11,14 +11,14 @@
 
 
         <ion-content :fullscreen="true" class="ion-padding" :scroll-y="false">
-            <h3>The best way to grow your sales</h3>
+            <h3>{{ $t("signup.landing.theBestWayToGrowYourSales") }}</h3>
             <p>
-                We help you to sell, buy, manage your customers and inventory simply and securely in one app!
+                {{ $t("signup.landing.weHelpYouToSell") }}
             </p>
 
             <IonCard class="option-card ion-no-border">
                 <IonCardContent class="ion-text-center">
-                    <h4>How do you intend to use Kola?</h4>
+                    <h4>{{ $t("signup.landing.howDoYouIntendToUseKola") }}</h4>
 
                     <div class="ion-padding">
                         <IonButton
@@ -28,7 +28,7 @@
                             fill="outline"
                             @click="selectOption('buy')"
                         >
-                            To Buy
+                            {{ $t("signup.landing.toBuy") }}
                         </IonButton>
 
                         <IonButton
@@ -38,24 +38,24 @@
                             fill="outline"
                             @click="selectOption('sell')"
                         >
-                            To Sell
+                            {{ $t("signup.landing.toSell") }}
                         </IonButton>
                     </div>
 
                 </IonCardContent>
             </IonCard>
 
-            <IonText router-link="/auth/login">
-                <p class="ion-text-center ion-padding login-prompt">
-                    Already have an account?
-                    <IonText color="primary" class="trigger">Log In</IonText>
-                </p>
-            </IonText>
+            <IonButton fill="clear" color="dark" expand="block" router-link="/auth/login" class="login-prompt">
+                {{ $t("signup.landing.alreadyHaveAnAccount") }}&nbsp;
+                <IonText color="primary" class="trigger">
+                    {{ $t("signup.landing.logIn") }}
+                </IonText>
+            </IonButton>
         </ion-content>
 
         <IonFooter class="ion-padding ion-no-border">
             <KolaYellowButton :disabled="!isOptionSelected" @click="redirectToSignup()">
-                Continue
+                {{ $t("general.continue") }}
             </KolaYellowButton>
         </IonFooter>
     </ion-page>
@@ -100,6 +100,11 @@ const redirectToSignup = () => {
 </script>
 
 <style scoped lang="css">
+
+p {
+    font-size: 0.75em;
+}
+
 .option-card {
     margin-top: 50px;
     --background: #F6F6F6;
@@ -128,6 +133,8 @@ h4 {
 
 .login-prompt {
     font-size: 0.9em;
+    text-transform: none;
+    margin-top: 20px;
 }
 
 .login-prompt .trigger {

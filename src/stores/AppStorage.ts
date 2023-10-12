@@ -1,17 +1,17 @@
 import { Storage } from '@ionic/storage';
 
-const storage = new Storage();
-
 export default class AppStorage {
 
-    keys: string[] = [];
+    private _storage: Storage | null = null;
+    private keys: string[] = [];
 
     constructor() {
-      this.initStorage();
+      this.init();
     }
 
-    async initStorage() {
-      await storage.create();
+    async init() {
+      const storage = new Storage();
+      this._storage = await storage.create();
     }
 
     /**
@@ -26,10 +26,11 @@ export default class AppStorage {
     async set(key: string, value: any, duration = 1, unit = 'days') {
       const later = new Date();
 
-      if( unit == 'days' ) later.setDate( later.getDate() + duration );
-      if( unit == 'hours' ) later.setHours( later.getHours() + duration );
-      if( unit == 'minutes' ) later.setMinutes( later.getMinutes() + duration );
-      if( unit == 'months' ) later.setMonth( later.getMonth() + duration );
+      if( unit.indexOf('day') > -1 ) later.setDate( later.getDate() + duration );
+      if( unit.indexOf('hour') > -1 ) later.setHours( later.getHours() + duration );
+      if( unit.indexOf('minute') > -1 ) later.setMinutes( later.getMinutes() + duration );
+      if( unit.indexOf('month') > -1 ) later.setMonth( later.getMonth() + duration );
+      if( unit.indexOf('year') > -1 ) later.setFullYear( later.getFullYear() + duration );
 
       const data = {
         created: Date.now(),
@@ -37,7 +38,7 @@ export default class AppStorage {
         expires: later.getTime()
       };
 
-      await storage.set(key, JSON.stringify(data));
+      await this._storage?.set(key, JSON.stringify(data));
       this.storeKey(key);
 
       return this;
@@ -54,11 +55,11 @@ export default class AppStorage {
       this.storeKey(key);
 
       try {
-        const data = await storage.get(key);
+        const data = await this._storage?.get(key);
         result = JSON.parse(data);
 
         if (result && this.isResultExpired(result)) {
-          await storage.remove(key);
+          await this._storage?.remove(key);
           return null;
         }
       } catch (e) {
@@ -75,7 +76,7 @@ export default class AppStorage {
      */
     async remove(key: string) {
       if ((await this.has(key))) {
-        await storage.remove(key);
+        await this._storage?.remove(key);
       }
     }
 
@@ -92,7 +93,7 @@ export default class AppStorage {
     async isValid(key: string) {
       if (await this.has(key)) {
         try {
-          const data = await storage.get(key);
+          const data = await this._storage?.get(key);
           const result = JSON.parse(data);
           return this.isResultExpired(result) === false;
         } catch (e) { }

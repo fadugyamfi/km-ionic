@@ -1,9 +1,9 @@
 <template>
     <ion-page>
         <ion-content :fullscreen="true" class="ion-padding" :scroll-y="false">
-            <h1>Welcome To Kola Wholesale Market</h1>
+            <h1>{{ $t("onboarding.welcomeToKolaMarket") }}</h1>
             <p>
-                We help you to buy and sell wholesale, manage your customers and inventory, simply and securely in one app!
+                {{ $t("onboarding.weHelpYouBuyAndSell") }}
             </p>
 
             <img src="/images/onboarding_message.svg" />
@@ -11,7 +11,7 @@
 
         <IonFooter class="ion-no-border ion-color-light ion-padding">
             <KolaYellowButton @click="getStarted()">
-                Get Started
+                {{ $t("onboarding.getStarted") }}
             </KolaYellowButton>
         </IonFooter>
     </ion-page>
@@ -37,7 +37,7 @@ h1 {
     font-size: 21px;
 }
 p {
-    font-size: 12px;
+    font-size: 0.75em;
 }
 
 </style>

@@ -1,0 +1,33 @@
+{
+    "general": {
+        "phoneNumber": "Phone Number",
+        "pin": "PIN",
+        "continue": "Continue"
+    },
+    "onboarding": {
+        "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
+        "weHelpYouBuyAndSell": "We help you to buy and sell wholesale, manage your customers and inventory, simply and securely in one app!",
+        "getStarted": "Get Started"
+    },
+    "signup": {
+        "landing": {
+            "theBestWayToGrowYourSales": "The best way to grow your sales",
+            "weHelpYouToSell": "We help you to sell, buy, manage your customers and inventory simply and securely in one app!",
+            "howDoYouIntendToUseKola": "How do you intend to use Kola?",
+            "toBuy": "To Buy",
+            "toSell": "To Sell",
+            "alreadyHaveAnAccount": "Already have an account?",
+            "logIn": "Log In"
+        }
+    },
+    "auth": {
+        "login": {
+            "goodToSeeYouAgain": "Good to see you again",
+            "enterDetailsBelowToLogin": "Enter your details below to login",
+            "forgotYourPin": "Forgot Your PIN?",
+            "dontHaveAnAccount": "Don't have an account?",
+            "signUp": "Sign Up",
+            "login": "Login"
+        }
+    }
+}

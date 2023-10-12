@@ -37,7 +37,19 @@ import FooterNavigation from './FooterNavigation.vue';
 
 export default defineComponent({
 
-    components: { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardContent, IonFooter, FooterNavigation },
+    components: {
+        IonPage,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonBackButton,
+        IonTitle,
+        IonContent,
+        IonCard,
+        IonCardContent,
+        IonFooter,
+        FooterNavigation
+    },
 
     data() {
         return {

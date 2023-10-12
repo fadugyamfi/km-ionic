@@ -7,46 +7,44 @@
         </IonHeader>
 
         <IonContent class="ion-padding">
-            <h3 class="header">Good To See You Again</h3>
-            <p class="subtext">Enter your details below to login</p>
+            <h3 class="header">{{ $t("auth.login.goodToSeeYouAgain") }}</h3>
+            <p class="subtext">{{ $t("auth.login.enterDetailsBelowToLogin") }}</p>
 
             <div class="ion-margin-top">
                 <section class="ion-padding-top ion-padding-bottom">
-                    <IonLabel class="input-label">Phone Number</IonLabel>
+                    <IonLabel class="input-label">{{ $t("general.phoneNumber") }}</IonLabel>
                     <PhoneInput v-model="phoneNumber"/>
                 </section>
 
                 <section class="pin-entry">
-                    <IonLabel class="input-label">PIN</IonLabel>
+                    <IonLabel class="input-label">{{ $t("general.pin") }}</IonLabel>
                     <IonInput v-model="pin" class="kola-input" type="password" placeholder="Enter 4 digit PIN" :maxlength="4" fill="outline"></IonInput>
                 </section>
 
                 <div class="forgot-pin-wrapper ion-padding-bottom">
                     <IonText router-link="/auth/forgot-pin" color="dark" class="forgot-pin-link">
-                        Forgot Your PIN?
+                        {{ $t("auth.login.forgotYourPin") }}
                     </IonText>
                 </div>
             </div>
 
-            <IonText router-link="/signup">
-                <p class="ion-text-center ion-padding login-prompt" >
-                    Don't have an account?
-                    <IonText color="primary" class="trigger">Sign Up</IonText>
-                </p>
-            </IonText>
+            <IonButton expand="block" fill="clear" color="dark" router-link="/signup" class="login-prompt">
+                {{ $t("auth.login.dontHaveAnAccount") }}&nbsp;
+                <IonText color="primary" class="trigger">{{ $t("auth.login.signUp") }}</IonText>
+            </IonButton>
         </IonContent>
 
         <IonFooter class="ion-padding ion-no-border">
             <KolaYellowButton @click="login()">
                 <IonSpinner v-if="fetching" name="crescent"></IonSpinner>
-                <IonText v-else>Login</IonText>
+                <IonText v-else>{{ $t("auth.login.login") }}</IonText>
             </KolaYellowButton>
         </IonFooter>
     </IonPage>
 </template>
 
 <script lang="ts">
-import { IonBackButton, IonContent, IonFooter, IonHeader, IonInput, IonLabel, IonPage, IonSpinner, IonText, IonToolbar, toastController } from '@ionic/vue';
+import { IonBackButton, IonButton, IonContent, IonFooter, IonHeader, IonInput, IonLabel, IonPage, IonSpinner, IonText, IonToolbar, toastController } from '@ionic/vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
@@ -57,11 +55,12 @@ import PhoneInput from '@/components/forms/PhoneInput.vue';
 export default defineComponent({
 
     components: {
-        KolaYellowButton,
-        IonBackButton, IonContent, IonFooter, IonHeader, IonInput, IonPage, IonSpinner, IonText, IonToolbar,
-        PhoneInput,
-        IonLabel
-    },
+    KolaYellowButton,
+    IonBackButton, IonContent, IonFooter, IonHeader, IonInput, IonPage, IonSpinner, IonText, IonToolbar,
+    PhoneInput,
+    IonLabel,
+    IonButton
+},
 
     data() {
         return {
@@ -132,6 +131,8 @@ export default defineComponent({
 
 .login-prompt {
     font-size: 0.9em;
+    text-transform: none;
+    margin-top: 20px;
 }
 
 .login-prompt .trigger {

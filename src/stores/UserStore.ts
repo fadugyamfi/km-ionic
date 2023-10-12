@@ -144,22 +144,22 @@ export const useUserStore = defineStore("user", {
 
         async toggleAppMode() {
             this.appMode = this.appMode == 'shopping' ? 'vendor' : 'shopping';
-            await storage.set('kola.app-mode', this.appMode );
+            await storage.set('kola.app-mode', this.appMode, 7, 'days' );
         },
 
         async storeUser(user: User) {
             this.user = user;
-            await storage.set('kola.user', this.user);
+            await storage.set('kola.user', this.user, 1, 'year');
         },
 
         async storeAuth(auth: object) {
             this.auth = auth;
-            await storage.set('kola.auth', this.auth);
+            await storage.set('kola.auth', this.auth, 1, 'year');
         },
 
         async storeOnboarded(onboarded: boolean) {
             this.onboarded = onboarded;
-            await storage.set('kola.onboarded', this.onboarded ? 'true' : 'false');
+            await storage.set('kola.onboarded', this.onboarded ? 'true' : 'false', 5, 'years');
         },
 
         async verifyPhoneNumber(credentials: { phone_number: string }) {
@@ -199,7 +199,7 @@ export const useUserStore = defineStore("user", {
 
         async setActiveBusiness(business: Business) {
             this.activeBusiness = business;
-            await storage.set('kola.active-business', business);
+            await storage.set('kola.active-business', business, 1, 'month');
         },
 
         async fetchUserInfo() {
@@ -248,7 +248,7 @@ export const useUserStore = defineStore("user", {
                     this.userBusinesses = businesses.map((el: any) => new Business(el.business));
 
                     if( typeof this.userBusinesses != 'undefined' && this.userBusinesses.length > 0 ) {
-                        await storage.set('kola.user-businesses', this.userBusinesses);
+                        await storage.set('kola.user-businesses', this.userBusinesses, 1, 'month');
                         this.setActiveBusiness(this.userBusinesses[0])
                     }
                 })
