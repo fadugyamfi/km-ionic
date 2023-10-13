@@ -28,6 +28,11 @@
             "dontHaveAnAccount": "Don't have an account?",
             "signUp": "Sign Up",
             "login": "Login"
+        },
+        "validateOtp": {
+            "verifyNumber": "Verify Number",
+            "codeSent": "A code was sent to %{number}",
+            "pleaseEnterCode": "Please enter code below to proceed"
         }
     }
 }

@@ -122,6 +122,7 @@ export const useUserStore = defineStore("user", {
             const appModeResult = await storage.get('kola.app-mode');
             const userBusinesses = await storage.get('kola.user-businesses');
             const activeBusiness = await storage.get('kola.active-business');
+            const userRegistering = await storage.get('kola.user-registering');
 
             if( onboardedResult ) {
                 this.onboarded = !!onboardedResult;
@@ -140,6 +141,7 @@ export const useUserStore = defineStore("user", {
             this.appMode = appModeResult || 'shopping';
             this.userBusinesses = userBusinesses || [];
             this.activeBusiness = activeBusiness || null;
+            this.registering = userRegistering || false;
         },
 
         async toggleAppMode() {
@@ -200,6 +202,13 @@ export const useUserStore = defineStore("user", {
         async setActiveBusiness(business: Business) {
             this.activeBusiness = business;
             await storage.set('kola.active-business', business, 1, 'month');
+        },
+
+        async setRegisteringAs(flow: string) {
+            this.registering = true;
+            this.registrationFlow = flow;
+
+            await storage.set('kola.user-registering', this.registering);
         },
 
         async fetchUserInfo() {

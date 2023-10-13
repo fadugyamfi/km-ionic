@@ -7,11 +7,11 @@
         </IonHeader>
 
         <IonContent class="ion-padding">
-            <h3>Verify Number</h3>
+            <h3>{{ $t("auth.validateOtp.verifyNumber") }}</h3>
 
-            <p style="font-size: 14px;">
-                A code was sent <b>{{ userStore.verification.response?.phone_number }}</b>.
-                Please enter code below to proceed
+            <p style="font-size: 0.9em;">
+                {{ $t("auth.validateOtp.codeSent", { number: userStore.verification.response?.phone_number }) }}.
+                {{ $t("auth.validateOtp.pleaseEnterCode") }}
             </p>
 
             <div class="ion-justify-content-center" style="display: flex; margin-top: 50px;">
@@ -25,7 +25,7 @@
         <IonFooter class="ion-padding">
             <KolaYellowButton :disabled="!otpEntered" @click="onContinue()">
                 <IonSpinner v-if="validating" name="crescent"></IonSpinner>
-                <IonText v-else>Continue</IonText>
+                <IonText v-else>{{ $t("general.continue") }}</IonText>
             </KolaYellowButton>
         </IonFooter>
     </IonPage>
@@ -83,5 +83,6 @@ const onContinue = async () => {
     padding-bottom: 10px;
     padding-left: 0px;
     padding-right: 0px;
+    width: 3em;
 }
 </style>

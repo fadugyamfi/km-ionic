@@ -38,7 +38,7 @@ import messages from './locales';
 const storage = new AppStorage();
 
 async function configureAxios() {
-  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'https://api-staging.kola.market/api';
+  axios.defaults.baseURL = 'http://api.kolamarket.local/api'; // import.meta.env.VITE_API_BASE_URL || 'https://api-staging.kola.market/api';
   axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   axios.defaults.headers.common['Content-Type'] = 'application/json';
 

@@ -24,6 +24,7 @@ export default defineComponent({
     --padding-bottom: 16px;
     --color: #101828;
     --border-radius: 0.8em;
+    --box-shadow: none;
     text-transform: none;
     font-weight: 600;
     font-size: 0.75em;

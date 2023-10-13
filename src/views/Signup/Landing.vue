@@ -88,8 +88,7 @@ const isOptionSelected = computed(() => selectedOption.value != null);
 const selectOption = (option: string) => selectedOption.value = option;
 
 const redirectToSignup = () => {
-    userStore.registering = true;
-    userStore.registrationFlow = selectedOption.value as string;
+    userStore.setRegisteringAs(selectedOption.value as string)
 
     if( selectedOption.value == 'buy' ) {
         router.push('/auth/verify-number');
