@@ -158,6 +158,7 @@ export default defineComponent({
 
     mounted() {
         this.loadRegions();
+        this.businessStore.loadCachedRegistrationInfo();
     }
 })
 </script>

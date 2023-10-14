@@ -44,6 +44,10 @@ export const useBusinessStore = defineStore("business", {
                 brand_is_in_large_retail_chain: "No", // Yes/No,
                 how_you_heard_about_kola: '',
                 goals_and_expectation_of_kolamarket: ""
+            },
+            user: {
+                pin: '',
+                pin_confirmation: ''
             }
         }
     }),
@@ -170,7 +174,7 @@ export const useBusinessStore = defineStore("business", {
         },
 
         async cacheRegistrationInfo() {
-            await storage.set('kola.business-registration', this.registration, 1, 'day');
+            await storage.set('kola.business-registration', this.registration, 3, 'days');
         },
 
         async clearCachedRegistrationInfo() {

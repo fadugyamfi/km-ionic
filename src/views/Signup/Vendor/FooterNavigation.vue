@@ -1,18 +1,18 @@
 <template>
     <IonGrid>
-                <IonRow>
-                    <IonCol size="6">
-                        <KolaWhiteButton @click="$router.go(-1)">
-                            Back
-                        </KolaWhiteButton>
-                    </IonCol>
-                    <IonCol size="6">
-                        <KolaYellowButton @click="$emit('continue')">
-                            Continue
-                        </KolaYellowButton>
-                    </IonCol>
-                </IonRow>
-            </IonGrid>
+        <IonRow>
+            <IonCol size="6">
+                <KolaWhiteButton @click="back()">
+                    {{ backText }}
+                </KolaWhiteButton>
+            </IonCol>
+            <IonCol size="6">
+                <KolaYellowButton @click="$emit('continue')">
+                    {{ continueText }}
+                </KolaYellowButton>
+            </IonCol>
+        </IonRow>
+    </IonGrid>
 </template>
 
 <script lang="ts">
@@ -22,6 +22,21 @@ import KolaWhiteButton from '@/components/KolaWhiteButton.vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 
 export default defineComponent({
+
+    props: {
+        doDefaultBackAction: {
+            default: true,
+            type: Boolean
+        },
+        backText: {
+            default: "Back",
+            type: String
+        },
+        continueText: {
+            default: "Continue",
+            type: String
+        }
+    },
 
     components: {
         IonGrid,
@@ -36,6 +51,17 @@ export default defineComponent({
     data() {
         return {
 
+        }
+    },
+
+    methods: {
+        back() {
+            if( this.doDefaultBackAction ) {
+                this.$router.go(-1);
+                return;
+            }
+
+            this.$emit('back');
         }
     }
 })

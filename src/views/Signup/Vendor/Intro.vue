@@ -108,6 +108,7 @@ export default defineComponent({
         onContinue() {
             const userStore = useUserStore();
             const toastStore = useToastStore();
+            const businessStore = useBusinessStore();
 
             if( !this.phoneNumber ) {
                 toastStore.showError('Phone Number Required');
@@ -126,6 +127,10 @@ export default defineComponent({
                         this.$router.push('/auth/login');
                         toastStore.showError("Account already exists. Please login to continue");
                     } else {
+                        businessStore.registration.phone_number = this.phoneNumber;
+                        businessStore.registration.business_owner_phone = this.phoneNumber;
+                        businessStore.cacheRegistrationInfo();
+
                         this.$router.push('/auth/verify-otp');
                     }
                 })

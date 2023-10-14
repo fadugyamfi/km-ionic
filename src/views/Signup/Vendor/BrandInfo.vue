@@ -131,6 +131,10 @@ export default defineComponent({
             this.businessStore.cacheRegistrationInfo();
             this.$router.push('/signup/vendor/location-info');
         }
-    }
+    },
+
+    mounted() {
+        this.businessStore.loadCachedRegistrationInfo();
+    },
 })
 </script>

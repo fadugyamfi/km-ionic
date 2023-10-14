@@ -11,6 +11,11 @@ export const VendorSignupRoutes = [
         component: () => import('@/views/Signup/Vendor/Summary.vue'),
       },
       {
+        name: 'VendorSignupPersonalInfo',
+        path: '/signup/vendor/personal-info',
+        component: () => import('@/views/Signup/Vendor/PersonalInfo.vue'),
+      },
+      {
         name: 'VendorSignupBusinessInfo',
         path: '/signup/vendor/business-info',
         component: () => import('@/views/Signup/Vendor/BusinessInfo.vue'),

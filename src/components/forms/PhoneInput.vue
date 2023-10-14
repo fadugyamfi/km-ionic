@@ -1,6 +1,6 @@
 <template>
     <input type="text" ref="phone-input" class="form-control phone-input kola-input" :class="classes"
-           placeholder="020 000 0000" :value="modelValue" @change="onChange($event)" />
+           placeholder="020 000 0000" :value="modelValue" @keyup="onChange($event)" @change="onChange($event)" />
 </template>
 
 <script lang="ts">

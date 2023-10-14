@@ -5,7 +5,8 @@
         "continue": "Continue",
         "yes": "Yes",
         "no": "No",
-        "optional": "optional"
+        "optional": "optional",
+        "cancel": "Cancel"
     },
     "onboarding": {
         "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -38,6 +39,9 @@
             "uploadYourProfilePhoto": "Upload Your Profile Photo",
             "uploadInstructions": "Please upload a clear and professional photo of yourself or your brand logo to personalize your profile. Your profile photo will be visible to other users and will represent your identity on Kola Market.",
 
+            "secureYourAccount": "Secure Your Account",
+
+            "fullName": "Your Full Name",
             "businessName": "Business Name",
             "emailAddress": "Email Address",
             "primaryCategory": "Primary Category",
@@ -58,6 +62,7 @@
 
             "summary": {
                 "weWantToGetToKnowYourBusiness": "We want to get to know your business better so we can help you succeed",
+                "weWantToGetToKnowYou": "We want to get to know you and help you setup your account",
                 "personalDetails": "Personal Details",
                 "pleaseProvidePersonalInfo": "Please provide personal info",
                 "shopSetup": "Shop Setup",
@@ -69,7 +74,12 @@
 
             "location": {
                 "useCurrentLocation": "Use Current Location"
-            }
+            },
+
+            "youAreOnTheWaitlist": "You Are On The Waitlist",
+            "congratulatoryMessage": "Congratulations! Your application to sell on Kola Market has been sent for approval. This usually takes between 24-72hours. In the meantime you can tap the chat button to reach one of our agents if you have inquiries.",
+            "continueToShopping": "Continue To Shopping",
+            "chatWithKola": "Chat With Kola"
         }
     },
     "auth": {

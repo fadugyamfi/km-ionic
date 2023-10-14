@@ -35,6 +35,12 @@ type Auth = {
     access_token: String,
 }
 
+interface ChangePINRequest {
+    phone_number: string;
+    pin: string;
+    pin_confirmation: string;
+    old_pin?: string
+}
 
 export const useUserStore = defineStore("user", {
 
@@ -187,8 +193,8 @@ export const useUserStore = defineStore("user", {
                 .catch(error => handleAxiosRequestError(error))
         },
 
-        async setupPin(credentials: object) {
-            return axios.post('/v2/auth/pin-setup', credentials)
+        async changePin(credentials: ChangePINRequest) {
+            return axios.post('/v2/auth/change-pin', credentials)
                 .then(response => response.data)
                 .catch(error => handleAxiosRequestError(error))
         },

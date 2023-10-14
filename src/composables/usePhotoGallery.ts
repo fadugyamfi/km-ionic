@@ -1,5 +1,5 @@
-import { ref, onMounted, watch } from 'vue';
-import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
+import { ref, onMounted, watch, Ref } from 'vue';
+import { Camera, CameraResultType, CameraSource, GalleryPhoto, Photo } from '@capacitor/camera';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Preferences } from '@capacitor/preferences';
 import { isPlatform } from '@ionic/vue';
@@ -13,7 +13,7 @@ export interface UserPhoto {
 
 export const usePhotoGallery = () => {
 
-    const photos = ref<UserPhoto[]>([]);
+    const photos: Ref<UserPhoto[]> = ref([]);
 
     const takePhoto = async () => {
         const photo = await Camera.getPhoto({
@@ -32,6 +32,21 @@ export const usePhotoGallery = () => {
         photos.value = [savedFileImage, ...photos.value];
     };
 
+    const pickImages = async () => {
+        const pickedPhotos = await Camera.pickImages({
+            height: 1024,
+            width: 2048
+        });
+
+        photos.value = await Promise.all(pickedPhotos.photos.map(async (photo) => {
+            return {
+                filepath: photo.path,
+                webviewPath: photo.webPath,
+                base64Data: await getPhotoAsBase64(photo)
+            } as UserPhoto
+        }))
+    };
+
     const convertBlobToBase64 = (blob: Blob) =>
         new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -42,7 +57,7 @@ export const usePhotoGallery = () => {
             reader.readAsDataURL(blob);
         });
 
-    const getPhotoAsBase64 = async (photo: Photo): Promise<string> => {
+    const getPhotoAsBase64 = async (photo: Photo|GalleryPhoto): Promise<string> => {
         // Fetch the photo, read as a blob, then convert to base64 format
         const response = await fetch(photo.webPath!);
         const blob = await response.blob();
@@ -92,6 +107,7 @@ export const usePhotoGallery = () => {
         photos,
         takePhoto,
         getPhotoAsBase64,
-        savePicture
+        savePicture,
+        pickImages
     };
 };

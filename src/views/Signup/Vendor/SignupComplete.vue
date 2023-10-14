@@ -1,51 +1,54 @@
 <template>
     <IonPage>
-        <IonHeader class="ion-no-border">
-            <IonToolbar>
-                <IonTitle></IonTitle>
-            </IonToolbar>
-        </IonHeader>
+        <IonContent :fullscreen="true">
+            <IonImg src="/images/vendor/signup-complete-header.jpg" height="400"></IonImg>
 
-        <IonContent class="ion-padding">
-            <header>
-                <h5>Let's get you selling on Kola</h5>
-                <p>
-                    To set up your shop you will upload images, share your story and choose your shop settings
-                </p>
-            </header>
-
-            <main>
-
+            <main class="ion-padding">
+                <HeaderArea
+                    :title="$t('signup.vendor.youAreOnTheWaitlist')"
+                    :subtext="$t('signup.vendor.congratulatoryMessage')"
+                ></HeaderArea>
             </main>
         </IonContent>
 
         <IonFooter class="ion-padding ion-no-border">
             <KolaYellowButton router-link="/shopper" class="ion-margin-bottom">
-                Continue To Shopping
+                {{  $t('signup.vendor.continueToShopping') }}
             </KolaYellowButton>
 
-            <KolaWhiteButton>
-                Chat With Kola
+            <KolaWhiteButton href="https://wa.me/233270404501">
+                {{ $t("signup.vendor.chatWithKola") }}
             </KolaWhiteButton>
         </IonFooter>
     </IonPage>
 </template>
 
 <script lang="ts">
-import { IonBackButton, IonButtons, IonCard, IonCardContent, IonContent, IonFooter, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonContent, IonFooter, IonHeader, IonImg, IonPage, IonToolbar } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
-import KolaWhiteButton from '../../../components/KolaWhiteButton.vue';
+import KolaWhiteButton from '@/components/KolaWhiteButton.vue';
+import { mapStores } from 'pinia';
+import { useBusinessStore } from '@/stores/BusinessStore';
+import HeaderArea from './HeaderArea.vue';
 
 export default defineComponent({
 
-    components: { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardContent, IonFooter, KolaYellowButton, KolaWhiteButton },
+    components: { IonPage, IonHeader, IonToolbar, IonContent, IonFooter, KolaYellowButton, KolaWhiteButton, IonImg, HeaderArea },
 
     data() {
         return {
 
         }
-    }
+    },
+
+    computed: {
+        ...mapStores( useBusinessStore )
+    },
+
+    mounted() {
+        this.businessStore.loadCachedRegistrationInfo();
+    },
 })
 </script>
 

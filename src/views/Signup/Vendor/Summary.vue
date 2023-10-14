@@ -60,9 +60,12 @@
         </IonContent>
 
         <IonFooter class="ion-padding ion-no-border">
-            <KolaYellowButton @click="onContinue()">
-                {{ $t('general.continue') }}
-            </KolaYellowButton>
+            <FooterNavigation
+                :doDefaultBackAction="false"
+                :backText="$t('general.cancel')"
+                @back="$router.replace('/signup')"
+                @continue="onContinue()"
+            ></FooterNavigation>
         </IonFooter>
     </IonPage>
 </template>
@@ -74,10 +77,11 @@ import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { mapStores } from 'pinia';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import HeaderArea from './HeaderArea.vue';
+import FooterNavigation from './FooterNavigation.vue';
 
 export default defineComponent({
 
-    components: { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardContent, IonFooter, KolaYellowButton, HeaderArea },
+    components: { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardContent, IonFooter, KolaYellowButton, HeaderArea, FooterNavigation },
 
     data() {
         return {
@@ -91,9 +95,9 @@ export default defineComponent({
 
     methods: {
         onContinue() {
-            this.$router.push('/signup/vendor/business-info');
+            this.$router.push('/signup/vendor/personal-info');
         }
-    }
+    },
 })
 </script>
 

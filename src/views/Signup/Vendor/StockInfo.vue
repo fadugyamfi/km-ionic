@@ -103,6 +103,10 @@ export default defineComponent({
         ...mapStores( useBusinessStore )
     },
 
+    mounted() {
+        this.businessStore.loadCachedRegistrationInfo();
+    },
+
     methods: {
         onContinue() {
             if( this.form.hasErrors() ) {
