@@ -88,9 +88,10 @@ import { IonBackButton, IonButtons, IonHeader, IonPage, IonTitle, IonToolbar, Io
 import { defineComponent } from 'vue';
 import PhoneInput from '@/components/forms/PhoneInput.vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
+import { handleAxiosRequestError } from '@/utilities';
 import { useUserStore } from '@/stores/UserStore';
-import { useToastStore } from '../../../stores/ToastStore';
-import { handleAxiosRequestError } from '../../../utilities';
+import { useToastStore } from '@/stores/ToastStore';
+import { useBusinessStore } from '@/stores/BusinessStore';
 
 export default defineComponent({
 
@@ -133,6 +134,11 @@ export default defineComponent({
                 })
                 .finally(() => this.validating = false);
         }
+    },
+
+    mounted() {
+        const businessStore = useBusinessStore();
+        businessStore.clearCachedRegistrationInfo();
     }
 })
 </script>

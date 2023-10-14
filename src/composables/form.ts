@@ -1,12 +1,13 @@
 import { reactive } from "vue";
 
 
-export default function useForm(fields: object) {
+export function useForm(fields: object) {
 
     return reactive({
         fields,
         processing: false,
         error: null as any,
+        errors: {} as { [key: string]: any },
 
         async submit(submitter: Function) {
             if( this.processing ) return;
@@ -23,8 +24,30 @@ export default function useForm(fields: object) {
             }
         },
 
-        isValid(validator: Function) {
+        hasErrors() {
+            return Object.keys(this.errors).some((key: string) => this.errors[key] != false);
+        },
 
-        }
+        validate(event: Event) {
+            const input = (event.target as HTMLInputElement);
+            const value = input.value;
+            const name = input.name;
+            this.errors[name] = input.checkValidity();
+
+            if( input.required && (!value || value == '') ) {
+                this.errors[name] = true;
+            }
+        },
+
+        validateSelectInput(event: Event) {
+            const input = (event.target as HTMLSelectElement);
+            const value = input.value;
+            const name = input.name;
+            this.errors[name] = false;
+
+            if( input.required && (!value || value == '') ) {
+                this.errors[name] = true;
+            }
+        },
     })
 }

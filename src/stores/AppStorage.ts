@@ -63,6 +63,7 @@ export default class AppStorage {
           return null;
         }
       } catch (e) {
+        console.log(e);
         return null;
       }
 

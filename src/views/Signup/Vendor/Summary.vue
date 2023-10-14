@@ -11,9 +11,9 @@
 
         <IonContent class="ion-padding">
             <header>
-                <h5>Let's get you selling on Kola</h5>
+                <h5>{{ $t("signup.vendor.letsGetYouSellingOnKola") }}</h5>
                 <p>
-                    To set up your shop you will upload images, share your story and choose your shop settings
+                    {{ $t("signup.vendor.toSetUpYourShop") }}
                 </p>
             </header>
 
@@ -26,8 +26,8 @@
                             </span>
 
                             <span class="content">
-                                <h6>Personal Details</h6>
-                                <p>Please provide personal info</p>
+                                <h6>{{ $t("signup.vendor.summary.personalDetails") }}</h6>
+                                <p>{{ $t("signup.vendor.summary.pleaseProvidePersonalInfo") }}</p>
                             </span>
                         </section>
 
@@ -37,8 +37,8 @@
                             </span>
 
                             <span class="content">
-                                <h6>Shop Setup</h6>
-                                <p>A few details about your shop</p>
+                                <h6>{{ $t("signup.vendor.summary.shopSetup") }}</h6>
+                                <p>{{ $t("signup.vendor.summary.aFewDetailsAboutYourShop") }}</p>
                             </span>
                         </section>
 
@@ -48,22 +48,22 @@
                             </span>
 
                             <span class="content">
-                                <h6>Review</h6>
-                                <p>Ensure all information provided is accurate</p>
+                                <h6>{{ $t("signup.vendor.summary.review") }}</h6>
+                                <p>{{ $t('signup.vendor.summary.ensureAllInformationProvidedIsAccurate') }}</p>
                             </span>
                         </section>
                     </IonCardContent>
                 </IonCard>
 
                 <p class="fw-semibold" style="font-size: 0.85em; color: #667085; margin-top: 25px;">
-                    Estimated time to complete: 10 minutes
+                    {{ $t("signup.vendor.summary.estimatedTimeToComplete", { minutes: 10 }) }}
                 </p>
             </main>
         </IonContent>
 
         <IonFooter class="ion-padding ion-no-border">
-            <KolaYellowButton router-link="/signup/vendor/business-info">
-                Continue
+            <KolaYellowButton @click="onContinue()">
+                {{ $t('general.continue') }}
             </KolaYellowButton>
         </IonFooter>
     </IonPage>
@@ -72,7 +72,9 @@
 <script lang="ts">
 import { IonBackButton, IonButtons, IonCard, IonCardContent, IonContent, IonFooter, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import KolaYellowButton from '../../../components/KolaYellowButton.vue';
+import KolaYellowButton from '@/components/KolaYellowButton.vue';
+import { mapStores } from 'pinia';
+import { useBusinessStore } from '@/stores/BusinessStore';
 
 export default defineComponent({
 
@@ -81,6 +83,16 @@ export default defineComponent({
     data() {
         return {
 
+        }
+    },
+
+    computed: {
+        ...mapStores( useBusinessStore )
+    },
+
+    methods: {
+        onContinue() {
+            this.$router.push('/signup/vendor/business-info');
         }
     }
 })

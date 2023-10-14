@@ -157,6 +157,7 @@ export const useUserStore = defineStore("user", {
         async storeAuth(auth: object) {
             this.auth = auth;
             await storage.set('kola.auth', this.auth, 1, 'year');
+            await this.updateRequestAuthorization();
         },
 
         async storeOnboarded(onboarded: boolean) {
@@ -275,6 +276,11 @@ export const useUserStore = defineStore("user", {
                 return response?.data;
             });
 
-        }
+        },
+
+        async updateRequestAuthorization() {
+            const auth = await storage.get('kola.auth');
+            axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;
+          }
     },
 });

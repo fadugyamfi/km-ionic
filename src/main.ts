@@ -25,7 +25,7 @@ import '@ionic/vue/css/display.css';
 import "intl-tel-input/build/css/intlTelInput.css";
 
 /* Theme variables */
-import './theme/variables.css';
+// import './theme/variables.css';
 import './theme/app.scss';
 
 import VOtpInput from "vue3-otp-input";
@@ -35,28 +35,12 @@ import { createI18n } from 'vue-i18n';
 import AppStorage from './stores/AppStorage';
 import messages from './locales';
 
-const storage = new AppStorage();
-
-async function configureAxios() {
-  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'https://api-staging.kola.market/api';
-  axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-  axios.defaults.headers.common['Content-Type'] = 'application/json';
-
-  const authResult = await storage.get('kola.auth');
-
-  if( authResult && typeof authResult== 'string' ) {
-      const auth = JSON.parse(authResult);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;
-  }
-}
-
 const i18n = createI18n({
   locale: "en", // set locale
   fallbackLocale: "en", // set fallback locale
   messages, // set locale messages
 });
 
-configureAxios()
 
 const pinia = createPinia();
 

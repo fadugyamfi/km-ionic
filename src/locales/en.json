@@ -18,6 +18,30 @@
             "toSell": "To Sell",
             "alreadyHaveAnAccount": "Already have an account?",
             "logIn": "Log In"
+        },
+        "vendor": {
+            "letsGetYouSellingOnKola": "Let's get you selling on Kola",
+            "toSetUpYourShop": "To set up your shop you will upload images, share your story and choose your shop settings",
+
+            "businessName": "Business Name",
+            "emailAddress": "Email Address",
+            "primaryCategory": "Primary Category",
+            "country": "Country",
+            "noOfProductsYouSell": "Number of Products you sell",
+            "noOfStores": "Number of Stores you work with",
+            "howDidYouHearAboutUs": "How did you hear about us?",
+            "yearEstablished": "Year Established",
+
+            "summary": {
+                "weWantToGetToKnowYourBusiness": "We want to get to know your business better so we can help you succeed",
+                "personalDetails": "Personal Details",
+                "pleaseProvidePersonalInfo": "Please provide personal info",
+                "shopSetup": "Shop Setup",
+                "aFewDetailsAboutYourShop": "A few details about your shop",
+                "review": "Review",
+                "ensureAllInformationProvidedIsAccurate": "Ensure all information provided is accurate",
+                "estimatedTimeToComplete": "Estimated time to complete: %{minutes} minutes"
+            }
         }
     },
     "auth": {

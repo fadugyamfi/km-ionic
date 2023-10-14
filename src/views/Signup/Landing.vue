@@ -74,7 +74,8 @@ import {
     IonCard,
     IonCardContent,
     IonFooter,
-IonText
+IonText,
+IonInput
 } from '@ionic/vue';
 import { Ref, computed, ref } from 'vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
@@ -95,6 +96,10 @@ const redirectToSignup = () => {
     } else {
         router.push('/signup/vendor');
     }
+}
+
+const doSubmit = function() {
+    alert("Submitting");
 }
 </script>
 

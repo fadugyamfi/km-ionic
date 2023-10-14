@@ -11,6 +11,39 @@ export const useBusinessStore = defineStore("business", {
     state: () => ({
         businesses: null as Business[] | null,
         selectedBusiness: null as Business | null,
+        registration: {
+            name: "", // Required
+            phone_number: "", // Required
+            location: "", // Required
+            business_types_id: 1, // Required
+            business_owner_name: "", // Required
+            business_owner_phone: "", // Required
+            email: '', // optional
+            country_id: 83, // get country_id from countries endpoint
+            region_id: 54, // get region from states endpoint
+            city: "", // optional city name
+            currency_id: 1, // Default currency for all transactions
+            logo_image: '', // NULL OR base64 encoded Image String
+            tax_number: '', // TIN
+            min_order_amount: 0, // Minimum amount required to place an order. Can be NULL or greater than 0
+            socials: { // optional
+                facebook: '',
+                twitter: '',
+                instagram: '',
+                website: ''
+            },
+            attributes: { // optional
+                year_established: '',
+                primary_product_category_id: '',
+                number_of_products: '',
+                number_of_unique_products: '',
+                catalog_update_frequency: '', // how often do you add new products to catalogue
+                number_of_stores: '',
+                brand_is_in_large_retail_chain: "No", // Yes/No,
+                how_you_heard_about_kola: '',
+                goals_and_expectation_of_kolamarket: ""
+            }
+        }
     }),
 
     actions: {
@@ -109,63 +142,18 @@ export const useBusinessStore = defineStore("business", {
                 .catch(error => handleAxiosRequestError(error))
         },
 
-        async setupBusinessInfo(postData: object) {
-            this.cacheBusinessData(postData)
-
-            return axios.post('/api/business-info-setup', postData)
-                .then(response => {
-                    const business = response.data.data
-                    this.setSelectedBusiness(business)
-                    return business
-                })
-                .catch(error => handleAxiosRequestError(error))
+        async loadCachedRegistrationInfo() {
+            if( await storage.has('kola.business-registration') ) {
+                this.registration = await storage.get('kola.business-registration');
+            }
         },
 
-        async setupBusinessLocation(postData: object) {
-            this.cacheBusinessData(postData)
-
-            return axios.put(`/api/business-info-setup/${this.selectedBusiness?.id}/location`, postData)
-                .then(response => {
-                    const business = response.data.data
-                    this.setSelectedBusiness(business)
-                    return business
-                })
-                .catch(error => handleAxiosRequestError(error))
+        async cacheRegistrationInfo() {
+            await storage.set('kola.business-registration', this.registration, 1, 'day');
         },
 
-        async setupBusinessBrand(postData: object) {
-            this.cacheBusinessData(postData)
-
-            return axios.put(`/api/business-info-setup/${this.selectedBusiness?.id}/brand`, postData)
-                .then(response => {
-                    const business = response.data.data
-                    this.setSelectedBusiness(business)
-                    return business
-                })
-                .catch(error => handleAxiosRequestError(error))
-        },
-        async setupBusinessAttributes(postData: object) {
-            this.cacheBusinessData(postData)
-
-            return axios.put(`/api/business-info-setup/${this.selectedBusiness?.id}/attributes`, postData)
-                .then(response => {
-                    const business = response.data.data
-                    this.setSelectedBusiness(business)
-                    return business
-                })
-                .catch(error => handleAxiosRequestError(error))
-        },
-
-        async businessImageUpload(postData: object) {
-            this.cacheBusinessData(postData)
-
-            return axios.put(`/api/business-info-setup/${this.selectedBusiness?.id}/profile-image-upload`, postData)
-                .then(response => {
-                    const business = response.data.data
-                    this.setSelectedBusiness(business)
-                    return business
-                })
-                .catch(error => handleAxiosRequestError(error))
-        },
+        async clearCachedRegistrationInfo() {
+            await storage.remove('kola.business-registration');
+        }
     },
 });

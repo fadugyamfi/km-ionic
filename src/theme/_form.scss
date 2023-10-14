@@ -2,13 +2,24 @@
     --background: #F6F6F6;
     --color: #74787C;
     --border-color: #E7E6E6;
+    --border-style: solid;
+    --border-width: 1px;
     --highlight-color-focused: #74787c;
     --border-radius: 8px;
+    font-size: 0.9em;
 
-    &:not(.has-focus):not(.input-label-placement-stacked) {
-        .label-text-wrapper {
-            bottom: 2.5em;
-        }
+    .input-highlight,
+    .select-highlight,
+    .textarea-highlight {
+        display: none !important;
+    }
+
+    .input-wrapper,
+    .select-wrapper,
+    .textarea-wrapper {
+        border: solid 1px var(--border-color);
+        border-radius: 8px !important;
+        overflow: hidden;
     }
 }
 

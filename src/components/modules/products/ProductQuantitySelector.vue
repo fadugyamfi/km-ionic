@@ -53,7 +53,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .quantity-selector {
     background-color: #F5F5F5;
     border: none;
