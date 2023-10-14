@@ -29,21 +29,25 @@ import "intl-tel-input/build/css/intlTelInput.css";
 import './theme/app.scss';
 
 import VOtpInput from "vue3-otp-input";
-import axios from 'axios';
+import messages from './locales';
 import { createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
-import AppStorage from './stores/AppStorage';
-import messages from './locales';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
+// Above the createApp() line
+defineCustomElements(window);
+
+// prepare for i18n
 const i18n = createI18n({
   locale: "en", // set locale
   fallbackLocale: "en", // set fallback locale
   messages, // set locale messages
 });
 
-
+// setup pina
 const pinia = createPinia();
 
+// initialize the app
 const app = createApp(App)
   .component("v-otp-input", VOtpInput)
   .use(IonicVue)

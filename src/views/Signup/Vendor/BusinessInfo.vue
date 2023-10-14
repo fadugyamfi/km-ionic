@@ -10,12 +10,10 @@
         </IonHeader>
 
         <IonContent class="ion-padding">
-            <header>
-                <h5>{{ $t("signup.vendor.letsGetYouSellingOnKola") }}</h5>
-                <p>
-                    {{ $t("signup.vendor.summary.weWantToGetToKnowYourBusiness") }}
-                </p>
-            </header>
+            <HeaderArea
+                :title="$t('signup.vendor.letsGetYouSellingOnKola')"
+                :subtext="$t('signup.vendor.summary.weWantToGetToKnowYourBusiness')"
+            ></HeaderArea>
 
             <form method="post" ref="form" @submit.prevent="onContinue()">
                 <main>
@@ -132,6 +130,7 @@ import { useLocationStore } from '@/stores/LocationStore';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import Country from '@/models/Country';
 import { useForm } from '@/composables/form';
+import HeaderArea from './HeaderArea.vue';
 
 export default defineComponent({
 
@@ -150,7 +149,8 @@ export default defineComponent({
         IonInput,
         IonSelect,
         IonSelectOption,
-        IonButton
+        IonButton,
+        HeaderArea
     },
 
     data() {
@@ -190,15 +190,3 @@ export default defineComponent({
     }
 })
 </script>
-
-<style lang="scss">
-header {
-
-    margin-bottom: 20px;
-
-    p {
-        font-size: 0.75em;
-    }
-}
-
-</style>

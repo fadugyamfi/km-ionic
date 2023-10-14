@@ -1,12 +1,16 @@
 .kola-input {
-    --background: #F6F6F6;
-    --color: #74787C;
-    --border-color: #E7E6E6;
-    --border-style: solid;
-    --border-width: 1px;
-    --highlight-color-focused: #74787c;
-    --border-radius: 8px;
-    font-size: 0.9em;
+
+    &.input-fill-solid {
+        --border-color: #b4b4b4;
+        --border-style: solid;
+        --border-width: 1px;
+        --border-radius: 8px;
+        --background: #F6F6F6;
+        border-color: var(--border-color);
+        border-radius: var(--border-radius);
+    }
+
+    overflow: hidden;
 
     .input-highlight,
     .select-highlight,
@@ -22,6 +26,27 @@
         overflow: hidden;
     }
 }
+
+.kola-input-item {
+    margin-bottom: 15px;
+
+    ion-item {
+        --background: #F6F6F6;
+        --color: #74787C;
+        --border-color: #b4b4b4;
+        --border-width: 1px;
+        --border-style: solid;
+        --highlight-color-focused: #74787c;
+        --border-radius: 8px;
+        font-size: 0.9em;
+    }
+}
+p.optional {
+    margin-top: 2px;
+    font-size: 0.65em;
+    color: #a1a1a1;
+}
+
 
 
 .search-input {

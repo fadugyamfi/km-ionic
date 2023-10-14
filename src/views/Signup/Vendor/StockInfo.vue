@@ -10,53 +10,108 @@
         </IonHeader>
 
         <IonContent class="ion-padding">
-            <header>
-                <h5>Let's get you selling on Kola</h5>
-                <p>
-                    To set up your shop you will upload images, share your story and choose your shop settings
-                </p>
-            </header>
+            <HeaderArea
+                :title="$t('signup.vendor.letsGetToKnowYourBusiness')"
+                :subtext="$t('signup.vendor.helpUsUnderstandYourBusiness')"
+            ></HeaderArea>
 
             <main>
+                <IonInput
+                    class="kola-input ion-margin-bottom"
+                    :class="{ 'ion-invalid ion-touched': form.errors.number_of_unique_products }"
+                    :label="$t('signup.vendor.howManyUniqueProductsDoYouSell')"
+                    labelPlacement="stacked"
+                    fill="solid"
+                    v-model="businessStore.registration.attributes.number_of_unique_products"
+                    required
+                    name="number_of_unique_products"
+                    type="number"
+                    min="0"
+                    @ion-input="form.validate($event)"
+                ></IonInput>
+
+                <IonInput
+                    class="kola-input ion-margin-bottom"
+                    :class="{ 'ion-invalid ion-touched': form.errors.catalog_update_frequency }"
+                    :label="$t('signup.vendor.howOftenDoYouAddNewProductsToYourCatalog')"
+                    labelPlacement="stacked"
+                    fill="solid"
+                    v-model="businessStore.registration.attributes.catalog_update_frequency"
+                    required
+                    name="catalog_update_frequency"
+                    @ion-input="form.validate($event)"
+                ></IonInput>
+
+                <IonInput
+                    class="kola-input ion-margin-bottom"
+                    :class="{ 'ion-invalid ion-touched': form.errors.number_of_small_retailers }"
+                    :label="$t('signup.vendor.howManySmallRetailersSellYourProducts')"
+                    labelPlacement="stacked"
+                    fill="solid"
+                    v-model="businessStore.registration.attributes.number_of_small_retailers"
+                    required
+                    name="number_of_small_retailers"
+                    type="number"
+                    min="0"
+                    @ion-input="form.validate($event)"
+                ></IonInput>
+
+                <IonSelect
+                    class="kola-input ion-margin-bottom"
+                    :label="$t('signup.vendor.isYourBrandInAnyLargeRetailChains')"
+                    :class="{ 'ion-invalid ion-touched': form.errors.brand_is_in_large_retail_chain }"
+                    labelPlacement="stacked"
+                    fill="solid"
+                    v-model="businessStore.registration.attributes.brand_is_in_large_retail_chain"
+                    required
+                    name="brand_is_in_large_retail_chain"
+                    @ion-change="form.validateSelectInput($event)"
+                >
+                    <IonSelectOption :value="$t('general.no')">{{ $t('general.no') }}</IonSelectOption>
+                    <IonSelectOption :value="$t('general.yes')">{{ $t('general.yes') }}</IonSelectOption>
+                </IonSelect>
 
             </main>
         </IonContent>
 
         <IonFooter class="ion-padding ion-no-border">
-            <FooterNavigation
-                @continue="$router.push('/signup/vendor/upload-photo')"
-            ></FooterNavigation>
-
+            <FooterNavigation @continue="onContinue()"></FooterNavigation>
         </IonFooter>
     </IonPage>
 </template>
 
 <script lang="ts">
-import { IonBackButton, IonButtons, IonCard, IonCardContent, IonContent, IonFooter, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonBackButton, IonButtons, IonCard, IonCardContent, IonContent, IonFooter, IonHeader, IonInput, IonPage, IonSelect, IonSelectOption, IonTitle, IonToolbar } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import FooterNavigation from './FooterNavigation.vue';
+import HeaderArea from './HeaderArea.vue';
+import { mapStores } from 'pinia';
+import { useBusinessStore } from '@/stores/BusinessStore';
+import { useForm } from '@/composables/form';
 
 export default defineComponent({
 
-    components: { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardContent, IonFooter, FooterNavigation },
+    components: { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardContent, IonFooter, FooterNavigation, HeaderArea, IonInput, IonSelect, IonSelectOption },
 
     data() {
         return {
+            form: useForm({})
+        }
+    },
 
+    computed: {
+        ...mapStores( useBusinessStore )
+    },
+
+    methods: {
+        onContinue() {
+            if( this.form.hasErrors() ) {
+                return;
+            }
+
+            this.businessStore.cacheRegistrationInfo();
+            this.$router.push('/signup/vendor/upload-photo')
         }
     }
 })
 </script>
-
-<style lang="scss">
-header {
-
-    margin-bottom: 20px;
-
-    p {
-        font-size: 0.75em;
-    }
-}
-
-main {}
-</style>

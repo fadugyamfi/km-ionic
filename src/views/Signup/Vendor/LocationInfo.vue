@@ -10,52 +10,154 @@
         </IonHeader>
 
         <IonContent class="ion-padding">
-            <header>
-                <h5>Let's get you selling on Kola</h5>
-                <p>
-                    To set up your shop you will upload images, share your story and choose your shop settings
-                </p>
-            </header>
+            <HeaderArea
+                :title="$t('signup.vendor.yourLocation')"
+                :subtext="$t('signup.vendor.summary.weWantToGetToKnowYourBusiness')"
+            ></HeaderArea>
 
             <main>
+                <IonInput
+                        class="kola-input"
+                        :class="{ 'ion-invalid ion-touched': form.errors.location}"
+                        :label="$t('signup.vendor.businessHeadquarters')"
+                        labelPlacement="stacked"
+                        fill="solid"
+                        name="location"
+                        v-model="businessStore.registration.location"
+                        @ionChange="form.validate($event)"
+                        @ionBlur="form.validate($event)"
+                        required
+                ></IonInput>
 
+                <IonButton
+                    fill="clear"
+                    color="primary"
+                    style="text-transform: none" class="ion-margin-bottom"
+                    @click="getCurrentLocation()"
+                >
+                    <IonIcon :icon="navigateOutline" style="margin-right: 5px;"></IonIcon>
+                    {{ $t("signup.vendor.location.useCurrentLocation") }}
+                </IonButton>
+
+                <IonSelect
+                        class="kola-input ion-margin-bottom"
+                        :label="$t('signup.vendor.region')"
+                        :class="{ 'ion-invalid ion-touched': form.errors.region_id }"
+                        labelPlacement="stacked"
+                        fill="solid"
+                        v-model="businessStore.registration.region_id"
+                        required
+                        name="region_id"
+                        @ion-change="form.validateSelectInput($event)"
+                    >
+                        <IonSelectOption v-for="region in regions" :key="region.id" :value="region.id">
+                            {{ region.name }}
+                        </IonSelectOption>
+                    </IonSelect>
+
+
+                <IonInput
+                        class="kola-input ion-margin-bottom"
+                        :class="{ 'ion-invalid ion-touched': form.errors.city}"
+                        :label="$t('signup.vendor.city')"
+                        labelPlacement="stacked"
+                        fill="solid"
+                        name="city"
+                        v-model="businessStore.registration.city"
+                        @ionBlur="form.validate($event)"
+                        @ionChange="form.validate($event)"
+                        required
+                ></IonInput>
+
+                <IonInput
+                        class="kola-input ion-margin-bottom"
+                        :class="{ 'ion-invalid ion-touched': form.errors.tax_number}"
+                        :label="$t('signup.vendor.tinNumber')"
+                        labelPlacement="stacked"
+                        fill="solid"
+                        name="tax_number"
+                        v-model="businessStore.registration.tax_number"
+                        @ionBlur="form.validate($event)"
+                        @ionChange="form.validate($event)"
+                        required
+                ></IonInput>
             </main>
         </IonContent>
 
         <IonFooter class="ion-padding ion-no-border">
-            <FooterNavigation
-                @continue="$router.push('/signup/vendor/stock-info')"
-            ></FooterNavigation>
+            <FooterNavigation @continue="onContinue()"></FooterNavigation>
         </IonFooter>
     </IonPage>
 </template>
 
 <script lang="ts">
-import { IonBackButton, IonButtons, IonCard, IonCardContent, IonContent, IonFooter, IonHeader, IonPage,  IonTitle, IonToolbar } from '@ionic/vue';
+import { IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonContent, IonFooter, IonHeader, IonIcon, IonInput, IonLabel, IonPage,  IonSelect,  IonSelectOption,  IonTitle, IonToolbar } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import FooterNavigation from './FooterNavigation.vue';
+import { useForm } from '@/composables/form';
+import { mapStores } from 'pinia';
+import { useBusinessStore } from '@/stores/BusinessStore';
+import { location, navigateOutline } from 'ionicons/icons';
+import Region from '@/models/Region';
+import { useLocationStore } from '@/stores/LocationStore';
+import { useToastStore } from '@/stores/ToastStore';
+import HeaderArea from './HeaderArea.vue';
+import { useGeolocation } from '@/composables/useGeolocation';
 
 export default defineComponent({
 
-    components: { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardContent, IonFooter, FooterNavigation },
+    components: { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardContent, IonFooter, FooterNavigation, IonInput, IonLabel, IonIcon, IonSelect, IonSelectOption, IonButton, HeaderArea },
 
     data() {
         return {
+            // icons
+            location, navigateOutline,
 
+            regions: [] as Region[],
+            form: useForm({}),
         }
+    },
+
+    computed: {
+        ...mapStores( useBusinessStore, useLocationStore )
+    },
+
+    methods: {
+        async loadRegions() {
+            this.regions = await this.locationStore.fetchRegions(
+                this.businessStore.registration.country_id
+            );
+        },
+
+        async getCurrentLocation() {
+            const toastStore = useToastStore();
+            const { getCurrentLocation } = useGeolocation();
+
+            try {
+                const coordinates = await getCurrentLocation();
+
+                if( coordinates ) {
+                    this.businessStore.registration.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
+                    this.businessStore.registration.gps = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
+                }
+            } catch(error) {
+                toastStore.showError("Cannot retrieve location info");
+                console.log(error);
+            }
+        },
+
+        onContinue() {
+            if( this.form.hasErrors() ) {
+                return;
+            }
+
+            this.businessStore.cacheRegistrationInfo();
+            this.$router.push('/signup/vendor/stock-info');
+        }
+    },
+
+    mounted() {
+        this.loadRegions();
     }
 })
 </script>
-
-<style lang="scss">
-header {
-
-    margin-bottom: 20px;
-
-    p {
-        font-size: 0.75em;
-    }
-}
-
-main {}
-</style>

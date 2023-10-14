@@ -19,6 +19,7 @@ export const useBusinessStore = defineStore("business", {
             business_owner_name: "", // Required
             business_owner_phone: "", // Required
             email: '', // optional
+            gps: '',
             country_id: 83, // get country_id from countries endpoint
             region_id: 54, // get region from states endpoint
             city: "", // optional city name
@@ -37,6 +38,7 @@ export const useBusinessStore = defineStore("business", {
                 primary_product_category_id: '',
                 number_of_products: '',
                 number_of_unique_products: '',
+                number_of_small_retailers: '',
                 catalog_update_frequency: '', // how often do you add new products to catalogue
                 number_of_stores: '',
                 brand_is_in_large_retail_chain: "No", // Yes/No,
@@ -130,14 +132,33 @@ export const useBusinessStore = defineStore("business", {
         async createBusinessAsShopper(postData: object) {
             return axios.post('/v2/businesses', postData)
                 .then(response => {
-                    const userStore = useUserStore();
-                    const data = response.data.data;
+                    if( response.status >= 200 && response.status < 300 ) {
+                        const userStore = useUserStore();
+                        const data = response.data.data;
 
-                    this.setSelectedBusiness(data.business);
-                    userStore.setActiveBusiness(data.business);
-                    userStore.storeOnboarded(true);
+                        this.setSelectedBusiness(data.business);
+                        userStore.setActiveBusiness(data.business);
+                        userStore.storeOnboarded(true);
 
-                    return data.business;
+                        return data.business;
+                    }
+                })
+                .catch(error => handleAxiosRequestError(error))
+        },
+
+        async createBusinessAsVendor() {
+            return axios.post('/v2/businesses', this.registration)
+                .then(response => {
+                    if( response.status >= 200 && response.status < 300 ) {
+                        const userStore = useUserStore();
+                        const data = response.data.data;
+
+                        this.setSelectedBusiness(data.business);
+                        userStore.setActiveBusiness(data.business);
+                        userStore.storeOnboarded(true);
+
+                        return data.business;
+                    }
                 })
                 .catch(error => handleAxiosRequestError(error))
         },

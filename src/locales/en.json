@@ -2,7 +2,10 @@
     "general": {
         "phoneNumber": "Phone Number",
         "pin": "PIN",
-        "continue": "Continue"
+        "continue": "Continue",
+        "yes": "Yes",
+        "no": "No",
+        "optional": "optional"
     },
     "onboarding": {
         "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -19,9 +22,21 @@
             "alreadyHaveAnAccount": "Already have an account?",
             "logIn": "Log In"
         },
+        "shopper": {
+            "fullName": "Full Name",
+            "businessName": "Business Name",
+            "businessLocation": "Business Location",
+            "newPinCode": "New PIN Code",
+            "confirmPinCode": "Confirm PIN Code"
+        },
         "vendor": {
             "letsGetYouSellingOnKola": "Let's get you selling on Kola",
+            "letsGetToKnowYourBusiness": "Let's get to know your business",
             "toSetUpYourShop": "To set up your shop you will upload images, share your story and choose your shop settings",
+            "yourLocation": "Your Location",
+            "helpUsUnderstandYourBusiness": "Help us understand your business better by providing some key details about your company",
+            "uploadYourProfilePhoto": "Upload Your Profile Photo",
+            "uploadInstructions": "Please upload a clear and professional photo of yourself or your brand logo to personalize your profile. Your profile photo will be visible to other users and will represent your identity on Kola Market.",
 
             "businessName": "Business Name",
             "emailAddress": "Email Address",
@@ -31,6 +46,15 @@
             "noOfStores": "Number of Stores you work with",
             "howDidYouHearAboutUs": "How did you hear about us?",
             "yearEstablished": "Year Established",
+            "howManyUniqueProductsDoYouSell": "How many unique products do you sell?",
+            "howOftenDoYouAddNewProductsToYourCatalog": "How often do you add new products to your catalog?",
+            "howManySmallRetailersSellYourProducts": "How many small retailers sell your products?",
+            "isYourBrandInAnyLargeRetailChains": "Is your brand in any large retail chains?",
+
+            "businessHeadquarters": "Business Headquarters",
+            "region": "Region",
+            "city": "City",
+            "tinNumber": "Tin Number",
 
             "summary": {
                 "weWantToGetToKnowYourBusiness": "We want to get to know your business better so we can help you succeed",
@@ -41,6 +65,10 @@
                 "review": "Review",
                 "ensureAllInformationProvidedIsAccurate": "Ensure all information provided is accurate",
                 "estimatedTimeToComplete": "Estimated time to complete: %{minutes} minutes"
+            },
+
+            "location": {
+                "useCurrentLocation": "Use Current Location"
             }
         }
     },

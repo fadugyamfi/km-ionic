@@ -37,14 +37,14 @@ export const useLocationStore = defineStore('location', {
             return this.countries;
         },
 
-        async fetchRegions() {
-            if( await storage.has('kola.regions') ) {
-                const data = await storage.get('kola.regions');
-                this.regions = data.map((el: any) => new Region(el));
-                return this.regions;
-            }
+        async fetchRegions(country_id: number | null = null) {
+            // if( await storage.has('kola.regions') ) {
+            //     const data = await storage.get('kola.regions');
+            //     this.regions = data.map((el: any) => new Region(el));
+            //     return this.regions;
+            // }
 
-            const params = { limit: 300 };
+            const params = { limit: 300, country_id };
 
             try {
                 const response = await axios.get('/v2/states', { params });

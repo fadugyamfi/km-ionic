@@ -10,12 +10,10 @@
         </IonHeader>
 
         <IonContent class="ion-padding">
-            <header>
-                <h5>{{ $t("signup.vendor.letsGetYouSellingOnKola") }}</h5>
-                <p>
-                    {{ $t("signup.vendor.summary.weWantToGetToKnowYourBusiness") }}
-                </p>
-            </header>
+            <HeaderArea
+                :title="$t('signup.vendor.letsGetYouSellingOnKola')"
+                :subtext="$t('signup.vendor.summary.weWantToGetToKnowYourBusiness')"
+            ></HeaderArea>
 
             <main>
                 <form>
@@ -44,7 +42,7 @@
                         </p>
                     </div>
 
-                    <div class="input-group">
+                    <div class="kola-input-item">
                         <IonItem lines="none">
                             <IonIcon :icon="logoInstagram" color="dark"></IonIcon>
                             <IonInput
@@ -53,10 +51,10 @@
                                 v-model="businessStore.registration.socials.instagram"
                             ></IonInput>
                         </IonItem>
-                        <p class="optional ion-no-margin">optional</p>
+                        <p class="optional ion-no-margin">{{ $t("general.optional") }}</p>
                     </div>
 
-                    <div class="input-group">
+                    <div class="kola-input-item">
                         <IonItem lines="none">
                             <IonIcon :icon="logoFacebook" color="primary"></IonIcon>
                             <IonInput
@@ -65,10 +63,10 @@
                                 v-model="businessStore.registration.socials.facebook"
                             ></IonInput>
                         </IonItem>
-                        <p class="optional ion-no-margin">optional</p>
+                        <p class="optional ion-no-margin">{{ $t("general.optional") }}</p>
                     </div>
 
-                    <div class="input-group">
+                    <div class="kola-input-item">
                         <IonItem lines="none">
                             <IonIcon :icon="globe" color="dark"></IonIcon>
                             <IonInput
@@ -77,15 +75,14 @@
                                 v-model="businessStore.registration.socials.website"
                             ></IonInput>
                         </IonItem>
-                        <p class="optional ion-no-margin">optional</p>
+                        <p class="optional ion-no-margin">{{ $t("general.optional") }}</p>
                     </div>
 
                     <div>
                         <p class="font-small">
                             What are your goals and expectations for promoting your brand on Kola Market?
                         </p>
-                        <IonTextarea fill="solid" class="kola-input" :maxlength="1000" :counter="true"></IonTextarea>
-                        <p class="optional ion-no-margin">optional</p>
+                        <IonTextarea fill="solid" class="kola-input" :maxlength="1000" :counter="true" helper-text="optional"></IonTextarea>
                     </div>
                 </form>
             </main>
@@ -105,10 +102,11 @@ import { mapStores } from 'pinia';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import { useForm } from '@/composables/form';
 import { logoFacebook, logoInstagram, logoTwitter, globe } from 'ionicons/icons';
+import HeaderArea from './HeaderArea.vue';
 
 export default defineComponent({
 
-    components: { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardContent, IonFooter, FooterNavigation, IonInput, IonItem, IonIcon, IonLabel, IonTextarea, IonText },
+    components: { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardContent, IonFooter, FooterNavigation, IonInput, IonItem, IonIcon, IonLabel, IonTextarea, IonText, HeaderArea },
 
     data() {
         return {
@@ -136,39 +134,3 @@ export default defineComponent({
     }
 })
 </script>
-
-<style lang="scss">
-header {
-
-    margin-bottom: 20px;
-
-    p {
-        font-size: 0.75em;
-    }
-}
-
-main {
-
-}
-
-.input-group {
-    margin-bottom: 15px;
-
-    ion-item {
-        --background: #F6F6F6;
-        --color: #74787C;
-        --border-color: #E7E6E6;
-        --border-width: 1px;
-        --border-style: solid;
-        --highlight-color-focused: #74787c;
-        --border-radius: 8px;
-        font-size: 0.9em;
-    }
-}
-
-p.optional {
-    margin-top: 2px;
-    font-size: 0.65em;
-    color: #a1a1a1;
-}
-</style>

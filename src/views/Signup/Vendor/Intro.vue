@@ -75,8 +75,8 @@
                     Experience the benefits of thriving online and watch your business flourish like never before
                 </h6>
 
-                <IonButton fill="outline" expand="block" color="dark">
-                    Sign up now
+                <IonButton fill="outline" expand="block" color="dark" router-link="/signup/shopper">
+                    Sign up to Shop
                 </IonButton>
             </footer>
         </IonContent>

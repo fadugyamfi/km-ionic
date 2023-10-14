@@ -1,5 +1,4 @@
 <template>
-    <section>
         <IonInput
             class="kola-input"
             :class="{ 'ion-invalid ion-touched': hasError }"

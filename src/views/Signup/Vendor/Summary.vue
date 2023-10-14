@@ -1,5 +1,5 @@
 <template>
-    <IonPage>
+    <IonPage class="vendor-signup-summary">
         <IonHeader class="ion-no-border">
             <IonToolbar>
                 <IonButtons slot="start">
@@ -10,12 +10,10 @@
         </IonHeader>
 
         <IonContent class="ion-padding">
-            <header>
-                <h5>{{ $t("signup.vendor.letsGetYouSellingOnKola") }}</h5>
-                <p>
-                    {{ $t("signup.vendor.toSetUpYourShop") }}
-                </p>
-            </header>
+            <HeaderArea
+                :title="$t('signup.vendor.letsGetYouSellingOnKola')"
+                :subtext="$t('signup.vendor.toSetUpYourShop')"
+            ></HeaderArea>
 
             <main>
                 <IonCard color="light" class="ion-no-margin">
@@ -75,10 +73,11 @@ import { defineComponent } from 'vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { mapStores } from 'pinia';
 import { useBusinessStore } from '@/stores/BusinessStore';
+import HeaderArea from './HeaderArea.vue';
 
 export default defineComponent({
 
-    components: { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardContent, IonFooter, KolaYellowButton },
+    components: { IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonContent, IonCard, IonCardContent, IonFooter, KolaYellowButton, HeaderArea },
 
     data() {
         return {
@@ -98,41 +97,43 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
-header {
-
-    margin-bottom: 20px;
-
-    p {
-        font-size: 0.75em;
-    }
-}
-
-main {
-    ion-card-content {
-        padding-top: 30px !important;
-        background-color: #F6F6F6;
-    }
-
-    .item {
-        display: flex;
-        align-items: start;
-        margin-top: -10px;
-
-        .connector {
-            padding: 0px 10px;
-        }
-
-        h6 {
-            font-weight: bold;
-            font-size: 1em;
-            margin-bottom: 5px;
-        }
+<style scoped lang="scss">
+.vendor-signup-summary {
+    header {
+        margin-bottom: 20px;
 
         p {
-            font-size: 0.8em;
-            color: #74787C;
+            font-size: 0.75em;
+        }
+    }
+
+    main {
+        ion-card-content {
+            padding-top: 30px !important;
+            background-color: #F6F6F6;
+        }
+
+        .item {
+            display: flex;
+            align-items: start;
+            margin-top: -10px;
+
+            .connector {
+                padding: 0px 10px;
+            }
+
+            h6 {
+                font-weight: bold;
+                font-size: 1em;
+                margin-bottom: 5px;
+            }
+
+            p {
+                font-size: 0.8em;
+                color: #74787C;
+            }
         }
     }
 }
+
 </style>

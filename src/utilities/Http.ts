@@ -12,13 +12,13 @@ const meta = (key:string) => {
 
 export function handleAxiosRequestError(error:any) {
     const toastStore = useToastStore();
-
+console.log(error);
     if( error.response?.status == 401 ) {
         return refreshAuth();
     }
 
     else if( error.response?.status == 422 ) {
-        const message = Array.isArray(error.response.data.message) ? error.response.data.message.join('<br />') : error.response.data.message;
+        const message = Array.isArray(error.response.data.data.errors) ? error.response.data.data.errors.join('<br />') : error.response.data.api_message;
         toastStore.showError(message, 'Validation Error');
     }
 

@@ -1,7 +1,7 @@
 import { reactive } from "vue";
 
 
-export function useForm(fields: object) {
+export function useForm(fields: { [key: string]: any }) {
 
     return reactive({
         fields,
@@ -32,7 +32,7 @@ export function useForm(fields: object) {
             const input = (event.target as HTMLInputElement);
             const value = input.value;
             const name = input.name;
-            this.errors[name] = input.checkValidity();
+            this.errors[name] = false;
 
             if( input.required && (!value || value == '') ) {
                 this.errors[name] = true;
