@@ -19,7 +19,7 @@
                     <PinEntryField v-model="pin" :label="$t('general.pin')"></PinEntryField>
                 </section>
 
-                <IonButton fill="clear" color="dark" @click="forgotPIN()" style="text-transform: none;">
+                <IonButton fill="clear" color="dark" @click="forgotPIN()" style="text-transform: none; padding-left: 0px;">
                     {{ $t("auth.login.forgotYourPin") }}
                 </IonButton>
             </div>
@@ -90,7 +90,7 @@ export default defineComponent({
                 pin: this.pin
             })
 
-            .then(() => this.$router.push('/shopper/home'))
+            .then(() => this.$router.replace('/shopper/home'))
 
             .catch(async (error: Error) => {
                 this.toastStore.showError(error.message || this.$t('Authentication Failed Unknown'), '', 'bottom', 'footer');
@@ -137,7 +137,7 @@ export default defineComponent({
 .login-prompt {
     font-size: 0.9em;
     text-transform: none;
-    margin-top: 20px;
+    margin-top: 60px;
 }
 
 .login-prompt .trigger {

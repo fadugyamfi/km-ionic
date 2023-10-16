@@ -65,6 +65,7 @@ const i18n = useI18n();
 const onContinue = async () => {
     try {
         const response = await userStore.changePin(form.fields as ChangePINRequest);
+
         if( response ) {
             toastStore.showSuccess( i18n.t("auth.resetPin.pinSuccessfullyReset") );
 

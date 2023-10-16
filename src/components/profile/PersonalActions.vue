@@ -62,6 +62,7 @@ import { mapStores } from 'pinia';
 import { search, createOutline, powerOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { useToastStore } from '../../stores/ToastStore';
+import { handleAxiosRequestError } from '../../utilities';
 
 
 export default defineComponent({
@@ -88,10 +89,12 @@ export default defineComponent({
             const toastStore = useToastStore();
             toastStore.blockUI("Logging Out...");
 
-            this.userStore.logout().then(response => {
-                this.router.push('/auth/login');
-                toastStore.unblockUI();
-            });
+            this.userStore.logout()
+                .then(() => {
+                    this.router.replace('/auth/login');
+                    toastStore.unblockUI();
+                })
+                .catch(error => handleAxiosRequestError(error));
         }
     }
 });

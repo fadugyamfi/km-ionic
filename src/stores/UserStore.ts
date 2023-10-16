@@ -201,7 +201,11 @@ export const useUserStore = defineStore("user", {
 
         async changePin(credentials: ChangePINRequest) {
             return axios.post('/v2/auth/change-pin', credentials)
-                .then(response => response.data)
+                .then(response => {
+                    this.resettingPIN = false;
+
+                    return response.data;
+                })
                 .catch(error => handleAxiosRequestError(error))
         },
 
@@ -218,6 +222,7 @@ export const useUserStore = defineStore("user", {
         },
 
         async setRegisteringAs(flow: string) {
+            this.resettingPIN = false;
             this.registering = true;
             this.registrationFlow = flow;
 

@@ -8,8 +8,11 @@
 
         <IonContent class="ion-padding">
 
-            <h3 v-if="userStore.resettingPIN">{{ $t("auth.resetPin.resettingYourPIN") }}</h3>
-            <h3 v-else>{{ $t("general.phoneNumber") }}</h3>
+            <h3 v-if="userStore.resettingPIN == true">
+                {{ $t("auth.resetPin.resettingYourPIN") }}
+            </h3>
+            <!-- Being explicit here due a funny rendering bug. Flag is not being rechecked -->
+            <h3 v-if="userStore.resettingPIN != true">{{ $t("general.phoneNumber") }}</h3>
 
             <p style="font-size: 14px;">
                 {{ $t("auth.verifyNumber.pleaseEnterYourPhoneNumberToProceed") }}
@@ -32,10 +35,8 @@
 <script setup lang="ts">
 import { Ref, computed, ref } from 'vue';
 import { IonBackButton, IonButtons, IonHeader, IonPage, IonToolbar, IonContent, IonFooter, IonSpinner, IonText } from '@ionic/vue';
-import KolaInputField from '@/components/KolaInputField.vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
 import { useUserStore } from '@/stores/UserStore';
 import PhoneInput from '@/components/forms/PhoneInput.vue';
 import { useToastStore } from '@/stores/ToastStore';
