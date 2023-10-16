@@ -16,8 +16,8 @@
         </ion-tab-button>
 
         <ion-tab-button tab="tab3" href="/vendor/sales">
-          <img src="/images/navigation/cart.svg" />
-          <img src="/images/navigation/cart_active.svg" class="active" />
+          <img src="/images/navigation/sales.svg" />
+          <img src="/images/navigation/sales_active.svg" class="active" />
           <ion-label>{{ $t('general.sales') }}</ion-label>
         </ion-tab-button>
 
