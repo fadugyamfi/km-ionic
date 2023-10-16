@@ -7,8 +7,13 @@
         </IonHeader>
 
         <IonContent class="ion-padding">
-            <h3>Phone Number</h3>
-            <p style="font-size: 14px;">Please Enter Your Phone Number To Proceed</p>
+
+            <h3 v-if="userStore.resettingPIN">{{ $t("auth.resetPin.resettingYourPIN") }}</h3>
+            <h3 v-else>{{ $t("general.phoneNumber") }}</h3>
+
+            <p style="font-size: 14px;">
+                {{ $t("auth.verifyNumber.pleaseEnterYourPhoneNumberToProceed") }}
+            </p>
 
             <div style="margin-top: 50px;">
                 <PhoneInput v-model="phoneNumber"/>
@@ -18,7 +23,7 @@
         <IonFooter class="ion-padding">
             <KolaYellowButton :disabled="!numberEntered" @click="onContinue()">
                 <IonSpinner v-if="validating" name="crescent"></IonSpinner>
-                <IonText v-else>Continue</IonText>
+                <IonText v-else>{{ $t('general.continue') }}</IonText>
             </KolaYellowButton>
         </IonFooter>
     </IonPage>

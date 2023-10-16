@@ -3,7 +3,7 @@
         <section class="rating">
             <span>{{ business?.rating || 1 }}</span>
             <span>⭐</span>
-            <span class="reviews">{{ business?.reviews_count || 0 }} Reviews</span>
+            <span class="reviews" v-if="showReviews">{{ business?.reviews_count || 0 }} Reviews</span>
         </section>
         <section class="distance ion-align-items-center" style="display: flex;">
             <IonIcon :icon="locationOutline"></IonIcon>
@@ -22,6 +22,10 @@ export default defineComponent({
     props: {
         business: {
             type: Object as PropType<Business | null>
+        },
+        showReviews: {
+            type: Boolean,
+            default: true
         }
     },
     data() {

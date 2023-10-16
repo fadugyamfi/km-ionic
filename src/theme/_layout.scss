@@ -78,3 +78,35 @@ ion-card {
         color: #2073d9;
     }
 }
+
+ion-tabs {
+    ion-tab-bar {
+      background-color: #ffffff;
+      border: none;
+      box-shadow: -4px 0px 8px rgba(0, 0, 0, 0.12);
+
+      ion-tab-button {
+        img.active {
+            display: none;
+        }
+
+        ion-label {
+          color: #003366;
+        }
+
+        &.tab-selected {
+          img.active {
+            display: block;
+          }
+
+          img:not(.active) {
+            display: none;
+          }
+
+          ion-label {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }

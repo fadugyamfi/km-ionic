@@ -30,9 +30,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Auth/PhoneNumberVerify.vue'),
   },
   {
-    name: 'Forgot PIN',
-    path: '/auth/forgot-pin',
-    component: () => import('@/views/Auth/ForgotPIN.vue'),
+    name: 'Reset PIN',
+    path: '/auth/reset-pin',
+    component: () => import('@/views/Auth/ResetPIN.vue'),
   },
   {
     name: 'Signup',

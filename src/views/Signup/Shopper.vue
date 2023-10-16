@@ -63,49 +63,22 @@
                     {{ $t("signup.vendor.location.useCurrentLocation") }}
                 </IonButton>
 
+                <PinEntryField
+                    name="pin"
+                    :label="$t('signup.shopper.newPinCode')"
+                    v-model="form.fields.pin"
+                ></PinEntryField>
 
-                <div class="kola-input-item">
-                    <IonItem lines="none" :class="{ 'ion-invalid ion-touched': form.errors.pin }">
-                        <IonInput
-                            ref="pin"
-                            :class="{ 'ion-invalid ion-touched': form.errors.pin }"
-                            :label="$t('signup.shopper.newPinCode')"
-                            labelPlacement="stacked"
-                            v-model="form.fields.pin"
-                            :type="pinVisible ? 'number' : 'password'"
-                            :maxlength="4"
-                            name="pin"
-                            @ion-input="form.validate($event)"
-                            required
-                        ></IonInput>
-                        <IonButton fill="clear" color="medium" @click="pinVisible = !pinVisible">
-                            <IonIcon slot="icon-only" :icon="pinVisible ? eye : eyeOff"></IonIcon>
-                        </IonButton>
-                    </IonItem>
-                </div>
+                <PinEntryField
+                    name="pin_confirmation"
+                    :label="$t('signup.shopper.confirmPinCode')"
+                    v-model="form.fields.pin_confirmation"
+                ></PinEntryField>
 
-                <div class="kola-input-item">
-                    <IonItem lines="none">
-                        <IonInput
-                            :class="{ 'ion-invalid ion-touched': form.errors.pin_confirmation }"
-                            :label="$t('signup.shopper.confirmPinCode')"
-                            labelPlacement="stacked"
-                            v-model="form.fields.pin_confirmation"
-                            name="pin_confirmation"
-                            :type="confPinVisible ? 'number' : 'password'"
-                            :maxlength="4"
-                            @ion-input="form.validate($event)"
-                            required
-                        ></IonInput>
-                        <IonButton fill="clear" color="medium" @click="confPinVisible = !confPinVisible">
-                            <IonIcon slot="icon-only" :icon="confPinVisible ? eye : eyeOff"></IonIcon>
-                        </IonButton>
-                    </IonItem>
-                </div>
             </form>
         </IonContent>
 
-        <IonFooter class="ion-padding ion-no-border">
+        <IonFooter class="ion-padding ion-no-border" id="footer">
             <KolaYellowButton :disabled="!formValid" @click="onContinue">
                 <IonSpinner v-if="creating" name="crescent"></IonSpinner>
                 <IonText v-else>{{ $t("general.continue") }}</IonText>
@@ -126,35 +99,33 @@ import {
     IonFooter,
     IonText,
     IonSpinner,
-IonInput,
-IonItem,
-IonIcon,
-IonButton
+    IonInput,
+    IonIcon,
+    IonButton
 } from '@ionic/vue';
-import { Ref, computed, ref } from 'vue';
+import { computed, ref } from 'vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import { useUserStore } from '@/stores/UserStore';
 import { useRouter } from 'vue-router';
 import { useForm } from '@/composables/form';
-import { eye, eyeOff, navigateOutline } from 'ionicons/icons';
+import { navigateOutline } from 'ionicons/icons';
 import { handleAxiosRequestError } from '@/utilities';
 import { useGeolocation } from '@/composables/useGeolocation';
 import { useToastStore } from '@/stores/ToastStore';
+import PinEntryField from '../Auth/PinEntryField.vue';
 
 let creating = ref(false);
 const router = useRouter();
+const toastStore = useToastStore();
 
 const form = useForm({
     name: '',
-    location: '',
+    business_location: '',
     business_name: '',
     pin: '',
     pin_confirmation: ''
 });
-
-const pinVisible = ref(false);
-const confPinVisible = ref(false);
 
 const formValid = computed(() => {
     const fields = form.fields;
@@ -169,25 +140,44 @@ const formValid = computed(() => {
 const businessStore = useBusinessStore();
 const userStore = useUserStore();
 
-const onContinue = () => {
+const onContinue = async () => {
     creating.value = true;
 
-    businessStore.createBusinessAsShopper({
-        name: form.fields.business_name,
-        location: form.fields.business_location,
-        phone_number: userStore.user?.phone_number,
-        business_types_id: 1,
-        business_owner_name: form.fields.name,
-        business_owner_phone: userStore.user?.phone_number
-    }).then((business) => {
+    toastStore.blockUI("Hold On As We Create Your Business");
+
+    try {
+
+        const business = await businessStore.createBusinessAsShopper({
+            name: form.fields.business_name,
+            location: form.fields.business_location,
+            phone_number: userStore.user?.phone_number,
+            business_types_id: 1,
+            business_owner_name: form.fields.name,
+            business_owner_phone: userStore.user?.phone_number
+        })
+
         if( business ) {
+            await userStore.changePin({
+                phone_number: userStore.user?.phone_number as string,
+                pin: form.fields.pin,
+                pin_confirmation: form.fields.pin_confirmation
+            });
+
+            await userStore.fetchUserInfo();
+            await userStore.fetchUserBusinesses();
+
             router.push('/shopper');
+        } else {
+            toastStore.unblockUI();
+            toastStore.showError("Account Registration Failed. Please try again", '', 'bottom', 'footer')
         }
-    }).catch(error => {
+
+    } catch(error) {
         handleAxiosRequestError(error);
-    }).finally(() => {
+    } finally {
         creating.value = false;
-    })
+        toastStore.unblockUI();
+    }
 }
 
 const getLocation = async () => {

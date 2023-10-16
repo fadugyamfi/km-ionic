@@ -5,27 +5,32 @@
       <ion-tab-bar slot="bottom">
         <ion-tab-button tab="tab1" href="/shopper/home">
           <img src="/images/navigation/home.svg" />
-          <ion-label>Home</ion-label>
+          <img class="active" src="/images/navigation/home_active.svg" />
+          <ion-label>{{ $t('general.home') }}</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab2" href="/shopper/orders">
           <img src="/images/navigation/orders.svg" />
-          <ion-label>Orders</ion-label>
+          <img class="active" src="/images/navigation/orders_active.svg" />
+          <ion-label>{{ $t('general.orders') }}</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab3" href="/shopper/cart">
           <img src="/images/navigation/cart.svg" />
-          <ion-label>Cart</ion-label>
+          <img class="active" src="/images/navigation/cart_active.svg" />
+          <ion-label>{{ $t('general.cart') }}</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab4" href="/shopper/credits">
           <img src="/images/navigation/credit.svg" />
-          <ion-label>Credit</ion-label>
+          <img src="/images/navigation/credit_active.svg" class="active" />
+          <ion-label>{{ $t('general.credit') }}</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="tab5" href="/shopper/profile">
           <img src="/images/navigation/profile.svg" />
-          <ion-label>Profile</ion-label>
+          <img src="/images/navigation/profile_active.svg" class="active" />
+          <ion-label>{{ $t('general.profile') }}</ion-label>
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
@@ -33,27 +38,5 @@
 </template>
 
 <script setup lang="ts">
-import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { ellipse, square, triangle } from 'ionicons/icons';
+import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonPage, IonRouterOutlet } from '@ionic/vue';
 </script>
-
-<style scoped lang="scss">
-img {
-  height: 24px;
-}
-
-ion-tabs {
-  ion-tab-bar {
-    background-color: #ffffff;
-    border: none;
-    box-shadow: -4px 0px 8px rgba(0, 0, 0, 0.12);
-
-    ion-tab-button {
-      ion-label {
-        font-weight: bold;
-        color: #003366;
-      }
-    }
-  }
-}
-</style>
