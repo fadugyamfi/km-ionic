@@ -9,7 +9,7 @@
                     </IonButtons>
 
                     <IonTitle size="small" class="fw-bold">
-                        {{ category?.name }}
+                        {{ brand?.name }}
                     </IonTitle>
 
                     <IonButtons slot="end">
@@ -37,23 +37,23 @@
 <script setup lang="ts">
 import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonList, IonItem, IonLabel, IonSpinner, IonGrid, IonCol, IonRow } from '@ionic/vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
-import ProductCategory from '@/models/ProductCategory';
+import Brand from '@/models/Brand';
 import Product from '@/models/Product';
 import { ref, onMounted } from 'vue';
-import { useProductCategoryStore } from '@/stores/ProductCategoryStore';
+import { useBrandStore } from '@/stores/BrandStore';
 import { useRoute } from 'vue-router';
 import ProductCard from '@/components/cards/ProductCard.vue';
 
-const productCategoryStore = useProductCategoryStore();
+const brandStore = useBrandStore();
 const route = useRoute();
-const category = ref<ProductCategory|null>();
+const brand = ref<Brand|null>();
 const products = ref<Product[]>([]);
 const fetching = ref(false);
 
 onMounted(async () => {
     fetching.value = true;
-    category.value = await productCategoryStore.getCategory( +route.params.id );
-    products.value = await productCategoryStore.fetchCategoryProducts(category.value);
+    brand.value = await brandStore.getBrand(+route.params.id );
+    products.value = await brandStore.fetchBrandProducts(brand.value);
     fetching.value = false;
 });
 </script>

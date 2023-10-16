@@ -1,6 +1,6 @@
 <template>
     <section class="brand-card">
-        <ion-card>
+        <ion-card @click="viewBrand">
             <FavoriteButton
                 class="favorite-button"
                 :brand="brand"
@@ -32,15 +32,21 @@ export default defineComponent({
             type: Brand
         },
     },
-
     data() {
         return {
             locationOutline
         };
     },
+   methods:  {
+    viewBrand() {
+        this.$router.push(`/shopper/home/brands/${this.brand.id}`);
+        },
 
+
+   },
     components: { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonIcon, Image, FavoriteButton }
 });
+  
 </script>
 
 <style scoped lang="scss">

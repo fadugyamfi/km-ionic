@@ -80,7 +80,7 @@ export const useBrandStore = defineStore("brand", {
                     sort: 'latest'
                 };
 
-                const response = await axios.get('/v2/brands', { params });
+                const response = await axios.get('/v2/products', { params });
                 this.brandProducts = response.data.data.map((el: object) => new Product(el))
 
                 return this.brandProducts
