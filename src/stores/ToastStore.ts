@@ -38,7 +38,8 @@ export const useToastStore = defineStore('toast', {
             message: string,
             title?: string,
             position: 'top' | 'bottom' | 'middle' = 'top',
-            type: 'success' | 'error' | 'warning' | 'info' = 'info'
+            type: 'success' | 'error' | 'warning' | 'info' = 'info',
+            anchor?: string
         ) {
 
             const toast = await toastController.create({
@@ -48,26 +49,27 @@ export const useToastStore = defineStore('toast', {
                 position: position,
                 animated: true,
                 cssClass: `app-toast toast-${type}`,
-                icon: this.getIcon(type)
+                icon: this.getIcon(type),
+                positionAnchor: anchor
             });
 
             await toast.present();
         },
 
-        async showSuccess(message: string, title?: string, position: any = 'top') {
-            return this.showToast(message, title, position, 'success');
+        async showSuccess(message: string, title?: string, position: any = 'top', anchor?: string) {
+            return this.showToast(message, title, position, 'success', anchor);
         },
 
-        async showError(message: string, title?: string, position: any = 'top') {
-            return this.showToast(message, title, position, 'error');
+        async showError(message: string, title?: string, position: any = 'top', anchor?: string) {
+            return this.showToast(message, title, position, 'error', anchor);
         },
 
-        async showWarning(message: string, title?: string, position: any = 'top') {
-            return this.showToast(message, title, position, 'warning');
+        async showWarning(message: string, title?: string, position: any = 'top', anchor?: string) {
+            return this.showToast(message, title, position, 'warning', anchor);
         },
 
-        async showInfo(message: string, title?: string, position: any = 'top') {
-            return this.showToast(message, title, position, 'info');
+        async showInfo(message: string, title?: string, position: any = 'top', anchor?: string) {
+            return this.showToast(message, title, position, 'info', anchor);
         },
     }
 })

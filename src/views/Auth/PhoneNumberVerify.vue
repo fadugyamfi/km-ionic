@@ -7,8 +7,16 @@
         </IonHeader>
 
         <IonContent class="ion-padding">
-            <h3>Phone Number</h3>
-            <p style="font-size: 14px;">Please Enter Your Phone Number To Proceed</p>
+
+            <h3 v-if="userStore.resettingPIN == true">
+                {{ $t("auth.resetPin.resettingYourPIN") }}
+            </h3>
+            <!-- Being explicit here due a funny rendering bug. Flag is not being rechecked -->
+            <h3 v-if="userStore.resettingPIN != true">{{ $t("general.phoneNumber") }}</h3>
+
+            <p style="font-size: 14px;">
+                {{ $t("auth.verifyNumber.pleaseEnterYourPhoneNumberToProceed") }}
+            </p>
 
             <div style="margin-top: 50px;">
                 <PhoneInput v-model="phoneNumber"/>
@@ -18,7 +26,7 @@
         <IonFooter class="ion-padding">
             <KolaYellowButton :disabled="!numberEntered" @click="onContinue()">
                 <IonSpinner v-if="validating" name="crescent"></IonSpinner>
-                <IonText v-else>Continue</IonText>
+                <IonText v-else>{{ $t('general.continue') }}</IonText>
             </KolaYellowButton>
         </IonFooter>
     </IonPage>
@@ -27,10 +35,8 @@
 <script setup lang="ts">
 import { Ref, computed, ref } from 'vue';
 import { IonBackButton, IonButtons, IonHeader, IonPage, IonToolbar, IonContent, IonFooter, IonSpinner, IonText } from '@ionic/vue';
-import KolaInputField from '@/components/KolaInputField.vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
 import { useUserStore } from '@/stores/UserStore';
 import PhoneInput from '@/components/forms/PhoneInput.vue';
 import { useToastStore } from '@/stores/ToastStore';

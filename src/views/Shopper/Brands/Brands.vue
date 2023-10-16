@@ -33,14 +33,12 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonLabel, IonTitle, IonGrid, IonRow, IonCol, IonSpinner } from '@ionic/vue';
-import ProductCategoryList from '@/components/lists/ProductCategoryList.vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonGrid, IonRow, IonCol, IonSpinner } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
-import { useProductCategoryStore } from '@/stores/ProductCategoryStore';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import BrandCard from '@/components/cards/BrandCard.vue';
 import Brand from '@/models/Brand';
-import { useBrandStore } from '../../../stores/BrandStore';
+import { useBrandStore } from '@/stores/BrandStore';
 
 const brandStore = useBrandStore();
 const brands = ref<Brand[]>([]);
@@ -51,4 +49,3 @@ async function fetchProductCategories() {
 
 onMounted(() => fetchProductCategories())
 </script>
-@/stores/ProductCategoryStore

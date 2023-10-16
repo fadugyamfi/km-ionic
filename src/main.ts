@@ -42,6 +42,7 @@ const i18n = createI18n({
   locale: "en", // set locale
   fallbackLocale: "en", // set fallback locale
   messages, // set locale messages
+  allowComposition: true
 });
 
 // setup pina

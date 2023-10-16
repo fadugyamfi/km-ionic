@@ -1,6 +1,6 @@
 <template>
-    <input type="text" ref="phone-input" class="form-control phone-input kola-input" :class="classes"
-           placeholder="020 000 0000" :value="modelValue" @keyup="onChange($event)" @change="onChange($event)" />
+    <input type="tel" ref="phone-input" class="form-control phone-input kola-input" :class="classes"
+           placeholder="020 000 0000" :value="modelValue" @change="onChange($event)" />
 </template>
 
 <script lang="ts">
@@ -62,8 +62,11 @@ export default defineComponent({
         padding: 10px 30px;
         padding-left: 60px;
         width: 100%;
-
+        min-height: 56px;
+        border: solid 1px #ccc;
+        border-radius: 8px;
     }
+
     &:focus {
         border-color: #74787c;
     }

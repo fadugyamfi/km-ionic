@@ -31,6 +31,7 @@ import KolaWhiteButton from '@/components/KolaWhiteButton.vue';
 import { mapStores } from 'pinia';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import HeaderArea from './HeaderArea.vue';
+import { useUserStore } from '@/stores/UserStore';
 
 export default defineComponent({
 
@@ -43,26 +44,13 @@ export default defineComponent({
     },
 
     computed: {
-        ...mapStores( useBusinessStore )
+        ...mapStores( useBusinessStore, useUserStore )
     },
 
     mounted() {
         this.businessStore.loadCachedRegistrationInfo();
+        this.userStore.fetchUserInfo();
+        this.userStore.fetchUserBusinesses();
     },
 })
 </script>
-
-<style lang="scss">
-header {
-
-    margin-bottom: 20px;
-
-    p {
-        font-size: 0.75em;
-    }
-}
-
-main {
-
-}
-</style>

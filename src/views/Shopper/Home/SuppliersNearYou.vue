@@ -9,9 +9,19 @@
         </header>
 
         <main>
-            <Swiper :slides-per-view="2">
-                <SwiperSlide v-for="supplier of suppliers" :key="supplier">
-                    <SupplierCard :supplier="supplier"></SupplierCard>
+            <Swiper>
+                <SwiperSlide v-for="(slide, index) of slides" :key="slide">
+                    <IonGrid>
+                        <IonRow>
+                            <IonCol size="6">
+                                <SupplierCard :supplier="slide[0]"></SupplierCard>
+                            </IonCol>
+                            <IonCol size="6" v-if="slide[1]">
+                                <SupplierCard :supplier="slide[1]"></SupplierCard>
+                            </IonCol>
+                        </IonRow>
+                    </IonGrid>
+
                 </SwiperSlide>
             </Swiper>
         </main>
@@ -27,19 +37,24 @@ import { defineComponent } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import SupplierCard from '@/components/cards/SupplierCard.vue';
 import Business from '@/models/Business';
+import { IonCol, IonGrid, IonRow } from '@ionic/vue';
 
 export default defineComponent({
 
     components: {
         Swiper,
         SwiperSlide,
-        SupplierCard
+        SupplierCard,
+        IonGrid,
+        IonRow,
+        IonCol
     },
 
     data() {
         return {
             backOff: 1,
-            suppliers: []
+            suppliers: [] as Business[],
+            slides: [] as any
         }
     },
 
@@ -54,9 +69,17 @@ export default defineComponent({
                 const response = await axios.get('/v2/businesses', { params });
                 const suppliers = response.data.data;
 
-                this.suppliers = suppliers.map((element: any) => {
-                    return new Business(element);
-                });;
+                this.suppliers = suppliers.map((element: any) => new Business(element));
+
+                this.slides = [];
+
+                for(let i = 0; i < this.suppliers.length; i += 2) {
+                    if( this.suppliers[i + 1] ) {
+                        this.slides.push([ this.suppliers[i], this.suppliers[i + 1] ]);
+                    } else {
+                        this.slides.push([ this.suppliers[i] ]);
+                    }
+                }
             } catch (error) {
                 console.log(error);
                 setTimeout(() => {
@@ -72,18 +95,3 @@ export default defineComponent({
     }
 });
 </script>
-
-<style lang="scss">
-
-.suppliers-near-you {
-
-    .swiper-wrapper {
-        display: inline-flex;
-        gap: 15px;
-    }
-
-    main {
-        padding: 0px 10px;
-    }
-}
-</style>

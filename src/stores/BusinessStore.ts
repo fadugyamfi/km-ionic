@@ -133,7 +133,7 @@ export const useBusinessStore = defineStore("business", {
             this.setSelectedBusiness(this.businesses != null ? this.businesses[0] : null);
         },
 
-        async createBusinessAsShopper(postData: object) {
+        async createBusinessAsShopper(postData: object): Promise<Business | null> {
             return axios.post('/v2/businesses', postData)
                 .then(response => {
                     if( response.status >= 200 && response.status < 300 ) {

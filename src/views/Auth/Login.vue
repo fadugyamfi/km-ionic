@@ -12,20 +12,16 @@
 
             <div class="ion-margin-top">
                 <section class="ion-padding-top ion-padding-bottom">
-                    <IonLabel class="input-label">{{ $t("general.phoneNumber") }}</IonLabel>
                     <PhoneInput v-model="phoneNumber"/>
                 </section>
 
                 <section class="pin-entry">
-                    <IonLabel class="input-label">{{ $t("general.pin") }}</IonLabel>
-                    <IonInput v-model="pin" class="kola-input" type="password" placeholder="Enter 4 digit PIN" :maxlength="4" fill="outline"></IonInput>
+                    <PinEntryField v-model="pin" :label="$t('general.pin')"></PinEntryField>
                 </section>
 
-                <div class="forgot-pin-wrapper ion-padding-bottom">
-                    <IonText router-link="/auth/forgot-pin" color="dark" class="forgot-pin-link">
-                        {{ $t("auth.login.forgotYourPin") }}
-                    </IonText>
-                </div>
+                <IonButton fill="clear" color="dark" @click="forgotPIN()" style="text-transform: none; padding-left: 0px;">
+                    {{ $t("auth.login.forgotYourPin") }}
+                </IonButton>
             </div>
 
             <IonButton expand="block" fill="clear" color="dark" router-link="/signup" class="login-prompt">
@@ -34,7 +30,7 @@
             </IonButton>
         </IonContent>
 
-        <IonFooter class="ion-padding ion-no-border">
+        <IonFooter class="ion-padding ion-no-border" id="footer">
             <KolaYellowButton @click="login()">
                 <IonSpinner v-if="fetching" name="crescent"></IonSpinner>
                 <IonText v-else>{{ $t("auth.login.login") }}</IonText>
@@ -47,20 +43,30 @@
 import { IonBackButton, IonButton, IonContent, IonFooter, IonHeader, IonInput, IonLabel, IonPage, IonSpinner, IonText, IonToolbar, toastController } from '@ionic/vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { defineComponent } from 'vue';
-import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/UserStore';
 import { mapStores } from 'pinia';
 import PhoneInput from '@/components/forms/PhoneInput.vue';
+import PinEntryField from './PinEntryField.vue';
+import { useToastStore } from '../../stores/ToastStore';
 
 export default defineComponent({
 
     components: {
-    KolaYellowButton,
-    IonBackButton, IonContent, IonFooter, IonHeader, IonInput, IonPage, IonSpinner, IonText, IonToolbar,
-    PhoneInput,
-    IonLabel,
-    IonButton
-},
+        KolaYellowButton,
+        IonBackButton,
+        IonContent,
+        IonFooter,
+        IonHeader,
+        IonInput,
+        IonPage,
+        IonSpinner,
+        IonText,
+        IonToolbar,
+        PhoneInput,
+        IonLabel,
+        IonButton,
+        PinEntryField
+    },
 
     data() {
         return {
@@ -71,7 +77,7 @@ export default defineComponent({
     },
 
     computed: {
-        ...mapStores( useUserStore )
+        ...mapStores( useUserStore, useToastStore )
     },
 
     methods: {
@@ -84,19 +90,18 @@ export default defineComponent({
                 pin: this.pin
             })
 
-            .then(() => this.$router.push('/shopper/home'))
+            .then(() => this.$router.replace('/shopper/home'))
 
             .catch(async (error: Error) => {
-                const toast = await toastController.create({
-                    message: error.message || 'Authentication Failed Unknown',
-                    duration: 1500,
-                    position: 'bottom',
-                });
-
-                await toast.present();
+                this.toastStore.showError(error.message || this.$t('Authentication Failed Unknown'), '', 'bottom', 'footer');
             })
 
             .finally(() => this.fetching = false);
+        },
+
+        forgotPIN() {
+            this.userStore.resettingPIN = true;
+            this.$router.push('/auth/verify-number');
         },
 
         handleOnChange() {},
@@ -106,7 +111,7 @@ export default defineComponent({
 
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .header {
     margin-bottom: 2px;
     margin-top: 0px;
@@ -132,7 +137,7 @@ export default defineComponent({
 .login-prompt {
     font-size: 0.9em;
     text-transform: none;
-    margin-top: 20px;
+    margin-top: 60px;
 }
 
 .login-prompt .trigger {
@@ -162,5 +167,9 @@ export default defineComponent({
         padding-left: 7px;
         padding-right: 7px;
     }
+}
+
+.iti input {
+    min-height: 56px;
 }
 </style>

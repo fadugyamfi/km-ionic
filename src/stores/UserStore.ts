@@ -20,6 +20,7 @@ type UserStoreState = {
     fetching: Boolean,
     appMode: string | null,
     registering: Boolean,
+    resettingPIN: Boolean,
     registrationFlow?: String,
     auth?: object|null,
     apiHeaders?: object|null,
@@ -35,7 +36,7 @@ type Auth = {
     access_token: String,
 }
 
-interface ChangePINRequest {
+export interface ChangePINRequest {
     phone_number: string;
     pin: string;
     pin_confirmation: string;
@@ -49,6 +50,7 @@ export const useUserStore = defineStore("user", {
             onboarded: false,
             appMode: 'shopping',
             fetching: false,
+            resettingPIN: false,
             registering: false,
             registrationFlow: '',
             user: null as User | null,
@@ -171,8 +173,12 @@ export const useUserStore = defineStore("user", {
             await storage.set('kola.onboarded', this.onboarded ? 'true' : 'false', 5, 'years');
         },
 
-        async verifyPhoneNumber(credentials: { phone_number: string }) {
+        async verifyPhoneNumber(credentials: { phone_number: string, request_otp?: boolean }) {
             this.verification.phone_number = credentials.phone_number;
+
+            if( this.resettingPIN ) {
+                credentials.request_otp = true;
+            }
 
             return axios.post('/v2/auth/verify', credentials)
                 .then((response) => {
@@ -195,7 +201,11 @@ export const useUserStore = defineStore("user", {
 
         async changePin(credentials: ChangePINRequest) {
             return axios.post('/v2/auth/change-pin', credentials)
-                .then(response => response.data)
+                .then(response => {
+                    this.resettingPIN = false;
+
+                    return response.data;
+                })
                 .catch(error => handleAxiosRequestError(error))
         },
 
@@ -212,6 +222,7 @@ export const useUserStore = defineStore("user", {
         },
 
         async setRegisteringAs(flow: string) {
+            this.resettingPIN = false;
             this.registering = true;
             this.registrationFlow = flow;
 

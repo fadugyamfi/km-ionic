@@ -1,6 +1,6 @@
 <template>
     <section class="supplier-card">
-        <ion-card>
+        <ion-card class="ion-no-padding ion-no-margin">
             <Image :alt="supplier.name" :src="supplier.logo" />
 
             <IonCardHeader>
@@ -16,7 +16,7 @@
             </IonCardHeader>
 
             <IonCardContent>
-                <BusinessRatingAndReviews :business="supplier"></BusinessRatingAndReviews>
+                <BusinessRatingAndReviews :business="supplier" :show-reviews="false"></BusinessRatingAndReviews>
             </IonCardContent>
         </ion-card>
     </section>
@@ -60,8 +60,8 @@ export default defineComponent({
 <style scoped lang="scss">
 .supplier-card {
     ion-card {
-        width: 170px;
-        max-height: 250px;
+        width: 100%;
+        height: 250px;
         min-height: 150px;
 
         ion-card-header {

@@ -55,17 +55,19 @@ const onContinue = async () => {
         code: otp.value
     })
     .then(response => {
-        if( !userStore.registering ) {
-            router.push('/shopper/home');
-            return;
+        if( userStore.resettingPIN ) {
+            return router.push('/auth/reset-pin');
         }
 
-        if( userStore.registering && userStore.registrationFlow == 'buy' ) {
-            router.push('/signup/shopper');
-            return;
+        if( userStore.registering ) {
+            if ( userStore.registrationFlow == 'buy' ) {
+                return router.push('/signup/shopper');
+            } else {
+                return router.push('/signup/vendor/summary');
+            }
         }
 
-        return router.push('/signup/vendor/summary');
+        return router.push('/shopper/home');
     })
     .finally(() => { validating.value = false });
 }

@@ -6,7 +6,13 @@
         "yes": "Yes",
         "no": "No",
         "optional": "optional",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "home": "Home",
+        "sales": "Sales",
+        "credit": "Credits",
+        "orders": "Orders",
+        "profile": "Profile",
+        "cart": "Cart"
     },
     "onboarding": {
         "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -91,10 +97,21 @@
             "signUp": "Sign Up",
             "login": "Login"
         },
+        "verifyNumber": {
+            "pleaseEnterYourPhoneNumberToProceed": "Please Enter Your Phone Number To Proceed"
+        },
         "validateOtp": {
             "verifyNumber": "Verify Number",
             "codeSent": "A code was sent to %{number}",
             "pleaseEnterCode": "Please enter code below to proceed"
+        },
+        "resetPin": {
+            "resettingYourPIN": "Resetting Your PIN",
+            "pleaseEnterAndConfirmYourNewPin": "Please Enter and Confirm Your New PIN To Proceed",
+            "pinSuccessfullyReset": "PIN Successfully Reset",
+            "loadingYourAccountInfo": "Loading Your Account Info",
+            "pinResetFailed": "PIN Reset Failed. Please try again",
+            "phoneNumberRequired": "Phone Number For Reset Required"
         }
     }
 }
