@@ -12,8 +12,8 @@ const meta = (key:string) => {
 
 export function handleAxiosRequestError(error:any) {
     const toastStore = useToastStore();
-console.log(error);
-    if( error.response?.status == 401 ) {
+
+    if( error.response?.status == 401 || error.response?.status == 403 ) {
         return refreshAuth();
     }
 

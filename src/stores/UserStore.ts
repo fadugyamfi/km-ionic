@@ -281,14 +281,18 @@ export const useUserStore = defineStore("user", {
                 })
         },
 
+        async clearSessionInfo() {
+            await storage.remove('kola.active-business');
+            await storage.remove('kola.user-businesses');
+            await storage.remove("kola.business");
+            await storage.remove('kola.user');
+            await storage.remove('kola.auth');
+            await storage.remove('kola.step');
+        },
+
         async logout() {
             return axios.post("/v2/auth/logout").then(async (response) => {
-                await storage.remove('kola.active-business');
-                await storage.remove('kola.user-businesses');
-                await storage.remove("kola.business");
-                await storage.remove('kola.user');
-                await storage.remove('kola.auth');
-                await storage.remove('kola.step');
+                await this.clearSessionInfo();
 
                 return response?.data;
             });
