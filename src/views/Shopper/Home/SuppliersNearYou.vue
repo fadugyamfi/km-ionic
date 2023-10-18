@@ -3,12 +3,13 @@
         <header class="ion-padding-horizontal">
             <h6>Suppliers Near You</h6>
 
-            <a router-link="/shopper/home/suppliers">
+            <router-link to="/shopper/home/suppliers">
                 View all
-            </a>
+        </router-link>
         </header>
 
         <main>
+        
             <Swiper>
                 <SwiperSlide v-for="(slide, index) of slides" :key="slide">
                     <IonGrid>

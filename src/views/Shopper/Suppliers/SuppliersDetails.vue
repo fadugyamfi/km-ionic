@@ -1,70 +1,75 @@
 <template>
-    <ion-page>
-      <ShopperHeader :show-search="false"></ShopperHeader>
-  
-      <ion-content :fullscreen="true">
-        <section class="supplier-details">
-          <ion-card>
-            <Image :alt="supplier.name" :src="supplier.logo" />
-            <IonCardHeader>
-              <IonCardTitle>{{ supplier.name }}</IonCardTitle>
-              <IonCardSubtitle>
-                <span v-if="supplier.min_order_amount">
-                  {{ supplier.currency?.symbol }} {{ supplier.min_order_amount }} minimum
-                </span>
-                <span v-else>
-                  No Order Minimums
-                </span>
-              </IonCardSubtitle>
-            </IonCardHeader>
-            <IonCardContent>
-              <BusinessRatingAndReviews :business="supplier"></BusinessRatingAndReviews>
-            </IonCardContent>
-          </ion-card>
-  
-          <section class="supplier-products">
-            <h2>Products</h2>
-            <ProductList :products="supplier.products"></ProductList>
-          </section>
-        </section>
-      </ion-content>
-    </ion-page>
-  </template>
-  
-  <script lang="ts">
-  import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
-  import { defineComponent, PropType } from 'vue';
-  import Business from '@/models/Business';
-  import Image from '@/components/Image.vue';
-  import BusinessRatingAndReviews from '@/components/modules/business/BusinessRatingAndReviews.vue';
-  import ProductList from '@/components/lists/ProductList.vue';
-  import ShopperHeader from '@/components/layout/ShopperHeader.vue';
-  
-  export default defineComponent({
-    props: {
-      supplier: {
-        required: true,
-        type: Business,
-      },
-    },
-  
-    components: { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, Image, BusinessRatingAndReviews, ProductList, ShopperHeader },
-  });
-  </script>
-  
-  <style lang="scss">
-  .supplier-details {
-    padding: 10px;
-  
-    .supplier-products {
-      margin-top: 20px;
-  
-      h2 {
-        font-size: 1.5em;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-    }
-  }
-  </style>
-  
+  <ion-page>
+    <section class="ion-padding">
+      <IonHeader class="inner-header">
+        <IonToolbar class="ion-align-items-center">
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/shopper/home/suppliers"></IonBackButton>
+          </IonButtons>
+          <IonTitle size="small" class="fw-bold">
+            {{ supplier?.name }}
+          </IonTitle>
+          <IonButtons slot="end">
+            <NotificationButton></NotificationButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+    </section>
+
+    <ion-content :fullscreen="true">
+      <section v-if="fetching" class="ion-text-center d-flex ion-justify-content-center ion-padding">
+        <IonSpinner name="crescent"></IonSpinner>
+      </section>
+      <section v-else>
+        <SupplierCard :supplier="Business"></SupplierCard>
+        <IonGrid>
+          <IonRow>
+            <IonCol size="6" v-for="product in products" :key="product.id">
+              <ProductCard :product="product"></ProductCard>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+      </section>
+    </ion-content>
+  </ion-page>
+</template>
+
+<script setup lang="ts">
+import {
+  IonPage,
+  IonContent,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonTitle,
+  IonSpinner,
+  IonGrid,
+  IonCol,
+  IonRow,
+} from '@ionic/vue';
+import NotificationButton from '@/components/notifications/NotificationButton.vue';
+import { ref, onMounted } from 'vue';
+import { useSupplierStore } from '@/stores/Supplierstore';
+import SupplierCard from '@/components/cards/SupplierCard.vue';
+import ProductCard from '@/components/cards/ProductCard.vue';
+import { useRoute } from 'vue-router';
+import Business from '@/models/Business';
+import Product from '@/models/Product';
+
+const SupplierStore = useSupplierStore();
+const route = useRoute();
+const supplierId = +route.params.id;
+const supplier = ref<Business | null>(null);
+const products = ref<Product[]>([]);
+const fetching = ref(false);
+
+onMounted(async () => {
+  fetching.value = true;
+  await SupplierStore.getSupplier(supplierId);
+  await SupplierStore.fetchSupplierProducts(supplierId);
+  supplier.value = SupplierStore.supplier;
+  products.value = SupplierStore.products;
+  fetching.value = false;
+});
+</script>
