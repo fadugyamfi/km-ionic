@@ -27,7 +27,7 @@
             <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
                 <span class="product-name"> {{ brand.name }} </span>
             </section>
-            <section>
+            <!-- <section>
                 <BrandRatingAndReviews :brand="brand"></BrandRatingAndReviews>
             </section>
             <section>
@@ -42,7 +42,7 @@
             </section>
             <section class="section tags">
                 <BrandTags :brand="brand"></BrandTags>
-            </section>
+            </section> -->
         </ion-content>
     </ion-page>
 </template>
