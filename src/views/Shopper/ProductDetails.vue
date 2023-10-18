@@ -60,7 +60,10 @@
                 <section class="section tags">
                     <ProductTags :product="product"></ProductTags>
                 </section>
+                <TopBrands></TopBrands>
             </main>
+
+        
         </IonContent>
 
         <IonSkeletonText v-if="!product" style="height: 300px" :animated="true"></IonSkeletonText>
@@ -90,6 +93,7 @@ import {
     IonText
 } from '@ionic/vue';
 import { defineComponent } from 'vue';
+
 import { close, heartOutline, heart, cart, cartOutline, shareOutline } from 'ionicons/icons'
 import Product from '@/models/Product';
 import { mapStores } from 'pinia';
@@ -106,6 +110,7 @@ import FavoriteButton from '@/components/modules/products/FavoriteButton.vue';
 import CartStatusButton from '../../components/modules/products/CartStatusButton.vue';
 import { useCartStore } from '../../stores/CartStore';
 import { handleAxiosRequestError } from '../../utilities';
+
 
 export default defineComponent({
 

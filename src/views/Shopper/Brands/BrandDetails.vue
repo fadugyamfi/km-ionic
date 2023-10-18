@@ -17,32 +17,34 @@
         </section>
         <ion-content :fullscreen="true">
             <section class="banner">
-                <img :src="defaultBanner" />
-                <aside>
-                    <IonAvatar size="medium">
-                        <span class="initials">RV</span>
-                    </IonAvatar>
-                </aside>
-            </section>
-            <!-- <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
+    <img :src="defaultBanner" @error="onLoadError" />
+    <aside>
+      <IonAvatar size="medium">
+        <template v-if="brand.logo">
+          <img :src="brand.logo" alt="Brand Logo" />
+        </template>
+        <template v-else>
+          <span class="initials">RV</span>
+        </template>
+      </IonAvatar>
+    </aside>
+  </section>
+            <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
                 <span class="product-name"> {{ brand.name }} </span>
-            </section> -->
-            <!-- <section>
+            </section> 
+            <section>
                 <BrandRatingAndReviews :brand="brand"></BrandRatingAndReviews>
             </section>
             <section>
                 <BrandLocation :brand=brand></BrandLocation>
             </section>
-
-            <section class="section min-order-section">
-                <BrandMinimumOrder :brand="brand"></BrandMinimumOrder>
-            </section>
-            <section class="section min-order-section">
-                <BrandDeliveryTime :brand="brand"></BrandDeliveryTime>
-            </section>
             <section class="section tags">
                 <BrandTags :brand="brand"></BrandTags>
-            </section> -->
+            </section>
+          
+            <section class="section arrival-section">
+          <BrandNewArrival></BrandNewArrival>
+        </section>
         </ion-content>
     </ion-page>
 </template>
@@ -57,8 +59,11 @@ import BrandMinimumOrder from '@/components/modules/brands/BrandMinimumOrder.vue
 import BrandLocation from '@/components/modules/brands/BrandLocation.vue';
 import BrandDeliveryTime from '@/components/modules/brands/BrandDeliveryTime.vue';
 import BrandTags from '@/components/modules/brands/BrandTags.vue';
+import BrandNewArrival from '@/components/modules/brands/BrandNewArrival.vue';
 import { useBrandStore } from '@/stores/BrandStore';
 import Brand from '@/models/Brand';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { IonText } from '@ionic/vue';
 import { useRoute } from 'vue-router';
 import ProductCard from '@/components/cards/ProductCard.vue';
 import { handleAxiosRequestError } from '@/utilities';
@@ -72,7 +77,7 @@ export default defineComponent({
         };
     },
 
-    components: { IonAvatar, IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, Brand, BrandRatingAndReviews, BrandLocation, BrandMinimumOrder, BrandTags, BrandDeliveryTime },
+    components: { IonAvatar, IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, Brand, BrandRatingAndReviews, BrandLocation, BrandMinimumOrder, BrandTags, BrandDeliveryTime, BrandNewArrival , Swiper, SwiperSlide, IonText, ProductCard },
 
     methods: {
         async fetchBrandDetails() {
