@@ -24,9 +24,9 @@
                     </IonAvatar>
                 </aside>
             </section>
-            <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
+            <!-- <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
                 <span class="product-name"> {{ brand.name }} </span>
-            </section>
+            </section> -->
             <!-- <section>
                 <BrandRatingAndReviews :brand="brand"></BrandRatingAndReviews>
             </section>
