@@ -1,5 +1,3 @@
-// /store/user.js
-
 import { defineStore } from "pinia";
 import { handleAxiosRequestError } from "@/utilities";
 import axios from 'axios';

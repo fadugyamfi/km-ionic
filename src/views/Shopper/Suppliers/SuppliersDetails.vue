@@ -50,7 +50,7 @@ import {
 } from '@ionic/vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import { ref, onMounted } from 'vue';
-import { useSupplierStore } from '@/stores/Supplierstore';
+import { useSupplierStore } from '@/stores/SupplierStore';
 import SupplierCard from '@/components/cards/SupplierCard.vue';
 import ProductCard from '@/components/cards/ProductCard.vue';
 import { useRoute } from 'vue-router';
