@@ -24,4 +24,6 @@ export default class Brand {
     unfavorite() {
         this.favorited = null;
     }
+
+      
 }

@@ -1,11 +1,7 @@
 <template>
     <section class="brand-card">
         <ion-card @click="viewBrand">
-            <FavoriteButton
-                class="favorite-button"
-                :brand="brand"
-                color="dark"
-            >
+            <FavoriteButton class="favorite-button" :brand="brand" color="dark">
             </FavoriteButton>
 
             <Image :alt="brand.name" :src="brand.logo" />
@@ -37,16 +33,26 @@ export default defineComponent({
             locationOutline
         };
     },
-   methods:  {
-    viewBrand() {
-        this.$router.push(`/shopper/home/brands/${this.brand.id}`);
+    methods: {
+        viewBrand() {
+            this.$router.push(`/shopper/home/brands/${this.brand.id}`);
         },
 
 
-   },
-    components: { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonIcon, Image, FavoriteButton }
+    },
+    components: {
+        IonCard,
+        IonCardHeader,
+        IonCardContent,
+        IonCardTitle,
+        IonCardSubtitle,
+        IonIcon,
+        Image,
+        FavoriteButton,
+        Brand
+    }
 });
-  
+
 </script>
 
 <style scoped lang="scss">
