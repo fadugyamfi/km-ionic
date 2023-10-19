@@ -11,7 +11,7 @@ export default class Business {
         throw new Error("Method not implemented.");
     }
 
-    public id: NullableStringOrNumber = null;
+    public id?: number | string;
     public name?: string;
     public location: NullableString = null;
     public phone_number: NullableString = null;

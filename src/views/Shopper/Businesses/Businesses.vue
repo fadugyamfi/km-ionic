@@ -7,7 +7,7 @@
             <IonBackButton defaultHref="/shopper/home"></IonBackButton>
           </IonButtons>
 
-          <IonTitle size="small"><b>All Suppliers</b></IonTitle>
+          <IonTitle size="small"><b>Suppliers</b></IonTitle>
 
           <IonButtons slot="end">
             <NotificationButton></NotificationButton>
@@ -16,26 +16,30 @@
       </IonHeader>
     </section>
 
-    <ion-content :fullscreen="true">
+    <ion-content>
       <SupplierList :suppliers="suppliers"></SupplierList>
     </ion-content>
   </ion-page>
 </template>
- 
+
 
 <script setup lang="ts">
 import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
 import Business from '@/models/Business';
 import { useBusinessStore } from '@/stores/BusinessStore';
-import SupplierList from '../../../components/lists/SupplierList.vue';
+import SupplierList from '@/components/lists/SuppliersList.vue';
 import NotificationButton from '../../../components/notifications/NotificationButton.vue';
+import { useRoute } from 'vue-router';
 
-const BusinessStore = useBusinessStore();
+const businessStore = useBusinessStore();
+const route = useRoute();
 const suppliers = ref<Business[]>([]);
+const params = route.params;
+console.log(params);
 
 async function fetchSuppliers() {
-  suppliers.value = await supplierStore.getSuppliers();
+  suppliers.value = await businessStore.getSuppliers();
 }
 
 onMounted(() => fetchSuppliers());

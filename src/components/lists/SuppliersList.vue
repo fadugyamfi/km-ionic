@@ -1,5 +1,7 @@
 <template>
   <section class="supplier-list d-flex">
+    <IonSpinner name="crescent" v-if="leftColumnItems.length == 0"></IonSpinner>
+
     <section v-if="leftColumnItems.length > 0" class="d-flex flex-column ion-align-items-stretch">
       <SupplierCard
         v-for="(supplier, index) of leftColumnItems"
@@ -28,6 +30,7 @@
 import { defineComponent, PropType } from 'vue';
 import Business from '@/models/Business';
 import SupplierCard from '@/components/cards/SupplierCard.vue';
+import { IonSpinner } from '@ionic/vue';
 
 export default defineComponent({
   props: {
@@ -44,24 +47,27 @@ export default defineComponent({
     };
   },
 
-  components: { SupplierCard },
+  components: { SupplierCard, IonSpinner },
 
   methods: {
     fillColumns() {
       this.leftColumnItems = this.suppliers.filter((supplier, index) => index % 2 === 0);
       this.rightColumnItems = this.suppliers.filter((supplier, index) => index % 2 !== 0);
+      console.log(this.leftColumnItems, this.rightColumnItems)
     },
 
     onSupplierSelected(supplier: Business) {
-      this.$router.push(`/shopper/home/suppliers/${supplier.id}`);
+      this.$router.push(`/shopper/home/businesses/${supplier.id}`);
     },
   },
 
-  mounted() {
-    setTimeout(() => {
-      this.fillColumns();
-    }, 200);
-  },
+  watch: {
+    suppliers: function() {
+      if( this.suppliers ) {
+        this.fillColumns();
+      }
+    }
+  }
 });
 </script>
 
