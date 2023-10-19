@@ -1,0 +1,27 @@
+<template>
+    <section>
+      <IonIcon :icon="'location'" color="medium" />
+      {{ business?.location || 'No Description Available' }}
+    </section>
+    <section>
+  
+      <IonText />
+      {{business?.deliverytime || 'Fulfills orders within 1-3 days' }}
+    </section>
+  </template>
+  
+  <script lang="ts">
+  import { IonIcon } from '@ionic/vue';
+  import { PropType, defineComponent } from 'vue';
+  
+  export default defineComponent({
+    props: {
+      business: {
+        type: Object as PropType<any | null>,
+      },
+    },
+  
+    components: { IonIcon },
+  });
+  </script>
+  

@@ -47,12 +47,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     name: 'Suppliers',
     path: '/suppliers/suppliers.vue',
-    component: () => import('@/views/Shopper/Suppliers/Suppliers.vue'),
+    component: () => import('@/views/Shopper/Business/Business.vue'),
  },
  {
   name: 'SuppliersDetails',
   path: '/suppliers/suppliersDetails.vue',
-  component: () => import('@/views/Shopper/Suppliers/SuppliersDetails.vue'),
+  component: () => import('@/views/Shopper/Business/BusinessDetails.vue'),
 },
 
 

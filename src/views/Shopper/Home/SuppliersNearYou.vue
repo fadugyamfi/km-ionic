@@ -3,7 +3,7 @@
         <header class="ion-padding-horizontal">
             <h6>Suppliers Near You</h6>
 
-            <router-link to="/shopper/home/suppliers">
+            <router-link to="/shopper/home/Business">
                 View all
         </router-link>
         </header>
