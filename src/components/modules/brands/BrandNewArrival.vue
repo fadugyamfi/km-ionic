@@ -39,7 +39,7 @@ export default defineComponent({
         };
     },
 
-    components: { Swiper, SwiperSlide, IonText, ProductCard },
+    components: { Swiper, SwiperSlide, IonText, ProductCard, Brand},
 
     computed: {
         ...mapStores(useProductStore)

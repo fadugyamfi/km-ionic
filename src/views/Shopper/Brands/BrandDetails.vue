@@ -51,17 +51,12 @@ import { defineComponent } from 'vue';
 import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonList, IonItem, IonLabel, IonSpinner, IonGrid, IonCol, IonRow } from '@ionic/vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import BrandRatingAndReviews from '@/components/modules/brands/BrandRatingAndReviews.vue';
-import BrandMinimumOrder from '@/components/modules/brands/BrandMinimumOrder.vue';
-import BrandLocation from '@/components/modules/brands/BrandLocation.vue';
-import BrandDeliveryTime from '@/components/modules/brands/BrandDeliveryTime.vue';
-import BrandTags from '@/components/modules/brands/BrandTags.vue';
 import BrandNewArrival from '@/components/modules/brands/BrandNewArrival.vue';
 import FollowButton from '@/components/modules/brands/FollowButton.vue';
 import { useBrandStore } from '@/stores/BrandStore';
 import Brand from '@/models/Brand';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { IonText } from '@ionic/vue';
-import { useRoute } from 'vue-router';
 import ProductCard from '@/components/cards/ProductCard.vue';
 import { handleAxiosRequestError } from '@/utilities';
 
@@ -85,17 +80,14 @@ export default defineComponent({
         IonTitle,
         Brand,
         BrandRatingAndReviews,
-        BrandLocation,
-        BrandMinimumOrder,
-        BrandTags,
-        BrandDeliveryTime,
         BrandNewArrival,
         Swiper,
         SwiperSlide,
         IonText,
         ProductCard,
         NotificationButton,
-        FollowButton
+        FollowButton,
+
     },
 
     methods: {
@@ -103,8 +95,6 @@ export default defineComponent({
             const brandId = +this.$route.params.id;
             try {
                 this.brand = await this.brandStore.getBrand(brandId);
-
-
             } catch (error) {
                 handleAxiosRequestError(error);
             }
@@ -115,7 +105,6 @@ export default defineComponent({
     },
 
     mounted() {
-
         this.fetchBrandDetails()
     },
 });

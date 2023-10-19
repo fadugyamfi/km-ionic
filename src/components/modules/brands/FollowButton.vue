@@ -1,39 +1,39 @@
 <template>
-  <IonButton class="kola-white-button" type="button"  fill="clear" @click.stop="toggleFollowed()">
-      <slot>{{title}}</slot>
- 
+  <IonButton class="kola-white-button" type="button" fill="clear" @click.stop="toggleFollowed()">
+    <slot>{{ title }}</slot>
   </IonButton>
 </template>
 
 <script setup lang="ts">
-import { IonButton, IonIcon } from '@ionic/vue';
-import { heart, heartOutline } from 'ionicons/icons';
+import { IonButton } from '@ionic/vue';
 import Brand from '@/models/Brand';
 import { useBrandStore } from '@/stores/BrandStore';
-import {ref} from 'vue';
+import { ref, defineProps } from 'vue';
 
 const props = defineProps({
-    brand: Brand
-})
+  brand: Brand
+});
 
 const brandStore = useBrandStore();
 const title = ref("Follow");
 
-
 const toggleFollowed = () => {
-    if( !props.brand ) {
-        return;
-    }
+  if (!props.brand) {
+    return;
+  }
 
-    if(title.value === 'Follow') {
-      title.value = 'Unfollow';
-    } else {
-      title.value = 'Follow';
-    }
-}
+  if (title.value === 'Follow') {
+    title.value = 'Unfollow';
+    brandStore.addToFavorites(props.brand)
+
+  } else {
+    title.value = 'Follow';
+    brandStore.removeFromFavorites(props.brand);
+  }
+};
 </script>
-<style scoped lang="css">
 
+<style scoped lang="css">
 ion-button {
   --background: #FFF !important;
   --padding-top: 8px;
