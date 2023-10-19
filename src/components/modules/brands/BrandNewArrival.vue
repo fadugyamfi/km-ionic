@@ -1,19 +1,19 @@
 <template>
-  <section class="shopper-home-section ion-padding-top">
-      <header class="ion-padding-horizontal ion-padding-bottom">
-          <h6>New Arrivals</h6>
+    <section class="shopper-home-section ion-padding-top">
+        <header class="ion-padding-horizontal ion-padding-bottom">
+            <h6>New Arrivals</h6>
 
-       <IonText color="primary" router-link="/shopper/home/recent-products">
-              Show all
-          </IonText> 
-      </header>
+            <IonText color="primary" :router-link="`/shopper/home/brands/${$route.params.id}/products`">
+                Show all
+            </IonText>
+        </header>
 
-      <Swiper :slides-per-view="2">
-          <SwiperSlide v-for="product of products" :key="product.id">
-              <ProductCard :product="product" :show-description="false"></ProductCard>
-          </SwiperSlide>
-      </Swiper>
-  </section>
+        <Swiper :slides-per-view="2">
+            <SwiperSlide v-for="product of products" :key="product.id">
+                <ProductCard :product="product" :show-description="false"></ProductCard>
+            </SwiperSlide>
+        </Swiper>
+    </section>
 </template>
 
 <script lang="ts">
@@ -23,6 +23,7 @@ import { useProductStore } from '@/stores/ProductStore';
 import { mapStores } from 'pinia';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { IonText } from '@ionic/vue';
+import Brand from '@/models/Brand';
 import ProductCard from '@/components/cards/ProductCard.vue';
 import AppStorage from '@/stores/AppStorage';
 
@@ -30,37 +31,42 @@ const storage = new AppStorage();
 const RECENTLY_VIEWED = 'kola.recently-viewed';
 
 export default defineComponent({
-  data() {
-      return {
-          products: [] as Product[]
-      };
-  },
-  components: { Swiper, SwiperSlide, IonText, ProductCard },
+    
+    
+    data() {
+        return {
+            products: [] as Product[]
+        };
+    },
 
-  computed: {
-      ...mapStores( useProductStore )
-  },
+    components: { Swiper, SwiperSlide, IonText, ProductCard },
 
-  methods: {
-      viewProduct(product: Product) {
-          this.$router.push(`/shopper/home/products/${product.id}`);
-      },
+    computed: {
+        ...mapStores(useProductStore)
+    },
 
-      async fetchRecentlyViewedProducts() {
-          const products = await storage.get(RECENTLY_VIEWED);
 
-          if( products ) {
-              this.products = products.map((el: object) => new Product(el));
-              return;
-          }
+    methods: {
+        viewProduct(product: Product) {
+            this.$router.push(`/shopper/home/products/${product.id}`);
+        },
 
-          this.products = await this.productStore.fetchRecentlyViewedProducts({ limit: 6 });
-          storage.set(RECENTLY_VIEWED, this.products, 5, 'minutes');
-      }
-  },
 
-  mounted() {
-      this.fetchRecentlyViewedProducts();
-  }
+        async fetchRecentlyViewedProducts() {
+            const products = await storage.get(RECENTLY_VIEWED);
+
+            if (products) {
+                this.products = products.map((el: object) => new Product(el));
+                return;
+            }
+
+            this.products = await this.productStore.fetchRecentlyViewedProducts({ limit: 6 });
+            storage.set(RECENTLY_VIEWED, this.products, 5, 'minutes');
+        }
+    },
+
+    mounted() {
+        this.fetchRecentlyViewedProducts();
+    }
 })
 </script>

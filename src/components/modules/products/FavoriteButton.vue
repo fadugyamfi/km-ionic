@@ -1,3 +1,4 @@
+
 <template>
     <IonButton fill="clear" @click.stop="toggleFavorited()">
         <IonIcon v-if="!product?.favorited" slot="icon-only" :icon="heartOutline"></IonIcon>

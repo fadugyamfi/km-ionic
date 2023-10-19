@@ -17,34 +17,30 @@
         </section>
         <ion-content :fullscreen="true">
             <section class="banner">
-    <img :src="defaultBanner" @error="onLoadError" />
-    <aside>
-      <IonAvatar size="medium">
-        <template v-if="brand.logo">
-          <img :src="brand.logo" alt="Brand Logo" />
-        </template>
-        <template v-else>
-          <span class="initials">RV</span>
-        </template>
-      </IonAvatar>
-    </aside>
-  </section>
-            <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
-                <span class="product-name"> {{ brand.name }} </span>
-            </section> 
-            <section>
-                <BrandRatingAndReviews :brand="brand"></BrandRatingAndReviews>
+                <img :src="defaultBanner" @error="onLoadError" />
+                <aside>
+                    <IonAvatar size="medium">
+                        <template v-if="brand.logo">
+                            <img :src="brand.logo" alt="Brand Logo" />
+                        </template>
+                        <template v-else>
+                            <span class="initials">RV</span>
+                        </template>
+                    </IonAvatar>
+                </aside>
             </section>
-            <section>
-                <BrandLocation :brand=brand></BrandLocation>
-            </section>
-            <section class="section tags">
-                <BrandTags :brand="brand"></BrandTags>
-            </section>
-          
-            <section class="section arrival-section">
-          <BrandNewArrival></BrandNewArrival>
-        </section>
+            <main>
+                <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
+                    <span class="product-name"> {{ brand.name }} </span>
+                    <FollowButton :brand="brand"></FollowButton>
+                </section>
+                <section class="section">
+                    <BrandRatingAndReviews :brand="brand"></BrandRatingAndReviews>
+                </section>
+                <section class="section arrival-section">
+                    <BrandNewArrival></BrandNewArrival>
+                </section>
+            </main>
         </ion-content>
     </ion-page>
 </template>
@@ -60,6 +56,7 @@ import BrandLocation from '@/components/modules/brands/BrandLocation.vue';
 import BrandDeliveryTime from '@/components/modules/brands/BrandDeliveryTime.vue';
 import BrandTags from '@/components/modules/brands/BrandTags.vue';
 import BrandNewArrival from '@/components/modules/brands/BrandNewArrival.vue';
+import FollowButton from '@/components/modules/brands/FollowButton.vue';
 import { useBrandStore } from '@/stores/BrandStore';
 import Brand from '@/models/Brand';
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -77,7 +74,29 @@ export default defineComponent({
         };
     },
 
-    components: { IonAvatar, IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, Brand, BrandRatingAndReviews, BrandLocation, BrandMinimumOrder, BrandTags, BrandDeliveryTime, BrandNewArrival , Swiper, SwiperSlide, IonText, ProductCard },
+    components: {
+        IonAvatar,
+        IonPage,
+        IonContent,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonBackButton,
+        IonTitle,
+        Brand,
+        BrandRatingAndReviews,
+        BrandLocation,
+        BrandMinimumOrder,
+        BrandTags,
+        BrandDeliveryTime,
+        BrandNewArrival,
+        Swiper,
+        SwiperSlide,
+        IonText,
+        ProductCard,
+        NotificationButton,
+        FollowButton
+    },
 
     methods: {
         async fetchBrandDetails() {
@@ -105,7 +124,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 main {
-    border-radius: 10px;
+    border-radius: 30px;
     background-color: white;
     margin-top: 15px;
     padding: 10px;
