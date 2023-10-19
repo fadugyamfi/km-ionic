@@ -1,27 +1,27 @@
 <template>
-  <section class="supplier-list d-flex">
+  <section class="business-list d-flex">
     <IonSpinner name="crescent" v-if="leftColumnItems.length == 0"></IonSpinner>
 
     <section v-if="leftColumnItems.length > 0" class="d-flex flex-column ion-align-items-stretch">
-      <SupplierCard
-        v-for="(supplier, index) of leftColumnItems"
-        :key="supplier.id"
-        :supplier="supplier"
+      <BusinessCard
+        v-for="(business, index) of leftColumnItems"
+        :key="business.id"
+        :business="business"
         :tall="index % 2 === 0"
-        @click="onSupplierSelected(supplier)"
+        @click="onBusinessSelected(business)"
         :data-index="index"
-      ></SupplierCard>
+      ></BusinessCard>
     </section>
 
     <section v-if="rightColumnItems.length > 0" class="d-flex flex-column ion-align-items-stretch">
-      <SupplierCard
-        v-for="(supplier, index) of rightColumnItems"
-        :key="supplier.id"
-        :supplier="supplier"
+      <BusinessCard
+        v-for="(business, index) of rightColumnItems"
+        :key="business.id"
+        :business="business"
         :tall="index % 2 !== 0"
-        @click="onSupplierSelected(supplier)"
+        @click="onBusinessSelected(business)"
         :data-index="index"
-      ></SupplierCard>
+      ></BusinessCard>
     </section>
   </section>
 </template>
@@ -29,12 +29,12 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import Business from '@/models/Business';
-import SupplierCard from '@/components/cards/SupplierCard.vue';
+import BusinessCard from './BusinessCard.vue';
 import { IonSpinner } from '@ionic/vue';
 
 export default defineComponent({
   props: {
-    suppliers: {
+    businesses: {
       default: [],
       type: Array as PropType<Array<Business>>,
     },
@@ -47,23 +47,23 @@ export default defineComponent({
     };
   },
 
-  components: { SupplierCard, IonSpinner },
+  components: { BusinessCard, IonSpinner },
 
   methods: {
     fillColumns() {
-      this.leftColumnItems = this.suppliers.filter((supplier, index) => index % 2 === 0);
-      this.rightColumnItems = this.suppliers.filter((supplier, index) => index % 2 !== 0);
+      this.leftColumnItems = this.businesses.filter((business, index) => index % 2 === 0);
+      this.rightColumnItems = this.businesses.filter((business, index) => index % 2 !== 0);
       console.log(this.leftColumnItems, this.rightColumnItems)
     },
 
-    onSupplierSelected(supplier: Business) {
-      this.$router.push(`/shopper/home/businesses/${supplier.id}`);
+    onBusinessSelected(business: Business) {
+      this.$router.push(`/shopper/home/businesses/${business.id}`);
     },
   },
 
   watch: {
-    suppliers: function() {
-      if( this.suppliers ) {
+    businesses: function(newBusiness, oldBusiness) {
+      if( newBusiness ) {
         this.fillColumns();
       }
     }
@@ -72,7 +72,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.supplier-list {
+.business-list {
   width: 100%;
   display: flex;
   justify-content: space-around;

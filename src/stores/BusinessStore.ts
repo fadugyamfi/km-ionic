@@ -88,49 +88,35 @@ export const useBusinessStore = defineStore("business", {
           ...options
       }
 
-      try {
-          const response = await axios.get('/v2/businesses', { params });
-          const suppliers = response.data.data;
-
-          return suppliers.map((element: any) => new Business(element));
-
-      } catch (error) {
-          console.log(error);
-          handleAxiosRequestError(error)
-      }
-
-      return [];
+      return this.getBusinesses(params);
     },
 
-    async getBusinesses(search_key?: string | null): Promise<Business | null> {
-      const userStore = useUserStore();
+    async getBusinesses(options = {}, append = false): Promise<Business[]> {
 
       try {
-        const link = "/v2/businesses";
-        const response = await axios.get(link, {
+        const response = await axios.get("/v2/businesses", {
           params: {
-            name_like: search_key,
+            ...options
           },
         });
 
         if (response) {
           const { data, links } = response.data;
-          this.businesses = [...(this.businesses || []), ...data];
+          const businesses: Business[] = data.map((el: any) => new Business(el));
 
-          if (!this.hasSelectedBusiness() && !userStore.user?.isSuperAdmin()) {
-            this.selectDefaultBusiness();
+          if( append ) {
+            this.businesses = [...(this.businesses || []), ...businesses];
+          } else {
+            this.businesses = businesses;
           }
 
-          this.storeBusinesses();
-
-          // Return the first business from the response for demonstration
-          return data.length > 0 ? data[0] : null;
+          return this.businesses;
         }
 
-        return null;
+        return [];
       } catch (error) {
         handleAxiosRequestError(error);
-        return null;
+        return [];
       }
     },
 

@@ -52,7 +52,7 @@
 <script lang="ts">
 import { IonAvatar } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonList, IonItem, IonLabel, IonSpinner, IonGrid, IonCol, IonRow } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle } from '@ionic/vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import BusinessRatingAndReviews from '@/components/modules/business/BusinessRatingAndReviews.vue';
 import BusinessMinimumOrder from '@/components/modules/business/BusinessMinimumOrder.vue';
@@ -64,9 +64,7 @@ import { useBusinessStore } from '@/stores/BusinessStore';
 import Business from '@/models/Business';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { IonText } from '@ionic/vue';
-import { useRoute } from 'vue-router';
 import ProductCard from '@/components/cards/ProductCard.vue';
-import SupplierCard from '@/components/cards/SupplierCard.vue';
 import { handleAxiosRequestError } from '@/utilities';
 
 export default defineComponent({
@@ -97,8 +95,7 @@ export default defineComponent({
     Swiper,
     SwiperSlide,
     IonText,
-    ProductCard,
-    SupplierCard,
+    ProductCard
   },
 
   methods: {

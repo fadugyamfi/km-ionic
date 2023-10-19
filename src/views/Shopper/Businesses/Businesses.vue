@@ -7,7 +7,7 @@
             <IonBackButton defaultHref="/shopper/home"></IonBackButton>
           </IonButtons>
 
-          <IonTitle size="small"><b>Suppliers</b></IonTitle>
+          <IonTitle size="small"><b>{{ meta.title || $t("general.businesses") }}</b></IonTitle>
 
           <IonButtons slot="end">
             <NotificationButton></NotificationButton>
@@ -17,7 +17,7 @@
     </section>
 
     <ion-content>
-      <SupplierList :suppliers="suppliers"></SupplierList>
+      <BusinessList :businesses="businesses"></BusinessList>
     </ion-content>
   </ion-page>
 </template>
@@ -28,19 +28,30 @@ import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, 
 import { ref, onMounted } from 'vue';
 import Business from '@/models/Business';
 import { useBusinessStore } from '@/stores/BusinessStore';
-import SupplierList from '@/components/lists/SuppliersList.vue';
-import NotificationButton from '../../../components/notifications/NotificationButton.vue';
+import BusinessList from '@/components/modules/business/BusinessList.vue';
+import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import { useRoute } from 'vue-router';
 
 const businessStore = useBusinessStore();
 const route = useRoute();
-const suppliers = ref<Business[]>([]);
-const params = route.params;
-console.log(params);
+const businesses = ref<Business[]>([]);
+const meta = route.meta;
+
+const search = { name_like: '' }
 
 async function fetchSuppliers() {
-  suppliers.value = await businessStore.getSuppliers();
+  businesses.value = await businessStore.getSuppliers(search);
 }
 
-onMounted(() => fetchSuppliers());
+async function fetchBusinesess() {
+  businesses.value = await businessStore.getBusinesses(search);
+}
+
+onMounted(() => {
+  if( meta.businessType == 'supplier' ) {
+    fetchSuppliers()
+  } else {
+    fetchBusinesess()
+  }
+});
 </script>

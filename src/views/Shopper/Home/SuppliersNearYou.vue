@@ -1,10 +1,10 @@
 <template>
     <section class="suppliers-near-you shopper-home-section">
         <header class="ion-padding-horizontal">
-            <h6>Suppliers Near You</h6>
+            <h6>{{ $t("shopper.home.suppliersNearYou") }}</h6>
 
             <router-link to="/shopper/home/suppliers">
-                View all
+                {{ $t("shopper.home.viewAll") }}
             </router-link>
         </header>
 
@@ -15,10 +15,10 @@
                     <IonGrid>
                         <IonRow>
                             <IonCol size="6">
-                                <SupplierCard :supplier="slide[0]"></SupplierCard>
+                                <BusinessCard :business="slide[0]"></BusinessCard>
                             </IonCol>
                             <IonCol size="6" v-if="slide[1]">
-                                <SupplierCard :supplier="slide[1]"></SupplierCard>
+                                <BusinessCard :business="slide[1]"></BusinessCard>
                             </IonCol>
                         </IonRow>
                     </IonGrid>
@@ -36,19 +36,21 @@ import '@ionic/vue/css/ionic-swiper.css';
 import axios from 'axios';
 import { defineComponent } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import SupplierCard from '@/components/cards/SupplierCard.vue';
 import Business from '@/models/Business';
 import { IonCol, IonGrid, IonRow } from '@ionic/vue';
+import BusinessCard from '@/components/modules/business/BusinessCard.vue';
+import { useBusinessStore } from '@/stores/BusinessStore';
+import { mapStores } from 'pinia';
 
 export default defineComponent({
 
     components: {
         Swiper,
         SwiperSlide,
-        SupplierCard,
         IonGrid,
         IonRow,
-        IonCol
+        IonCol,
+        BusinessCard
     },
 
     data() {
@@ -59,18 +61,14 @@ export default defineComponent({
         }
     },
 
+    computed: {
+        ...mapStores( useBusinessStore )
+    },
+
     methods: {
         async fetchSuppliers() {
-            const params = {
-                approved_vendor: 1,
-                limit: 10
-            }
-
             try {
-                const response = await axios.get('/v2/businesses', { params });
-                const suppliers = response.data.data;
-
-                this.suppliers = suppliers.map((element: any) => new Business(element));
+                this.suppliers = await this.businessStore.getSuppliers();
 
                 this.slides = [];
 

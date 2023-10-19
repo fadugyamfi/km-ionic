@@ -12,7 +12,12 @@
         "credit": "Credits",
         "orders": "Orders",
         "profile": "Profile",
-        "cart": "Cart"
+        "cart": "Cart",
+        "businesses": "Businesses",
+        "retailer": "Retailer",
+        "wholesaler": "Wholesaler",
+        "keyDistributor": "Key Distributor",
+        "supplier": "Supplier"
     },
     "onboarding": {
         "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -112,6 +117,12 @@
             "loadingYourAccountInfo": "Loading Your Account Info",
             "pinResetFailed": "PIN Reset Failed. Please try again",
             "phoneNumberRequired": "Phone Number For Reset Required"
+        }
+    },
+    "shopper": {
+        "home": {
+            "viewAll": "View all",
+            "suppliersNearYou": "Suppliers Near You"
         }
     }
 }

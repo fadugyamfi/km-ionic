@@ -1,13 +1,13 @@
 <template>
-    <section class="supplier-card">
+    <section class="business-card">
         <ion-card class="ion-no-padding ion-no-margin">
-            <Image :alt="supplier.name" :src="supplier.logo" />
+            <Image :alt="business.name" :src="business.logo" />
 
             <IonCardHeader>
-                <IonCardTitle>{{ supplier.name }}</IonCardTitle>
+                <IonCardTitle>{{ business.name }}</IonCardTitle>
                 <IonCardSubtitle>
-                    <span v-if="supplier.min_order_amount">
-                        {{ supplier.currency?.symbol }} {{ supplier.min_order_amount }} minimum
+                    <span v-if="business.min_order_amount">
+                        {{ business.currency?.symbol }} {{ business.min_order_amount }} minimum
                     </span>
                     <span v-else>
                         No Order Minimums
@@ -16,7 +16,7 @@
             </IonCardHeader>
 
             <IonCardContent>
-                <BusinessRatingAndReviews :business="supplier" :show-reviews="false"></BusinessRatingAndReviews>
+                <BusinessRatingAndReviews :business="business" :show-reviews="false"></BusinessRatingAndReviews>
             </IonCardContent>
         </ion-card>
     </section>
@@ -32,7 +32,7 @@ import BusinessRatingAndReviews from '@/components/modules/business/BusinessRati
 
 export default defineComponent({
     props: {
-        supplier: {
+        business: {
             required: true,
             type: Business
         }
@@ -58,7 +58,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.supplier-card {
+.business-card {
     ion-card {
         width: 100%;
         height: 250px;

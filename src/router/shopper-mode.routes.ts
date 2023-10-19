@@ -50,7 +50,7 @@ export const ShopperModeRoutes = [
               {
                 path: 'suppliers',
                 component: () => import('@/views/Shopper/Businesses/Businesses.vue'),
-                props: {
+                meta: {
                   title: "Suppliers",
                   businessType: "supplier"
                 }

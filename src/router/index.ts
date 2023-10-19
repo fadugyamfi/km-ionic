@@ -44,16 +44,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/signup/shopper',
     component: () => import('@/views/Signup/Shopper.vue'),
   },
-  {
-    name: 'Suppliers',
-    path: '/suppliers/suppliers.vue',
-    component: () => import('@/views/Shopper/Business/Business.vue'),
- },
- {
-  name: 'SuppliersDetails',
-  path: '/suppliers/suppliersDetails.vue',
-  component: () => import('@/views/Shopper/Business/BusinessDetails.vue'),
-},
 
 
   // Vendor Signup Routes
