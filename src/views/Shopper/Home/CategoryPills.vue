@@ -1,6 +1,16 @@
 <template>
     <section class="ion-no-border">
-        <Swiper :slides-per-view="4">
+        <section v-if="categories.length == 0">
+            <IonGrid>
+                <IonRow>
+                    <IonCol v-for="pill in tempPills" :key="pill">
+                        <IonSkeletonText :animated="true" class="skeleton-pill"></IonSkeletonText>
+                    </IonCol>
+                </IonRow>
+            </IonGrid>
+        </section>
+
+        <Swiper v-else :slides-per-view="4">
             <SwiperSlide v-for="category of categories" :key="category.id">
                 <CategoryPill :category="category" @click="viewCategory(category)"></CategoryPill>
             </SwiperSlide>
@@ -12,7 +22,7 @@
 import 'swiper/scss';
 import '@ionic/vue/css/ionic-swiper.css';
 
-import { IonSearchbar } from '@ionic/vue';
+import { IonCol, IonGrid, IonRow, IonSearchbar, IonSkeletonText } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import CategoryPill from './CategoryPill.vue';
@@ -26,12 +36,17 @@ export default defineComponent({
         IonSearchbar,
         CategoryPill,
         Swiper,
-        SwiperSlide
+        SwiperSlide,
+        IonGrid,
+        IonRow,
+        IonCol,
+        IonSkeletonText
     },
 
     data() {
         return {
             backOff: 1,
+            tempPills: ["Loading", "Loading", "Loading", "Loading"],
             categories: [] as ProductCategory[]
         }
     },
@@ -57,5 +72,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-
+.skeleton-pill {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 0px auto;
+}
 </style>

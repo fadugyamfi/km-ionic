@@ -64,6 +64,13 @@ export default defineComponent({
         height: 250px;
         min-height: 150px;
 
+        image {
+            img {
+                min-height: 100px;
+                min-width: 100%;
+            }
+        }
+
         ion-card-header {
             text-align: left;
             padding: 10px;
