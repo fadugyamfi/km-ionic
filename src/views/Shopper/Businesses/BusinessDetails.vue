@@ -15,7 +15,7 @@
         </IonToolbar>
       </IonHeader>
     </section>
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="false">
       <section class="banner">
         <img :src="defaultBanner" @error="onLoadError" />
         <aside>
@@ -31,7 +31,7 @@
       </section>
       <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
         <span class="product-name"> {{ business?.name }} </span>
-      </section>nic
+      </section>
       <section>
         <BusinessRatingAndReviews :business="business"></BusinessRatingAndReviews>
       </section>
@@ -63,7 +63,6 @@ import BusinessNewArrival from '@/components/modules/business/BusinessNewArrival
 import { useBusinessStore } from '@/stores/BusinessStore';
 import Business from '@/models/Business';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { IonText } from '@ionic/vue';
 import ProductCard from '@/components/cards/ProductCard.vue';
 import { handleAxiosRequestError } from '@/utilities';
 
@@ -94,9 +93,9 @@ export default defineComponent({
     BusinessNewArrival,
     Swiper,
     SwiperSlide,
-    IonText,
-    ProductCard
-  },
+    ProductCard,
+    NotificationButton
+},
 
   methods: {
     async fetchBusinessDetails() {

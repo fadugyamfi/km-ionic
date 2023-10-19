@@ -15,10 +15,10 @@
                     <IonGrid>
                         <IonRow>
                             <IonCol size="6">
-                                <BusinessCard :business="slide[0]"></BusinessCard>
+                                <BusinessCard :business="slide[0]" @click="onBusinessSelected(slide[0])"></BusinessCard>
                             </IonCol>
                             <IonCol size="6" v-if="slide[1]">
-                                <BusinessCard :business="slide[1]"></BusinessCard>
+                                <BusinessCard :business="slide[1]" @click="onBusinessSelected(slide[1])"></BusinessCard>
                             </IonCol>
                         </IonRow>
                     </IonGrid>
@@ -86,7 +86,11 @@ export default defineComponent({
                     this.backOff += 1;
                 }, 100 * this.backOff);
             }
-        }
+        },
+
+        onBusinessSelected(business: Business) {
+            this.$router.push(`/shopper/home/businesses/${business.id}`);
+        },
     },
 
     mounted() {
