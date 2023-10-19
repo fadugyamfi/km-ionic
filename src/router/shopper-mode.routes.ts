@@ -1,3 +1,4 @@
+import { Business } from '@/models/Business';
 import { useUserStore } from '@/stores/UserStore';
 import TabsPage from '@/views/Shopper/TabsPage.vue';
 import HomePage from '@/views/Shopper/HomePage.vue';
@@ -49,11 +50,11 @@ export const ShopperModeRoutes = [
               },
               {
                 path: 'suppliers',
-                component: () => import('@/views/Shopper/Suppliers/Suppliers.vue'),
+                component: () => import('@/views/Shopper/Business/Business.vue'),
               },
               {
                 path: 'suppliers/:id',
-                component: () => import('@/views/Shopper/Suppliers/Suppliers.vue'),
+                component: () => import('@/views/Shopper/Business/Business.vue'),
               },
             ],
           },
@@ -64,6 +65,10 @@ export const ShopperModeRoutes = [
           {
             path: 'search-results',
             component: () => import('@/views/Shopper/ProductSearchResults.vue')
+          },
+          {
+            path: 'search-results',
+            component: () => import('@/views/Shopper/BusinessSearchResults.vue')
           },
           {
             path: 'orders',
