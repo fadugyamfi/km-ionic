@@ -9,7 +9,7 @@
         </header>
 
         <main>
-        
+
             <Swiper>
                 <SwiperSlide v-for="(slide, index) of slides" :key="slide">
                     <IonGrid>
@@ -62,8 +62,8 @@ export default defineComponent({
     methods: {
         async fetchSuppliers() {
             const params = {
-                business_types_id: 3,
-                limit: 6
+                approved_vendor: 1,
+                limit: 10
             }
 
             try {
