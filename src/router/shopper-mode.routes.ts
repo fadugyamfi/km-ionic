@@ -49,11 +49,15 @@ export const ShopperModeRoutes = [
                 component: () => import('@/views/Shopper/Brands/BrandDetails.vue'),
               },
               {
-                path: 'suppliers',
+                path: 'business',
                 component: () => import('@/views/Shopper/Business/Business.vue'),
               },
               {
-                path: 'suppliers/:id',
+                path: 'business/:id',
+                component: () => import('@/views/Shopper/Business/Business.vue'),
+              },
+               {
+                path: 'business/:id/products',
                 component: () => import('@/views/Shopper/Business/Business.vue'),
               },
             ],

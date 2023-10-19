@@ -4,8 +4,11 @@ import { useUserStore } from "./UserStore";
 import { handleAxiosRequestError } from "@/utilities";
 import Business from "@/models/Business";
 import AppStorage from "./AppStorage";
+import { useToastStore } from './ToastStore';
+import { business } from "ionicons/icons";
 
 const storage = new AppStorage();
+const toastStore = useToastStore();
 
 export const useBusinessStore = defineStore("business", {
   state: () => ({
@@ -41,7 +44,7 @@ export const useBusinessStore = defineStore("business", {
         number_of_small_retailers: '',
         catalog_update_frequency: '',
         number_of_stores: '',
-        brand_is_in_large_retail_chain: "No",
+        business_is_in_large_retail_chain: "No",
         how_you_heard_about_kola: '',
         goals_and_expectation_of_kolamarket: ""
       },
@@ -186,6 +189,45 @@ export const useBusinessStore = defineStore("business", {
 
         async clearCachedRegistrationInfo() {
             await storage.remove('kola.business-registration');
+        },
+        async addToFavorites(business: Business) {
+            const toastStore = useToastStore();
+            business.addToFavorites();
+
+            try {
+                const response = await axios.post(`/v2/businesss/${business.id}/favorites`);
+                const favoriteData = response.data.data;
+                business.addToFavorites({ business_id: business.id as number, cms_users_id: favoriteData.cms_users_id});
+
+                toastStore.showSuccess('Added To Favorites');
+                this.persist();
+            } catch(error) {
+                handleAxiosRequestError(error);
+                business.unfavorite();
+            }
+
+
+
+
+
+        },
+
+        persist() {
+            this.storeBusinesses();
+        },
+
+        async removeFromFavorites(business: Business) {
+            const toastStore = useToastStore();
+            business.unfavorite();
+
+            try {
+                const response = await axios.delete(`/v2/businesss/${business.id}/favorites`);
+                toastStore.showError('Removed From Favorites');
+                this.persist();
+            } catch(error) {
+                handleAxiosRequestError(error);
+                business.addToFavorites();
+            }
         }
-    },
+    }
 });

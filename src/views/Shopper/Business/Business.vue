@@ -27,11 +27,11 @@
 import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
 import Business from '@/models/Business';
-import { useSupplierStore } from '@/stores/SupplierStore';
+import { useBusinessStore } from '@/stores/BusinessStore';
 import SupplierList from '../../../components/lists/SupplierList.vue';
 import NotificationButton from '../../../components/notifications/NotificationButton.vue';
 
-const supplierStore = useSupplierStore();
+const BusinessStore = useBusinessStore();
 const suppliers = ref<Business[]>([]);
 
 async function fetchSuppliers() {
