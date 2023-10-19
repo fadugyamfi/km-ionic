@@ -19,7 +19,7 @@
 
 
     <ion-content :fullscreen="true">
-      <ProductCategoriesList :categories="categories"></ProductCategoriesList>
+      <ProductCategoryList :categories="categories"></ProductCategoryList>
     </ion-content>
   </ion-page>
 </template>
