@@ -9,8 +9,20 @@
         </header>
 
         <main>
+            <section v-if="slides.length == 0">
+                <IonGrid>
+                    <IonRow>
+                        <IonCol>
+                            <IonSkeletonText class="skeleton-card" :animated="true"></IonSkeletonText>
+                        </IonCol>
+                        <IonCol>
+                            <IonSkeletonText class="skeleton-card" :animated="true"></IonSkeletonText>
+                        </IonCol>
+                    </IonRow>
+                </IonGrid>
+            </section>
 
-            <Swiper>
+            <Swiper v-else>
                 <SwiperSlide v-for="(slide, index) of slides" :key="slide">
                     <IonGrid>
                         <IonRow>
@@ -37,7 +49,7 @@ import axios from 'axios';
 import { defineComponent } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import Business from '@/models/Business';
-import { IonCol, IonGrid, IonRow } from '@ionic/vue';
+import { IonCol, IonGrid, IonRow, IonSkeletonText } from '@ionic/vue';
 import BusinessCard from '@/components/modules/business/BusinessCard.vue';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import { mapStores } from 'pinia';
@@ -50,7 +62,8 @@ export default defineComponent({
         IonGrid,
         IonRow,
         IonCol,
-        BusinessCard
+        BusinessCard,
+        IonSkeletonText
     },
 
     data() {
@@ -67,10 +80,10 @@ export default defineComponent({
 
     methods: {
         async fetchSuppliers() {
+            this.slides = [];
+
             try {
                 this.suppliers = await this.businessStore.getSuppliers();
-
-                this.slides = [];
 
                 for(let i = 0; i < this.suppliers.length; i += 2) {
                     if( this.suppliers[i + 1] ) {
@@ -98,3 +111,11 @@ export default defineComponent({
     }
 });
 </script>
+
+<style scoped>
+.skeleton-card {
+    width: 100%;
+    height: 200px;
+    border-radius: 10px;
+}
+</style>

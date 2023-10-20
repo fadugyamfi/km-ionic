@@ -1,5 +1,9 @@
 <template>
-    <IonImg :src="imageData || noImgSrc" @ion-error="onLoadError($event)" @ion-img-did-load="onLoaded()"></IonImg>
+    <IonImg
+        :src="imageData || noImgSrc"
+        @ion-error="onLoadError($event)"
+        @ion-img-did-load="onLoaded()"
+    ></IonImg>
 </template>
 
 <script lang="ts">
@@ -118,7 +122,9 @@ export default defineComponent({
 
     mounted() {
         //this.loadImage();
-        this.imageData = this.src as string;
+        setTimeout(() => {
+            this.imageData = this.src as string;
+        }, 200);
     }
 });
 </script>
