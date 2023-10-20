@@ -50,6 +50,10 @@ export default defineComponent({
             color :#666EED
         }
 
+
+
+
+
         .distance {
             color: #666EED;
         }
