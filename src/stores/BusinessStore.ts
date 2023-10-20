@@ -6,6 +6,7 @@ import Business from "@/models/Business";
 import AppStorage from "./AppStorage";
 import { useToastStore } from './ToastStore';
 import { business } from "ionicons/icons";
+import Product from "@/models/Product";
 
 const storage = new AppStorage();
 const toastStore = useToastStore();
@@ -22,6 +23,7 @@ export const useBusinessStore = defineStore("business", {
       business_owner_name: "",
       business_owner_phone: "",
       email: '',
+      value : "",
       gps: '',
       country_id: 83,
       region_id: 54,
@@ -52,8 +54,11 @@ export const useBusinessStore = defineStore("business", {
         pin: '',
         pin_confirmation: ''
       }
-    }
+    },
+    searchQuery:"",
+    SearchResults:[] as Business[]
   }),
+
 
   actions: {
     async loadCachedBusinesses() {
@@ -84,18 +89,19 @@ export const useBusinessStore = defineStore("business", {
 
     async getSuppliers(options = {}): Promise<Business[]> {
       const params = {
-          approved_vendor: 1,
-          ...options
-      }
+        approved_vendor: 1,
+        ...options
+      };
 
-      return this.getBusinesses(params);
+      return this.getBusinesses("", params);
     },
 
-    async getBusinesses(options = {}, append = false): Promise<Business[]> {
+    async getBusinesses(searchQuery ="",options = {}, append = false): Promise<Business[]> {
 
       try {
         const response = await axios.get("/v2/businesses", {
           params: {
+            name_like: searchQuery,
             ...options
           },
         });
@@ -135,10 +141,29 @@ export const useBusinessStore = defineStore("business", {
         return null;
       }
     },
-
+    async getBusinessProducts(business: Business): Promise<Product[]> {
+      try {
+        const response = await axios.get(`/v2/businesses/${business.id}/products`);
+        if (response) {
+          const { data } = response.data;
+          const products: Product[] = data.map((el: any) => new Product(el));
+          return products;
+        }
+        return [];
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return [];
+      }
+    },
     async storeBusinesses() {
       await storage.set('store.businesses', this.businesses);
     },
+    
+    async setSearchQuery(query: string) {
+      this.searchQuery = query;
+      await this.clearBusinesses();
+    },
+
     clearBusinesses() {
       this.businesses = [];
     },

@@ -43,9 +43,11 @@ export default defineComponent({
         align-items: center;
         justify-content: space-between;
         font-size: 0.8em;
+        
 
         .reviews {
             margin-left: 8px;
+            color :#666EED
         }
 
         .distance {

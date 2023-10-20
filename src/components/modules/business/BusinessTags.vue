@@ -10,17 +10,17 @@
   import { IonChip } from '@ionic/vue';
   import { PropType, defineComponent } from 'vue';
   import Business from '@/models/Business';
+
   export default defineComponent({
     props: {
       business: {
         type: Object as PropType<Business | null>,
       },
     },
-    components: { IonChip },
-    data() {
+    components: { IonChip },    data() {
       return {
         business: {
-          tags: ['Eco-friendly', 'Retails','Free Delivery','Homemade',],
+          tags: ['Eco-friendly', 'Retails','Homemade','Free Delivery'],
         },
       };
     },

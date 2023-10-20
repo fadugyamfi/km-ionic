@@ -29,13 +29,15 @@
           </IonAvatar>
         </aside>
       </section>
-      <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
+      <main>
+       <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
         <span class="product-name"> {{ business?.name }} </span>
+      <FollowButton :business="business"></FollowButton>
       </section>
-      <section>
+       <section class="section">
         <BusinessRatingAndReviews :business="business"></BusinessRatingAndReviews>
       </section>
-      <section>
+      <section class="section">
         <BusinessLocation :business=business></BusinessLocation>
       </section>
       <section class="section tags">
@@ -45,6 +47,7 @@
       <section class="section arrival-section">
         <BusinessNewArrival></BusinessNewArrival>
       </section>
+      </main>
     </ion-content>
   </ion-page>
 </template>
@@ -52,7 +55,7 @@
 <script lang="ts">
 import { IonAvatar } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle,IonList, IonItem,IonLabel, IonSpinner, IonGrid, IonCol, IonRow } from '@ionic/vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import BusinessRatingAndReviews from '@/components/modules/business/BusinessRatingAndReviews.vue';
 import BusinessMinimumOrder from '@/components/modules/business/BusinessMinimumOrder.vue';
@@ -65,6 +68,7 @@ import Business from '@/models/Business';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import ProductCard from '@/components/cards/ProductCard.vue';
 import { handleAxiosRequestError } from '@/utilities';
+import FollowButton from '@/components/modules/business/FollowButton.vue';
 
 export default defineComponent({
   data() {
@@ -92,6 +96,7 @@ export default defineComponent({
     BusinessDeliveryTime,
     BusinessNewArrival,
     Swiper,
+    FollowButton,
     SwiperSlide,
     ProductCard,
     NotificationButton
@@ -119,7 +124,7 @@ export default defineComponent({
 </script>
 <style scoped lang="scss">
 main {
-  border-radius: 10px;
+  border-radius: 30px;
   background-color: white;
   margin-top: 15px;
   padding: 10px;

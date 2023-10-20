@@ -2,19 +2,20 @@
     <section class="shopper-home-section ion-padding-top">
         <header class="ion-padding-horizontal ion-padding-bottom">
             <h6>New Arrivals</h6>
-  
-         <IonText color="primary" router-link="/shopper/home/recent-products">
-                Shop all
-            </IonText> 
+
+            <IonText color="primary" :router-link="`/shopper/home/Businesses/${$route.params.id}/BusinessProducts`">
+  Show all
+</IonText>
+
         </header>
-  
+
         <Swiper :slides-per-view="2">
             <SwiperSlide v-for="product of products" :key="product.id">
                 <ProductCard :product="product" :show-description="false"></ProductCard>
             </SwiperSlide>
         </Swiper>
     </section>
-  </template>
+</template>
   
   <script lang="ts">
   import { defineComponent } from 'vue';
@@ -25,8 +26,10 @@
   import { IonText } from '@ionic/vue';
   import ProductCard from '@/components/cards/ProductCard.vue';
   import AppStorage from '@/stores/AppStorage';
+
   const storage = new AppStorage();
   const RECENTLY_VIEWED = 'kola.recently-viewed';
+
   export default defineComponent({
     data() {
         return {
