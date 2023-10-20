@@ -8,14 +8,16 @@
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
             {{ business?.name }}
+
           </IonTitle>
+         
           <IonButtons slot="end">
             <NotificationButton></NotificationButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
     </section>
-    <ion-content :fullscreen="false">
+    <ion-content :fullscreen="true">
       <section class="banner">
         <img :src="defaultBanner" @error="onLoadError" />
         <aside>
@@ -39,6 +41,12 @@
       </section>
       <section class="section">
         <BusinessLocation :business=business></BusinessLocation>
+      </section>
+      <section class="section">
+        <BusinessMinimumOrder :business="business"></BusinessMinimumOrder>
+      </section>
+      <section class="section">
+      <BusinessDeliveryTime :business="business"></BusinessDeliveryTime>
       </section>
       <section class="section tags">
         <BusinessTags :business="business"></BusinessTags>

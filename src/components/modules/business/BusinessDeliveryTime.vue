@@ -1,9 +1,8 @@
 <template>
     <section>
-      <IonChip v-for="tag in Business.tags" :key="tag">
-        {{ tag }}
-      </IonChip>
-    </section>
+  <IonText />
+  {{business?.deliverytime || 'Fulfills orders within 1-3 days' }}
+</section>
   </template>
   
   <script lang="ts">
@@ -23,7 +22,7 @@
     data() {
       return {
         Business: {
-          tags: ['Homemade', 'Retails'],
+          tags: ['24hrs'],
         },
       };
     },

@@ -3,11 +3,6 @@
       <IonIcon :icon="'location'" color="medium" />
       {{ business?.location || 'No Description Available' }}
     </section>
-    <section>
-  
-      <IonText />
-      {{business?.deliverytime || 'Fulfills orders within 1-3 days' }}
-    </section>
   </template>
   
   <script lang="ts">
