@@ -8,9 +8,7 @@
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
             {{ business?.name }}
-
           </IonTitle>
-         
           <IonButtons slot="end">
             <NotificationButton></NotificationButton>
           </IonButtons>
@@ -32,29 +30,25 @@
         </aside>
       </section>
       <main>
-       <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
-        <span class="product-name"> {{ business?.name }} </span>
-      <FollowButton :business="business"></FollowButton>
-      </section>
-       <section class="section">
-        <BusinessRatingAndReviews :business="business"></BusinessRatingAndReviews>
-      </section>
-      <section class="section">
-        <BusinessLocation :business=business></BusinessLocation>
-      </section>
-      <section class="section">
-        <BusinessMinimumOrder :business="business"></BusinessMinimumOrder>
-      </section>
-      <section class="section">
-      <BusinessDeliveryTime :business="business"></BusinessDeliveryTime>
-      </section>
-      <section class="section tags">
-        <BusinessTags :business="business"></BusinessTags>
-      </section>
-
-      <section class="section arrival-section">
-        <BusinessNewArrival></BusinessNewArrival>
-      </section>
+        <section class="section business-name ion-align-items-center ion-justify-between">
+          <span class="product-name">{{ business?.name }}</span>
+          <FollowButton :business="business"></FollowButton>
+        </section>
+        <section class="section ratings-and-reviews ion-align-items-center ion-justify-between">
+          <BusinessRatingAndReviews :business="business"></BusinessRatingAndReviews>
+        </section>
+        <section class="section minimum ion-align-items-center ion-justify-between">
+          <BusinessMinimumOrder :business="business"></BusinessMinimumOrder>
+        </section>
+        <section class="section delivery ion-align-items-center ion-justify-between">
+          <BusinessDeliveryTime :business="business"></BusinessDeliveryTime>
+        </section>
+        <section class="section tags ion-align-items-center ion-justify-between">
+          <BusinessTags :business="business"></BusinessTags>
+        </section>
+        <section class="section arrival-section">
+          <BusinessNewArrival></BusinessNewArrival>
+        </section>
       </main>
     </ion-content>
   </ion-page>
@@ -63,7 +57,7 @@
 <script lang="ts">
 import { IonAvatar } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle,IonList, IonItem,IonLabel, IonSpinner, IonGrid, IonCol, IonRow } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonList, IonItem, IonLabel, IonSpinner, IonGrid, IonCol, IonRow } from '@ionic/vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import BusinessRatingAndReviews from '@/components/modules/business/BusinessRatingAndReviews.vue';
 import BusinessMinimumOrder from '@/components/modules/business/BusinessMinimumOrder.vue';
@@ -108,7 +102,7 @@ export default defineComponent({
     SwiperSlide,
     ProductCard,
     NotificationButton
-},
+  },
 
   methods: {
     async fetchBusinessDetails() {
@@ -130,6 +124,7 @@ export default defineComponent({
   },
 });
 </script>
+
 <style scoped lang="scss">
 main {
   border-radius: 30px;
