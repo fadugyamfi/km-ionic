@@ -3,7 +3,7 @@
         <header class="ion-padding-horizontal ion-padding-bottom">
             <h6>New Arrivals</h6>
 
-            <IonText color="primary" :router-link="`/shopper/home/Businesses/${$route.params.id}/BusinessProducts`">
+            <IonText color="primary" :router-link="`/shopper/home/Businesses/BusinessProducts`">
   Show all
 </IonText>
 
