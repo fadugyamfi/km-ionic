@@ -6,15 +6,14 @@
   </template>
   
   <script setup lang="ts">
-  import { IonButton, IonIcon } from '@ionic/vue';
-  import { heart, heartOutline } from 'ionicons/icons';
+  import { IonButton } from '@ionic/vue';
   import Business from '@/models/Business';
   import { useBusinessStore } from '@/stores/BusinessStore';
-  import {ref} from 'vue';
+  import {ref,defineProps} from 'vue';
   
   const props = defineProps({
       Business: Business
-  })
+  });
   
   const BusinessStore = useBusinessStore();
   const title = ref("Follow");
@@ -27,10 +26,14 @@
   
       if(title.value === 'Follow') {
         title.value = 'Unfollow';
+        BusinessStore.addToFavorites(props.Business);
+
       } else {
         title.value = 'Follow';
+        BusinessStore.removeFromFavorites(props.Business);
       }
-  }
+  };
+
   </script>
   <style scoped lang="css">
   
