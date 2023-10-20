@@ -23,7 +23,7 @@ export default defineComponent({
   data() {
     return {
       brand: {
-        tags: ['Eco-friendly', 'Retails','Free Delivery','Homemade',],
+        tags: ['Eco-friendly', 'Retails','Free Delivery','Homemade'],
       },
     };
   },
