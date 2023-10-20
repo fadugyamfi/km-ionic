@@ -40,7 +40,7 @@ export default defineComponent({
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 0.8em;
+      font-size: 0.85em;
       padding-left: 10;
 
       .reviews {
