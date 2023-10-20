@@ -31,7 +31,7 @@
   ion-chip {
     --color: var(--kola-blue);
     --background: #F0F9FF;
-    font-size: 0.8em;
+    font-size: 1em;
     border-radius: 16px;
     padding: 6px 10px 6px 10px;
     margin-right: 3px;

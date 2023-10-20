@@ -30,7 +30,7 @@
                 </aside>
             </section>
             <main>
-                <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
+                <section class="section title-section d-flex ion-align-items-center ion-justify-content-between">
                     <span class="product-name"> {{ brand.name }} </span>
                     <FollowButton :brand="brand"></FollowButton>
                 </section>

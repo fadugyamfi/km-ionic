@@ -59,24 +59,20 @@ export const ShopperModeRoutes = [
                   businessType: "supplier"
                 }
               },
-              {
-                path: 'businesses',
-                component: () => import('@/views/Shopper/Businesses/Businesses.vue'),
-              },
-              {
-                path: 'businesses/:id',
-                component: () => import('@/views/Shopper/Businesses/BusinessDetails.vue'),
-              },
-            {
-              path: 'businessproducts', 
-              component: () => import('@/views/Shopper/Businesses/BusinessProducts.vue'),
-            },
-            {
-              path: 'businesses/:id/products',
-              component: () => import('@/views/Shopper/Businesses/BusinessProducts.vue'),
-            }, 
-            ],
+             {
+            path: 'businesses',
+            component: () => import('@/views/Shopper/Businesses/Businesses.vue'),
           },
+          {
+            path: 'businesses/:id',
+            component: () => import('@/views/Shopper/Businesses/BusinessDetails.vue'),
+          },
+          {
+            path: 'businesses/:id/products',
+            component: () => import('@/views/Shopper/Businesses/BusinessProducts.vue'),
+          },
+        ],
+      },
           {
             path: 'products/:id',
             component: () => import('@/views/Shopper/ProductDetails.vue')
