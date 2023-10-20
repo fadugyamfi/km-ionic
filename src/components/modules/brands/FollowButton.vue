@@ -3,19 +3,18 @@
     <slot>{{ title }}</slot>
   </IonButton>
 </template>
-
 <script setup lang="ts">
 import { IonButton } from '@ionic/vue';
 import Brand from '@/models/Brand';
 import { useBrandStore } from '@/stores/BrandStore';
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, onBeforeMount } from 'vue';
 
 const props = defineProps({
   brand: Brand
 });
 
 const brandStore = useBrandStore();
-const title = ref("Follow");
+const title = ref(props.brand?.favorited ? 'Unfollow' : 'Follow');
 
 const toggleFollowed = () => {
   if (!props.brand) {
@@ -24,13 +23,19 @@ const toggleFollowed = () => {
 
   if (title.value === 'Follow') {
     title.value = 'Unfollow';
-    brandStore.addToFavorites(props.brand)
+    brandStore.addToFavorites(props.brand);
 
   } else {
     title.value = 'Follow';
     brandStore.removeFromFavorites(props.brand);
   }
 };
+
+onBeforeMount(() => {
+  if (props.brand && props.brand.favorited) {
+    title.value = 'Unfollow';
+  }
+});
 </script>
 
 <style scoped lang="css">
