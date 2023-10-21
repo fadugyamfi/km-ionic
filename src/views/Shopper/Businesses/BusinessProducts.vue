@@ -4,7 +4,7 @@
       <IonHeader class="inner-header">
         <IonToolbar class="ion-align-items-center">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/shopper/home/categories"></IonBackButton>
+            <IonBackButton :defaultHref="`/shopper/home/businesses/${business?.id}`"></IonBackButton>
           </IonButtons>
           <IonTitle size="small" class="fw-bold">{{ business?.name }}</IonTitle>
           <IonButtons slot="end">
@@ -48,7 +48,7 @@ const fetching = ref(false);
 onMounted(async () => {
   fetching.value = true;
   business.value = await businessStore.getBusiness(+route.params.id);
-  products.value = await businessStore.getBusinessProducts(business.value);
+  products.value = await businessStore.getBusinessProducts(business.value as Business);
   fetching.value = false;
 });
 </script>

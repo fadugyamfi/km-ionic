@@ -16,9 +16,9 @@
         </Swiper>
     </section>
 </template>
-  
+
   <script lang="ts">
-  import { defineComponent } from 'vue';
+  import { PropType, defineComponent } from 'vue';
   import Product from '@/models/Product';
   import { useProductStore } from '@/stores/ProductStore';
   import { mapStores } from 'pinia';
@@ -26,11 +26,16 @@
   import { IonText } from '@ionic/vue';
   import ProductCard from '@/components/cards/ProductCard.vue';
   import AppStorage from '@/stores/AppStorage';
+import Business from '../../../models/Business';
 
   const storage = new AppStorage();
-  const RECENTLY_VIEWED = 'kola.recently-viewed';
 
   export default defineComponent({
+    props: {
+        business: {
+            type: Object as PropType<Business | null>
+        }
+    },
     data() {
         return {
             products: [] as Product[]
@@ -44,18 +49,22 @@
         viewProduct(product: Product) {
             this.$router.push(`/shopper/home/products/${product.id}`);
         },
-        async fetchRecentlyViewedProducts() {
-            const products = await storage.get(RECENTLY_VIEWED);
-            if( products ) {
-                this.products = products.map((el: object) => new Product(el));
-                return;
-            }
-            this.products = await this.productStore.fetchRecentlyViewedProducts({ limit: 6 });
-            storage.set(RECENTLY_VIEWED, this.products, 5, 'minutes');
+
+        async fetchNewArrivals() {
+            this.products = await this.productStore.fetchProducts({
+                businesses_id: this.business?.id,
+                limit: 6,
+                sort: 'latest'
+            });
         }
     },
     mounted() {
-        this.fetchRecentlyViewedProducts();
+        // this.fetchNewArrivals();
+    },
+    watch: {
+        business: function() {
+            this.fetchNewArrivals();
+        }
     }
   })
   </script>

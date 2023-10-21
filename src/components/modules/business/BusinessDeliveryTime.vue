@@ -1,8 +1,8 @@
 <template>
   <section>
-    <ion-text style="color: #6B7785;">
-      {{ 'Fulfills orders within 1-3 days' }}
-    </ion-text>
+    <IonText>
+      {{ business?.deliveryTime || 'Fulfills orders within 1-3 days' }}
+    </IonText>
   </section>
 </template>
 

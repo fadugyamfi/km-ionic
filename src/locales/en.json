@@ -134,5 +134,11 @@
             "youHaveXNewOrders": "You have %{orders} New Order(s)",
             "pleaseTapOrdersButtonBelowToSeeThem": "Please click \"orders\" button below to see all"
         }
+    },
+    "modules": {
+        "business": {
+            "noDescriptAvailable": "No Description Available",
+            "unknownLocation": "Unknown Location"
+        }
     }
 }

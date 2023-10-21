@@ -4,13 +4,13 @@
       <IonHeader class="inner-header">
         <IonToolbar class="ion-align-items-center">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/shopper/home/categories"></IonBackButton>
+            <IonBackButton defaultHref="/shopper/home"></IonBackButton>
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
             {{ business?.name }}
 
           </IonTitle>
-         
+
           <IonButtons slot="end">
             <NotificationButton></NotificationButton>
           </IonButtons>
@@ -52,7 +52,7 @@
         <BusinessTags :business="business"></BusinessTags>
       </section>
       <section class="section arrival-section">
-        <BusinessNewArrival></BusinessNewArrival>
+        <BusinessNewArrival :business="business"></BusinessNewArrival>
       </section>
       </main>
     </ion-content>
@@ -75,7 +75,7 @@ import Business from '@/models/Business';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import ProductCard from '@/components/cards/ProductCard.vue';
 import { IonIcon, IonText } from '@ionic/vue';
-import { locationOutline } from 'ionicons/icons'; 
+import { locationOutline } from 'ionicons/icons';
 import { handleAxiosRequestError } from '@/utilities';
 import FollowButton from '@/components/modules/brands/FollowButton.vue';
 

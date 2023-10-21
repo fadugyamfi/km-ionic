@@ -4,6 +4,7 @@
 
     <section v-if="leftColumnItems.length > 0" class="d-flex flex-column ion-align-items-stretch">
       <BusinessCard
+        class="ion-margin-bottom"
         v-for="(business, index) of leftColumnItems"
         :key="business.id"
         :business="business"
@@ -15,6 +16,7 @@
 
     <section v-if="rightColumnItems.length > 0" class="d-flex flex-column ion-align-items-stretch">
       <BusinessCard
+        class="ion-margin-bottom"
         v-for="(business, index) of rightColumnItems"
         :key="business.id"
         :business="business"

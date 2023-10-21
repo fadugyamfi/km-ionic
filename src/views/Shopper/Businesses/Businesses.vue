@@ -14,6 +14,17 @@
           </IonButtons>
         </IonToolbar>
       </IonHeader>
+
+      <IonToolbar style="margin-top: 5px;">
+        <IonSearchbar
+          class="search-input"
+          placeholder="Search..."
+          :debounce="2000"
+          v-model="search.term"
+          @ion-change="fetchBusinesses()"
+          @ion-input="fetchBusinesses()"
+        ></IonSearchbar>
+      </IonToolbar>
     </section>
 
     <ion-content>
@@ -24,7 +35,7 @@
 
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonSearchbar } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
 import Business from '@/models/Business';
 import { useBusinessStore } from '@/stores/BusinessStore';
@@ -37,21 +48,22 @@ const route = useRoute();
 const businesses = ref<Business[]>([]);
 const meta = route.meta;
 
-const search = { name_like: '' }
+const search = { term: '' }
 
 async function fetchSuppliers() {
   businesses.value = await businessStore.getSuppliers(search);
 }
 
-async function fetchBusinesess() {
-  businesses.value = await businessStore.getBusinesses(search);
+async function fetchBusinesses() {
+  businesses.value = [];
+  businesses.value = await businessStore.getBusinesses(search.term);
 }
 
 onMounted(() => {
   if( meta.businessType == 'supplier' ) {
     fetchSuppliers()
   } else {
-    fetchBusinesess()
+    fetchBusinesses()
   }
 });
 </script>

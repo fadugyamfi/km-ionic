@@ -1,15 +1,10 @@
 import { NullableNumber, NullableString, NullableStringOrNumber } from "@/utilities/Types";
-import Currency from "./Currency";
 import { FavoritedBrand } from "./types";
+import Currency from "./Currency";
+import Tag from "./Tag";
 
 
 export default class Business {
-    addToFavorites() {
-        throw new Error("Method not implemented.");
-    }
-    unfavorite() {
-        throw new Error("Method not implemented.");
-    }
 
     public id?: number | string;
     public name?: string;
@@ -27,6 +22,8 @@ export default class Business {
     public rating?: number = 1;
     public distance?: number = 0;
     public favorited?: FavoritedBrand | null;
+    public deliveryTime?: string;
+    public tags?: Tag[];
 
 
     constructor(data: object | null) {
@@ -39,5 +36,12 @@ export default class Business {
 
     set currency(value: any) {
         this._currency = new Currency(value);
+    }
+
+    addToFavorites() {
+        throw new Error("Method not implemented.");
+    }
+    unfavorite() {
+        throw new Error("Method not implemented.");
     }
 }

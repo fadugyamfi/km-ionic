@@ -141,9 +141,14 @@ export const useBusinessStore = defineStore("business", {
         return null;
       }
     },
-    async getBusinessProducts(business: Business): Promise<Product[]> {
+    async getBusinessProducts(business: Business, limit: number = 50): Promise<Product[]> {
       try {
-        const response = await axios.get(`/v2/businesses/${business.id}/products`);
+        const params = {
+          businesses_id: business.id,
+          limit
+        };
+
+        const response = await axios.get(`/v2/products`, { params });
         if (response) {
           const { data } = response.data;
           const products: Product[] = data.map((el: any) => new Product(el));
@@ -158,7 +163,7 @@ export const useBusinessStore = defineStore("business", {
     async storeBusinesses() {
       await storage.set('store.businesses', this.businesses);
     },
-    
+
     async setSearchQuery(query: string) {
       this.searchQuery = query;
       await this.clearBusinesses();

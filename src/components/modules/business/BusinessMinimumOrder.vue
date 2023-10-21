@@ -2,14 +2,14 @@
   <section class="minimum-order">
     <section v-if="business?.min_order_amount" class="d-flex ion-align-items-center">
       <IonIcon class="danger" color="danger" :icon="alertCircleOutline"></IonIcon>
-      <IonText class="larger-text" color="medium">
+      <IonText color="medium">
         {{ business?.currency?.symbol }} {{ business?.min_order_amount }} minimum
       </IonText>
     </section>
 
     <section v-else class="d-flex ion-align-items-center">
       <IonIcon class="success" color="success" :icon="checkmarkCircleOutline"></IonIcon>
-      <IonText class="larger-text" color="medium">
+      <IonText color="medium">
         No minimum order amount
       </IonText>
     </section>
@@ -56,7 +56,7 @@ ion-icon {
 }
 
 ion-text {
-  font-size: 1.2em; /* Increase the text size */
+  font-size: 1em; /* Increase the text size */
 }
 
 .larger-text {

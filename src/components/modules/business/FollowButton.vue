@@ -14,7 +14,7 @@ const props = defineProps({
   Business: Business
 });
 
-const BusinessStore = useBusinessStore();
+const businessStore = useBusinessStore();
 const buttonLabel = ref("Follow");
 const isFollowed = ref(false);
 
@@ -25,11 +25,11 @@ const toggleFollowed = () => {
 
   if (isFollowed.value) {
     buttonLabel.value = 'Follow';
-    BusinessStore.removeFromFavorites(props.Business);
+    businessStore.removeFromFavorites(props.Business);
     isFollowed.value = false;
   } else {
     buttonLabel.value = 'Unfollow';
-    BusinessStore.addToFavorites(props.Business);
+    businessStore.addToFavorites(props.Business);
     isFollowed.value = true;
   }
 };

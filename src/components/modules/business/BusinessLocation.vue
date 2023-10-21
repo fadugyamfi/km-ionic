@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="d-flex ion-align-items-center">
     <IonIcon :icon="locationOutline"></IonIcon>
     <IonText style="color:#728087;">{{ business?.location || 'No Description Available' }}</IonText>
   </section>
@@ -9,7 +9,7 @@
 import { IonIcon, IonText } from '@ionic/vue';
 import { locationOutline } from 'ionicons/icons';
 import { defineComponent, PropType } from 'vue';
-import Business from '@/models/Business'; 
+import Business from '@/models/Business';
 
 export default defineComponent({
   props: {
@@ -23,17 +23,22 @@ export default defineComponent({
       locationOutline,
     };
   },
+
+  data() {
+    return {
+      location
+    }
+  }
 });
 </script>
 
-<style lang="css">
+<style scoped lang="css">
 ion-icon {
   --color: var(--kola-blue);
   --background: #F0F9FF;
-  font-size: 1.2em; 
+  font-size: 1.2em;
   border-radius: 16px;
-  padding: 6px 10px 6px 10px;
+  padding: 6px 8px 6px 8px;
   margin-right: 3px;
-  height: auto;
 }
 </style>

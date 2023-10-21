@@ -1,7 +1,7 @@
 <template>
   <section>
-    <IonChip v-for="tag in business.tags" :key="tag">
-      {{ tag }}
+    <IonChip v-for="tag in (business?.tags || defaultTags)" :key="tag.name">
+      {{ tag.name }}
     </IonChip>
   </section>
 </template>
@@ -10,6 +10,7 @@
 import { IonChip } from '@ionic/vue';
 import { PropType, defineComponent } from 'vue';
 import Business from '@/models/Business';
+import Tag from '../../../models/Tag';
 
 export default defineComponent({
   props: {
@@ -17,19 +18,20 @@ export default defineComponent({
       type: Object as PropType<Business | null>,
     },
   },
+
   components: { IonChip },
 
   data() {
     return {
-      business: {
-        tags: ['Eco-friendly', 'Retails', 'Homemade', 'Free Delivery'],
-      },
+      defaultTags: [
+        new Tag({ name: 'Eco-friendly' }),
+      ],
     };
   },
 });
 </script>
   
-<style lang="css">
+<style scoped lang="css">
 ion-chip {
   --color: var(--kola-blue);
   --background: #F0F9FF;
