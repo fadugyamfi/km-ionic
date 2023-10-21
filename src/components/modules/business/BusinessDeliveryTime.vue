@@ -1,13 +1,13 @@
 <template>
   <section>
-    <ion-chip>
-      {{ business?.deliverytime || 'Fulfills orders within 1-3 days' }}
-    </ion-chip>
+    <ion-text style="color: #6B7785;">
+      {{ 'Fulfills orders within 1-3 days' }}
+    </ion-text>
   </section>
 </template>
 
 <script lang="ts">
-import { IonChip } from '@ionic/vue';
+import { IonText } from '@ionic/vue';
 import { PropType, defineComponent } from 'vue';
 import Business from '@/models/Business';
 
@@ -18,12 +18,13 @@ export default defineComponent({
     },
   },
 
-  components: { IonChip },
+  components: { IonText, Business },
 });
 </script>
 
 <style lang="css">
-ion-chip {
+
+.ion-text {
   --color: var(--kola-blue);
   --background: #F0F9FF;
   font-size: 1em;
@@ -31,5 +32,6 @@ ion-chip {
   padding: 6px 10px 6px 10px;
   margin-right: 3px;
   height: auto;
+  text-decoration-color: #6B7785;
 }
 </style>
