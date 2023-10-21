@@ -1,3 +1,14 @@
+<template>
+  <ion-searchbar
+    v-model="searchTerm"
+    @ionInput="onSearchInput"
+    @ionClear="onClearSearch"
+    placeholder="Search businesses"
+  ></ion-searchbar>
+
+  <BusinessesList :businesses="filteredBusinesses"></BusinessesList>
+</template>
+
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
 import { IonSearchbar } from '@ionic/vue';
