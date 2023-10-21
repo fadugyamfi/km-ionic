@@ -1,21 +1,28 @@
 <template>
   <section>
-    <IonIcon :icon="'location'" color="medium" />
-    {{ business?.location || 'No Description Available' }}
+    <IonIcon :icon="locationOutline"></IonIcon>
+    <IonText style="color:#728087;">{{ business?.location || 'No Description Available' }}</IonText>
   </section>
 </template>
 
 <script lang="ts">
-import { IonIcon } from '@ionic/vue';
-import { PropType, defineComponent } from 'vue';
+import { IonIcon, IonText } from '@ionic/vue';
+import { locationOutline } from 'ionicons/icons';
+import { defineComponent, PropType } from 'vue';
+import Business from '@/models/Business'; 
 
 export default defineComponent({
   props: {
     business: {
-      type: Object as PropType<any | null>,
+      type: Object as PropType<Business | null>,
     },
   },
-  components: { IonIcon },
+  components: { IonIcon, IonText, Business },
+  setup() {
+    return {
+      locationOutline,
+    };
+  },
 });
 </script>
 
@@ -23,7 +30,7 @@ export default defineComponent({
 ion-icon {
   --color: var(--kola-blue);
   --background: #F0F9FF;
-  font-size: 1.2em; /* Adjust the font-size for a larger icon */
+  font-size: 1.2em; 
   border-radius: 16px;
   padding: 6px 10px 6px 10px;
   margin-right: 3px;

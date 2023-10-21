@@ -52,7 +52,8 @@ export default defineComponent({
         IonCardSubtitle,
         IonIcon,
         Image,
-        BusinessRatingAndReviews
+        BusinessRatingAndReviews,
+        Business
     }
 });
 </script>
