@@ -1,49 +1,128 @@
 <template>
-  <ion-searchbar
-    v-model="searchTerm"
-    @ionInput="onSearchInput"
-    @ionClear="onClearSearch"
-    placeholder="Search businesses"
-  ></ion-searchbar>
+  <IonPage>
+    <IonHeader class="ion-no-border">
+      <IonToolbar>
+        <IonButtons slot="start">
+          <IonBackButton :icon="close"></IonBackButton>
+        </IonButtons>
+        <IonTitle size="small">Search Results</IonTitle>
+      </IonToolbar>
 
-  <BusinessesList :businesses="filteredBusinesses"></BusinessesList>
+      <IonToolbar>
+        <IonSearchbar
+          class="search-input"
+          placeholder="Search..."
+          :debounce="2000"
+          @ion-change="onSearch"
+          @ion-input="onSearch"
+        ></IonSearchbar>
+      </IonToolbar>
+    </IonHeader>
+
+    <IonContent>
+      <section v-if="!businesses">
+        <IonSkeletonText :animated="true"></IonSkeletonText>
+        <IonSkeletonText :animated="true"></IonSkeletonText>
+      </section>
+
+      <IonGrid v-if="businesses">
+        <IonRow>
+          <IonCol size="6" v-for="business in businesses" :key="business.id">
+            <BusinessCard :business="business"></BusinessCard>
+          </IonCol>
+        </IonRow>
+      </IonGrid>
+    </IonContent>
+  </IonPage>
 </template>
 
-<script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
-import { IonSearchbar } from '@ionic/vue';
-import { useBusinessStore } from '@/stores/BusinessStore';
-import BusinessesList from '@/components/lists/BusinessesList.vue';
+<script lang="ts">
+import { IonBackButton, IonButtons, IonCol, IonContent, IonGrid, IonHeader, IonPage, IonRow, IonSearchbar, IonSkeletonText, IonTitle, IonToolbar } from '@ionic/vue';
+import { defineComponent } from 'vue';
+import { close } from 'ionicons/icons';
 import Business from '@/models/Business';
+import { mapStores } from 'pinia';
+import { useBusinessStore } from '@/stores/BusinessStore';
+import BusinessCard from '@/components/cards/BusinessCard.vue';
 
-const { getBusinesses } = useBusinessStore();
-const businesses = ref<Business[]>([]);
-const searchTerm = ref<string>('');
-const filteredBusinesses = ref<Business[]>([]);
+export default defineComponent({
+  components: {
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonBackButton,
+    IonTitle,
+    IonSearchbar,
+    IonSkeletonText,
+    BusinessCard,
+    IonGrid,
+    IonRow,
+    IonCol,
+  },
 
-const fetchBusinesses = async () => {
-  businesses.value = await getBusinesses();
-  // Initial filtered list is the same as the full list
-  filteredBusinesses.value = [...businesses.value];
-};
+  data() {
+    return {
+      close,
+      businesses: null as Business[] | null,
+    };
+  },
 
-const filterBusinesses = (source: Business[], term: string) =>
-  source.filter((business) =>
-    business.name.toLowerCase().includes(term.toLowerCase())
-  );
+  computed: {
+    ...mapStores(useBusinessStore),
+  },
 
-const onSearchInput = () => {
-  // Reuse the filtering logic
-  filteredBusinesses.value = filterBusinesses(businesses.value, searchTerm.value);
-};
+  methods: {
+    async fetchSearchedBusinesses() {
+      try {
+        this.businesses = await this.businessStore.fetchSearchedBusinesses();
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
-const onClearSearch = () => {
-  searchTerm.value = '';
-  // Reset filtered list to the full list
-  filteredBusinesses.value = [...businesses.value];
-};
+    onSearch(event: any) {
+      this.businessStore.searchTerm = event.target?.value;
+      this.businesses = null;
+      this.fetchSearchedBusinesses();
+    },
 
-watch(searchTerm, onSearchInput);
+    viewBusiness(business: Business) {
+      this.$router.push(`/shopper/businesses/${business.id}`);
+    },
+  },
 
-onMounted(fetchBusinesses);
+  mounted() {
+    this.fetchSearchedBusinesses();
+  },
+});
 </script>
+
+<style scoped lang="scss">
+main {
+  border-radius: 10px;
+  background-color: white;
+  margin-top: 15px;
+  border: solid #f9f9f9 1px;
+  padding: 10px;
+
+  .title-section {
+    font-size: 0.8em;
+    font-weight: bold;
+
+    .price {
+      text-align: right;
+      min-width: 80px;
+    }
+  }
+}
+
+ion-grid {
+  --ion-grid-padding: 2px;
+
+  ion-col {
+    padding-left: 1px;
+    padding-right: 1px;
+  }
+}
+</style>
