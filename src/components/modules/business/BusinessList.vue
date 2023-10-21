@@ -31,7 +31,7 @@ import { defineComponent, PropType } from 'vue';
 import Business from '@/models/Business';
 import BusinessCard from './BusinessCard.vue';
 import { IonSpinner } from '@ionic/vue';
-
+import { IonSearchbar } from '@ionic/vue'
 export default defineComponent({
   props: {
     businesses: {
