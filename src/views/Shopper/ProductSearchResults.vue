@@ -6,6 +6,7 @@
                     <IonBackButton :icon="close"></IonBackButton>
                 </IonButtons>
 
+                
                 <IonTitle size="small">Search Results</IonTitle>
             </IonToolbar>
 
