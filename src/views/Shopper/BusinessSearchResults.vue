@@ -1,49 +1,38 @@
-<template>
-  <ion-searchbar
-    v-model="searchTerm"
-    @ionInput="onSearchInput"
-    @ionClear="onClearSearch"
-    placeholder="Search suppliers"
-  ></ion-searchbar>
-
-  <SuppliersList :suppliers="filteredSuppliers"></SuppliersList>
-</template>
-
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
 import { IonSearchbar } from '@ionic/vue';
-import { useSupplierStore } from '@/stores/SupplierStore';
-import SuppliersList from '@/components/lists/SuppliersList.vue';
+import { useBusinessStore } from '@/stores/BusinessStore';
+import BusinessesList from '@/components/lists/BusinessesList.vue';
 import Business from '@/models/Business';
 
-const { getSuppliers } = useSupplierStore();
-const suppliers = ref<Business[]>([]);
+const { getBusinesses } = useBusinessStore();
+const businesses = ref<Business[]>([]);
 const searchTerm = ref<string>('');
-const filteredSuppliers = ref<Business[]>([]);
+const filteredBusinesses = ref<Business[]>([]);
 
-const fetchSuppliers = async () => {
-  suppliers.value = await getSuppliers();
+const fetchBusinesses = async () => {
+  businesses.value = await getBusinesses();
   // Initial filtered list is the same as the full list
-  filteredSuppliers.value = [...suppliers.value];
+  filteredBusinesses.value = [...businesses.value];
 };
 
-const filterSuppliers = (source: Business[], term: string) =>
-  source.filter((supplier) =>
-    supplier.name.toLowerCase().includes(term.toLowerCase())
+const filterBusinesses = (source: Business[], term: string) =>
+  source.filter((business) =>
+    business.name.toLowerCase().includes(term.toLowerCase())
   );
 
 const onSearchInput = () => {
   // Reuse the filtering logic
-  filteredSuppliers.value = filterSuppliers(suppliers.value, searchTerm.value);
+  filteredBusinesses.value = filterBusinesses(businesses.value, searchTerm.value);
 };
 
 const onClearSearch = () => {
   searchTerm.value = '';
   // Reset filtered list to the full list
-  filteredSuppliers.value = [...suppliers.value];
+  filteredBusinesses.value = [...businesses.value];
 };
 
 watch(searchTerm, onSearchInput);
 
-onMounted(fetchSuppliers);
+onMounted(fetchBusinesses);
 </script>
