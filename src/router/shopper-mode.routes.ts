@@ -1,6 +1,7 @@
 import { useUserStore } from '@/stores/UserStore';
 import TabsPage from '@/views/Shopper/TabsPage.vue';
 import HomePage from '@/views/Shopper/HomePage.vue';
+import BusinessSearchResults from '@/views/BusinessSearchResults.vue';
 
 export const ShopperModeRoutes = [
     {
