@@ -122,7 +122,9 @@
     "shopper": {
         "home": {
             "viewAll": "View all",
-            "suppliersNearYou": "Suppliers Near You"
+            "suppliersNearYou": "Suppliers Near You",
+            "showAll": "Show All",
+            "newArrivals": "New Arrivals"
         },
         "businesses": {
             "noResultsAvailable": "No Results Available",

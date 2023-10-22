@@ -40,7 +40,7 @@
                     <BrandRatingAndReviews :brand="brand"></BrandRatingAndReviews>
                 </section>
                 <section class="section arrival-section">
-                    <BrandNewArrival></BrandNewArrival>
+                    <BrandNewArrival :brand="brand"></BrandNewArrival>
                 </section>
             </main>
         </ion-content>
