@@ -1,6 +1,6 @@
 <template>
     <section class="business-card">
-        <ion-card class="ion-no-padding ion-no-margin">
+        <ion-card @click="viewBusiness" class="ion-no-padding ion-no-margin">
             <Image :alt="business.name" :src="business.logo" />
 
             <IonCardHeader>
@@ -35,13 +35,18 @@ export default defineComponent({
         business: {
             required: true,
             type: Business
-        }
+        },
     },
 
     data() {
         return {
             locationOutline
         };
+    },
+    methods: {
+        viewBusiness() {
+            this.$router.push(`/shopper/home/Businesses/${this.business.id}`);
+        },
     },
 
     components: {

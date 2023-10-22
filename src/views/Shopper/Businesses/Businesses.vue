@@ -23,12 +23,20 @@
           v-model="search.term"
           @ion-change="fetchBusinesses()"
           @ion-input="fetchBusinesses()"
+          @keyup.enter="onEnterSearch"
         ></IonSearchbar>
       </IonToolbar>
     </section>
 
     <ion-content>
-      <BusinessList :businesses="businesses"></BusinessList>
+      <ion-list >
+        <!-- Display your list of businesses here -->
+        <BusinessList :businesses="businesses"></BusinessList>
+      </ion-list>
+
+      <ion-text class="no-result" v-if="businesses.length === 0">
+        <p> No results available </p>
+      </ion-text>
     </ion-content>
   </ion-page>
 </template>
@@ -58,7 +66,10 @@ async function fetchBusinesses() {
   businesses.value = [];
   businesses.value = await businessStore.getBusinesses(search.term);
 }
-
+const onEnterSearch = () => {
+  // This function is called when the user presses "Enter" in the search bar
+  fetchBusinesses();
+};
 onMounted(() => {
   if( meta.businessType == 'supplier' ) {
     fetchSuppliers()
@@ -67,3 +78,11 @@ onMounted(() => {
   }
 });
 </script>
+<style scoped>
+.no-result {
+  font-weight: bold;
+  text-align: center; 
+  font-size: 16px;
+  padding: 50px; 
+}
+</style>
