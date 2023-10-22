@@ -30,12 +30,19 @@
 
     <ion-content>
       <ion-list >
-        <!-- Display your list of businesses here -->
+        
         <BusinessList :businesses="businesses"></BusinessList>
       </ion-list>
 
       <ion-text class="no-result" v-if="businesses.length === 0">
         <p> No results available </p>
+        <span class="info">
+        - Check your spelling for typing errors
+       <br>
+        - Try searching with short and simple keywords
+       <br>
+        - Try searching more general terms 
+    </span>
       </ion-text>
     </ion-content>
   </ion-page>
@@ -84,5 +91,15 @@ onMounted(() => {
   text-align: center; 
   font-size: 16px;
   padding: 50px; 
+}
+.info {
+  font-weight: normal;
+  text-align: center;
+  color: #666EED;
+  justify-content: center;
+  display: flex;
+  align-items: center; 
+  font-size: 15px;
+  padding: 52px;
 }
 </style>
