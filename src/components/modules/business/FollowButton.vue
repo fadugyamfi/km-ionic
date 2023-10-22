@@ -1,6 +1,6 @@
 <template>
-  <IonButton class="kola-white-button" type="button" fill="clear" @click.stop="toggleFollowed" :disabled="!isFollowed">
-    {{ buttonLabel }}
+  <IonButton class="kola-white-button" type="button" fill="clear" @click.stop="toggleFollowed()">
+    <slot>{{ title }}</slot>
   </IonButton>
 </template>
 
@@ -8,36 +8,33 @@
 import { IonButton } from '@ionic/vue';
 import Business from '@/models/Business';
 import { useBusinessStore } from '@/stores/BusinessStore';
-import { ref, defineProps, onMounted } from 'vue';
+import { ref, defineProps, onBeforeMount } from 'vue';
 
 const props = defineProps({
-  Business: Business
+  business: Business
 });
 
 const businessStore = useBusinessStore();
-const buttonLabel = ref("Follow");
-const isFollowed = ref(false);
+const title = ref(props.business?.favorited ? 'Unfollow' : 'Follow');
 
 const toggleFollowed = () => {
-  if (!props.Business) {
+  if (!props.business) {
     return;
   }
 
-  if (isFollowed.value) {
-    buttonLabel.value = 'Follow';
-    businessStore.removeFromFavorites(props.Business);
-    isFollowed.value = false;
+  if (title.value === 'Follow') {
+    title.value = 'Unfollow';
+    businessStore.addToFavorites(props.business);
+
   } else {
-    buttonLabel.value = 'Unfollow';
-    businessStore.addToFavorites(props.Business);
-    isFollowed.value = true;
+    title.value = 'Follow';
+    businessStore.removeFromFavorites(props.business);
   }
 };
 
-onMounted(() => {
-  if (props.Business && props.Business.favorited) {
-    buttonLabel.value = 'Unfollow';
-    isFollowed.value = true;
+onBeforeMount(() => {
+  if (props.business && props.business.favorited) {
+    title.value = 'Unfollow';
   }
 });
 </script>
@@ -57,6 +54,6 @@ ion-button {
   --box-shadow: none;
   text-transform: none;
   font-weight: 600;
-  font-size: 1em; /* Adjust the font size here */
+  font-size: 0.75em;
 }
 </style>

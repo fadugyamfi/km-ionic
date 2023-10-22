@@ -1,5 +1,6 @@
 import { NullableNumber, NullableString, NullableStringOrNumber } from "@/utilities/Types";
 import { FavoritedBrand } from "./types";
+import { FavoritedBusiness } from "./types";
 import Currency from "./Currency";
 import Tag from "./Tag";
 

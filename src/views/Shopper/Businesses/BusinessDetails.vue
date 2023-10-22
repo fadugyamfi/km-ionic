@@ -77,7 +77,7 @@ import ProductCard from '@/components/cards/ProductCard.vue';
 import { IonIcon, IonText } from '@ionic/vue';
 import { locationOutline } from 'ionicons/icons';
 import { handleAxiosRequestError } from '@/utilities';
-import FollowButton from '@/components/modules/brands/FollowButton.vue';
+import FollowButton from '@/components/modules/business/FollowButton.vue';
 
 export default defineComponent({
   data() {
@@ -106,9 +106,9 @@ export default defineComponent({
     BusinessDeliveryTime,
     BusinessNewArrival,
     Swiper,
-    FollowButton,
     SwiperSlide,
     ProductCard,
+    FollowButton,
     NotificationButton,
     IonIcon,
     IonText,
