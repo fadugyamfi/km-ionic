@@ -1,44 +1,24 @@
 <template>
     <section class="product-card">
         <ion-card @click="viewProduct()">
-            <FavoriteButton
-                class="favorite-button"
-                :product="product"
-                color="dark"
-            >
+            <FavoriteButton class="favorite-button" :product="product" color="dark">
             </FavoriteButton>
 
-            <Image
-                class="product-image"
-                :class="{ float: !imgLoaded }"
-                :alt="product.product_name"
-                :src="product.image"
-                :no-img-src="noImage"
-                @loaded="imgLoaded = true"
-            />
+            <Image class="product-image" :class="{ float: !imgLoaded }" :alt="product.product_name" :src="product.image"
+                   :no-img-src="noImage" @loaded="imgLoaded = true" />
             <IonSkeletonText v-if="!imgLoaded" :animated="true" class="product-image"></IonSkeletonText>
 
             <IonCardHeader>
-                <section style="position: relative; padding-top: 30px;">
-
-
+                <section class="d-flex ion-align-items-center ion-justify-content-between">
                     <p class="product-title fw-semibold line-clamp">
                         {{ product.product_name }}
-
-                        <IonButton
-                            fill="clear"
-                            color="medium"
-                            style="--padding-start: 0px; --padding-end: 0px; position: absolute; right: 0px; top: -5px;"
-                            @click.prevent.stop="addToCart()"
-                        >
-                            <IonIcon
-                                size="large"
-                                slot="icon-only"
-                                :icon="addCircleOutline"
-                            ></IonIcon>
-                        </IonButton>
                     </p>
+
+                    <IonButton fill="clear" color="medium" @click.prevent.stop="addToCart()" class="ion-no-padding ion-no-margin">
+                        <IonIcon size="large" slot="icon-only" :icon="addCircleOutline"></IonIcon>
+                    </IonButton>
                 </section>
+
 
                 <section class="pricing d-flex ion-justify-content-between">
                     <span>
@@ -112,12 +92,11 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-
 .line-clamp {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .product-card {
@@ -151,7 +130,7 @@ export default defineComponent({
                 text-overflow: ellipsis;
                 overflow: hidden;
                 height: 40px;
-                color:#111;
+                color: #111;
             }
 
             .pricing {

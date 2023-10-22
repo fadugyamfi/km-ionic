@@ -1,13 +1,13 @@
 <template>
-    <section class="supplier-card">
-        <ion-card class="ion-no-padding ion-no-margin">
-            <Image :alt="supplier.name" :src="supplier.logo" />
+    <section class="business-card">
+        <ion-card @click="viewBusiness" class="ion-no-padding ion-no-margin">
+            <Image :alt="business.name" :src="business.logo" />
 
             <IonCardHeader>
-                <IonCardTitle>{{ supplier.name }}</IonCardTitle>
+                <IonCardTitle>{{ business.name }}</IonCardTitle>
                 <IonCardSubtitle>
-                    <span v-if="supplier.min_order_amount">
-                        {{ supplier.currency?.symbol }} {{ supplier.min_order_amount }} minimum
+                    <span v-if="business.min_order_amount">
+                        {{ business.currency?.symbol }} {{ business.min_order_amount }} minimum
                     </span>
                     <span v-else>
                         No Order Minimums
@@ -16,7 +16,7 @@
             </IonCardHeader>
 
             <IonCardContent>
-                <BusinessRatingAndReviews :business="supplier" :show-reviews="false"></BusinessRatingAndReviews>
+                <BusinessRatingAndReviews :business="business" :show-reviews="false"></BusinessRatingAndReviews>
             </IonCardContent>
         </ion-card>
     </section>
@@ -32,16 +32,21 @@ import BusinessRatingAndReviews from '@/components/modules/business/BusinessRati
 
 export default defineComponent({
     props: {
-        supplier: {
+        business: {
             required: true,
             type: Business
-        }
+        },
     },
 
     data() {
         return {
             locationOutline
         };
+    },
+    methods: {
+        viewBusiness() {
+            this.$router.push(`/shopper/home/Businesses/${this.business.id}`);
+        },
     },
 
     components: {
@@ -52,17 +57,25 @@ export default defineComponent({
         IonCardSubtitle,
         IonIcon,
         Image,
-        BusinessRatingAndReviews
+        BusinessRatingAndReviews,
+        Business
     }
 });
 </script>
 
 <style scoped lang="scss">
-.supplier-card {
+.business-card {
     ion-card {
         width: 100%;
         height: 250px;
         min-height: 150px;
+
+        image {
+            img {
+                min-height: 100px;
+                min-width: 100%;
+            }
+        }
 
         ion-card-header {
             text-align: left;

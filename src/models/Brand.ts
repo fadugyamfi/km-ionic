@@ -24,4 +24,8 @@ export default class Brand {
     unfavorite() {
         this.favorited = null;
     }
+
+    getInitials(length: number = 3) {
+        return this.name?.split(" ").map((n)=>n[0]).join("").toUpperCase().substring(0, length);
+    }
 }

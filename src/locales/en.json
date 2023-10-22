@@ -12,7 +12,12 @@
         "credit": "Credits",
         "orders": "Orders",
         "profile": "Profile",
-        "cart": "Cart"
+        "cart": "Cart",
+        "businesses": "Businesses",
+        "retailer": "Retailer",
+        "wholesaler": "Wholesaler",
+        "keyDistributor": "Key Distributor",
+        "supplier": "Supplier"
     },
     "onboarding": {
         "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -112,6 +117,39 @@
             "loadingYourAccountInfo": "Loading Your Account Info",
             "pinResetFailed": "PIN Reset Failed. Please try again",
             "phoneNumberRequired": "Phone Number For Reset Required"
+        }
+    },
+    "shopper": {
+        "home": {
+            "viewAll": "View all",
+            "suppliersNearYou": "Suppliers Near You",
+            "showAll": "Show All",
+            "newArrivals": "New Arrivals"
+        },
+        "businesses": {
+            "noResultsAvailable": "No Results Available",
+            "pleaseTryYourSearchAgain": "Please try your search again"
+        },
+        "productDetails": {
+            "productDetails": "Product Details",
+            "buyNow": "Buy Now",
+            "addToCart": "Add To Cart"
+        }
+    },
+    "vendor": {
+        "home": {
+            "yourOrderListIsEmpty": "Your Order List Is Empty",
+            "emptyListInstruction": "Looks like your haven't received any orders yet. Please follow these steps to Get more orders!",
+            "inviteCustomers": "Invite Customers",
+            "chatWithUs": "Chat With Us To Learn More",
+            "youHaveXNewOrders": "You have %{orders} New Order(s)",
+            "pleaseTapOrdersButtonBelowToSeeThem": "Please click \"orders\" button below to see all"
+        }
+    },
+    "modules": {
+        "business": {
+            "noDescriptAvailable": "No Description Available",
+            "unknownLocation": "Unknown Location"
         }
     }
 }

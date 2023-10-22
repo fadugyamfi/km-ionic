@@ -13,8 +13,7 @@
       <IonSearchbar
             placeholder="Search..."
             class="search-input"
-            :debounce="500"
-            @ion-input="onSearch($event)"
+            @keyup.enter="onSearch($event)"
             @ion-change="onSearch($event)"
         ></IonSearchbar>
     </IonToolbar>

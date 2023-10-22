@@ -3,8 +3,9 @@
         <IonHeader class="ion-no-border">
             <IonToolbar>
                 <IonButtons slot="start">
-                    <IonBackButton :icon="close"></IonBackButton>
+                    <IonBackButton defaultHref="/shopper/home" :icon="close"></IonBackButton>
                 </IonButtons>
+
 
                 <IonTitle size="small">Search Results</IonTitle>
             </IonToolbar>
@@ -13,22 +14,27 @@
                 <IonSearchbar
                     class="search-input"
                     placeholder="Search..."
-                    :debounce="2000"
+                    @keyup.enter="onSearch($event)"
                     @ion-change="onSearch($event)"
-                    @ion-input="onSearch($event)"
+                    @ion-clear="onSearch($event)"
                 ></IonSearchbar>
             </IonToolbar>
         </IonHeader>
 
 
         <IonContent>
-            <section v-if="!products">
+            <section v-if="fetching">
                 <IonSkeletonText :animated="true"></IonSkeletonText>
                 <IonSkeletonText :animated="true" ></IonSkeletonText>
-
             </section>
 
-            <IonGrid v-if="products">
+            <NoResults
+                v-if="products?.length == 0 && !fetching"
+                :title="$t('shopper.businesses.noResultsAvailable')"
+                :description="$t('shopper.businesses.pleaseTryYourSearchAgain')"
+            ></NoResults>
+
+            <IonGrid v-if="!fetching && products">
                 <IonRow>
                     <IonCol size="6" v-for="product in products" :key="product.id">
                         <ProductCard :product="product" :show-description="false"></ProductCard>
@@ -51,6 +57,8 @@ import KolaWhiteButton from '@/components/KolaWhiteButton.vue';
 import Image from '@/components/Image.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import ProductCard from '@/components/cards/ProductCard.vue';
+import NoResults from '../../components/layout/NoResults.vue';
+import { handleAxiosRequestError } from '../../utilities';
 
 export default defineComponent({
 
@@ -79,13 +87,15 @@ export default defineComponent({
         ProductCard,
         IonGrid,
         IonRow,
-        IonCol
+        IonCol,
+        NoResults
     },
 
     data() {
 
         return {
             close, heartOutline, cartOutline, shareOutline, cart, heart,
+            fetching: false,
             products: null as Product[] | null,
             defaultBanner: '/images/vendor/banner.png'
         }
@@ -97,16 +107,19 @@ export default defineComponent({
 
     methods: {
         async fetchSearchedProducts() {
+            this.fetching = true;
             try {
                 this.products = await this.productStore.fetchSearchedProducts();
             } catch(error) {
-                console.log(error)
+                handleAxiosRequestError(error);
+            } finally {
+                this.fetching = false;
             }
         },
 
         onSearch(event: any) {
             this.productStore.searchTerm = event.target?.value;
-            this.products = null;
+            this.products = [];
             this.fetchSearchedProducts();
         },
 

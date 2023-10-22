@@ -46,16 +46,50 @@ export const ShopperModeRoutes = [
               {
                 path: 'brands/:id',
                 component: () => import('@/views/Shopper/Brands/BrandDetails.vue'),
-              }
-            ],
+              },
+
+              {
+                path: 'brands/:id/products',
+                component: () => import('@/views/Shopper/Brands/BrandByProduct.vue'),
+              },
+              {
+                path: 'suppliers',
+                component: () => import('@/views/Shopper/Businesses/Businesses.vue'),
+                meta: {
+                  title: "Suppliers",
+                  businessType: "supplier"
+                }
+              },
+             {
+            path: 'businesses',
+            component: () => import('@/views/Shopper/Businesses/Businesses.vue'),
           },
+          {
+            path: 'businesses/:id',
+            component: () => import('@/views/Shopper/Businesses/BusinessDetails.vue'),
+          },
+          {
+            path: 'businesses/:id/products',
+            component: () => import('@/views/Shopper/Businesses/BusinessProducts.vue'),
+          },
+        ],
+      },
           {
             path: 'products/:id',
             component: () => import('@/views/Shopper/ProductDetails.vue')
           },
           {
+
             path: 'search-results',
             component: () => import('@/views/Shopper/ProductSearchResults.vue')
+          },
+          {
+            path: 'no-business-results',
+            component: () => import('@/views/Shopper/NoBusinessResults.vue')
+          },
+          {
+            path: 'search-results',
+            component: () => import('@/views/Shopper/BusinessSearchResults.vue')
           },
           {
             path: 'orders',
