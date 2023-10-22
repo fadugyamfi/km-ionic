@@ -123,6 +123,15 @@
         "home": {
             "viewAll": "View all",
             "suppliersNearYou": "Suppliers Near You"
+        },
+        "businesses": {
+            "noResultsAvailable": "No Results Available",
+            "pleaseTryYourSearchAgain": "Please try your search again"
+        },
+        "productDetails": {
+            "productDetails": "Product Details",
+            "buyNow": "Buy Now",
+            "addToCart": "Add To Cart"
         }
     },
     "vendor": {

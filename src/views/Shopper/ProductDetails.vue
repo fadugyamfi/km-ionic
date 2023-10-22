@@ -3,10 +3,12 @@
         <IonHeader>
             <IonToolbar>
                 <IonButtons slot="start">
-                    <IonBackButton :icon="close"></IonBackButton>
+                    <IonBackButton defaultHref="/shopper/home" :icon="close"></IonBackButton>
                 </IonButtons>
 
-                <IonTitle size="small">Product Details</IonTitle>
+                <IonTitle size="small">
+                    {{ $t("shopper.productDetails.productDetails") }}
+                </IonTitle>
 
                 <IonButtons slot="end">
                     <FavoriteButton :product="product || undefined"></FavoriteButton>
@@ -60,17 +62,20 @@
                 <section class="section tags">
                     <ProductTags :product="product"></ProductTags>
                 </section>
-                <TopBrands></TopBrands>
             </main>
 
-        
+
         </IonContent>
 
         <IonSkeletonText v-if="!product" style="height: 300px" :animated="true"></IonSkeletonText>
 
         <IonFooter class="ion-padding ion-no-border">
-            <KolaYellowButton class="ion-margin-bottom">Buy Now</KolaYellowButton>
-            <KolaWhiteButton @click="addToCart()" :disabled="cartHasProduct">Add To Cart</KolaWhiteButton>
+            <KolaYellowButton class="ion-margin-bottom">
+                {{ $t("shopper.productDetails.buyNow") }}
+            </KolaYellowButton>
+            <KolaWhiteButton @click="addToCart()" :disabled="cartHasProduct">
+                {{ $t("shopper.productDetails.addToCart") }}
+            </KolaWhiteButton>
         </IonFooter>
     </IonPage>
 </template>

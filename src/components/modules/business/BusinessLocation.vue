@@ -38,7 +38,6 @@ ion-icon {
   --background: #F0F9FF;
   font-size: 1.2em;
   border-radius: 16px;
-  padding: 6px 8px 6px 8px;
   margin-right: 3px;
 }
 </style>

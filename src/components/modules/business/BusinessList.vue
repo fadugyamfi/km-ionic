@@ -1,7 +1,5 @@
 <template>
   <section class="business-list d-flex">
-    <IonSpinner name="crescent" v-if="leftColumnItems.length == 0"></IonSpinner>
-
     <section v-if="leftColumnItems.length > 0" class="d-flex flex-column ion-align-items-stretch">
       <BusinessCard
         class="ion-margin-bottom"
@@ -33,7 +31,6 @@ import { defineComponent, PropType } from 'vue';
 import Business from '@/models/Business';
 import BusinessCard from './BusinessCard.vue';
 import { IonSpinner } from '@ionic/vue';
-import { IonSearchbar } from '@ionic/vue'
 export default defineComponent({
   props: {
     businesses: {
@@ -55,7 +52,6 @@ export default defineComponent({
     fillColumns() {
       this.leftColumnItems = this.businesses.filter((business, index) => index % 2 === 0);
       this.rightColumnItems = this.businesses.filter((business, index) => index % 2 !== 0);
-      console.log(this.leftColumnItems, this.rightColumnItems)
     },
 
     onBusinessSelected(business: Business) {
@@ -64,8 +60,8 @@ export default defineComponent({
   },
 
   watch: {
-    businesses: function(newBusiness, oldBusiness) {
-      if( newBusiness ) {
+    businesses: function(newBusinesses, oldBusiness) {
+      if( newBusinesses ) {
         this.fillColumns();
       }
     }

@@ -16,89 +16,81 @@
       </IonHeader>
 
       <IonToolbar style="margin-top: 5px;">
-        <IonSearchbar
-          class="search-input"
-          placeholder="Search..."
-          :debounce="2000"
-          v-model="search.term"
-          @ion-change="fetchBusinesses()"
-          @ion-input="fetchBusinesses()"
-          @keyup.enter="onEnterSearch"
-        ></IonSearchbar>
+        <IonSearchbar class="search-input" placeholder="Search..." v-model="search.term"
+                      @ion-change="fetchBusinesses()"  @keyup.enter="fetchBusinesses()">
+        </IonSearchbar>
       </IonToolbar>
     </section>
 
-    <ion-content>
-      <ion-list >
-        
-        <BusinessList :businesses="businesses"></BusinessList>
-      </ion-list>
+    <IonContent>
+      <div class="ion-text-center" v-if="fetching">
+        <IonSpinner name="crescent"></IonSpinner>
+      </div>
 
-      <ion-text class="no-result" v-if="businesses.length === 0">
-        <p> No results available </p>
-        <span class="info">
-        - Check your spelling for typing errors
-       <br>
-        - Try searching with short and simple keywords
-       <br>
-        - Try searching more general terms 
-    </span>
-      </ion-text>
-    </ion-content>
+      <BusinessList :businesses="businesses"></BusinessList>
+
+      <NoResults
+        v-if="!fetching && businesses.length == 0"
+        :title="$t('shopper.businesses.noResultsAvailable')"
+        :description="$t('shopper.businesses.pleaseTryYourSearchAgain')"
+      ></NoResults>
+
+    </IonContent>
   </ion-page>
 </template>
 
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonSearchbar } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonSearchbar, IonText, IonSpinner } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
 import Business from '@/models/Business';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import BusinessList from '@/components/modules/business/BusinessList.vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import { useRoute } from 'vue-router';
+import NoResults from '../../../components/layout/NoResults.vue';
 
 const businessStore = useBusinessStore();
 const route = useRoute();
 const businesses = ref<Business[]>([]);
 const meta = route.meta;
+const fetching = ref(false);
 
 const search = { term: '' }
 
-async function fetchSuppliers() {
-  businesses.value = await businessStore.getSuppliers(search);
+async function fetchBusinesses() {
+  if( fetching.value == true ) return;
+
+  fetching.value = true;
+  businesses.value = [];
+
+  if (meta.businessType == 'supplier') {
+    businesses.value = await businessStore.getSuppliers(search.term);
+  } else {
+    businesses.value = await businessStore.getBusinesses(search.term);
+  }
+
+  fetching.value = false;
 }
 
-async function fetchBusinesses() {
-  businesses.value = [];
-  businesses.value = await businessStore.getBusinesses(search.term);
-}
-const onEnterSearch = () => {
-  // This function is called when the user presses "Enter" in the search bar
-  fetchBusinesses();
-};
-onMounted(() => {
-  if( meta.businessType == 'supplier' ) {
-    fetchSuppliers()
-  } else {
-    fetchBusinesses()
-  }
-});
+onMounted(() => fetchBusinesses());
 </script>
+
 <style scoped>
 .no-result {
   font-weight: bold;
-  text-align: center; 
+  text-align: center;
   font-size: 16px;
-  padding: 50px; 
+  padding: 50px;
 }
+
 .info {
   font-weight: normal;
   text-align: center;
   color: #666EED;
   justify-content: center;
   display: flex;
-  align-items: center; 
+  align-items: center;
   font-size: 15px;
   padding: 52px;
 }

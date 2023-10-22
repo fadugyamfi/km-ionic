@@ -4,10 +4,10 @@
             <IonHeader class="inner-header">
                 <IonToolbar class="ion-align-items-center">
                     <IonButtons slot="start">
-                        <IonBackButton defaultHref="/shopper/home/categories"></IonBackButton>
+                        <IonBackButton defaultHref="/shopper/home"></IonBackButton>
                     </IonButtons>
                     <IonTitle size="small" class="fw-bold">
-                        {{ brand.name }}
+                        {{ brand?.name }}
                     </IonTitle>
                     <IonButtons slot="end">
                         <NotificationButton></NotificationButton>
@@ -20,18 +20,20 @@
                 <img :src="defaultBanner" @error="onLoadError" />
                 <aside>
                     <IonAvatar size="medium">
-                        <template v-if="brand.logo">
-                            <img :src="brand.logo" alt="Brand Logo" />
+                        <template v-if="brand?.logo">
+                            <img :src="brand?.logo" alt="Brand Logo" />
                         </template>
                         <template v-else>
-                            <span class="initials">RV</span>
+                            <span class="initials">
+                                {{ brand?.getInitials(2) }}
+                            </span>
                         </template>
                     </IonAvatar>
                 </aside>
             </section>
             <main>
                 <section class="section title-section d-flex ion-align-items-center ion-justify-content-between">
-                    <span class="product-name"> {{ brand.name }} </span>
+                    <span class="product-name"> {{ brand?.name }} </span>
                     <FollowButton :brand="brand"></FollowButton>
                 </section>
                 <section class="section">
@@ -64,7 +66,7 @@ export default defineComponent({
     data() {
         return {
             defaultBanner: '/images/vendor/banner.png',
-            brand: {} as Brand,
+            brand: null as Brand | null,
             brandStore: useBrandStore()
         };
     },

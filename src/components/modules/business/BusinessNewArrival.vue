@@ -4,8 +4,8 @@
             <h6>New Arrivals</h6>
 
             <IonText color="primary" :router-link="`/shopper/home/businesses/${$route.params.id}/products`">
-  Show all
-</IonText>
+                Show all
+            </IonText>
 
         </header>
 
@@ -17,20 +17,20 @@
     </section>
 </template>
 
-  <script lang="ts">
-  import { PropType, defineComponent } from 'vue';
-  import Product from '@/models/Product';
-  import { useProductStore } from '@/stores/ProductStore';
-  import { mapStores } from 'pinia';
-  import { Swiper, SwiperSlide } from 'swiper/vue';
-  import { IonText } from '@ionic/vue';
-  import ProductCard from '@/components/cards/ProductCard.vue';
-  import AppStorage from '@/stores/AppStorage';
+<script lang="ts">
+import { PropType, defineComponent } from 'vue';
+import Product from '@/models/Product';
+import { useProductStore } from '@/stores/ProductStore';
+import { mapStores } from 'pinia';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { IonText } from '@ionic/vue';
+import ProductCard from '@/components/cards/ProductCard.vue';
+import AppStorage from '@/stores/AppStorage';
 import Business from '../../../models/Business';
 
-  const storage = new AppStorage();
+const storage = new AppStorage();
 
-  export default defineComponent({
+export default defineComponent({
     props: {
         business: {
             type: Object as PropType<Business | null>
@@ -43,7 +43,7 @@ import Business from '../../../models/Business';
     },
     components: { Swiper, SwiperSlide, IonText, ProductCard },
     computed: {
-        ...mapStores( useProductStore )
+        ...mapStores(useProductStore)
     },
     methods: {
         viewProduct(product: Product) {
@@ -62,9 +62,9 @@ import Business from '../../../models/Business';
         // this.fetchNewArrivals();
     },
     watch: {
-        business: function() {
+        business: function () {
             this.fetchNewArrivals();
         }
     }
-  })
-  </script>
+})
+</script>

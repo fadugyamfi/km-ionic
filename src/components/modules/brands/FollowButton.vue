@@ -7,35 +7,29 @@
 import { IonButton } from '@ionic/vue';
 import Brand from '@/models/Brand';
 import { useBrandStore } from '@/stores/BrandStore';
-import { ref, defineProps, onBeforeMount } from 'vue';
+import { ref, defineProps, onBeforeMount, PropType, computed } from 'vue';
 
 const props = defineProps({
-  brand: Brand
+  brand: {
+    type: Object as PropType<Brand | null>
+  }
 });
 
 const brandStore = useBrandStore();
-const title = ref(props.brand?.favorited ? 'Unfollow' : 'Follow');
+const title = computed(() => props.brand?.favorited ? 'Unfollow' : 'Follow');
 
 const toggleFollowed = () => {
   if (!props.brand) {
     return;
   }
 
-  if (title.value === 'Follow') {
-    title.value = 'Unfollow';
+  if (!props.brand.favorited) {
     brandStore.addToFavorites(props.brand);
-
   } else {
-    title.value = 'Follow';
     brandStore.removeFromFavorites(props.brand);
   }
 };
 
-onBeforeMount(() => {
-  if (props.brand && props.brand.favorited) {
-    title.value = 'Unfollow';
-  }
-});
 </script>
 
 <style scoped lang="css">

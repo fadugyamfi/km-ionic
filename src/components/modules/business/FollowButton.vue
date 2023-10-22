@@ -8,14 +8,16 @@
 import { IonButton } from '@ionic/vue';
 import Business from '@/models/Business';
 import { useBusinessStore } from '@/stores/BusinessStore';
-import { ref, defineProps, onBeforeMount } from 'vue';
+import { ref, defineProps, onBeforeMount, PropType, computed } from 'vue';
 
 const props = defineProps({
-  business: Business
+  business: {
+    type: Object as PropType<Business | null>
+  }
 });
 
 const businessStore = useBusinessStore();
-const title = ref(props.business?.favorited ? 'Unfollow' : 'Follow');
+const title = computed(() => props.business?.favorited ? 'Unfollow' : 'Follow');
 
 const toggleFollowed = () => {
   if (!props.business) {
@@ -23,20 +25,13 @@ const toggleFollowed = () => {
   }
 
   if (title.value === 'Follow') {
-    title.value = 'Unfollow';
     businessStore.addToFavorites(props.business);
 
   } else {
-    title.value = 'Follow';
     businessStore.removeFromFavorites(props.business);
   }
 };
 
-onBeforeMount(() => {
-  if (props.business && props.business.favorited) {
-    title.value = 'Unfollow';
-  }
-});
 </script>
 
 <style scoped lang="css">
@@ -44,8 +39,8 @@ ion-button {
   --background: #FFF !important;
   --padding-top: 8px;
   --padding-bottom: 8px;
-  --padding-start: 32px !important;
-  --padding-end: 32px !important;
+  --padding-start: 16px !important;
+  --padding-end: 16px !important;
   --color: #101828;
   --border-style: solid;
   --border-color: #101828;

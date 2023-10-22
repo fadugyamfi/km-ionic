@@ -87,16 +87,16 @@ export const useBusinessStore = defineStore("business", {
       await storage.set('businessInfo', data);
     },
 
-    async getSuppliers(options = {}): Promise<Business[]> {
+    async getSuppliers(searchTerm = '', options = {}): Promise<Business[]> {
       const params = {
         approved_vendor: 1,
         ...options
       };
 
-      return this.getBusinesses("", params);
+      return this.getBusinesses(searchTerm, params);
     },
 
-    async getBusinesses(searchQuery ="",options = {}, append = false): Promise<Business[]> {
+    async getBusinesses(searchQuery = "", options = {}, append = false): Promise<Business[]> {
 
       try {
         const response = await axios.get("/v2/businesses", {
@@ -242,14 +242,19 @@ export const useBusinessStore = defineStore("business", {
     async clearCachedRegistrationInfo() {
       await storage.remove('kola.business-registration');
     },
+
     async addToFavorites(business: Business) {
       const toastStore = useToastStore();
       business.addToFavorites();
 
       try {
-        const response = await axios.post(`/v2/businesss/${business.id}/favorites`);
+        const response = await axios.post(`/v2/businesses/${business.id}/favorites`);
         const favoriteData = response.data.data;
-        // business.addToFavorites({ business_id: business.id as number, cms_users_id: favoriteData.cms_users_id });
+
+        business.addToFavorites({
+          businesses_id: business.id as number,
+          cms_users_id: favoriteData.cms_users_id
+        });
 
         toastStore.showSuccess('Added To Favorites');
         this.persist();
@@ -257,11 +262,6 @@ export const useBusinessStore = defineStore("business", {
         handleAxiosRequestError(error);
         business.unfavorite();
       }
-
-
-
-
-
     },
 
     persist() {
@@ -273,7 +273,7 @@ export const useBusinessStore = defineStore("business", {
       business.unfavorite();
 
       try {
-        const response = await axios.delete(`/v2/businesss/${business.id}/favorites`);
+        const response = await axios.delete(`/v2/businesses/${business.id}/favorites`);
         toastStore.showError('Removed From Favorites');
         this.persist();
       } catch (error) {
