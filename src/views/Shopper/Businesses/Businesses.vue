@@ -26,7 +26,7 @@
       <div class="ion-text-center" v-if="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-
+        <!-- Display your list of businesses here -->
       <BusinessList :businesses="businesses"></BusinessList>
 
       <NoResults
@@ -39,7 +39,6 @@
   </ion-page>
 </template>
 
-
 <script setup lang="ts">
 import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonSearchbar, IonText, IonSpinner } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
@@ -47,7 +46,7 @@ import Business from '@/models/Business';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import BusinessList from '@/components/modules/business/BusinessList.vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'; // Import 'useRouter'
 import NoResults from '../../../components/layout/NoResults.vue';
 
 const businessStore = useBusinessStore();
@@ -62,7 +61,6 @@ async function fetchBusinesses() {
   if( fetching.value == true ) return;
 
   fetching.value = true;
-  businesses.value = [];
 
   if (meta.businessType == 'supplier') {
     businesses.value = await businessStore.getSuppliers(search.term);
