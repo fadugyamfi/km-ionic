@@ -38,7 +38,7 @@
           <IonLabel>
             <p class="text-product">{{ item.product.product_name }}</p>
             <p>Quantity: &nbsp;{{ item.quantity || 1 }}</p>
-            <p>{{ item.product.currency?.symbol || 'GHS' }} {{ item.quantity || 1 * (it  
+            <p>{{ item.product.currency?.symbol || 'GHS' }} {{ item.quantity || 1 * (item.product.product_price || 0) }}</p>
           </IonLabel>
           
           <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
