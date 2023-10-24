@@ -1,12 +1,13 @@
 
 export default class User {
 
-    public id_cms_privileges: number | null = null;
-    public phone_number: string | null = null;
-    public name: string | null = null;
-    public parent_users_id: number | null = null;
-    public location: string | null = null;
-    public id: number | null = null;
+    public id_cms_privileges?: number;
+    public phone_number?: string;
+    public name?: string;
+    public parent_users_id?: number;
+    public location?: string;
+    public id?: number;
+    public role?: any;
 
     constructor(data: Object) {
         Object.assign(this, data)
