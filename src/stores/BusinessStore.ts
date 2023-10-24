@@ -14,6 +14,7 @@ const toastStore = useToastStore();
 export const useBusinessStore = defineStore("business", {
   state: () => ({
     businesses: null as Business[] | null,
+    customers: null as Business[] | null,
     selectedBusiness: null as Business | null,
     registration: {
       name: "",
@@ -160,6 +161,37 @@ export const useBusinessStore = defineStore("business", {
         return [];
       }
     },
+
+    async getBusinessCustomers(business: Business, limit: number = 50, refresh = false): Promise<Business[]> {
+      const cacheKey = `kola.business.${business.id}.customers`;
+
+      if( await storage.has(cacheKey) && !refresh ) {
+        const data = await storage.get(cacheKey);
+        return data.map((el: object) => new Business(el));
+      }
+
+      try {
+        const params = {
+          limit
+        };
+
+        const response = await axios.get(`/v2/businesses/${business.id}/customers`, { params });
+
+        if (response) {
+          const { data } = response.data;
+          const customers: Business[] = data.map((el: any) => new Business(el));
+
+          await storage.set(cacheKey, customers, 7, 'days')
+
+          return customers;
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+
+      return [];
+    },
+
     async storeBusinesses() {
       await storage.set('store.businesses', this.businesses);
     },

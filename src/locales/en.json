@@ -144,6 +144,23 @@
             "chatWithUs": "Chat With Us To Learn More",
             "youHaveXNewOrders": "You have %{orders} New Order(s)",
             "pleaseTapOrdersButtonBelowToSeeThem": "Please click \"orders\" button below to see all"
+        },
+        "sales": {
+            "selectSaleAgent": "Select sale agent",
+            "selectSaleType": "Select Sale Type",
+            "selectPaymentMethod": "Select Payment Method",
+            "selectCustomer": "Select Customer",
+            "saleAgent": "Sale Agent",
+            "addSale": "Add Sale",
+            "cashSale": "Cash Sale",
+            "creditSale": "Credit Sale",
+            "cash": "Cash",
+            "mobileMoney": "Mobile Money",
+            "cheque": "Cheque",
+            "selectAgentToContinue": "Select Sale Agent To Continue",
+            "selectSaleTypeToContinue": "Select Sale Type To Continue",
+            "selectPaymentModeToContinue": "Select Payment Mode To Continue",
+            "selectCustomerToContinue": "Select Customer To Continue"
         }
     },
     "modules": {

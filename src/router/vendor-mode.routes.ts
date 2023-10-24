@@ -48,6 +48,18 @@ export const VendorModeRoutes = [
           {
             path: 'add-sale/select-agent',
             component: () => import('@/views/Vendor/Sales/SelectAgent.vue')
+          },
+          {
+            path: 'add-sale/select-sale-type',
+            component: () => import('@/views/Vendor/Sales/SelectSaleType.vue')
+          },
+          {
+            path: 'add-sale/select-payment-mode',
+            component: () => import('@/views/Vendor/Sales/SelectPaymentMode.vue')
+          },
+          {
+            path: 'add-sale/select-customer',
+            component: () => import('@/views/Vendor/Sales/SelectCustomer.vue')
           }
         ]
       },

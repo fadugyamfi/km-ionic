@@ -4,7 +4,7 @@
       <IonHeader class="inner-header">
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/vendor/sales" :icon="arrowBack" mode="md"></IonBackButton>
+            <IonBackButton defaultHref="/vendor/sales/add-sale/select-payment-mode" :icon="arrowBack" mode="md"></IonBackButton>
           </IonButtons>
           <IonTitle size="small"><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle>
           <IonButtons slot="end">
@@ -23,26 +23,20 @@
 
       <IonList v-if="!fetching" lines="none" class="ion-padding-horizontal sales-select-list simple">
         <IonListHeader>
-          <IonLabel class="fw-bold">{{ $t("vendor.sales.selectSaleAgent") }}</IonLabel>
+          <IonLabel class="fw-bold">{{ $t("vendor.sales.selectCustomer") }}</IonLabel>
         </IonListHeader>
 
-        <IonItem v-for="agent in agents" :key="agent.id" @click="selectAgent(agent)">
+        <IonItem v-for="customer in customers" :key="customer.id" @click="selectCustomer(customer)">
           <IonAvatar slot="start">
-            <Image :src="agent.image"></Image>
+            <Image :src="customer.logo"></Image>
           </IonAvatar>
           <IonLabel>
-            <p class="ion-no-margin">{{ agent.name }}</p>
+            <p class="ion-no-margin">{{ customer.name }}</p>
             <IonText color="medium" class="font-medium">
-              {{ agent.role?.name || $t('vendor.sales.saleAgent') }}
+              {{ customer.location || 'Location Unknown' }}
             </IonText>
           </IonLabel>
-          <IonCheckbox
-            :aria-label="agent.name"
-            slot="end"
-            mode="ios"
-            :value="agent.id"
-            :checked="saleStore.newSale.cms_users_id == agent.id"
-          ></IonCheckbox>
+          <IonCheckbox :aria-label="customer.name" slot="end" mode="ios" :value="customer.id" :checked="saleStore.newSale.customer_id == customer.id"></IonCheckbox>
         </IonItem>
       </IonList>
     </IonContent>
@@ -68,6 +62,8 @@ import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
 import { useToastStore } from '@/stores/ToastStore';
 import Image from '@/components/Image.vue';
+import Business from '@/models/Business';
+import { useBusinessStore } from '../../../stores/BusinessStore';
 
 export default defineComponent({
 
@@ -99,7 +95,7 @@ export default defineComponent({
     return {
       search, close, arrowBack,
       fetching: false,
-      agents: [] as User[],
+      customers: [] as Business[],
     }
   },
 
@@ -108,41 +104,35 @@ export default defineComponent({
   },
 
   methods: {
-    fetchSaleAgents() {
+    async fetchCustomers() {
       this.fetching = true;
       const userStore = useUserStore();
+      const businessStore = useBusinessStore();
 
-      const params = {
-        businesses_id: userStore.activeBusiness?.id
-      }
+      this.customers = await businessStore.getBusinessCustomers(userStore.activeBusiness as Business);
 
-      axios.get('/v2/sale-agents', { params })
-        .then(response => {
-          this.agents = response.data.data.map((el: object) => new User(el));
-        })
-        .catch(error => handleAxiosRequestError(error))
-        .finally(() => this.fetching = false)
+      this.fetching = false;
     },
 
-    selectAgent(agent: User) {
-      this.saleStore.newSale.cms_users_id = agent.id as number;
+    selectCustomer(customer: Business) {
+      this.saleStore.newSale.customer_id = customer.id as number;
     },
 
     onContinue() {
-      if( !this.saleStore.newSale.cms_users_id ) {
+      if( !this.saleStore.newSale.customer_id ) {
         const toastStore = useToastStore();
-        toastStore.showError( this.$t("vendor.sales.selectAgentToContinue"), '', 'bottom', 'continue');
+        toastStore.showError( this.$t("vendor.sales.selectCustomerToContinue"), '', 'bottom', 'continue');
         return;
       }
 
-      this.$router.push('/vendor/sales/add-sale/select-sale-type')
+      this.$router.push('/vendor/sales/add-sale/select-products')
     },
 
     refresh() {}
   },
 
   mounted() {
-    this.fetchSaleAgents();
+    this.fetchCustomers();
   }
 })
 </script>

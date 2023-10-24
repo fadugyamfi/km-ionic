@@ -8,6 +8,7 @@ export default class User {
     public location?: string;
     public id?: number;
     public role?: any;
+    public image?: string;
 
     constructor(data: Object) {
         Object.assign(this, data)
