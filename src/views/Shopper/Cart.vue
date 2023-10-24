@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ShopperHeader></ShopperHeader>
+    <ShopperHeader />
     <section class="ion-padding">
       <IonHeader class="inner-header">
         <IonToolbar class="ion-align-items-center">
@@ -11,22 +11,20 @@
             Cart
           </IonTitle>
           <IonButtons slot="end">
-            <NotificationButton></NotificationButton>
+            <NotificationButton />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
     </section>
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
 
-      <CartCard></CartCard>
-
       <IonSegment value="personal" mode="ios" v-model="viewing">
         <IonSegmentButton value="cart">
-          <IonLabel :class="{'yellow-circle': segmentValue === 'cart'}">
-  Cart
-  <ion-text class="badge-text">{{ totalItems }}</ion-text>
-</IonLabel>
-</IonSegmentButton>
+          <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">
+            Cart
+            <ion-badge color="warning" >{{ cartStore.items.length }}</ion-badge>
+          </IonLabel>
+        </IonSegmentButton>
         <IonSegmentButton value="saved">
           <ion-label>Saved</ion-label>
         </IonSegmentButton>
@@ -39,10 +37,11 @@
           </IonAvatar>
           <IonLabel>
             <p class="text-product">{{ item.product.product_name }}</p>
-            <p>Quantity: &nbsp;{{ item.quantity }}</p> 
-            <p>{{ item.product.currency?.symbol || 'GHS' }} {{ item.quantity * (item.product.product_price || 0) }}</p>
-            <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
+            <p>Quantity: &nbsp;{{ item.quantity || 1 }}</p>
+            <p>{{ item.product.currency?.symbol || 'GHS' }} {{ item.quantity || 1 * (it  
           </IonLabel>
+          
+          <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
           <IonButton fill="clear" color="black" slot="end" @click.prevent.stop="removeFromCart(item, index)">
             <IonIcon :icon="closeCircleOutline"></IonIcon>
           </IonButton>
@@ -90,7 +89,7 @@ import {
   IonSegment, IonSegmentButton,
   IonTitle, IonList, IonItem, IonLabel,
   IonCard, IonRow, IonCol, IonText,
-  IonAvatar, IonImg, IonButton, IonIcon
+  IonAvatar, IonImg, IonButton, IonIcon, IonBadge
 } from '@ionic/vue';
 import { CartItem, useCartStore } from '@/stores/CartStore';
 import ShopperHeader from '@/components/layout/ShopperHeader.vue';
@@ -110,14 +109,11 @@ const calculateTotalCost = computed(() => {
   return `GHS ${totalCost.toFixed(2)}`;
 });
 
-const segmentValue = ref('cart'); 
+const segmentValue = ref('cart');
 const updateQuantity = (item: CartItem, newQuantity: number) => {
   item.quantity = newQuantity;
 
 }
-const totalItems = computed(() => {
-  return 0;
-});
 
 const removeFromCart = (item: CartItem, index: number) => {
   cartStore.removeAtIndex(index);
@@ -147,8 +143,8 @@ const removeFromCart = (item: CartItem, index: number) => {
 }
 
 .text-product {
-    color: black;
-  }
+  color: black;
+}
 
 .row {
   justify-content: flex-start;
@@ -189,7 +185,7 @@ const removeFromCart = (item: CartItem, index: number) => {
   border-radius: 50%;
   padding: 4px;
   display: inline-block;
-  color: black; 
+  color: black;
   font-size: 14px;
   font-family: Poppins;
   font-weight: 500;
