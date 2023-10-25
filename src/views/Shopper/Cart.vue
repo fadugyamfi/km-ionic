@@ -20,10 +20,12 @@
 
       <IonSegment value="personal" mode="ios" v-model="viewing">
         <IonSegmentButton value="cart">
-          <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">
-            Cart
-            <ion-badge color="warning" >{{ cartStore.items.length }}</ion-badge>
-          </IonLabel>
+          <div style="display: flex; align-items: center;">
+  <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">
+    Cart
+  </IonLabel>
+  <ion-badge color="warning">{{ cartStore.items.length }}</ion-badge>
+</div>
         </IonSegmentButton>
         <IonSegmentButton value="saved">
           <ion-label>Saved</ion-label>
@@ -35,18 +37,21 @@
           <IonAvatar slot="start" class="fullcover">
             <IonImg :src="item.product?.image"></IonImg>
           </IonAvatar>
+          
           <IonLabel>
             <p class="text-product">{{ item.product.product_name }}</p>
             <p>Quantity: &nbsp;{{ item.quantity || 1 }}</p>
             <p>{{ item.product.currency?.symbol || 'GHS' }} {{ item.quantity || 1 * (item.product.product_price || 0) }}</p>
+            <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
           </IonLabel>
-          
-          <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
-          <IonButton fill="clear" color="black" slot="end" @click.prevent.stop="removeFromCart(item, index)">
+
+          <!-- <IonButton fill="clear" color="black" slot="end" @click.prevent.stop="removeFromCart(item, index)">
             <IonIcon :icon="closeCircleOutline"></IonIcon>
-          </IonButton>
+          </IonButton>  -->
         </IonItem>
+        
       </IonList>
+    
 
       <ion-card class="custom-card">
         <ion-row class="row">
@@ -56,7 +61,7 @@
                 <ion-text class="item-text">Item total</ion-text>
               </ion-col>
               <ion-col size="auto">
-                <ion-text class="item-price">{{ 0 }}</ion-text>
+                <ion-text class="item-price">{{ calculateTotalCost }}</ion-text>
               </ion-col>
             </ion-row>
           </ion-col>
@@ -101,13 +106,6 @@ const cartStore = useCartStore();
 cartStore.loadFromStorage();
 const viewing = ref('cart');
 
-const calculateTotalCost = computed(() => {
-  let totalCost = 0;
-  for (const item of cartStore.items) {
-    totalCost += item.quantity * (item.product.product_price || 0);
-  }
-  return `GHS ${totalCost.toFixed(2)}`;
-});
 
 const segmentValue = ref('cart');
 const updateQuantity = (item: CartItem, newQuantity: number) => {
@@ -115,6 +113,13 @@ const updateQuantity = (item: CartItem, newQuantity: number) => {
 
 }
 
+const calculateTotalCost = computed(() => {
+  let totalCost = 0;
+  for (const item of cartStore.items) {
+    totalCost += (item.product.product_price || 0);
+  }
+  return `GHS ${totalCost.toFixed(2)}`;
+});
 const removeFromCart = (item: CartItem, index: number) => {
   cartStore.removeAtIndex(index);
 }
@@ -129,8 +134,17 @@ const removeFromCart = (item: CartItem, index: number) => {
   background-size: cover;
   border: 2px solid rgb(243, 237, 237);
   border-radius: 10px;
+  overflow: auto;
 }
-
+.ion-img {
+  border-radius: var(--border-radius);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    overflow: hidden;
+    width: 94px;
+  height: 120px;
+}
 .custom-card {
   height: 85px;
   padding-left: 16px;
