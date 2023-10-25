@@ -21,11 +21,11 @@
       <IonSegment value="personal" mode="ios" v-model="viewing">
         <IonSegmentButton value="cart">
           <div style="display: flex; align-items: center;">
-  <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">
-    Cart
-  </IonLabel>
-  <ion-badge color="warning">{{ cartStore.items.length }}</ion-badge>
-</div>
+            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">
+              Cart
+            </IonLabel>
+            <ion-badge color="warning">{{ cartStore.items.length }}</ion-badge>
+          </div>
         </IonSegmentButton>
         <IonSegmentButton value="saved">
           <ion-label>Saved</ion-label>
@@ -33,25 +33,31 @@
       </IonSegment>
 
       <IonList>
-        <IonItem v-for="(item, index) in cartStore.items" :key="item.product?.id">
-          <IonAvatar slot="start" class="fullcover">
+        <IonItem v-for="(item, index) in cartStore.items" :key="item.product?.id" >
+          <IonAvatar slot="start" class="fullcover" style="border: none;">
             <IonImg :src="item.product?.image"></IonImg>
           </IonAvatar>
-          
+          <div>
+        <div class="label">
           <IonLabel>
             <p class="text-product">{{ item.product.product_name }}</p>
-            <p>Quantity: &nbsp;{{ item.quantity || 1 }}</p>
-            <p>{{ item.product.currency?.symbol || 'GHS' }} {{ item.quantity || 1 * (item.product.product_price || 0) }}</p>
-            <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
+            <p>Quantity: &nbsp;{{ item.quantity  }}</p>
+            <p>{{ item.product.currency?.symbol || 'GHS' }} {{ item.quantity  * (item.product.product_price || 0) }}
+            </p>
+          
           </IonLabel>
+          <IonButton fill="clear" color="" slot="end" @click.prevent.stop="removeFromCart(item, index)">
+            <IonIcon class="remove-icon" :icon="closeCircleOutline"></IonIcon>
+          </IonButton> 
+        </div>
+          <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
+      </div>
 
-          <!-- <IonButton fill="clear" color="black" slot="end" @click.prevent.stop="removeFromCart(item, index)">
-            <IonIcon :icon="closeCircleOutline"></IonIcon>
-          </IonButton>  -->
-        </IonItem>
-        
+           
+    </IonItem>
+
       </IonList>
-    
+
 
       <ion-card class="custom-card">
         <ion-row class="row">
@@ -94,6 +100,7 @@ import {
   IonSegment, IonSegmentButton,
   IonTitle, IonList, IonItem, IonLabel,
   IonCard, IonRow, IonCol, IonText,
+  IonInput,
   IonAvatar, IonImg, IonButton, IonIcon, IonBadge
 } from '@ionic/vue';
 import { CartItem, useCartStore } from '@/stores/CartStore';
@@ -109,6 +116,7 @@ const viewing = ref('cart');
 
 const segmentValue = ref('cart');
 const updateQuantity = (item: CartItem, newQuantity: number) => {
+  console.log('hello');
   item.quantity = newQuantity;
 
 }
@@ -120,6 +128,7 @@ const calculateTotalCost = computed(() => {
   }
   return `GHS ${totalCost.toFixed(2)}`;
 });
+
 const removeFromCart = (item: CartItem, index: number) => {
   cartStore.removeAtIndex(index);
 }
@@ -127,24 +136,22 @@ const removeFromCart = (item: CartItem, index: number) => {
 
 
 <style scoped lang="scss">
+
+.label {
+  display: flex;
+  justify-content:space-between;
+  width: 216px;
+}
+
+ion-icon.remove-icon {
+  color: #000;
+}
 .fullcover {
   width: 94px;
   height: 120px;
-  border-radius: 12px;
-  background-size: cover;
-  border: 2px solid rgb(243, 237, 237);
-  border-radius: 10px;
-  overflow: auto;
+
 }
-.ion-img {
-  border-radius: var(--border-radius);
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    overflow: hidden;
-    width: 94px;
-  height: 120px;
-}
+
 .custom-card {
   height: 85px;
   padding-left: 16px;
@@ -158,6 +165,15 @@ const removeFromCart = (item: CartItem, index: number) => {
 
 .text-product {
   color: black;
+}
+
+::slotted(ion-img),
+::slotted(img) {
+  border-radius: var(--border-radius);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
 }
 
 .row {
@@ -228,5 +244,4 @@ const removeFromCart = (item: CartItem, index: number) => {
 
 .divider-col {
   height: 100%;
-}
-</style>
+}</style>

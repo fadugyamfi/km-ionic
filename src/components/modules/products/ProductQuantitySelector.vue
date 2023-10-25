@@ -47,6 +47,7 @@ export default defineComponent({
             }
 
             ++this.quantity;
+            console.log(this.quantity)
             this.$emit('change', this.quantity);
         }
     }
