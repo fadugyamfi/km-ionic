@@ -5,7 +5,6 @@ import { handleAxiosRequestError } from "@/utilities";
 import Business from "@/models/Business";
 import AppStorage from "./AppStorage";
 import { useToastStore } from './ToastStore';
-import { business } from "ionicons/icons";
 import Product from "@/models/Product";
 
 const storage = new AppStorage();
