@@ -13,7 +13,7 @@ export const useSaleStore = defineStore("sale", {
 
     state() {
         return {
-            newSale: new Sale(),
+            newSale: new Sale({}),
         }
     },
 

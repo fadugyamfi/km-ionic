@@ -4,7 +4,8 @@
       <IonHeader class="inner-header">
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/vendor/sales/add-sale/select-payment-mode" :icon="arrowBack" mode="md"></IonBackButton>
+            <IonBackButton defaultHref="/vendor/sales/add-sale/select-payment-mode" :icon="arrowBack" mode="md">
+            </IonBackButton>
           </IonButtons>
           <IonTitle size="small"><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle>
           <IonButtons slot="end">
@@ -17,6 +18,10 @@
     </section>
 
     <IonContent :fullscreen="true">
+      <IonRefresher ref="refresher" slot="fixed" @ionRefresh="handleRefresh($event)">
+        <IonRefresherContent pullingIcon="crescent"></IonRefresherContent>
+      </IonRefresher>
+
       <div class="ion-text-center ion-padding" v-if="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
@@ -36,7 +41,8 @@
               {{ customer.location || 'Location Unknown' }}
             </IonText>
           </IonLabel>
-          <IonCheckbox :aria-label="customer.name" slot="end" mode="ios" :value="customer.id" :checked="saleStore.newSale.customer_id == customer.id"></IonCheckbox>
+          <IonCheckbox :aria-label="customer.name" slot="end" mode="ios" :value="customer.id"
+                       :checked="saleStore.newSale.customer_id == customer.id"></IonCheckbox>
         </IonItem>
       </IonList>
     </IonContent>
@@ -50,13 +56,10 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonButton, IonToolbar, IonIcon, IonTitle, IonButtons, IonHeader, IonBackButton, IonList, IonItem, IonListHeader, IonLabel, IonAvatar, IonCheckbox, IonText, IonFooter, IonImg, IonSpinner } from '@ionic/vue';
+import { IonPage, IonContent, IonButton, IonToolbar, IonIcon, IonTitle, IonButtons, IonHeader, IonBackButton, IonList, IonItem, IonListHeader, IonLabel, IonAvatar, IonCheckbox, IonText, IonFooter, IonImg, IonSpinner, IonRefresher, IonRefresherContent, RefresherCustomEvent } from '@ionic/vue';
 import { arrowBack, close, refreshOutline, search } from 'ionicons/icons';
 import { defineComponent } from 'vue';
-import User from '@/models/User';
-import axios from 'axios';
 import { useUserStore } from '@/stores/UserStore';
-import { handleAxiosRequestError } from '@/utilities';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
@@ -88,28 +91,38 @@ export default defineComponent({
     KolaYellowButton,
     IonImg,
     Image,
-    IonSpinner
+    IonSpinner,
+    IonRefresher,
+    IonRefresherContent
 },
 
   data() {
     return {
       search, close, arrowBack,
       fetching: false,
+      refreshing: false,
       customers: [] as Business[],
     }
   },
 
   computed: {
-    ...mapStores( useSaleStore )
+    ...mapStores(useSaleStore)
   },
 
   methods: {
+    async handleRefresh(event: RefresherCustomEvent) {
+      this.refreshing = true;
+      await this.fetchCustomers();
+      this.refreshing = false;
+      event.target.complete();
+    },
+
     async fetchCustomers() {
       this.fetching = true;
       const userStore = useUserStore();
       const businessStore = useBusinessStore();
 
-      this.customers = await businessStore.getBusinessCustomers(userStore.activeBusiness as Business);
+      this.customers = await businessStore.getBusinessCustomers(userStore.activeBusiness as Business, 300, this.refreshing);
 
       this.fetching = false;
     },
@@ -119,16 +132,16 @@ export default defineComponent({
     },
 
     onContinue() {
-      if( !this.saleStore.newSale.customer_id ) {
+      if (!this.saleStore.newSale.customer_id) {
         const toastStore = useToastStore();
-        toastStore.showError( this.$t("vendor.sales.selectCustomerToContinue"), '', 'bottom', 'continue');
+        toastStore.showError(this.$t("vendor.sales.selectCustomerToContinue"), '', 'bottom', 'continue');
         return;
       }
 
       this.$router.push('/vendor/sales/add-sale/select-products')
     },
 
-    refresh() {}
+    refresh() { }
   },
 
   mounted() {
