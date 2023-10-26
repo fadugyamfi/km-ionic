@@ -134,8 +134,7 @@ export default defineComponent({
   },
 
   mounted() {
-    this.business = this.businessStore.selectedToView;
-    console.log(this.business);
+    this.business = this.businessStore.getSelectedForViewing();
     this.fetchBusinessDetails();
   },
 });

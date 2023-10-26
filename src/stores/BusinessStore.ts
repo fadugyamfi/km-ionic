@@ -6,6 +6,7 @@ import Business from "@/models/Business";
 import AppStorage from "./AppStorage";
 import { useToastStore } from './ToastStore';
 import Product from "@/models/Product";
+import { useRouter } from "vue-router";
 
 const storage = new AppStorage();
 const toastStore = useToastStore();
@@ -314,7 +315,7 @@ export const useBusinessStore = defineStore("business", {
       }
     },
 
-    selectToView(business: Business) {
+    viewBusiness(business: Business) {
       this.selectedToView = business;
     },
 

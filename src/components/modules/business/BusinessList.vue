@@ -7,7 +7,6 @@
         :key="business.id"
         :business="business"
         :tall="index % 2 === 0"
-        @click="onBusinessSelected(business)"
         :data-index="index"
       ></BusinessCard>
     </section>
@@ -19,7 +18,6 @@
         :key="business.id"
         :business="business"
         :tall="index % 2 !== 0"
-        @click="onBusinessSelected(business)"
         :data-index="index"
       ></BusinessCard>
     </section>
@@ -58,13 +56,6 @@ export default defineComponent({
     fillColumns() {
       this.leftColumnItems = this.businesses.filter((business, index) => index % 2 === 0);
       this.rightColumnItems = this.businesses.filter((business, index) => index % 2 !== 0);
-    },
-
-    onBusinessSelected(business: Business) {
-      this.businessStore.selectToView(business);
-      setTimeout(() => {
-        this.$router.push(`/shopper/home/businesses/${business.id}`);
-      }, 100);
     },
   },
 
