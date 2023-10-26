@@ -4,22 +4,51 @@
       <ion-avatar slot="start">
         <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
       </ion-avatar>
-      <ion-label>
-        <h2><span class="bold-text">{{ order.id }}</span>{{ order.id }}</h2>
+      <ion-label class= "item">
+        <h2>{{ order.id }}</h2>
         <p>{{ order.businesses_id }}</p>
         <p>{{ order.created_at }}</p>
         <ion-badge :color="getStatusInfo(order.order_status_id)?.color">{{ order.order_status?.name }}</ion-badge>
       </ion-label>
-      <ion-icon slot="end" :icon="ellipsisHorizontal" @click="openOptionsMenu($event, order.id)"></ion-icon>
+      <ion-icon slot="end" :icon="ellipsisHorizontal" id="click-trigger">
+      <ion-popover trigger="click-trigger" trigger-action = "click">
+        <ion-content class="ion- padding">
+          <ion-list>
+            <ion-item aria-label="sync" >
+              ReOrder
+              <ion-icon slot="start" :icon="sync" aria-hidden="true" ></ion-icon>
+            </ion-item>
+            <ion-item>
+              Message Supplier
+              <ion-icon slot="start" :icon="chatbubble" ></ion-icon>
+            </ion-item>
+            <ion-item >
+              Edit Order
+              <ion-icon slot="start" :icon="create" ></ion-icon>
+            </ion-item>
+            <ion-item >
+              Delete
+              <ion-icon slot="start" :icon="trash" ></ion-icon>
+            </ion-item>
+          </ion-list>
+        </ion-content>
+        </ion-popover>
+      </ion-icon>
     </ion-item>
   </ion-list>
 </template>
 
-<script setup lang="ts">
+<script default setup lang="ts">
 import { defineProps, computed, PropType } from 'vue';
 import { IonAvatar, IonBadge, IonIcon, IonItem, IonLabel, IonList } from '@ionic/vue';
 import { ellipsisHorizontal } from 'ionicons/icons';
+import { create } from 'ionicons/icons';
+import { trash } from 'ionicons/icons';
+import { sync } from 'ionicons/icons';
+import { chatbubble } from 'ionicons/icons';
+
 import { Order } from '@/models/Order';
+import Product from '../../../models/Product';
 
 const props = defineProps({
   orders: {
@@ -101,3 +130,20 @@ const getStatusInfo = (orderStatusId?: number) => {
   }
 };
 </script>
+<style scoped lang="scss">
+.order-list {
+  --padding : 10px;
+  --border-radius: 20px;
+  --background: #fff;
+  justify-content:center ;
+}
+.item{
+  align-content: center;
+  justify-content: center;
+
+}
+.badge{
+  align-content: center;
+  justify-content: center;
+}
+</style>
