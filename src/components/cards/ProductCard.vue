@@ -89,6 +89,11 @@ export default defineComponent({
             type: Boolean
         },
 
+        initiallySelected: {
+            default: false,
+            type: Boolean
+        },
+
         action: {
             default: 'viewProduct',
             type: String as PropType<'viewProduct' | 'toggleSelect'>
