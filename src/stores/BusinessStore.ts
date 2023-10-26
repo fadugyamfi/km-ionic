@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { useUserStore } from "./UserStore";
 import { handleAxiosRequestError } from "@/utilities";
 import Business from "@/models/Business";
+import User from '@/models/User';
 import AppStorage from "./AppStorage";
 import { useToastStore } from './ToastStore';
 import Product from "@/models/Product";
@@ -185,6 +186,37 @@ export const useBusinessStore = defineStore("business", {
           await storage.set(cacheKey, customers, 7, 'days')
 
           return customers;
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+
+      return [];
+    },
+
+    async getBusinessSaleAgents(business: Business, limit: number = 50, refresh = false): Promise<User[]> {
+      const cacheKey = `kola.business.${business.id}.sale-agents`;
+
+      if( await storage.has(cacheKey) && !refresh ) {
+        const data = await storage.get(cacheKey);
+        return data.map((el: object) => new User(el));
+      }
+
+      try {
+        const params = {
+          businesses_id: business.id,
+          limit
+        };
+
+        const response = await axios.get(`/v2/sale-agents`, { params });
+
+        if (response) {
+          const { data } = response.data;
+          const agents: User[] = data.map((el: any) => new User(el));
+
+          await storage.set(cacheKey, agents, 7, 'days')
+
+          return agents;
         }
       } catch (error) {
         handleAxiosRequestError(error);

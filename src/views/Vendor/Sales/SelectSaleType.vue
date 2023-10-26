@@ -35,7 +35,7 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton id="continue" @click="onContinue()">
+      <KolaYellowButton id="sale-type-continue" @click="onContinue()">
         {{ $t('general.continue') }}
       </KolaYellowButton>
     </IonFooter>
@@ -97,7 +97,7 @@ export default defineComponent({
     onContinue() {
       if( !this.saleStore.newSale.sale_types_id ) {
         const toastStore = useToastStore();
-        toastStore.showError( this.$t("vendor.sales.selectSaleTypeToContinue"), '', 'bottom', 'continue');
+        toastStore.showError( this.$t("vendor.sales.selectSaleTypeToContinue"), '', 'bottom', 'sale-type-continue');
         return;
       }
 

@@ -150,6 +150,8 @@
             "selectSaleType": "Select Sale Type",
             "selectPaymentMethod": "Select Payment Method",
             "selectCustomer": "Select Customer",
+            "selectProducts": "Select Products",
+            "itemsSelected": "%{total} Item Selected",
             "saleAgent": "Sale Agent",
             "addSale": "Add Sale",
             "cashSale": "Cash Sale",

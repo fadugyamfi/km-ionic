@@ -17,6 +17,10 @@
     </section>
 
     <IonContent :fullscreen="true">
+      <IonRefresher ref="refresher" slot="fixed" @ionRefresh="handleRefresh($event)">
+        <IonRefresherContent pullingIcon="crescent"></IonRefresherContent>
+      </IonRefresher>
+
       <div class="ion-text-center ion-padding" v-if="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
@@ -48,7 +52,7 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton id="continue" @click="onContinue()">
+      <KolaYellowButton id="agent-continue" @click="onContinue()">
         {{ $t('general.continue') }}
       </KolaYellowButton>
     </IonFooter>
@@ -56,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonButton, IonToolbar, IonIcon, IonTitle, IonButtons, IonHeader, IonBackButton, IonList, IonItem, IonListHeader, IonLabel, IonAvatar, IonCheckbox, IonText, IonFooter, IonImg, IonSpinner } from '@ionic/vue';
+import { IonPage, IonContent, IonButton, IonToolbar, IonIcon, IonTitle, IonButtons, IonHeader, IonBackButton, IonList, IonItem, IonListHeader, IonLabel, IonAvatar, IonCheckbox, IonText, IonFooter, IonImg, IonSpinner, RefresherCustomEvent, IonRefresher, IonRefresherContent } from '@ionic/vue';
 import { arrowBack, close, refreshOutline, search } from 'ionicons/icons';
 import { defineComponent } from 'vue';
 import User from '@/models/User';
@@ -68,6 +72,8 @@ import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
 import { useToastStore } from '@/stores/ToastStore';
 import Image from '@/components/Image.vue';
+import { useBusinessStore } from '../../../stores/BusinessStore';
+import Business from '../../../models/Business';
 
 export default defineComponent({
 
@@ -92,36 +98,42 @@ export default defineComponent({
     KolaYellowButton,
     IonImg,
     Image,
-    IonSpinner
+    IonSpinner,
+    IonRefresher,
+    IonRefresherContent
 },
 
   data() {
     return {
       search, close, arrowBack,
       fetching: false,
+      refreshing: false,
       agents: [] as User[],
     }
   },
 
   computed: {
-    ...mapStores( useSaleStore )
+    ...mapStores( useUserStore, useSaleStore, useBusinessStore )
   },
 
   methods: {
-    fetchSaleAgents() {
+    async handleRefresh(event: RefresherCustomEvent) {
+      this.refreshing = true;
+      await this.fetchSaleAgents();
+      this.refreshing = false;
+      event.target.complete();
+    },
+
+    async fetchSaleAgents() {
       this.fetching = true;
-      const userStore = useUserStore();
 
-      const params = {
-        businesses_id: userStore.activeBusiness?.id
+      try {
+        this.agents = await this.businessStore.getBusinessSaleAgents(this.userStore.activeBusiness as Business, 200, this.refreshing)
+      } catch(error) {
+        handleAxiosRequestError(error);
+      } finally {
+        this.fetching = false;
       }
-
-      axios.get('/v2/sale-agents', { params })
-        .then(response => {
-          this.agents = response.data.data.map((el: object) => new User(el));
-        })
-        .catch(error => handleAxiosRequestError(error))
-        .finally(() => this.fetching = false)
     },
 
     selectAgent(agent: User) {
@@ -131,7 +143,7 @@ export default defineComponent({
     onContinue() {
       if( !this.saleStore.newSale.cms_users_id ) {
         const toastStore = useToastStore();
-        toastStore.showError( this.$t("vendor.sales.selectAgentToContinue"), '', 'bottom', 'continue');
+        toastStore.showError( this.$t("vendor.sales.selectAgentToContinue"), '', 'bottom', 'agent-continue');
         return;
       }
 

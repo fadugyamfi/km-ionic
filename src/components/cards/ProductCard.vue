@@ -1,11 +1,14 @@
 <template>
     <section class="product-card">
-        <ion-card @click="viewProduct()">
-            <FavoriteButton class="favorite-button" :product="product" color="dark">
+        <ion-card @click="doAction()">
+            <FavoriteButton v-if="showAddToFavorites" class="favorite-button" :product="product" color="dark">
             </FavoriteButton>
+
+            <IonCheckbox mode="ios" @click.stop="" v-model="selected"></IonCheckbox>
 
             <Image class="product-image" :class="{ float: !imgLoaded }" :alt="product.product_name" :src="product.image"
                    :no-img-src="noImage" @loaded="imgLoaded = true" />
+
             <IonSkeletonText v-if="!imgLoaded" :animated="true" class="product-image"></IonSkeletonText>
 
             <IonCardHeader>
@@ -14,7 +17,7 @@
                         {{ product.product_name }}
                     </p>
 
-                    <IonButton fill="clear" color="medium" @click.prevent.stop="addToCart()" class="ion-no-padding ion-no-margin">
+                    <IonButton v-if="showAddToCart" fill="clear" color="medium" @click.prevent.stop="addToCart()" class="ion-no-padding ion-no-margin">
                         <IonIcon size="large" slot="icon-only" :icon="addCircleOutline"></IonIcon>
                     </IonButton>
                 </section>
@@ -40,14 +43,19 @@
 </template>
 
 <script lang="ts">
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon, IonSkeletonText } from '@ionic/vue';
-import { defineComponent } from 'vue';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCheckbox, IonIcon, IonSkeletonText } from '@ionic/vue';
+import { PropType, defineComponent } from 'vue';
 import { locationOutline } from 'ionicons/icons';
 import Product from '@/models/Product';
 import { addCircleOutline } from 'ionicons/icons';
 import Image from '@/components/Image.vue';
 import { useCartStore } from '@/stores/CartStore';
 import FavoriteButton from '../modules/products/FavoriteButton.vue';
+
+export type ProductSelection = {
+    selected: Boolean,
+    product: Product
+}
 
 export default defineComponent({
     props: {
@@ -64,6 +72,26 @@ export default defineComponent({
         showDescription: {
             default: true,
             type: Boolean
+        },
+
+        showAddToCart: {
+            default: true,
+            type: Boolean
+        },
+
+        showAddToFavorites: {
+            default: true,
+            type: Boolean
+        },
+
+        showAddToSelected: {
+            default: false,
+            type: Boolean
+        },
+
+        action: {
+            default: 'viewProduct',
+            type: String as PropType<'viewProduct' | 'toggleSelect'>
         }
     },
 
@@ -72,15 +100,33 @@ export default defineComponent({
             locationOutline,
             addCircleOutline,
             imgLoaded: false,
+            selected: false,
             noImage: '/images/product-placeholder.png'
         };
     },
 
-    components: { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonIcon, IonButton, Image, IonSkeletonText, FavoriteButton },
+    emits: ['toggleSelect'],
+
+    components: { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonIcon, IonButton, Image, IonSkeletonText, FavoriteButton, IonCheckbox },
 
     methods: {
+        doAction() {
+            if( this.action == 'viewProduct' ) {
+                this.viewProduct();
+            }
+
+            if( this.action == 'toggleSelect' ) {
+                this.toggleSelected();
+            }
+        },
+
         viewProduct() {
             this.$router.push(`/shopper/products/${this.product.id}`);
+        },
+
+        toggleSelected() {
+            this.selected = !this.selected;
+            this.$emit('toggleSelect', { selected: this.selected, product: this.product } as ProductSelection);
         },
 
         addToCart() {
@@ -181,6 +227,12 @@ export default defineComponent({
         border-radius: 50%;
         background: white;
         border: solid 1px #f1f1f1;
+    }
+
+    ion-checkbox {
+        position: absolute;
+        top: 10px;
+        right: 10px;
     }
 }
 </style>

@@ -60,6 +60,10 @@ export const VendorModeRoutes = [
           {
             path: 'add-sale/select-customer',
             component: () => import('@/views/Vendor/Sales/SelectCustomer.vue')
+          },
+          {
+            path: 'add-sale/select-products',
+            component: () => import('@/views/Vendor/Sales/SelectProducts.vue')
           }
         ]
       },

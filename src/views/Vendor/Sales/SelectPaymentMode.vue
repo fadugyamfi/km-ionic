@@ -35,7 +35,7 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton id="continue" @click="onContinue()">
+      <KolaYellowButton id="payment-mode-continue" @click="onContinue()">
         {{ $t('general.continue') }}
       </KolaYellowButton>
     </IonFooter>
@@ -99,7 +99,7 @@ export default defineComponent({
     onContinue() {
       if( !this.saleStore.newSale.payment_modes_id ) {
         const toastStore = useToastStore();
-        toastStore.showError( this.$t("vendor.sales.selectPaymentModeToContinue"), '', 'bottom', 'continue');
+        toastStore.showError( this.$t("vendor.sales.selectPaymentModeToContinue"), '', 'bottom', 'payment-mode-continue');
         return;
       }
 

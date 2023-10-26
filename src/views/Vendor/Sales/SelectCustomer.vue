@@ -48,7 +48,7 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton id="continue" @click="onContinue()">
+      <KolaYellowButton id="customer-continue" @click="onContinue()">
         {{ $t('general.continue') }}
       </KolaYellowButton>
     </IonFooter>
@@ -134,7 +134,7 @@ export default defineComponent({
     onContinue() {
       if (!this.saleStore.newSale.customer_id) {
         const toastStore = useToastStore();
-        toastStore.showError(this.$t("vendor.sales.selectCustomerToContinue"), '', 'bottom', 'continue');
+        toastStore.showError(this.$t("vendor.sales.selectCustomerToContinue"), '', 'bottom', 'customer-continue');
         return;
       }
 
