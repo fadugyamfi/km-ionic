@@ -21,7 +21,7 @@
       <ion-content :fullscreen="true">
         <ion-card>
     <ion-slides pager="true" ref="imageSlider">
-      <ion-slide v-for="(image, index) in order" :key="index">
+      <ion-slide v-for="(image, index) in order.id" :key="index">
         <img :src="image" alt="Image" @click="nextImage" />
       </ion-slide>
     </ion-slides>
