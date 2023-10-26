@@ -2,20 +2,9 @@
   <ion-page>
     <ShopperHeader />
     <section class="ion-padding">
-      <IonHeader class="inner-header">
-        <IonToolbar class="ion-align-items-center">
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/shopper/home"></IonBackButton>
-          </IonButtons>
-          <IonTitle size="small" class="fw-bold">
-            Cart
-          </IonTitle>
-          <IonButtons slot="end">
-            <NotificationButton />
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+      <CartHeader />
     </section>
+    
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
 
       <IonSegment value="personal" mode="ios" v-model="viewing">
@@ -32,34 +21,31 @@
         </IonSegmentButton>
       </IonSegment>
 
-      <IonList>
-        <IonItem v-for="(item, index) in cartStore.items" :key="item.product?.id" >
-          <IonAvatar slot="start" class="fullcover" style="border: none;">
+      <EmptyCart v-if="cartStore.items.length === 0"></EmptyCart>
+
+      <IonList v-else>
+
+        <IonItem v-for="(item, index) in cartStore.items" :key="item.product?.id">
+          <ion-thumbnail slot="start">
             <IonImg :src="item.product?.image"></IonImg>
-          </IonAvatar>
+          </ion-thumbnail>
           <div>
-        <div class="label">
-          <IonLabel>
-            <p class="text-product">{{ item.product.product_name }}</p>
-            <p>Quantity: &nbsp;{{ item.quantity  }}</p>
-            <p>{{ item.product.currency?.symbol || 'GHS' }} {{ item.quantity  * (item.product.product_price || 0) }}
-            </p>
-          
-          </IonLabel>
-          <IonButton fill="clear" color="" slot="end" @click.prevent.stop="removeFromCart(item, index)">
-            <IonIcon class="remove-icon" :icon="closeCircleOutline"></IonIcon>
-          </IonButton> 
-        </div>
-          <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
-      </div>
+            <div class="label">
+              <IonLabel>
+                <p class="text-product">{{ item.product.product_name }}</p>
+                <p>Quantity: &nbsp;{{ item.quantity }}</p>
+                <p>{{ item.product.currency?.symbol || 'GHS' }} {{ item.quantity * (item.product.product_price || 0) }}
+                </p>
 
-           
-    </IonItem>
-
-      </IonList>
-
-
-      <ion-card class="custom-card">
+              </IonLabel>
+              <IonButton fill="clear" color="" slot="end" @click.prevent.stop="removeFromCart(item, index)">
+                <IonIcon class="remove-icon" :icon="closeCircleOutline"></IonIcon>
+              </IonButton>
+            </div>
+            <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
+          </div>
+        </IonItem>
+        <ion-card class="custom-card">
         <ion-row class="row">
           <ion-col class="col">
             <ion-row class="inner-row">
@@ -88,31 +74,30 @@
           </ion-col>
         </ion-row>
       </ion-card>
+      </IonList>
+  
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 
-import {
-  IonPage, IonContent, IonToolbar,
-  IonButtons, IonBackButton, IonHeader,
-  IonSegment, IonSegmentButton,
-  IonTitle, IonList, IonItem, IonLabel,
-  IonCard, IonRow, IonCol, IonText,
-  IonInput,
-  IonAvatar, IonImg, IonButton, IonIcon, IonBadge
-} from '@ionic/vue';
+import { ref, computed, defineProps, withDefaults } from 'vue';
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import { IonSegmentButton, IonLabel, IonThumbnail, IonImg, IonBadge, IonItem, 
+      IonHeader,IonBackButton,IonList,IonSegment,IonCol, IonToolbar, IonButtons,IonPage,IonText,
+      IonContent,IonRow,IonButton, IonIcon , IonTitle} from '@ionic/vue';
 import { CartItem, useCartStore } from '@/stores/CartStore';
+import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import ShopperHeader from '@/components/layout/ShopperHeader.vue';
 import ProductQuantitySelector from '@/components/modules/products/ProductQuantitySelector.vue';
 import { closeCircleOutline } from 'ionicons/icons';
-import { ref, computed } from 'vue';
+import CartHeader from '@/components/header/CartHeader.vue';
+import EmptyCart from '@/components/cards/EmptyCart.vue';
 
 const cartStore = useCartStore();
 cartStore.loadFromStorage();
 const viewing = ref('cart');
-
 
 const segmentValue = ref('cart');
 const updateQuantity = (item: CartItem, newQuantity: number) => {
@@ -136,16 +121,19 @@ const removeFromCart = (item: CartItem, index: number) => {
 
 
 <style scoped lang="scss">
-
 .label {
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
   width: 216px;
 }
 
+.ion-item {
+    --padding-start: 0;
+  }
 ion-icon.remove-icon {
   color: #000;
 }
+
 .fullcover {
   width: 94px;
   height: 120px;
@@ -244,4 +232,5 @@ ion-icon.remove-icon {
 
 .divider-col {
   height: 100%;
-}</style>
+}
+</style>
