@@ -10,7 +10,7 @@
         <p>{{ order.created_at }}</p>
         <ion-badge :color="getStatusColor(order.order_status_id)">{{ order.order_status?.name }}</ion-badge>
       </ion-label>
-      <ion-icon slot="end" :icon="ellipsisHorizontal"></ion-icon>
+      <ion-icon slot="end" :icon="ellipsisHorizontal" @click="openOptionsMenu($event, order.id)"></ion-icon>
     </ion-item>
   </ion-list>
 </template>

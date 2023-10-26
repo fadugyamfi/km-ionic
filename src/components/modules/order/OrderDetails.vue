@@ -35,20 +35,22 @@
       <IonLabel>
         <h2>{{ order.id }}</h2>
          </IonLabel>
-      <IonIcon slot="end" :icon="ellipsisHorizontal"></IonIcon>
+      <IonIcon name ="chevron-down-outline" slot="end" ></IonIcon>
     </IonItem>
   </ion-card>
+<ion-card>
 
+</ion-card>
  </ion-content>
     </ion-page>
 </template>
 
 <script lang="ts">
-import { IonAvatar, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonSlides, IonSlide } from '@ionic/vue';
+import { IonSelect, IonSelectOption,IonAvatar, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonSlides, IonSlide } from '@ionic/vue';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  components: { IonAvatar,IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonSlides, IonSlide },
+  components: { IonSelect, IonSelectOption,IonAvatar,IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle, IonSlides, IonSlide },
   data() {
     return {
       images: [
