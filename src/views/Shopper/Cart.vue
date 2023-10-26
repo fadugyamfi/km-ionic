@@ -22,25 +22,26 @@
 
       <IonList v-else>
         <IonItem v-for="(item, index) in cartStore.items" :key="item.product?.id">
-  <ion-thumbnail slot="start" class="custom-thumbnail">
-    <IonImg :src="item.product?.image"></IonImg>
-  </ion-thumbnail>
+          <ion-thumbnail slot="start" class="custom-thumbnail">
+            <IonImg :src="item.product?.image"></IonImg>
+          </ion-thumbnail>
 
-  <ion-row class="item-row">
-    <ion-col size="10">
-      <p class="text-product">{{ item.product.product_name }}</p>
-      <p>Quantity: {{ item.quantity }}</p>
-      <p class="price">{{ item.product.currency?.symbol || 'GHS' }} {{ item.quantity * (item.product.product_price || 0) }}</p>
-      <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
-    </ion-col>
-    <ion-col size="1" class="remove-button">
-      <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(item, index)">
-        <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
-      </ion-button>
-    </ion-col>
-  </ion-row>
-</IonItem>
-<CartTotalCard />
+          <ion-row class="item-row">
+            <ion-col size="10 ">
+              <p class="text-product">{{ item.product.product_name }}</p>
+              <p>Quantity: {{ item.quantity }}</p>
+              <p class="price">{{ item.product.currency?.symbol || 'GHS' }} {{ item.quantity * (item.product.product_price
+                || 0) }}</p>
+              <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
+            </ion-col>
+            <ion-col size="1" class="remove-button">
+              <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(item, index)">
+                <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </IonItem>
+        <CartTotalCard />
       </IonList>
     </ion-content>
   </ion-page>
@@ -48,7 +49,7 @@
 
 <script setup lang="ts">
 
-import { ref} from 'vue';
+import { ref } from 'vue';
 import {
   IonSegmentButton, IonLabel, IonThumbnail, IonImg, IonBadge, IonItem,
   IonList, IonSegment, IonCol, IonToolbar, IonPage, IonText,
@@ -102,8 +103,8 @@ p {
 
 
 .custom-thumbnail {
-  align-self: flex-start; 
-  margin-right: 16px; 
+  align-self: flex-start;
+  margin-right: 16px;
 }
 
 .segment-button {
@@ -147,14 +148,16 @@ p {
     word-wrap: break-word;
   }
 }
+
 .item-row[data-v-c11d03b0] {
-    align-items: baseline;
+  align-items: baseline;
 }
+
 ion-icon.remove-icon {
   color: #000;
   vertical-align: text-top;
 }
+
 .text-product {
   color: black;
-}
-</style>
+}</style>
