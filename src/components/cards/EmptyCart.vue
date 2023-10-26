@@ -1,5 +1,6 @@
 <template>
-        <main class="ion-text-center">
+      
+      <IonList class="ion-text-center">
             <section>
                 <img src="/images/vendor/shopping-cart.png" width="70" height="70" />
             </section>
@@ -10,13 +11,13 @@
             <section class="ion-text-center">
                 <ion-button color="yellow" class="centered-button">Start Shopping</ion-button>
             </section>
-        </main>
+        </IonList>
 </template>
   
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { IonButton, IonButtons, IonToolbar } from '@ionic/vue';
+import { IonButton, IonList} from '@ionic/vue';
 import { Order } from '@/models/Order';
 
 export default defineComponent({
