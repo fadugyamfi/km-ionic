@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <!-- <ShopperHeader></ShopperHeader> -->
+  
     <section class="ion-padding">
       <ion-header class="inner-header">
         <ion-toolbar>
@@ -53,3 +53,31 @@ const orderStore = useOrderStore();
 const viewing = ref('today');
 const segmentValue = ref('today');
 </script>
+<style scoped>
+    ion-content {
+      --align-items: center;
+    }
+  
+    ion-segment {
+      --padding-top: 10px;
+      --padding-bottom: 10px;
+      --padding-left: 10px;
+      --padding-right: 10px;
+    }
+  
+    ion-label {
+      font-size: 16px;
+      --align-items: center;
+      text-align: center;
+      overflow: inherit;
+      text-overflow: inherit;
+    }
+  
+    ion-segment-button {
+      --padding-top: 10px;
+      --padding-bottom: 10px;
+      --padding-left: 10px;
+      --padding-right: 10px;
+    }
+  </style>
+  

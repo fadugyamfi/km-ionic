@@ -21,8 +21,9 @@ export class Order {
     public customer_id?: number;
     public total_order_amount?: number;
     public order_status_id?: number;
-    public start_dt: string | number | Date | undefined;
+    public created_dt: string | number | Date | undefined;
     public order_status: any;
+    public start_dt:string | number | Date | undefined;
 
     constructor(data: object) {
         Object.assign(this, data);

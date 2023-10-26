@@ -92,6 +92,10 @@ export const ShopperModeRoutes = [
         component: () => import('@/views/Shopper/Orders.vue')
       },
       {
+        path: 'orders-details',
+        component: () => import('@/views/Shopper/OrdersDetails.vue')
+      },
+      {
         path: 'cart',
         component: () => import('@/views/Shopper/Cart.vue')
       },

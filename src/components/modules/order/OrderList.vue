@@ -7,7 +7,7 @@
       <IonLabel>
         <h2>{{ order.id }}</h2>
         <p>{{ order.businesses_id }}</p>
-        <p>{{ order.start_dt }}</p>
+        <p>{{ order.created_dt }}</p>
         <IonBadge :color="getStatusColor(order.order_status_id)">{{ order.order_status?.name }}</IonBadge>
       </IonLabel>
       <IonIcon slot="end" :icon="ellipsisHorizontal"></IonIcon>
@@ -16,35 +16,34 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed, ref, PropType } from 'vue';
+import { defineProps, computed, ref, PropType,defineComponent } from 'vue';
 import { Order } from '@/models/Order';
 import { ellipsisHorizontal } from 'ionicons/icons';
 import { IonAvatar, IonBadge, IonIcon, IonItem, IonLabel, IonList } from '@ionic/vue';
+ import { useOrderStore } from '@/store/modules/order';
 
-const props = defineProps({
-  orders: {
-    type: Array as PropType<Order[]>,
-    required: true,
-  },
-});
+
+ const orderStore = useOrderStore();
 
 const selectedSegment = ref('today');
 const currentDate = new Date();
 
 const filteredOrders = computed(() => {
   const segment = selectedSegment.value;
-  const startDt = new Date(currentDate);
+  const createdDt = new Date(currentDate);
+
   if (segment === 'thisweek') {
-    startDt.setDate(currentDate.getDate() - currentDate.getDay());
+    createdDt.setDate(currentDate.getDate() - currentDate.getDay());
   } else if (segment === 'pastmonth') {
-    startDt.setMonth(currentDate.getMonth() - 1);
+    createdDt.setMonth(currentDate.getMonth() - 1);
   }
 
-  return props.orders.filter((order) => {
-    const orderDate = new Date(order.start_dt as string);
-    return orderDate >= startDt;
+  return orderStore.orders.filter((order) => {
+    const orderDate = new Date(order.created_dt as string); // Use 'created_at' from your store
+    return orderDate >= createdDt;
   });
 });
+
 
 const getStatusColor = (orderStatusId: any) => {
   switch (orderStatusId) {
@@ -68,5 +67,4 @@ const getStatusColor = (orderStatusId: any) => {
 };
 
 </script>
-<style>
-</style>
+
