@@ -31,6 +31,8 @@ import { defineComponent, PropType } from 'vue';
 import Business from '@/models/Business';
 import BusinessCard from './BusinessCard.vue';
 import { IonSpinner } from '@ionic/vue';
+import { mapStores } from 'pinia';
+import { useBusinessStore } from '../../../stores/BusinessStore';
 export default defineComponent({
   props: {
     businesses: {
@@ -48,6 +50,10 @@ export default defineComponent({
 
   components: { BusinessCard, IonSpinner },
 
+  computed: {
+    ...mapStores( useBusinessStore )
+  },
+
   methods: {
     fillColumns() {
       this.leftColumnItems = this.businesses.filter((business, index) => index % 2 === 0);
@@ -55,7 +61,10 @@ export default defineComponent({
     },
 
     onBusinessSelected(business: Business) {
-      this.$router.push(`/shopper/home/businesses/${business.id}`);
+      this.businessStore.selectToView(business);
+      setTimeout(() => {
+        this.$router.push(`/shopper/home/businesses/${business.id}`);
+      }, 100);
     },
   },
 

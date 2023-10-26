@@ -15,6 +15,7 @@ export const useBusinessStore = defineStore("business", {
     businesses: null as Business[] | null,
     customers: null as Business[] | null,
     selectedBusiness: null as Business | null,
+    selectedToView: null as Business | null,
     registration: {
       name: "",
       phone_number: "",
@@ -311,6 +312,14 @@ export const useBusinessStore = defineStore("business", {
         handleAxiosRequestError(error);
         business.addToFavorites();
       }
+    },
+
+    selectToView(business: Business) {
+      this.selectedToView = business;
+    },
+
+    getSelectedForViewing() {
+      return this.selectedToView;
     }
   }
 });

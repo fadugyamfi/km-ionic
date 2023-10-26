@@ -18,6 +18,8 @@ export const useSaleStore = defineStore("sale", {
     },
 
     actions: {
-
+        resetForNewSale() {
+            this.newSale = new Sale({});
+        }
     }
 });

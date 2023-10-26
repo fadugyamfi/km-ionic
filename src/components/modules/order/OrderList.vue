@@ -8,7 +8,7 @@
         <h2><span class="bold-text">{{ order.id }}</span>{{ order.id }}</h2>
         <p>{{ order.businesses_id }}</p>
         <p>{{ order.created_at }}</p>
-        <ion-badge :color="getStatusColor(order.order_status_id)">{{ order.order_status?.name }}</ion-badge>
+        <ion-badge :color="getStatusInfo(order.order_status_id)?.color">{{ order.order_status?.name }}</ion-badge>
       </ion-label>
       <ion-icon slot="end" :icon="ellipsisHorizontal" @click="openOptionsMenu($event, order.id)"></ion-icon>
     </ion-item>
@@ -40,7 +40,7 @@ const filteredOrders = computed(() => {
     tomorrow.setDate(today.getDate() + 1);
 
     return orders.filter((order) => {
-      const orderDate = new Date(order.created_at);
+      const orderDate = new Date(order.created_at as string);
       return orderDate >= today && orderDate < tomorrow;
     });
   } else if (props.selectedSegment === 'thisweek') {
@@ -49,7 +49,7 @@ const filteredOrders = computed(() => {
     startOfWeek.setDate(currentDate.getDate() - dayOfWeek);
 
     return orders.filter((order) => {
-      const orderDate = new Date(order.created_at);
+      const orderDate = new Date(order.created_at as string);
       return orderDate >= startOfWeek;
     });
   } else if (props.selectedSegment === 'pastmonth') {
@@ -57,7 +57,7 @@ const filteredOrders = computed(() => {
     oneMonthAgo.setMonth(currentDate.getMonth() - 1);
 
     return orders.filter((order) => {
-      const orderDate = new Date(order.created_at);
+      const orderDate = new Date(order.created_at as string);
       return orderDate >= oneMonthAgo;
     });
   }
@@ -65,7 +65,7 @@ const filteredOrders = computed(() => {
   return orders;
 });
 
-const getStatusInfo = (orderStatusId: number) => {
+const getStatusInfo = (orderStatusId?: number) => {
   switch (orderStatusId) {
     case 1:
       return {
@@ -100,5 +100,4 @@ const getStatusInfo = (orderStatusId: number) => {
       };
   }
 };
-</script>
 </script>

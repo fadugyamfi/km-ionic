@@ -7,7 +7,7 @@
             <ion-back-button defaultHref="/shopper/home"></ion-back-button>
           </ion-buttons>
 
-          <ion-title size="small" class="fw-bold">Order History</ion-title>
+          <IonTitle size="small" class="fw-bold">Order History</IonTitle>
           <ion-buttons slot="end">
             <NotificationButton />
           </ion-buttons>
@@ -38,10 +38,23 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonContent, IonSegmentButton, IonSegment, IonLabel, IonButtons, IonBackButton, IonBadge } from '@ionic/vue';
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonContent,
+  IonSegmentButton,
+  IonSegment,
+  IonLabel,
+  IonButtons,
+  IonBackButton,
+  IonBadge,
+  IonTitle
+} from '@ionic/vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import { ref } from 'vue';
 import { useOrderStore } from '@/stores/OrderStore';
+import OrderList from '@/components/modules/order/OrderList.vue';
 
 const orderStore = useOrderStore();
 const viewing = ref('today');
@@ -60,18 +73,18 @@ const segmentValue = ref('today');
     --padding-right: 10px;
   }
 
-  ion-label {
-    font-size: 16px;
-    --align-items: center;
-    text-align: center;
-    overflow: inherit;
-    text-overflow: inherit;
-  }
-
   ion-segment-button {
     --padding-top: 10px;
     --padding-bottom: 10px;
     --padding-left: 10px;
     --padding-right: 10px;
   }
+
+  /* ion-segment-button ion-label {
+    font-size: 16px;
+    --align-items: center;
+    text-align: center;
+    overflow: inherit;
+    text-overflow: inherit;
+  } */
 </style>
