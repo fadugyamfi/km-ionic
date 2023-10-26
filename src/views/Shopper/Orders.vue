@@ -9,7 +9,7 @@
 
           <ion-title size="small" class="fw-bold">Order History</ion-title>
           <ion-buttons slot="end">
-            <NotificationButton/>
+            <NotificationButton />
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
@@ -22,7 +22,7 @@
             <ion-label :class="{'yellow-circle': segmentValue === 'today'}">
               Today
             </ion-label>
-            <IonBadge color="warning">{{ orderStore.orders.length }}</IonBadge>
+            <ion-badge color="warning">{{ orderStore.orders.length }}</ion-badge>
           </div>
         </ion-segment-button>
         <ion-segment-button value="thisweek">
@@ -32,14 +32,13 @@
           <ion-label>Past Month</ion-label>
         </ion-segment-button>
       </ion-segment>
-      <OrderList :orders="filteredOrders"></OrderList>
+      <OrderList :orders="orderStore.orders" :selectedSegment="viewing" />
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonContent, IonSegmentButton, IonSegment, IonLabel, IonButtons, IonBackButton, IonBadge } from '@ionic/vue';
-import OrderList from '@/components/modules/order/OrderList.vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import { ref } from 'vue';
 import { useOrderStore } from '@/stores/OrderStore';
@@ -47,11 +46,6 @@ import { useOrderStore } from '@/stores/OrderStore';
 const orderStore = useOrderStore();
 const viewing = ref('today');
 const segmentValue = ref('today');
-
-const filteredOrders = computed(() => {
-  const segment = viewing.value;
-  // Implement filtering logic based on the selected segment here
-});
 </script>
 
 <style scoped>
