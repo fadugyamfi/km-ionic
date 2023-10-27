@@ -14,21 +14,21 @@
       <ion-popover trigger="click-trigger" trigger-action = "click">
         <ion-content class="ion- padding">
           <ion-list>
-            <ion-item aria-label="sync" >
-              ReOrder
+            <ion-item :button="true" lines="full" aria-label="sync" >
               <ion-icon slot="start" :icon="sync" aria-hidden="true" ></ion-icon>
+              Re-order
             </ion-item>
-            <ion-item>
+            <ion-item :button="true" lines="full">
+              <ion-icon slot="start" :icon="chatbubbleOutline" ></ion-icon>
               Message Supplier
-              <ion-icon slot="start" :icon="chatbubble" ></ion-icon>
             </ion-item>
-            <ion-item >
+            <ion-item :button="true" lines="full" >
+              <ion-icon slot="start" :icon="createOutline" ></ion-icon>
               Edit Order
-              <ion-icon slot="start" :icon="create" ></ion-icon>
             </ion-item>
-            <ion-item @click= "deleteOrder(order.id)" >
+            <ion-item :button="true" lines="full">
+              <ion-icon slot="start" :icon="trashOutline" ></ion-icon>
               Delete
-              <ion-icon slot="start" :icon="trash" ></ion-icon>
             </ion-item>
           </ion-list>
         </ion-content>
@@ -39,9 +39,9 @@
 </template>
 
 <script default setup lang="ts">
-import { defineProps, computed, PropType, ref,onMounted } from 'vue';
-import { IonAvatar, IonBadge, IonIcon, IonItem, IonLabel, IonList,IonSkeletonText } from '@ionic/vue';
-import { ellipsisHorizontal } from 'ionicons/icons';
+import { defineProps, computed, PropType } from 'vue';
+import { IonAvatar, IonBadge, IonIcon, IonItem, IonLabel, IonList, IonPopover, IonContent } from '@ionic/vue';
+import { chatbubbleOutline, createOutline, ellipsisHorizontal, trashOutline } from 'ionicons/icons';
 import { create } from 'ionicons/icons';
 import { trash } from 'ionicons/icons';
 import { sync } from 'ionicons/icons';
@@ -131,12 +131,10 @@ const getStatusInfo = (orderStatusId?: number) => {
       };
   }
 };
-const reorderOrder = (orderId: number) => {
-  orderstore.reorderOrder(orderId);
-};
-const deleteOrder = (orderId: number) => {
- orderstore.deleteOrder(orderId);
-};
+
+const openOptionsMenu = () => {
+
+}
 </script>
 <style scoped lang="scss">
 .order-list {

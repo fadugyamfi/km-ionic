@@ -34,6 +34,12 @@ export const useSaleStore = defineStore("sale", {
         removeProductFromSale(product: Product) {
             const index = this.newSale.items?.findIndex((item: SaleItem) => item.products_id == product.id);
             this.newSale.items?.splice(index as number, 1);
+        },
+
+        isProductSelected(product: Product): boolean {
+            const index = this.newSale.items?.findIndex((item: SaleItem) => item.products_id == product.id) as number;
+
+            return !isNaN(index) ? index > -1 : false;
         }
     }
 });

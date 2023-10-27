@@ -20,14 +20,14 @@
       </ion-list>
     </ion-popover>
   </template>
-  
-  <script lang="ts">
+
+  <script setup lang="ts">
   import { defineProps, ref } from 'vue';
-  
-  const handleOptionClick = (option) => {
+
+  const handleOptionClick = (option: any) => {
+    console.log(option);
     // Handle the option click, e.g., by emitting an event or calling a method
     // You can pass the selected option to the parent component
   };
-  
+
   </script>
-  

@@ -89,6 +89,11 @@ export default defineComponent({
             type: Boolean
         },
 
+        initiallySelected: {
+            default: false,
+            type: Boolean
+        },
+
         action: {
             default: 'viewProduct',
             type: String as PropType<'viewProduct' | 'toggleSelect'>
@@ -133,6 +138,10 @@ export default defineComponent({
             const cartStore = useCartStore();
             cartStore.addProduct(this.product, 1);
         }
+    },
+
+    beforeMount() {
+        this.selected = this.initiallySelected;
     }
 });
 </script>

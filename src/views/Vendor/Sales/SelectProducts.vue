@@ -9,10 +9,19 @@
                     </IonButtons>
                     <IonTitle size="small"><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle>
                     <IonButtons slot="end">
-                        <IonButton color="dark" style="opacity: 0;">
+                        <IonButton color="dark" @click="toggleSearchEnabled()">
                             <IonIcon :icon="search" color="dark"></IonIcon>
                         </IonButton>
                     </IonButtons>
+                </IonToolbar>
+
+                <IonToolbar v-if="searchEnabled">
+                    <IonSearchbar
+                        :placeholder="$t('vendor.sales.searchProducts') + '...'"
+                        class="search-input"
+                        @keyup.enter="onSearch($event)"
+                        @ion-change="onSearch($event)"
+                    ></IonSearchbar>
                 </IonToolbar>
             </IonHeader>
         </section>
@@ -29,6 +38,10 @@
                 </IonListHeader>
             </IonList>
 
+            <div class="ion-text-center" v-if="fetching">
+                <IonSpinner name="crescent"></IonSpinner>
+            </div>
+
             <IonGrid v-if="!fetching">
                 <IonRow>
                     <IonCol size="6" v-for="product in products" :key="product.id">
@@ -39,6 +52,7 @@
                             :showAddToFavorites="false"
                             :showAddToSelected="false"
                             :action="'toggleSelect'"
+                            :initially-selected="isSelected(product)"
                             @toggleSelect="selectProduct($event)"
                         ></ProductCard>
                     </IonCol>
@@ -56,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonBackButton, IonButton, IonButtons, IonCheckbox, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonRow, IonSearchbar, IonSpinner, IonText, IonTitle, IonToolbar } from '@ionic/vue';
 import { arrowBack, search } from 'ionicons/icons';
 import { defineComponent } from 'vue';
 import { useSaleStore } from '@/stores/SaleStore';
@@ -77,6 +91,7 @@ export default defineComponent({
         return {
             search,
             arrowBack,
+            searchEnabled: false,
             fetching: false,
             products: [] as Product[]
         };
@@ -108,7 +123,9 @@ export default defineComponent({
         IonGrid,
         IonRow,
         IonCol,
-        ProductCard
+        ProductCard,
+        IonSearchbar,
+        IonSpinner
     },
 
     computed: {
@@ -116,17 +133,25 @@ export default defineComponent({
     },
 
     methods: {
-        async fetchProducts() {
+        async fetchProducts(options = {}) {
+            this.fetching = true;
             try {
                 const params = {
                     businesses_id: this.userStore.activeBusiness?.id,
-                    limit: 500
+                    limit: 500,
+                    ...options
                 }
 
                 this.products = await this.productStore.fetchProducts(params);
             } catch(error) {
                 handleAxiosRequestError(error)
+            } finally {
+                this.fetching = false;
             }
+        },
+
+        isSelected(product: Product): boolean {
+            return this.saleStore.isProductSelected(product);
         },
 
         selectProduct(selection: ProductSelection) {
@@ -146,8 +171,18 @@ export default defineComponent({
                 return;
             }
 
-            this.$router.push('/vendor/sales/add-sale/select-customer')
+            this.$router.push('/vendor/sales/add-sale/configure-items')
         },
+
+        toggleSearchEnabled() {
+            this.searchEnabled = !this.searchEnabled;
+        },
+
+        onSearch(event: Event) {
+            this.fetchProducts({
+                product_name_has: (event.target as HTMLIonSearchbarElement).value
+            })
+        }
     },
 
 })
