@@ -4,7 +4,7 @@
       <IonHeader class="inner-header">
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/vendor/sales/add-sale/select-agent" :icon="arrowBack" mode="md"></IonBackButton>
+            <IonBackButton defaultHref="/vendor/sales/add-sale/select-sale-type" :icon="arrowBack" mode="md"></IonBackButton>
           </IonButtons>
           <IonTitle size="small"><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle>
           <IonButtons slot="end">
@@ -19,23 +19,23 @@
     <IonContent :fullscreen="true">
       <IonList lines="none" class="sales-select-list ion-padding-horizontal">
         <IonListHeader>
-          <IonLabel class="fw-bold">{{ $t("vendor.sales.selectSaleType") }}</IonLabel>
+          <IonLabel class="fw-bold">{{ $t("vendor.sales.selectPaymentMethod") }}</IonLabel>
         </IonListHeader>
 
-        <IonItem v-for="saleType in saleTypes" :key="saleType.id" @click="selectSaleType(saleType)">
+        <IonItem v-for="paymentMode in paymentModes" :key="paymentMode.id" @click="selectPaymentMethod(paymentMode)">
           <IonLabel>
-            <p class="ion-no-margin">{{ saleType.name }}</p>
+            <p class="ion-no-margin">{{ paymentMode.name }}</p>
             <IonText color="medium" class="font-medium">
-              {{ saleType.description }}
+              {{ paymentMode.description }}
             </IonText>
           </IonLabel>
-          <IonCheckbox :aria-label="saleType.name" slot="end" mode="ios" :value="saleType.id" :checked="saleStore.newSale.sale_types_id == saleType.id"></IonCheckbox>
+          <IonCheckbox :aria-label="paymentMode.name" slot="end" mode="ios" :value="paymentMode.id" :checked="saleStore.newSale.payment_modes_id == paymentMode.id"></IonCheckbox>
         </IonItem>
       </IonList>
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton id="sale-type-continue" @click="onContinue()">
+      <KolaYellowButton id="payment-mode-continue" :disabled="!saleStore.newSale.payment_modes_id" @click="onContinue()">
         {{ $t('general.continue') }}
       </KolaYellowButton>
     </IonFooter>
@@ -43,13 +43,13 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonButton, IonToolbar, IonIcon, IonTitle, IonButtons, IonHeader, IonBackButton, IonList, IonItem, IonListHeader, IonLabel, IonAvatar, IonCheckbox, IonText, IonFooter } from '@ionic/vue';
+import { IonPage, IonContent, IonButton, IonToolbar, IonIcon, IonTitle, IonButtons, IonHeader, IonBackButton, IonList, IonItem, IonListHeader, IonLabel, IonAvatar, IonCheckbox, IonText, IonFooter, IonSpinner } from '@ionic/vue';
 import { arrowBack, close, refreshOutline, search } from 'ionicons/icons';
 import { defineComponent } from 'vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
-import { SaleType } from '@/models/SaleType';
+import { PaymentMode } from '@/models/PaymentMode';
 import { useToastStore } from '@/stores/ToastStore';
 
 export default defineComponent({
@@ -72,15 +72,17 @@ export default defineComponent({
     IonCheckbox,
     IonText,
     IonFooter,
-    KolaYellowButton
+    KolaYellowButton,
+    IonSpinner
 },
 
   data() {
     return {
       search, close, arrowBack,
-      saleTypes: [
-        new SaleType({ id: 1, name: this.$t('vendor.sales.cashSale') }),
-        new SaleType({ id: 5, name: this.$t('vendor.sales.creditSale') })
+      paymentModes: [
+        new PaymentMode({ id: 1, name: this.$t('vendor.sales.cash') }),
+        new PaymentMode({ id: 2, name: this.$t('vendor.sales.mobileMoney') }),
+        new PaymentMode({ id: 3, name: this.$t('vendor.sales.cheque') })
       ],
     }
   },
@@ -90,18 +92,18 @@ export default defineComponent({
   },
 
   methods: {
-    selectSaleType(saleType: SaleType) {
-      this.saleStore.newSale.sale_types_id = saleType.id as number;
+    selectPaymentMethod(paymentMode: PaymentMode) {
+      this.saleStore.newSale.payment_modes_id = paymentMode.id as number;
     },
 
     onContinue() {
-      if( !this.saleStore.newSale.sale_types_id ) {
+      if( !this.saleStore.newSale.payment_modes_id ) {
         const toastStore = useToastStore();
-        toastStore.showError( this.$t("vendor.sales.selectSaleTypeToContinue"), '', 'bottom', 'sale-type-continue');
+        toastStore.showError( this.$t("vendor.sales.selectPaymentModeToContinue"), '', 'bottom', 'payment-mode-continue');
         return;
       }
 
-      this.$router.push('/vendor/sales/add-sale/select-payment-mode')
+      this.$router.push('/vendor/sales/add-sale/select-customer')
     },
 
     refresh() {}

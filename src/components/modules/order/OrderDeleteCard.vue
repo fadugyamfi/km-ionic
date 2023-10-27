@@ -1,7 +1,7 @@
 <template>
   <ion-card>
     <ion-card-header>
-      <ion-icon :icon="alert-circle-outline" class="icon"></ion-icon>
+      <ion-icon :icon="alertCircleOutline" class="icon"></ion-icon>
       <ion-card-subtitle>Delete from List</ion-card-subtitle>
     </ion-card-header>
 
@@ -15,11 +15,19 @@
 </template>
 
 <script lang="ts">
-import { IonButton, IonCard, IonCardHeader, IonCardSubtitle, IonIcon } from '@ionic/vue';
+import { IonButton, IonCard, IonCardHeader, IonCardSubtitle, IonIcon, IonCardContent } from '@ionic/vue';
+import { alertCircleOutline } from 'ionicons/icons';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  components: { IonButton, IonCard, IonCardHeader, IonCardSubtitle, IonIcon },
+  components: { IonButton, IonCard, IonCardHeader, IonCardSubtitle, IonIcon, IonCardContent },
+
+  data() {
+    return {
+      alertCircleOutline
+    }
+  },
+
   methods: {
     deleteItem() {
       // Handle the delete action here
@@ -41,5 +49,3 @@ export default defineComponent({
   color: yellow; /* Set the icon color to yellow */
 }
 </style>
-
-    

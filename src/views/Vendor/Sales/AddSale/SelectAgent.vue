@@ -4,8 +4,7 @@
       <IonHeader class="inner-header">
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/vendor/sales/add-sale/select-payment-mode" :icon="arrowBack" mode="md">
-            </IonBackButton>
+            <IonBackButton defaultHref="/vendor/sales" :icon="arrowBack" mode="md"></IonBackButton>
           </IonButtons>
           <IonTitle size="small"><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle>
           <IonButtons slot="end">
@@ -28,27 +27,32 @@
 
       <IonList v-if="!fetching" lines="none" class="ion-padding-horizontal sales-select-list simple">
         <IonListHeader>
-          <IonLabel class="fw-bold">{{ $t("vendor.sales.selectCustomer") }}</IonLabel>
+          <IonLabel class="fw-bold">{{ $t("vendor.sales.selectSaleAgent") }}</IonLabel>
         </IonListHeader>
 
-        <IonItem v-for="customer in customers" :key="customer.id" @click="selectCustomer(customer)">
+        <IonItem v-for="agent in agents" :key="agent.id" @click="selectAgent(agent)">
           <IonAvatar slot="start">
-            <Image :src="customer.logo"></Image>
+            <Image :src="agent.image"></Image>
           </IonAvatar>
           <IonLabel>
-            <p class="ion-no-margin">{{ customer.name }}</p>
+            <p class="ion-no-margin">{{ agent.name }}</p>
             <IonText color="medium" class="font-medium">
-              {{ customer.location || 'Location Unknown' }}
+              {{ agent.role?.name || $t('vendor.sales.saleAgent') }}
             </IonText>
           </IonLabel>
-          <IonCheckbox :aria-label="customer.name" slot="end" mode="ios" :value="customer.id"
-                       :checked="saleStore.newSale.customer_id == customer.id"></IonCheckbox>
+          <IonCheckbox
+            :aria-label="agent.name"
+            slot="end"
+            mode="ios"
+            :value="agent.id"
+            :checked="saleStore.newSale.cms_users_id == agent.id"
+          ></IonCheckbox>
         </IonItem>
       </IonList>
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton id="customer-continue" @click="onContinue()">
+      <KolaYellowButton id="agent-continue" :disabled="!saleStore.newSale.cms_users_id" @click="onContinue()">
         {{ $t('general.continue') }}
       </KolaYellowButton>
     </IonFooter>
@@ -56,17 +60,20 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonButton, IonToolbar, IonIcon, IonTitle, IonButtons, IonHeader, IonBackButton, IonList, IonItem, IonListHeader, IonLabel, IonAvatar, IonCheckbox, IonText, IonFooter, IonImg, IonSpinner, IonRefresher, IonRefresherContent, RefresherCustomEvent } from '@ionic/vue';
+import { IonPage, IonContent, IonButton, IonToolbar, IonIcon, IonTitle, IonButtons, IonHeader, IonBackButton, IonList, IonItem, IonListHeader, IonLabel, IonAvatar, IonCheckbox, IonText, IonFooter, IonImg, IonSpinner, RefresherCustomEvent, IonRefresher, IonRefresherContent } from '@ionic/vue';
 import { arrowBack, close, refreshOutline, search } from 'ionicons/icons';
 import { defineComponent } from 'vue';
+import User from '@/models/User';
+import axios from 'axios';
 import { useUserStore } from '@/stores/UserStore';
+import { handleAxiosRequestError } from '@/utilities';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
 import { useToastStore } from '@/stores/ToastStore';
 import Image from '@/components/Image.vue';
+import { useBusinessStore } from '@/stores/BusinessStore';
 import Business from '@/models/Business';
-import { useBusinessStore } from '../../../stores/BusinessStore';
 
 export default defineComponent({
 
@@ -101,51 +108,53 @@ export default defineComponent({
       search, close, arrowBack,
       fetching: false,
       refreshing: false,
-      customers: [] as Business[],
+      agents: [] as User[],
     }
   },
 
   computed: {
-    ...mapStores(useSaleStore)
+    ...mapStores( useUserStore, useSaleStore, useBusinessStore )
   },
 
   methods: {
     async handleRefresh(event: RefresherCustomEvent) {
       this.refreshing = true;
-      await this.fetchCustomers();
+      await this.fetchSaleAgents();
       this.refreshing = false;
       event.target.complete();
     },
 
-    async fetchCustomers() {
+    async fetchSaleAgents() {
       this.fetching = true;
-      const userStore = useUserStore();
-      const businessStore = useBusinessStore();
 
-      this.customers = await businessStore.getBusinessCustomers(userStore.activeBusiness as Business, 300, this.refreshing);
-
-      this.fetching = false;
+      try {
+        this.agents = await this.businessStore.getBusinessSaleAgents(this.userStore.activeBusiness as Business, 200, this.refreshing)
+      } catch(error) {
+        handleAxiosRequestError(error);
+      } finally {
+        this.fetching = false;
+      }
     },
 
-    selectCustomer(customer: Business) {
-      this.saleStore.newSale.customer_id = customer.id as number;
+    selectAgent(agent: User) {
+      this.saleStore.newSale.cms_users_id = agent.id as number;
     },
 
     onContinue() {
-      if (!this.saleStore.newSale.customer_id) {
+      if( !this.saleStore.newSale.cms_users_id ) {
         const toastStore = useToastStore();
-        toastStore.showError(this.$t("vendor.sales.selectCustomerToContinue"), '', 'bottom', 'customer-continue');
+        toastStore.showError( this.$t("vendor.sales.selectAgentToContinue"), '', 'bottom', 'agent-continue');
         return;
       }
 
-      this.$router.push('/vendor/sales/add-sale/select-products')
+      this.$router.push('/vendor/sales/add-sale/select-sale-type')
     },
 
-    refresh() { }
+    refresh() {}
   },
 
   mounted() {
-    this.fetchCustomers();
+    this.fetchSaleAgents();
   }
 })
 </script>

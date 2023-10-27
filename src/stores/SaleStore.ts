@@ -26,7 +26,11 @@ export const useSaleStore = defineStore("sale", {
 
         addProductToSale(product: Product) {
             const saleItem = new SaleItem({
-                products_id: product.id
+                quantity: 1,
+                unit_price: product.product_price,
+                total_price: product.product_price,
+                products_id: product.id,
+                product: product
             });
             this.newSale.items?.push(saleItem)
         },

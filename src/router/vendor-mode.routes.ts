@@ -46,25 +46,36 @@ export const VendorModeRoutes = [
             component: () => import('@/views/Vendor/Sales/Home.vue')
           },
           {
-            path: 'add-sale/select-agent',
-            component: () => import('@/views/Vendor/Sales/SelectAgent.vue')
+            path: 'add-sale',
+            component: () => import('@/views/Vendor/Sales/AddSale.vue'),
+            children: [
+              {
+                path: 'select-agent',
+                component: () => import('@/views/Vendor/Sales/AddSale/SelectAgent.vue')
+              },
+              {
+                path: 'select-sale-type',
+                component: () => import('@/views/Vendor/Sales/AddSale/SelectSaleType.vue')
+              },
+              {
+                path: 'select-payment-mode',
+                component: () => import('@/views/Vendor/Sales/AddSale/SelectPaymentMode.vue')
+              },
+              {
+                path: 'select-customer',
+                component: () => import('@/views/Vendor/Sales/AddSale/SelectCustomer.vue')
+              },
+              {
+                path: 'select-products',
+                component: () => import('@/views/Vendor/Sales/AddSale/SelectProducts.vue')
+              },
+              {
+                path: 'configure-items',
+                component: () => import('@/views/Vendor/Sales/AddSale/ConfigureItems.vue')
+              }
+            ]
           },
-          {
-            path: 'add-sale/select-sale-type',
-            component: () => import('@/views/Vendor/Sales/SelectSaleType.vue')
-          },
-          {
-            path: 'add-sale/select-payment-mode',
-            component: () => import('@/views/Vendor/Sales/SelectPaymentMode.vue')
-          },
-          {
-            path: 'add-sale/select-customer',
-            component: () => import('@/views/Vendor/Sales/SelectCustomer.vue')
-          },
-          {
-            path: 'add-sale/select-products',
-            component: () => import('@/views/Vendor/Sales/SelectProducts.vue')
-          }
+
         ]
       },
       {

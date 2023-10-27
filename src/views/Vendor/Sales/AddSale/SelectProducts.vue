@@ -1,42 +1,44 @@
 <template>
     <IonPage>
         <section class="ion-padding" style="padding-bottom: 0.35em;">
-            <IonHeader class="inner-header">
-                <IonToolbar>
-                    <IonButtons slot="start">
-                        <IonBackButton defaultHref="/vendor/sales/add-sale/select-customer" :icon="arrowBack" mode="md">
-                        </IonBackButton>
-                    </IonButtons>
-                    <IonTitle size="small"><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle>
-                    <IonButtons slot="end">
-                        <IonButton color="dark" @click="toggleSearchEnabled()">
-                            <IonIcon :icon="search" color="dark"></IonIcon>
-                        </IonButton>
-                    </IonButtons>
-                </IonToolbar>
+            <IonHeader classs="ion-no-border" style="box-shadow: none;">
+                <IonHeader class="inner-header">
+                    <IonToolbar>
+                        <IonButtons slot="start">
+                            <IonBackButton defaultHref="/vendor/sales/add-sale/select-customer" :icon="arrowBack" mode="md">
+                            </IonBackButton>
+                        </IonButtons>
+                        <IonTitle size="small"><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle>
+                        <IonButtons slot="end">
+                            <IonButton color="dark" @click="toggleSearchEnabled()">
+                                <IonIcon :icon="search" color="dark"></IonIcon>
+                            </IonButton>
+                        </IonButtons>
+                    </IonToolbar>
 
-                <IonToolbar v-if="searchEnabled">
-                    <IonSearchbar
-                        :placeholder="$t('vendor.sales.searchProducts') + '...'"
-                        class="search-input"
-                        @keyup.enter="onSearch($event)"
-                        @ion-change="onSearch($event)"
-                    ></IonSearchbar>
-                </IonToolbar>
+                    <IonToolbar v-if="searchEnabled">
+                        <IonSearchbar
+                            :placeholder="$t('vendor.sales.searchProducts') + '...'"
+                            class="search-input"
+                            @keyup.enter="onSearch($event)"
+                            @ion-change="onSearch($event)"
+                        ></IonSearchbar>
+                    </IonToolbar>
+                </IonHeader>
+
+                <IonList lines="none" class="sales-select-list ion-padding-horizontal" style="margin-bottom: 0px;">
+                        <IonListHeader class="d-flex ion-justify-content-between">
+                            <IonLabel class="fw-bold">{{ $t("vendor.sales.selectProducts") }}</IonLabel>
+                            <IonLabel class="fw-bold ion-text-end" color="medium">
+                                {{ $t("vendor.sales.itemsSelected", { total: saleStore.newSale.items?.length }) }}
+                            </IonLabel>
+                        </IonListHeader>
+                    </IonList>
             </IonHeader>
         </section>
 
         <IonContent>
             <SelectedCustomer></SelectedCustomer>
-
-            <IonList lines="none" class="sales-select-list ion-padding-horizontal">
-                <IonListHeader class="d-flex ion-justify-content-between">
-                    <IonLabel class="fw-bold">{{ $t("vendor.sales.selectProducts") }}</IonLabel>
-                    <IonLabel class="fw-bold ion-text-end" color="medium">
-                        {{ $t("vendor.sales.itemsSelected", { total: saleStore.newSale.items?.length }) }}
-                    </IonLabel>
-                </IonListHeader>
-            </IonList>
 
             <div class="ion-text-center" v-if="fetching">
                 <IonSpinner name="crescent"></IonSpinner>
@@ -165,9 +167,9 @@ export default defineComponent({
         },
 
         onContinue() {
-            if (!this.saleStore.newSale.payment_modes_id) {
+            if (this.saleStore.newSale.items?.length == 0) {
                 const toastStore = useToastStore();
-                toastStore.showError(this.$t("vendor.sales.selectPaymentModeToContinue"), '', 'bottom', 'payment-mode-continue');
+                toastStore.showError(this.$t("vendor.sales.selectProductsToContinue"), '', 'bottom', 'select-products-continue');
                 return;
             }
 

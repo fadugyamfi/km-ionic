@@ -6,8 +6,8 @@
       </ion-avatar>
       <ion-label class= "item">
         <ion-skeleton-text :animated="true" style="width: 80%;"><h3>{{ order.id }}</h3></ion-skeleton-text>
-        <ion-skeleton-text :animated="true"style="width: 60%;"><p>{{ order.businesses_id }}</p></ion-skeleton-text>
-        <ion-skeleton-text :animated="true"style="width: 40%;"> <p>{{ order.created_at }}</p></ion-skeleton-text>
+        <ion-skeleton-text :animated="true" style="width: 60%;"><p>{{ order.businesses_id }}</p></ion-skeleton-text>
+        <ion-skeleton-text :animated="true" style="width: 40%;"> <p>{{ order.created_at }}</p></ion-skeleton-text>
         <ion-badge :color="getStatusInfo(order.order_status_id)?.color">{{ order.order_status?.name }}</ion-badge>
       </ion-label>
       <ion-icon slot="end" :icon="ellipsisHorizontal" id="click-trigger">
@@ -38,9 +38,9 @@
   </ion-list>
 </template>
 
-<script default setup lang="ts">
-import { defineProps, computed, PropType } from 'vue';
-import { IonAvatar, IonBadge, IonIcon, IonItem, IonLabel, IonList, IonPopover, IonContent } from '@ionic/vue';
+<script setup lang="ts">
+import { defineProps, computed, PropType, ref } from 'vue';
+import { IonAvatar, IonBadge, IonIcon, IonItem, IonLabel, IonList, IonPopover, IonContent, IonSkeletonText } from '@ionic/vue';
 import { chatbubbleOutline, createOutline, ellipsisHorizontal, trashOutline } from 'ionicons/icons';
 import { create } from 'ionicons/icons';
 import { trash } from 'ionicons/icons';
@@ -51,6 +51,7 @@ import { Order } from '@/models/Order';
 import Product from '../../../models/Product';
 const orderstore = useOrderStore();
 const orders = ref([]);
+
 const props = defineProps({
   orders: {
     type: Array as PropType<Order[]>,

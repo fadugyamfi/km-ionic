@@ -4,7 +4,7 @@
             <FavoriteButton v-if="showAddToFavorites" class="favorite-button" :product="product" color="dark">
             </FavoriteButton>
 
-            <IonCheckbox mode="ios" @click.stop="" v-model="selected"></IonCheckbox>
+            <IonCheckbox mode="ios" @click.prevent="" v-model="selected"></IonCheckbox>
 
             <Image class="product-image" :class="{ float: !imgLoaded }" :alt="product.product_name" :src="product.image"
                    :no-img-src="noImage" @loaded="imgLoaded = true" />

@@ -18,7 +18,9 @@
         "wholesaler": "Wholesaler",
         "keyDistributor": "Key Distributor",
         "supplier": "Supplier",
-        "search": "Search"
+        "search": "Search",
+        "totalCost": "Total Cost",
+        "quantity": "Quantity"
     },
     "onboarding": {
         "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -164,6 +166,8 @@
             "selectSaleTypeToContinue": "Select Sale Type To Continue",
             "selectPaymentModeToContinue": "Select Payment Mode To Continue",
             "selectCustomerToContinue": "Select Customer To Continue",
+            "selectProductsToContinue": "Select Products To Continue",
+            "cannotProceedWithTotalCostOfZero": "Cannot proceed with total cost of zero",
             "searchProducts": "Search Product Inventory"
         }
     },

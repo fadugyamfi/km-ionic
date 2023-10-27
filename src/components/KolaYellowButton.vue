@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { IonButton } from '@ionic/vue';
-import { defineComponent } from 'vue';a
+import { defineComponent } from 'vue';
 
 export default defineComponent({
     props: [],
