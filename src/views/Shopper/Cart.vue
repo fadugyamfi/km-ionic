@@ -6,7 +6,7 @@
     </section>
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
-      <IonSegment value="personal" mode="ios" v-model="viewing">
+      <IonSegment value="personal" mode="ios" v-model="viewing" class="segment-margin">
         <IonSegmentButton value="cart">
           <div class="segment-button">
             <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
@@ -42,20 +42,25 @@
           </ion-row>
         </IonItem>
         <CartTotalCard />
-        <CheckoutButton />
       </IonList>
-    
     </ion-content>
+
+    <IonFooter class="ion-padding ion-no-border" v-if="cartStore.items.length">
+      <KolaYellowButton>
+        Proceed to Checkout
+      </KolaYellowButton>
+    </IonFooter>
   </ion-page>
 </template>
+
 
 <script setup lang="ts">
 
 import { ref } from 'vue';
 import {
-  IonSegmentButton, IonLabel, IonThumbnail, IonImg, 
+  IonSegmentButton, IonLabel, IonThumbnail, IonImg,
   IonBadge, IonItem, IonList, IonSegment, IonCol, IonPage,
-  IonContent, IonRow, IonButton, IonIcon, 
+  IonContent, IonRow, IonButton, IonIcon, IonFooter
 } from '@ionic/vue';
 import { CartItem, useCartStore } from '@/stores/CartStore';
 import ShopperHeader from '@/components/layout/ShopperHeader.vue';
@@ -64,17 +69,21 @@ import { closeCircleOutline } from 'ionicons/icons';
 import CartHeader from '@/components/header/CartHeader.vue';
 import EmptyCart from '@/components/cards/EmptyCart.vue';
 import CartTotalCard from '@/components/cards/CartTotalCard.vue';
-import CheckoutButton from '@/components/buttons/CheckoutButton.vue';
+import KolaYellowButton from '@/components/KolaYellowButton.vue';
+
 
 const cartStore = useCartStore();
 cartStore.loadFromStorage();
 const viewing = ref('cart');
+
 
 const segmentValue = ref('cart');
 const updateQuantity = (item: CartItem, newQuantity: number) => {
   console.log('hello');
   item.quantity = newQuantity;
 }
+
+
 
 const removeFromCart = (item: CartItem, index: number) => {
   cartStore.removeAtIndex(index);
@@ -85,6 +94,7 @@ const removeFromCart = (item: CartItem, index: number) => {
 .item-row {
   align-items: center;
 }
+
 
 .remove-button {
   text-align: end;
@@ -160,4 +170,5 @@ ion-icon.remove-icon {
 
 .text-product {
   color: black;
-}</style>
+}
+</style>
