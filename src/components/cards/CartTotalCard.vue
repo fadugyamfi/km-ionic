@@ -55,7 +55,7 @@ ion-col.ion-text-end {
 }
 
 .item-text, .item-price {
-  color: var(--text-color);
+  color: #000;
   font-size: 14px;
   font-family: "Poppins";
   font-weight: 400;
@@ -71,5 +71,4 @@ ion-col.ion-text-end {
   align-items: flex-end;
 }
 
-/* Rest of your CSS styles... */
 </style>
