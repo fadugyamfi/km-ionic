@@ -100,6 +100,10 @@ export const ShopperModeRoutes = [
             component: () => import('@/views/Shopper/Cart.vue')
           },
           {
+            path: 'cart-business',
+            component: () => import('@/views/Shopper/CartBussiness.vue')
+          },
+          {
             path: 'credits',
             component: () => import('@/views/Shopper/Credits.vue')
           },

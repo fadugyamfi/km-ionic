@@ -36,6 +36,9 @@ export default defineComponent({
     background-color: yellow;
     color: #101828;
 }
+h{
+    
+}
 
 p {
     font-size: 0.75em;

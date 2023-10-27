@@ -190,7 +190,7 @@ export default defineComponent({
         },
 
         async addToCart() {
-            await this.cartStore.addProduct(this.product as Product, this.quantity);
+            await this.cartStore.addProductToBusiness(this.product as Product, this.quantity);
         }
     },
 

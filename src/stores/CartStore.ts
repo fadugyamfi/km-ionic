@@ -2,10 +2,14 @@ import axios from "axios";
 import {defineStore} from "pinia";
 import Product from "@/models/Product";
 import { useToastStore } from '@/stores/ToastStore';
+import { useBusinessStore } from '@/stores/BusinessStore';
 import AppStorage from './AppStorage';
 
 const storage = new AppStorage();
 const KOLA_CART = 'kola.cart';
+
+
+const businessStore = useBusinessStore()
 
 export type CartItem = {
     product: Product;
@@ -16,7 +20,8 @@ export const useCartStore = defineStore("cart", {
 
     state: () => {
         return {
-            items: [] as CartItem[]
+            items: [] as CartItem[],
+            businesses: [] as any
         }
     },
 
@@ -55,6 +60,22 @@ export const useCartStore = defineStore("cart", {
             }
 
             this.persist();
+            return this;
+        },
+
+        addProductToBusiness(product: Product, quantity = 1) {
+            this.addProduct(product, quantity)
+        const existingBusiness = this.businesses.find((item: any) => item.id == product.businesses_id)
+        if(existingBusiness) {
+            const index = this.businesses.findIndex((item: any) => item.id == existingBusiness.id)
+            if(index > -1){
+                this.businesses[index].cartItems.push({product, quantity})
+            }
+        } else {
+            const allBusinesses = businessStore.businesses
+            const business = allBusinesses?.find(business => business.id == product.businesses_id)
+            this.businesses.push({id: product.businesses_id, business, cartItems: [{product, quantity }]})
+        }
             return this;
         },
 

@@ -10,7 +10,7 @@
         <IonSegmentButton value="cart">
           <div class="segment-button">
             <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
-            <ion-badge class="badge" color="warning">{{ cartStore.items.length }}</ion-badge>
+            <ion-badge class="badge" color="warning">{{ cartStore.businesses.length }}</ion-badge>
           </div>
         </IonSegmentButton>
         <IonSegmentButton value="saved">
@@ -18,33 +18,25 @@
         </IonSegmentButton>
       </IonSegment>
 
-      <EmptyCart v-if="cartStore.items.length === 0"></EmptyCart>
+      <ion-text class="space">2 Items from 1 Brand are ready for checkout</ion-text>
 
-      <IonList v-else>
-        <IonItem v-for="(item, index) in cartStore.items" :key="item.product?.id">
+      <!-- <EmptyCart v-if="cartStore.items.length === 0"></EmptyCart> -->
+
+      <IonList>
+        <IonItem v-for="(item) in cartStore.businesses" :key="item.id">
           <ion-thumbnail slot="start" class="custom-thumbnail">
-            <IonImg :src="item.product?.image"></IonImg>
+            <IonImg :src="item.business?.business_owner?.logo"></IonImg>
           </ion-thumbnail>
-
           <ion-row class="item-row">
-            <ion-col size="10 ">
-              <p class="text-product">{{ item.product.product_name }}</p>
-              <p>Quantity: {{ item.quantity }}</p>
-              <p class="price">{{ item.product.currency?.symbol || 'GHS' }} {{ item.quantity * (item.product.product_price
-                || 0) }}</p>
-              <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
-            </ion-col>
-            <ion-col size="1" class="remove-button">
-              <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(item, index)">
-                <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
-              </ion-button>
+            <ion-col size="12">
+              <p class="text-product"> {{ item.business?.name }} </p>
+              <p>Quantity</p>
+              <p>GHS 3000 minimum reached</p>
             </ion-col>
           </ion-row>
         </IonItem>
-        <CartTotalCard />
-        <CheckoutButton />
       </IonList>
-    
+
     </ion-content>
   </ion-page>
 </template>
@@ -53,35 +45,29 @@
 
 import { ref } from 'vue';
 import {
-  IonSegmentButton, IonLabel, IonThumbnail, IonImg, 
+  IonSegmentButton, IonLabel, IonThumbnail, IonImg,
   IonBadge, IonItem, IonList, IonSegment, IonCol, IonPage,
-  IonContent, IonRow, IonButton, IonIcon, 
+  IonContent, IonRow, IonText,
 } from '@ionic/vue';
 import { CartItem, useCartStore } from '@/stores/CartStore';
 import ShopperHeader from '@/components/layout/ShopperHeader.vue';
-import ProductQuantitySelector from '@/components/modules/products/ProductQuantitySelector.vue';
-import { closeCircleOutline } from 'ionicons/icons';
 import CartHeader from '@/components/header/CartHeader.vue';
 import EmptyCart from '@/components/cards/EmptyCart.vue';
-import CartTotalCard from '@/components/cards/CartTotalCard.vue';
-import CheckoutButton from '@/components/buttons/CheckoutButton.vue';
+
 
 const cartStore = useCartStore();
 cartStore.loadFromStorage();
 const viewing = ref('cart');
-
 const segmentValue = ref('cart');
-const updateQuantity = (item: CartItem, newQuantity: number) => {
-  console.log('hello');
-  item.quantity = newQuantity;
-}
 
-const removeFromCart = (item: CartItem, index: number) => {
-  cartStore.removeAtIndex(index);
-}
 </script>
 
 <style scoped lang="scss">
+ion-text.space {
+  margin-bottom: 5550px;
+  // --margin-top: 400px;
+}
+
 .item-row {
   align-items: center;
 }
@@ -89,6 +75,11 @@ const removeFromCart = (item: CartItem, index: number) => {
 .remove-button {
   text-align: end;
 }
+
+.ion-text {
+  margin-bottom: 8880px;
+}
+
 
 .item-row ion-col {
   margin: 0;
@@ -160,4 +151,5 @@ ion-icon.remove-icon {
 
 .text-product {
   color: black;
-}</style>
+}
+</style>
