@@ -15,6 +15,7 @@ order_status_id
 */
 
 export class Order {
+[x: string]: any;
 
     public id?: number | string;
     public businesses_id?: number;
@@ -24,6 +25,7 @@ export class Order {
     public created_at: string | number | Date | undefined;
     public order_status: any;
     public start_dt:string | number | Date | undefined;
+
   
 
     constructor(data: object) {

@@ -1,6 +1,8 @@
 import { useUserStore } from '@/stores/UserStore';
 import TabsPage from '@/views/Shopper/TabsPage.vue';
 import HomePage from '@/views/Shopper/HomePage.vue';
+import OrderDetails from  '@/views/Shopper/OrderDetails.vue';
+
 
 export const ShopperModeRoutes = [
   {
@@ -92,8 +94,8 @@ export const ShopperModeRoutes = [
         component: () => import('@/views/Shopper/Orders.vue')
       },
       {
-        path: 'order-details',
-        component: () => import('@/views/Shopper/Orders/OrderDetails.vue')
+        path: 'orderdetails',
+        component: () => import('@/views/Shopper/OrderDetails.vue')
       },
       {
         path: 'cart',

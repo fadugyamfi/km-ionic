@@ -1,32 +1,31 @@
 <template>
-    <section>
-        <ion-toolbar>
-            <ion-buttons slot="primary">
-                <ion-button color="yellow">Update</ion-button>
-            </ion-buttons>
-        </ion-toolbar>
-    </section>
+    <IonButton expand="block" class="kola-white-button" type="button">
+        <slot></slot>
+    </IonButton>
 </template>
 
 <script lang="ts">
-import { IonButton,IonButtons,iontoolbar } from '@ionic/vue';
+import { IonButton } from '@ionic/vue';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
     props: [],
 
     components: {
-        IonButton,iontoolbar,IonButtons
+        IonButton
     }
 })
 </script>
 
 <style scoped lang="css">
-.kola-yellow-button {
-    --background: #F5AA29 !important;
+.kola-white-button {
+    --background: #FFF !important;
     --padding-top: 16px;
     --padding-bottom: 16px;
     --color: #101828;
+    --border-style: solid;
+    --border-color: #101828;
+    --border-width: 1px;
     --border-radius: 0.8em;
     --box-shadow: none;
     text-transform: none;
@@ -34,5 +33,3 @@ export default defineComponent({
     font-size: 0.75em;
 }
 </style>
-
- 

@@ -1,13 +1,13 @@
 <template>
-  <ion-list>
+  <ion-list class= "ion-list">
     <ion-item v-for="order in filteredOrders" :key="order.id">
       <ion-avatar slot="start">
-        <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+        <img style="width: 100%;height:100%" alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
       </ion-avatar>
       <ion-label class= "item">
-        <h2>{{ order.id }}</h2>
-        <p>{{ order.businesses_id }}</p>
-        <p>{{ order.created_at }}</p>
+        <ion-skeleton-text :animated="true" style="width: 80%;"><h3>{{ order.id }}</h3></ion-skeleton-text>
+        <ion-skeleton-text :animated="true"style="width: 60%;"><p>{{ order.businesses_id }}</p></ion-skeleton-text>
+        <ion-skeleton-text :animated="true"style="width: 40%;"> <p>{{ order.created_at }}</p></ion-skeleton-text>
         <ion-badge :color="getStatusInfo(order.order_status_id)?.color">{{ order.order_status?.name }}</ion-badge>
       </ion-label>
       <ion-icon slot="end" :icon="ellipsisHorizontal" id="click-trigger">
@@ -26,7 +26,7 @@
               Edit Order
               <ion-icon slot="start" :icon="create" ></ion-icon>
             </ion-item>
-            <ion-item >
+            <ion-item @click= "deleteOrder(order.id)" >
               Delete
               <ion-icon slot="start" :icon="trash" ></ion-icon>
             </ion-item>
@@ -39,17 +39,18 @@
 </template>
 
 <script default setup lang="ts">
-import { defineProps, computed, PropType } from 'vue';
-import { IonAvatar, IonBadge, IonIcon, IonItem, IonLabel, IonList } from '@ionic/vue';
+import { defineProps, computed, PropType, ref,onMounted } from 'vue';
+import { IonAvatar, IonBadge, IonIcon, IonItem, IonLabel, IonList,IonSkeletonText } from '@ionic/vue';
 import { ellipsisHorizontal } from 'ionicons/icons';
 import { create } from 'ionicons/icons';
 import { trash } from 'ionicons/icons';
 import { sync } from 'ionicons/icons';
 import { chatbubble } from 'ionicons/icons';
-
+import { useOrderStore } from '@/stores/OrderStore';
 import { Order } from '@/models/Order';
 import Product from '../../../models/Product';
-
+const orderstore = useOrderStore();
+const orders = ref([]);
 const props = defineProps({
   orders: {
     type: Array as PropType<Order[]>,
@@ -94,6 +95,7 @@ const filteredOrders = computed(() => {
   return orders;
 });
 
+
 const getStatusInfo = (orderStatusId?: number) => {
   switch (orderStatusId) {
     case 1:
@@ -129,6 +131,12 @@ const getStatusInfo = (orderStatusId?: number) => {
       };
   }
 };
+const reorderOrder = (orderId: number) => {
+  orderstore.reorderOrder(orderId);
+};
+const deleteOrder = (orderId: number) => {
+ orderstore.deleteOrder(orderId);
+};
 </script>
 <style scoped lang="scss">
 .order-list {
@@ -138,8 +146,9 @@ const getStatusInfo = (orderStatusId?: number) => {
   justify-content:center ;
 }
 .item{
-  align-content: center;
-  justify-content: center;
+  --align-content: center;
+  --justify-content: center;
+  --align-items:center;
 
 }
 .badge{

@@ -2,7 +2,7 @@
     <section>
         <ion-toolbar>
             <ion-buttons slot="primary">
-                <ion-button color="yellow">Update</ion-button>
+                <ion-button color="yellow">Delete</ion-button>
             </ion-buttons>
         </ion-toolbar>
     </section>

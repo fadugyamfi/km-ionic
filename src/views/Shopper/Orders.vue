@@ -14,10 +14,11 @@
         </ion-toolbar>
       </ion-header>
     </section>
-
-    <ion-content :fullscreen="true" class="ion-padding-horizontal">
-      <ion-segment value="today" mode="ios" v-model="viewing">
-        <ion-segment-button value="today">
+  
+   
+      <ion-content :fullscreen="true" class="ion-padding-horizontal">
+      <ion-segment class= "ion-content" value="today" mode="ios" v-model="viewing">
+        <ion-segment-button  value="today">
           <div style="display: flex; align-items: center;">
             <ion-label :class="{'yellow-circle': segmentValue === 'today'}">
               Today
@@ -25,19 +26,22 @@
             <ion-badge color="warning">{{ orderStore.orders.length }}</ion-badge>
           </div>
         </ion-segment-button>
-        <ion-segment-button value="thisweek">
+        <ion-segment-button  value="thisweek">
           <ion-label>This Week</ion-label>
         </ion-segment-button>
-        <ion-segment-button value="pastmonth">
+        <ion-segment-button  value="pastmonth">
           <ion-label>Past Month</ion-label>
         </ion-segment-button>
       </ion-segment>
+      <section class= "ion-list">
       <OrderList :orders="orderStore.orders" :selectedSegment="viewing" />
+      </section>
     </ion-content>
+  
   </ion-page>
 </template>
 
-<script setup lang="ts">
+<script default setup lang="ts">
 import {
   IonPage,
   IonHeader,
@@ -62,18 +66,19 @@ const segmentValue = ref('today');
 </script>
 
 <style scoped>
-  ion-content {
-    --align-items: center;
-  }
 
-  ion-segment {
+  .ion-content {
+    --align-items: center;
     --padding-top: 10px;
     --padding-bottom: 10px;
     --padding-left: 10px;
     --padding-right: 10px;
+    --text-align: justify;
+    --white-space: normal;
+    --border-radius: 10px;
   }
 
-  ion-segment-button {
+  .ion-segment-button {
     --padding-top: 10px;
     --padding-bottom: 10px;
     --padding-left: 10px;
