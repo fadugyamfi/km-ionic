@@ -20,24 +20,29 @@
 
       <ion-text class="space">2 Items from 1 Brand are ready for checkout</ion-text>
 
-      <!-- <EmptyCart v-if="cartStore.items.length === 0"></EmptyCart> -->
+       <EmptyCart v-if="cartStore.items.length === 0"></EmptyCart> 
 
-      <IonList>
+       <IonList v-else>
         <IonItem v-for="(item) in cartStore.businesses" :key="item.id">
           <ion-thumbnail slot="start" class="custom-thumbnail">
-            <IonImg :src="item.business?.business_owner?.logo"></IonImg>
+            <IonImg :src="item.business?.business_owner?.image"></IonImg>
           </ion-thumbnail>
+
           <ion-row class="item-row">
-            <ion-col size="12">
-              <p class="text-product"> {{ item.business?.name }} </p>
-              <p>Quantity</p>
-              <p>GHS 3000 minimum reached</p>
+            <ion-col size="10 ">
+              <p class="text-product">{{ item.business.name }}</p>
+            
+            </ion-col>
+            <ion-col size="1" class="remove-button">
+              <ion-button fill="clear" color="" >
+                <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
+              </ion-button>
             </ion-col>
           </ion-row>
         </IonItem>
       </IonList>
-
     </ion-content>
+
   </ion-page>
 </template>
 
@@ -47,25 +52,33 @@ import { ref } from 'vue';
 import {
   IonSegmentButton, IonLabel, IonThumbnail, IonImg,
   IonBadge, IonItem, IonList, IonSegment, IonCol, IonPage,
-  IonContent, IonRow, IonText,
+  IonContent, IonRow, IonText, IonButton, IonIcon
 } from '@ionic/vue';
 import { CartItem, useCartStore } from '@/stores/CartStore';
 import ShopperHeader from '@/components/layout/ShopperHeader.vue';
 import CartHeader from '@/components/header/CartHeader.vue';
 import EmptyCart from '@/components/cards/EmptyCart.vue';
-
+import { closeCircleOutline } from 'ionicons/icons';
 
 const cartStore = useCartStore();
 cartStore.loadFromStorage();
 const viewing = ref('cart');
+
 const segmentValue = ref('cart');
+const updateQuantity = (item: CartItem, newQuantity: number) => {
+  console.log('hello');
+  item.quantity = newQuantity;
+}
+
+const removeFromCart = (item: CartItem, index: number) => {
+  cartStore.removeAtIndex(index);
+}
 
 </script>
 
 <style scoped lang="scss">
 ion-text.space {
-  margin-bottom: 5550px;
-  // --margin-top: 400px;
+  margin-bottom: 550px;
 }
 
 .item-row {
