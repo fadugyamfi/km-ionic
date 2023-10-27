@@ -37,9 +37,9 @@ export const useSaleStore = defineStore("sale", {
         },
 
         isProductSelected(product: Product): boolean {
-            const index = this.newSale.items?.findIndex((item: SaleItem) => item.products_id == product.id);
+            const index = this.newSale.items?.findIndex((item: SaleItem) => item.products_id == product.id) as number;
 
-            return index && index > -1;
+            return !isNaN(index) ? index > -1 : false;
         }
     }
 });

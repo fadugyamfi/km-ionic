@@ -138,6 +138,10 @@ export default defineComponent({
             const cartStore = useCartStore();
             cartStore.addProduct(this.product, 1);
         }
+    },
+
+    beforeMount() {
+        this.selected = this.initiallySelected;
     }
 });
 </script>

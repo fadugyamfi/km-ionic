@@ -52,7 +52,7 @@
                             :showAddToFavorites="false"
                             :showAddToSelected="false"
                             :action="'toggleSelect'"
-                            :initially-selected="!!isSelected(product)"
+                            :initially-selected="isSelected(product)"
                             @toggleSelect="selectProduct($event)"
                         ></ProductCard>
                     </IonCol>
