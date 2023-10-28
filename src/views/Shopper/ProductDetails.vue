@@ -161,7 +161,8 @@ export default defineComponent({
         ...mapStores( useProductStore, useCartStore ),
 
         cartHasProduct() {
-            return this.cartStore.hasProduct(this.product as Product);
+           // return this.cartStore.hasProduct(this.product as Product);
+           return false;
         }
     },
 
@@ -190,7 +191,7 @@ export default defineComponent({
         },
 
         async addToCart() {
-            await this.cartStore.addProductToBusiness(this.product as Product, this.quantity);
+            await this.cartStore.addProduct(this.product as Product, this.quantity);
         }
     },
 

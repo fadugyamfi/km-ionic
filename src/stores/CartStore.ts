@@ -31,26 +31,26 @@ export const useCartStore = defineStore("cart", {
 
     actions: {
         async loadFromStorage() {
-            let items = await storage.get(KOLA_CART);
+            let orders = await storage.get(KOLA_CART);
 
-            this.items = (items || []) as CartItem[];
+            this.orders = (orders || []) as Order[];
 
-            return items;
+            return orders;
         },
 
-        getProductItem(product: Product): CartItem | undefined {
-            return this.items.find(el => el.product.id == product.id);
-        },
+        // getProductItem(product: Product): OrderItem | undefined {
+        //     return this.orders.find(el => el.product.id == product.id);
+        // },
 
-        hasProduct(product: Product): boolean {
-            if (!product || !this.items) {
-                return false;
-            }
+        // hasProduct(product: Product): boolean {
+        //     if (!product || !this.orders) {
+        //         return false;
+        //     }
 
-            const index = this.items.findIndex(el => el.product.id == product.id);
+        //     const index = this.items.findIndex(el => el.product.id == product.id);
 
-            return index > -1;
-        },
+        //     return index > -1;
+        // },
 
         // addProduct(product: Product, quantity = 1) {
         //     const toastStore = useToastStore();
@@ -72,19 +72,20 @@ export const useCartStore = defineStore("cart", {
             const userStore = useUserStore();
 
             let order = this.orders.find((order) => order.businesses_id == product.businesses_id);
-
+            const business = product.business;
             if( !order ) {
                 order = new Order({
                     businesses_id: product.businesses_id,
                     customer_id: userStore.activeBusiness?.id,
-                    cms_users_id: userStore.user?.id
+                    cms_users_id: userStore.user?.id,
+                    business: business
                 });
 
                 this.orders.push(order);
             }
 
             let orderItem = order.order_items.find((item: OrderItem) => item.products_id == product.id);
-
+          
             if( !orderItem ) {
                 orderItem = new OrderItem({
                     businesses_id: product.businesses_id,
@@ -102,7 +103,9 @@ export const useCartStore = defineStore("cart", {
             } else {
                 orderItem.quantity = quantity;
                 toastStore.showInfo('Increased quantity in cart');
+        
             }
+            this.persist();
 
 
 
@@ -142,22 +145,22 @@ export const useCartStore = defineStore("cart", {
         },
 
         updateQuantity(product: Product, quantity: number = 0) {
-            if (!this.hasProduct(product)) {
-                return;
-            }
+            // if (!this.hasProduct(product)) {
+            //     return;
+            // }
 
-            const item = this.getProductItem(product);
+            // const item = this.getProductItem(product);
 
-            if (item) {
-                item.quantity = quantity ? quantity : item.quantity++;
-                this.persist();
-            }
+            // if (item) {
+            //     item.quantity = quantity ? quantity : item.quantity++;
+            //     this.persist();
+            // }
 
-            return this;
+            // return this;
         },
 
         async persist() {
-            await storage.set(KOLA_CART, this.items, 30, 'days');
+            await storage.set(KOLA_CART, this.orders, 30, 'days');
         }
     }
 });

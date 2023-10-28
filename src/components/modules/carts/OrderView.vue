@@ -76,9 +76,9 @@
 
     methods: {
       updateItemQuantity(quantity: number) {
-        this.saleItem?.update({
+        this.order?.update({
           quantity,
-          total_price: quantity * (this.saleItem?.product?.product_price || 0)
+          total_price: quantity * (this.order?.product?.product_price || 0)
         });
       },
 

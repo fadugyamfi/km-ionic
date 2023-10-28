@@ -12,4 +12,8 @@ export class OrderItem {
     constructor(data: object) {
         Object.assign(this, data);
     }
+
+    update(data: object) {
+        Object.assign(this, data);
+    }
 }

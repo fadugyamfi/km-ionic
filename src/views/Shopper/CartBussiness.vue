@@ -10,7 +10,7 @@
         <IonSegmentButton value="cart">
           <div class="segment-button">
             <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
-            <ion-badge class="badge" color="warning">{{ cartStore.businesses.length }}</ion-badge>
+            <ion-badge class="badge" color="warning">{{ cartStore.orders.length }}</ion-badge>
           </div>
         </IonSegmentButton>
         <IonSegmentButton value="saved">
@@ -20,7 +20,7 @@
 
       <ion-text class="space">2 Items from 1 Brand are ready for checkout</ion-text>
 
-      <EmptyCart v-if="cartStore.items.length === 0"></EmptyCart>
+      <EmptyCart v-if="cartStore.orders.length === 0"></EmptyCart>
 
       <!-- <BusinessInCart></BusinessInCart> -->
 
@@ -45,7 +45,6 @@ import { CartItem, useCartStore } from '@/stores/CartStore';
 import ShopperHeader from '@/components/layout/ShopperHeader.vue';
 import CartHeader from '@/components/header/CartHeader.vue';
 import EmptyCart from '@/components/cards/EmptyCart.vue';
-import BusinessInCart from '@/components/modules/sales/BusinessInCart.vue';
 import OrderView from '@/components/modules/carts/OrderView.vue';
 
 
