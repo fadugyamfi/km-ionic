@@ -40,8 +40,12 @@
             <IonCard>
                 <IonCardContent>
                     <IonList lines="full">
-                        <ProductInCart v-for="item in saleStore.newSale.sale_items" :key="item.products_id" :saleItem="item">
-                        </ProductInCart>
+                        <SaleItemView
+                            v-for="item in saleStore.newSale.sale_items"
+                            :key="item.products_id"
+                            :saleItem="item"
+                        >
+                        </SaleItemView>
                     </IonList>
                 </IonCardContent>
             </IonCard>
@@ -49,7 +53,7 @@
 
         <IonFooter class="ion-padding ion-no-border">
             <KolaYellowButton id="configure-continue" :disabled="!cartTotalCost" @click="onContinue()">
-                {{ $t('general.continue') }}
+                {{ $t('vendor.sales.recordSale') }}
             </KolaYellowButton>
         </IonFooter>
     </IonPage>
@@ -61,7 +65,7 @@ import { arrowBack, closeCircleOutline, search } from 'ionicons/icons';
 import { defineComponent } from 'vue';
 import Image from '@/components/Image.vue';
 import ProductQuantitySelector from '@/components/modules/products/ProductQuantitySelector.vue';
-import ProductInCart from '@/components/modules/sales/ProductInCart.vue';
+import SaleItemView from '@/components/modules/sales/SaleItemView.vue';
 import { useSaleStore } from '@/stores/SaleStore';
 import { mapStores } from 'pinia';
 import { SaleItem } from '@/models/SaleItem';
@@ -98,7 +102,7 @@ export default defineComponent({
         Image,
         IonLabel,
         ProductQuantitySelector,
-        ProductInCart,
+        SaleItemView,
         IonFooter,
         KolaYellowButton
     },
