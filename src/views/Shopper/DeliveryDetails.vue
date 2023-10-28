@@ -2,7 +2,7 @@
   <ion-page>
     <ShopperHeader />
     <section class="ion-padding">
-      <CartHeader />
+      <CartHeader>Cart</CartHeader>
     </section>
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
@@ -18,31 +18,6 @@
         </IonSegmentButton>
       </IonSegment>
 
-      <EmptyCart v-if="cartStore.items.length === 0"></EmptyCart>
-
-      <IonList v-else>
-        <IonItem v-for="(item, index) in cartStore.items" :key="item.product?.id">
-          <ion-thumbnail slot="start" class="custom-thumbnail">
-            <IonImg :src="item.product?.image"></IonImg>
-          </ion-thumbnail>
-
-          <ion-row class="item-row">
-            <ion-col size="10 ">
-              <p class="text-product">{{ item.product.product_name }}</p>
-              <p>Quantity: {{ item.quantity }}</p>
-              <p class="price">{{ item.product.currency?.symbol || 'GHS' }} {{ item.quantity * (item.product.product_price
-                || 0) }}</p>
-              <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
-            </ion-col>
-            <ion-col size="1" class="remove-button">
-              <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(item, index)">
-                <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
-              </ion-button>
-            </ion-col>
-          </ion-row>
-        </IonItem>
-        <CartTotalCard />
-      </IonList>
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border" v-if="cartStore.items.length">

@@ -81,6 +81,7 @@ const updateQuantity = (item: CartItem, newQuantity: number) => {
   item.quantity = newQuantity;
 }
 
+
 const removeFromCart = (item: CartItem, index: number) => {
   cartStore.removeAtIndex(index);
 }
