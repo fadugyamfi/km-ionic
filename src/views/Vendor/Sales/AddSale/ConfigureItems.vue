@@ -40,7 +40,7 @@
             <IonCard>
                 <IonCardContent>
                     <IonList lines="full">
-                        <ProductInCart v-for="item in saleStore.newSale.items" :key="item.products_id" :saleItem="item">
+                        <ProductInCart v-for="item in saleStore.newSale.sale_items" :key="item.products_id" :saleItem="item">
                         </ProductInCart>
                     </IonList>
                 </IonCardContent>
@@ -67,6 +67,7 @@ import { mapStores } from 'pinia';
 import { SaleItem } from '@/models/SaleItem';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { useToastStore } from '@/stores/ToastStore';
+import { handleAxiosRequestError } from '../../../../utilities';
 
 
 export default defineComponent({
@@ -106,24 +107,39 @@ export default defineComponent({
         ...mapStores(useSaleStore),
 
         cartTotalCost() {
-            return this.saleStore.newSale.items?.reduce((acc, saleItem: SaleItem) => acc + (saleItem.total_price || 0), 0);
+            return this.saleStore.newSale.sale_items?.reduce((acc, saleItem: SaleItem) => acc + (saleItem.total_price || 0), 0);
         },
 
         cartCurrency() {
-            const firstItem: SaleItem | undefined = this.saleStore.newSale.items?.at(0);
+            const firstItem: SaleItem | undefined = this.saleStore.newSale.sale_items?.at(0);
             return firstItem?.product?.currency?.symbol as string;
         }
     },
 
     methods: {
-        onContinue() {
+        async onContinue() {
             if (!this.cartTotalCost) {
                 const toastStore = useToastStore();
                 toastStore.showError(this.$t("vendor.sales.cannotProceedWithTotalCostOfZero"), '', 'bottom', 'configure-continue');
                 return;
             }
 
-            this.$router.push('/vendor/sales/add-sale/select-sale-type')
+            const toastStore = useToastStore();
+            toastStore.blockUI();
+
+            try {
+                const sale = await this.saleStore.recordSale();
+
+                if( sale ) {
+                    this.$router.push('/vendor/sales/add-sale/sale-confirmation')
+                } else {
+                    toastStore.showError("Failed to record sale", "Error", "bottom", 'configure-continue')
+                }
+            } catch(error) {
+                handleAxiosRequestError(error)
+            } finally {
+                toastStore.unblockUI();
+            }
         }
     }
 })

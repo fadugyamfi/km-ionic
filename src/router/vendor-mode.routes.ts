@@ -72,6 +72,10 @@ export const VendorModeRoutes = [
               {
                 path: 'configure-items',
                 component: () => import('@/views/Vendor/Sales/AddSale/ConfigureItems.vue')
+              },
+              {
+                path: 'sale-confirmation',
+                component: () => import('@/views/Vendor/Sales/AddSale/SaleConfirmation.vue')
               }
             ]
           },

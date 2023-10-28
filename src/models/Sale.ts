@@ -18,9 +18,13 @@ export class Sale {
     public total_discount?: number = 0;
     public created_at?: string;
 
-    public items?: SaleItem[] = [];
+    public sale_items?: SaleItem[] = [];
 
     constructor(data: object) {
+        this.update(data);
+    }
+
+    update(data: object) {
         Object.assign(this, data);
     }
 }

@@ -162,13 +162,17 @@
             "cash": "Cash",
             "mobileMoney": "Mobile Money",
             "cheque": "Cheque",
+            "saleConfirmation": "Sale Confirmation",
+            "saleHasBeenRecorded": "Sale has been recorded",
             "selectAgentToContinue": "Select Sale Agent To Continue",
             "selectSaleTypeToContinue": "Select Sale Type To Continue",
             "selectPaymentModeToContinue": "Select Payment Mode To Continue",
             "selectCustomerToContinue": "Select Customer To Continue",
             "selectProductsToContinue": "Select Products To Continue",
             "cannotProceedWithTotalCostOfZero": "Cannot proceed with total cost of zero",
-            "searchProducts": "Search Product Inventory"
+            "searchProducts": "Search Product Inventory",
+            "addNewSale": "Add New Sale",
+            "done": "Done"
         }
     },
     "modules": {

@@ -30,7 +30,7 @@
                         <IonListHeader class="d-flex ion-justify-content-between">
                             <IonLabel class="fw-bold">{{ $t("vendor.sales.selectProducts") }}</IonLabel>
                             <IonLabel class="fw-bold ion-text-end" color="medium">
-                                {{ $t("vendor.sales.itemsSelected", { total: saleStore.newSale.items?.length }) }}
+                                {{ $t("vendor.sales.itemsSelected", { total: saleStore.newSale.sale_items?.length }) }}
                             </IonLabel>
                         </IonListHeader>
                     </IonList>
@@ -63,7 +63,7 @@
         </IonContent>
 
         <IonFooter class="ion-padding ion-no-border">
-            <KolaYellowButton id="select-products-continue" :disabled="saleStore.newSale.items?.length == 0"
+            <KolaYellowButton id="select-products-continue" :disabled="saleStore.newSale.sale_items?.length == 0"
                               @click="onContinue()">
                 {{ $t('general.continue') }}
             </KolaYellowButton>
@@ -167,7 +167,7 @@ export default defineComponent({
         },
 
         onContinue() {
-            if (this.saleStore.newSale.items?.length == 0) {
+            if (this.saleStore.newSale.sale_items?.length == 0) {
                 const toastStore = useToastStore();
                 toastStore.showError(this.$t("vendor.sales.selectProductsToContinue"), '', 'bottom', 'select-products-continue');
                 return;
