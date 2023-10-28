@@ -37,4 +37,8 @@ export class Order {
     update(data: object) {
         Object.assign(this, data);
     }
+
+    getTotal() {
+        return this.order_items.reduce((acc, value) => acc + (value.total_price || 0), 0)
+    }
 }

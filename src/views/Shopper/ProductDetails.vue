@@ -161,8 +161,7 @@ export default defineComponent({
         ...mapStores( useProductStore, useCartStore ),
 
         cartHasProduct() {
-           // return this.cartStore.hasProduct(this.product as Product);
-           return false;
+           return this.cartStore.hasProduct(this.product as Product);
         }
     },
 

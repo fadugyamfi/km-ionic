@@ -13,7 +13,7 @@
             <section class="d-flex flex-column">
               <IonText class="fw-semibold">{{ order?.business?.name || 'Unknown' }}</IonText>
               <IonText color="medium" class="font-medium">
-                {{ $t("Item total") }}: {{ order?.total_order_amount }}
+                {{ $t("Item total") }}: {{ order?.getTotal() }}
               </IonText>
               <IonText color="medium" class="font-medium">
                 GHS 3000 minimum reached

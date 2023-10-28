@@ -31,26 +31,45 @@ export const useCartStore = defineStore("cart", {
 
     actions: {
         async loadFromStorage() {
-            let orders = await storage.get(KOLA_CART);
+            let data = await storage.get(KOLA_CART);
 
-            this.orders = (orders || []) as Order[];
+            this.orders = (data.map((d: object) => new Order(d)) || []) as Order[];
 
-            return orders;
+            return this;
         },
 
-        // getProductItem(product: Product): OrderItem | undefined {
-        //     return this.orders.find(el => el.product.id == product.id);
-        // },
+        getProductItem(product: Product): OrderItem | null {
+            let existingProduct: OrderItem | null = null;
 
-        // hasProduct(product: Product): boolean {
-        //     if (!product || !this.orders) {
-        //         return false;
-        //     }
+            this.orders.forEach((order: Order) => {
+                const p = order.order_items.find(el => el.products_id = product.id);
 
-        //     const index = this.items.findIndex(el => el.product.id == product.id);
+                if( p ) {
+                    existingProduct = p;
+                    return false;
+                }
+            });
 
-        //     return index > -1;
-        // },
+            return existingProduct;
+        },
+
+        hasProduct(product: Product): boolean {
+            if (!product || !this.orders) {
+                return false;
+            }
+
+            let exists = false;
+
+            this.orders.forEach((order: Order) => {
+                const index = order.order_items.findIndex(el => el.products_id = product.id);
+                if( index > -1 ) {
+                    exists = true;
+                    return false;
+                }
+            });
+
+            return exists;
+        },
 
         // addProduct(product: Product, quantity = 1) {
         //     const toastStore = useToastStore();
@@ -67,25 +86,29 @@ export const useCartStore = defineStore("cart", {
         //     return this;
         // },
 
+        getTotalCost() {
+            return this.orders.reduce((acc, value) => acc + value.getTotal(), 0);
+        },
+
         addProduct(product: Product, quantity = 1) {
             const toastStore = useToastStore();
             const userStore = useUserStore();
 
             let order = this.orders.find((order) => order.businesses_id == product.businesses_id);
-            const business = product.business;
+
             if( !order ) {
                 order = new Order({
                     businesses_id: product.businesses_id,
                     customer_id: userStore.activeBusiness?.id,
                     cms_users_id: userStore.user?.id,
-                    business: business
+                    business: product.business
                 });
 
                 this.orders.push(order);
             }
 
             let orderItem = order.order_items.find((item: OrderItem) => item.products_id == product.id);
-          
+
             if( !orderItem ) {
                 orderItem = new OrderItem({
                     businesses_id: product.businesses_id,
@@ -103,7 +126,7 @@ export const useCartStore = defineStore("cart", {
             } else {
                 orderItem.quantity = quantity;
                 toastStore.showInfo('Increased quantity in cart');
-        
+
             }
             this.persist();
 

@@ -51,6 +51,7 @@ import { addCircleOutline } from 'ionicons/icons';
 import Image from '@/components/Image.vue';
 import { useCartStore } from '@/stores/CartStore';
 import FavoriteButton from '../modules/products/FavoriteButton.vue';
+import Business from '../../models/Business';
 
 export type ProductSelection = {
     selected: Boolean,
@@ -97,6 +98,11 @@ export default defineComponent({
         action: {
             default: 'viewProduct',
             type: String as PropType<'viewProduct' | 'toggleSelect'>
+        },
+
+        business: {
+            defaut: null,
+            type: Object as PropType<Business|null>
         }
     },
 
@@ -135,6 +141,10 @@ export default defineComponent({
         },
 
         addToCart() {
+            if( this.business && !this.product.business ) {
+                this.product.business = this.business;
+            }
+
             const cartStore = useCartStore();
             cartStore.addProduct(this.product, 1);
         }
