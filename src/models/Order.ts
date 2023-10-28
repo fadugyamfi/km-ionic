@@ -14,6 +14,8 @@ order_status_id
  10 = Refunded
 */
 
+import { OrderItem } from "./OrderItem";
+
 export class Order {
 [x: string]: any;
 
@@ -26,7 +28,7 @@ export class Order {
     public order_status: any;
     public start_dt:string | number | Date | undefined;
 
-  
+  public order_items: OrderItem[] = [];
 
     constructor(data: object) {
         Object.assign(this, data);

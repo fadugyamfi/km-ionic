@@ -1,6 +1,7 @@
 import axios from "axios";
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
 import Product from "@/models/Product";
+import { Order } from "@/models/Order";
 import { useToastStore } from '@/stores/ToastStore';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import AppStorage from './AppStorage';
@@ -21,7 +22,8 @@ export const useCartStore = defineStore("cart", {
     state: () => {
         return {
             items: [] as CartItem[],
-            businesses: [] as any
+            businesses: [] as any,
+            orders: [] as Order[]
         }
     },
 
@@ -34,12 +36,12 @@ export const useCartStore = defineStore("cart", {
             return items;
         },
 
-        getProductItem(product: Product): CartItem|undefined {
+        getProductItem(product: Product): CartItem | undefined {
             return this.items.find(el => el.product.id == product.id);
         },
 
         hasProduct(product: Product): boolean {
-            if( !product || !this.items ) {
+            if (!product || !this.items) {
                 return false;
             }
 
@@ -51,7 +53,7 @@ export const useCartStore = defineStore("cart", {
         addProduct(product: Product, quantity = 1) {
             const toastStore = useToastStore();
 
-            if( this.hasProduct(product) ) {
+            if (this.hasProduct(product)) {
                 this.updateQuantity(product);
                 toastStore.showInfo('Increased quantity in cart');
             } else {
@@ -65,17 +67,17 @@ export const useCartStore = defineStore("cart", {
 
         addProductToBusiness(product: Product, quantity = 1) {
             this.addProduct(product, quantity)
-        const existingBusiness = this.businesses.find((item: any) => item.id == product.businesses_id)
-        if(existingBusiness) {
-            const index = this.businesses.findIndex((item: any) => item.id == existingBusiness.id)
-            if(index > -1){
-                this.businesses[index].cartItems.push({product, quantity})
+            const existingBusiness = this.businesses.find((item: any) => item.id == product.businesses_id)
+            if (existingBusiness) {
+                const index = this.businesses.findIndex((item: any) => item.id == existingBusiness.id)
+                if (index > -1) {
+                    this.businesses[index].cartItems.push({ product, quantity })
+                }
+            } else {
+                const allBusinesses = businessStore.businesses
+                const business = allBusinesses?.find(business => business.id == product.businesses_id)
+                this.businesses.push({ id: product.businesses_id, business, cartItems: [{ product, quantity }] })
             }
-        } else {
-            const allBusinesses = businessStore.businesses
-            const business = allBusinesses?.find(business => business.id == product.businesses_id)
-            this.businesses.push({id: product.businesses_id, business, cartItems: [{product, quantity }]})
-        }
             return this;
         },
 
@@ -92,7 +94,7 @@ export const useCartStore = defineStore("cart", {
         removeProduct(product: Product) {
             const index = this.items.findIndex(el => el.product.id == product.id);
 
-            if( index > -1 ) {
+            if (index > -1) {
                 return this.removeAtIndex(index);
             }
 
@@ -100,13 +102,13 @@ export const useCartStore = defineStore("cart", {
         },
 
         updateQuantity(product: Product, quantity: number = 0) {
-            if( !this.hasProduct(product)) {
+            if (!this.hasProduct(product)) {
                 return;
             }
 
             const item = this.getProductItem(product);
 
-            if( item ) {
+            if (item) {
                 item.quantity = quantity ? quantity : item.quantity++;
                 this.persist();
             }
