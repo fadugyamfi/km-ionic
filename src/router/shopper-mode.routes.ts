@@ -102,6 +102,22 @@ export const ShopperModeRoutes = [
         component: () => import('@/views/Shopper/Cart.vue')
       },
       {
+        path: 'cart-business',
+        component: () => import('@/views/Shopper/CartBussiness.vue')
+      },
+      {
+        path: 'delivery-details',
+        component: () => import('@/views/Shopper/DeliveryDetails.vue')
+      },
+      {
+        path: 'payment-options',
+        component: () => import('@/views/Shopper/DeliveryDetails.vue')
+      },
+      {
+        path: 'item-review',
+        component: () => import('@/views/Shopper/ItemReview.vue')
+      },
+      {
         path: 'credits',
         component: () => import('@/views/Shopper/Credits.vue')
       },
