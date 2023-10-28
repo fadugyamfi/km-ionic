@@ -49,7 +49,7 @@
                 </section>
             </section>
 
-            <IonButton expand="block" class="intro-btn warning ion-margin-bottom">
+            <IonButton expand="block" class="intro-btn warning ion-margin-bottom" @click="openWhatsAppChat()">
                 {{ $t("vendor.home.chatWithUs") }}
             </IonButton>
         </IonCardContent>
@@ -75,6 +75,12 @@ export default defineComponent({
         IonText,
         IonImg,
         IonButton
+    },
+
+    methods: {
+        openWhatsAppChat() {
+            window.open('https://wa.me/233270404501', '_system', 'location=yes')
+        }
     }
 })
 </script>

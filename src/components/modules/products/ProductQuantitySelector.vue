@@ -4,7 +4,13 @@
             <IonIcon slot="icon-only" :icon="remove" color="dark"></IonIcon>
         </IonButton>
 
-        <IonInput v-model="quantity" type="number" fill="outline"></IonInput>
+        <IonInput
+            v-model="quantity"
+            type="number"
+            fill="outline"
+            @ion-change="updateQuantity()"
+            @ion-blur="updateQuantity()"
+        ></IonInput>
 
         <IonButton fill="clear" size="small" @click="increaseQuantity()">
             <IonIcon slot="icon-only" :icon="add" color="dark"></IonIcon>
@@ -29,7 +35,18 @@ export default defineComponent({
         }
     },
 
+    props: {
+        initialQuantity: {
+            default: 1,
+            type: Number
+        }
+    },
+
     emits: ['change'],
+
+    mounted() {
+        this.quantity = this.initialQuantity;
+    },
 
     methods: {
         decreaseQuantity() {
@@ -49,6 +66,10 @@ export default defineComponent({
             ++this.quantity;
             console.log(this.quantity)
             this.$emit('change', this.quantity);
+        },
+
+        updateQuantity() {
+            this.$emit('change', +this.quantity);
         }
     }
 })

@@ -7,7 +7,6 @@
         :key="business.id"
         :business="business"
         :tall="index % 2 === 0"
-        @click="onBusinessSelected(business)"
         :data-index="index"
       ></BusinessCard>
     </section>
@@ -19,7 +18,6 @@
         :key="business.id"
         :business="business"
         :tall="index % 2 !== 0"
-        @click="onBusinessSelected(business)"
         :data-index="index"
       ></BusinessCard>
     </section>
@@ -31,6 +29,8 @@ import { defineComponent, PropType } from 'vue';
 import Business from '@/models/Business';
 import BusinessCard from './BusinessCard.vue';
 import { IonSpinner } from '@ionic/vue';
+import { mapStores } from 'pinia';
+import { useBusinessStore } from '../../../stores/BusinessStore';
 export default defineComponent({
   props: {
     businesses: {
@@ -48,14 +48,14 @@ export default defineComponent({
 
   components: { BusinessCard, IonSpinner },
 
+  computed: {
+    ...mapStores( useBusinessStore )
+  },
+
   methods: {
     fillColumns() {
       this.leftColumnItems = this.businesses.filter((business, index) => index % 2 === 0);
       this.rightColumnItems = this.businesses.filter((business, index) => index % 2 !== 0);
-    },
-
-    onBusinessSelected(business: Business) {
-      this.$router.push(`/shopper/home/businesses/${business.id}`);
     },
   },
 

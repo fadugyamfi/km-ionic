@@ -3,10 +3,11 @@ import { defineStore } from "pinia";
 import { useUserStore } from "./UserStore";
 import { handleAxiosRequestError } from "@/utilities";
 import Business from "@/models/Business";
+import User from '@/models/User';
 import AppStorage from "./AppStorage";
 import { useToastStore } from './ToastStore';
-import { business } from "ionicons/icons";
 import Product from "@/models/Product";
+import { useRouter } from "vue-router";
 
 const storage = new AppStorage();
 const toastStore = useToastStore();
@@ -14,7 +15,9 @@ const toastStore = useToastStore();
 export const useBusinessStore = defineStore("business", {
   state: () => ({
     businesses: null as Business[] | null,
+    customers: null as Business[] | null,
     selectedBusiness: null as Business | null,
+    selectedToView: null as Business | null,
     registration: {
       name: "",
       phone_number: "",
@@ -160,6 +163,68 @@ export const useBusinessStore = defineStore("business", {
         return [];
       }
     },
+
+    async getBusinessCustomers(business: Business, limit: number = 50, refresh = false): Promise<Business[]> {
+      const cacheKey = `kola.business.${business.id}.customers`;
+
+      if( await storage.has(cacheKey) && !refresh ) {
+        const data = await storage.get(cacheKey);
+        return data.map((el: object) => new Business(el));
+      }
+
+      try {
+        const params = {
+          limit
+        };
+
+        const response = await axios.get(`/v2/businesses/${business.id}/customers`, { params });
+
+        if (response) {
+          const { data } = response.data;
+          const customers: Business[] = data.map((el: any) => new Business(el));
+
+          await storage.set(cacheKey, customers, 7, 'days')
+
+          return customers;
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+
+      return [];
+    },
+
+    async getBusinessSaleAgents(business: Business, limit: number = 50, refresh = false): Promise<User[]> {
+      const cacheKey = `kola.business.${business.id}.sale-agents`;
+
+      if( await storage.has(cacheKey) && !refresh ) {
+        const data = await storage.get(cacheKey);
+        return data.map((el: object) => new User(el));
+      }
+
+      try {
+        const params = {
+          businesses_id: business.id,
+          limit
+        };
+
+        const response = await axios.get(`/v2/sale-agents`, { params });
+
+        if (response) {
+          const { data } = response.data;
+          const agents: User[] = data.map((el: any) => new User(el));
+
+          await storage.set(cacheKey, agents, 7, 'days')
+
+          return agents;
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+
+      return [];
+    },
+
     async storeBusinesses() {
       await storage.set('store.businesses', this.businesses);
     },
@@ -280,6 +345,14 @@ export const useBusinessStore = defineStore("business", {
         handleAxiosRequestError(error);
         business.addToFavorites();
       }
+    },
+
+    viewBusiness(business: Business) {
+      this.selectedToView = business;
+    },
+
+    getSelectedForViewing() {
+      return this.selectedToView;
     }
   }
 });

@@ -1,6 +1,9 @@
 import { Storage } from '@ionic/storage';
 
 export default class AppStorage {
+    deleteOrder(orderId: string | number | undefined) {
+        throw new Error("Method not implemented.");
+    }
 
     private _storage: Storage | null = null;
     private keys: string[] = [];
