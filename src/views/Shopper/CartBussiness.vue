@@ -20,9 +20,13 @@
 
       <ion-text class="space">2 Items from 1 Brand are ready for checkout</ion-text>
 
-       <EmptyCart v-if="cartStore.items.length === 0"></EmptyCart> 
-       
-<BusinessInCart></BusinessInCart>
+      <EmptyCart v-if="cartStore.items.length === 0"></EmptyCart>
+
+      <!-- <BusinessInCart></BusinessInCart> -->
+
+      <IonList>
+        <OrderView v-for="order in cartStore.orders" :order="order" :key="order.businesses_id"></OrderView>
+      </IonList>
 
     </ion-content>
 
@@ -42,6 +46,7 @@ import ShopperHeader from '@/components/layout/ShopperHeader.vue';
 import CartHeader from '@/components/header/CartHeader.vue';
 import EmptyCart from '@/components/cards/EmptyCart.vue';
 import BusinessInCart from '@/components/modules/sales/BusinessInCart.vue';
+import OrderView from '@/components/modules/carts/OrderView.vue';
 
 
 const cartStore = useCartStore();
@@ -70,20 +75,21 @@ ion-text.space {
 }
 
 ion-item {
-    --inner-padding-start: 0px;
-    --inner-padding-end: 0px;
-    --padding-start: 0px;
-    margin-bottom: 10px;
+  --inner-padding-start: 0px;
+  --inner-padding-end: 0px;
+  --padding-start: 0px;
+  margin-bottom: 10px;
 }
-ion-text{
+
+ion-text {
   margin-bottom: 7px;
 }
 
 ion-thumbnail {
-    min-width: 85px;
-    height: 140px;
-    margin-right: 10px;
-    --border-radius: 8px;
+  min-width: 85px;
+  height: 140px;
+  margin-right: 10px;
+  --border-radius: 8px;
 }
 
 .text-product,
@@ -112,5 +118,4 @@ p {
 .item-row[data-v-c11d03b0] {
   align-items: baseline;
 }
-
 </style>
