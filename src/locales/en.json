@@ -172,7 +172,8 @@
             "cannotProceedWithTotalCostOfZero": "Cannot proceed with total cost of zero",
             "searchProducts": "Search Product Inventory",
             "addNewSale": "Add New Sale",
-            "done": "Done"
+            "done": "Done",
+            "recordSale": "Record Sale"
         }
     },
     "modules": {
