@@ -89,6 +89,26 @@ export const useSaleStore = defineStore("sale", {
 
                     return null;
                 });
+        },
+
+        async fetchSales(options = {}): Promise<Sale[]> {
+            const userStore = useUserStore();
+            const params = {
+                businesses_id: userStore.activeBusiness?.id,
+                limit: 50,
+                ...options
+            };
+
+            return axios.get('/v2/sales', { params })
+                .then(response => {
+                    this.sales = response.data.data.map((el: object) => new Sale(el));
+                    return this.sales;
+                })
+                .catch(error => {
+                    handleAxiosRequestError(error);
+
+                    return [];
+                });
         }
     }
 });

@@ -79,7 +79,10 @@ export const VendorModeRoutes = [
               }
             ]
           },
-
+          {
+            path: 'history',
+            component: () => import('@/views/Vendor/Sales/SalesHistory.vue')
+          }
         ]
       },
       {

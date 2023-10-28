@@ -5,7 +5,11 @@
     <ion-content :fullscreen="true">
       <IonGrid>
         <IonRow>
-          <IonCol></IonCol>
+          <IonCol>
+            <IonButton fill="clear" color="primarys" @click="onViewSales()">
+              View Sales
+            </IonButton>
+          </IonCol>
           <IonCol class="ion-justify-content-end ion-text-end">
             <IonButton fill="clear" color="primarys" @click="onAddSale()">
               Add Sale
@@ -50,6 +54,10 @@ export default defineComponent({
     onAddSale() {
       this.saleStore.resetForNewSale();
       this.$router.push('/vendor/sales/add-sale/select-agent')
+    },
+
+    onViewSales() {
+      this.$router.push('/vendor/sales/history');
     }
   }
 })
