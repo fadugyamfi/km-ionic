@@ -109,6 +109,19 @@ export const useSaleStore = defineStore("sale", {
 
                     return [];
                 });
+        },
+
+        async deleteSale(sale: Sale) {
+            return axios.delete(`/v2/sales/${sale.id}`)
+                .then(() => {
+                    const index = this.sales.findIndex(s => s.id == sale.id);
+                    if( index > -1 ) {
+                        this.sales.splice(index, 1);
+                    }
+                })
+                .catch(error => {
+                    handleAxiosRequestError(error)
+                });
         }
     }
 });

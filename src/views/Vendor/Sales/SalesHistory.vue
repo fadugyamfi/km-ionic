@@ -8,7 +8,7 @@
                     </IonButtons>
                     <IonTitle size="small"><b>{{ $t("vendor.sales.salesHistory") }}</b></IonTitle>
                     <IonButtons slot="end">
-                        <IonButton @click="showFilterSheet()" color="dark">
+                        <IonButton @click="showFilterSheet = true" color="dark">
                             <IonIcon :icon="optionsOutline"></IonIcon>
                         </IonButton>
                     </IonButtons>
@@ -18,14 +18,14 @@
             <IonSegment value="thisweek" mode="ios" @ionChange="onSegmentChanged($event)">
                 <IonSegmentButton value="today">
                     <IonLabel>
-                        Today
+                        {{ $t('general.today') }}
                     </IonLabel>
                 </IonSegmentButton>
                 <IonSegmentButton value="thisweek">
-                    <IonLabel>This Week</IonLabel>
+                    <IonLabel>{{ $t('general.thisWeek') }}</IonLabel>
                 </IonSegmentButton>
                 <IonSegmentButton value="pastmonth">
-                    <IonLabel>Past Month</IonLabel>
+                    <IonLabel>{{ $t('general.pastMonth') }}</IonLabel>
                 </IonSegmentButton>
             </IonSegment>
         </IonHeader>
@@ -37,39 +37,21 @@
                 </IonFabButton>
             </IonFab>
 
-            <div class="ion-padding ion-text-center" v-if="fetching">
+            <div class="ion-padding ion-text-center" v-show="fetching">
                 <IonSpinner name="crescent"></IonSpinner>
             </div>
 
-            <IonList v-else lines="full">
-                <IonItem v-for="sale in saleStore.sales" :key="sale.id">
-                    <IonAvatar slot="start" class="ion-align-self-start">
-                        <Image :src="sale.customer?.logo"></Image>
-                    </IonAvatar>
-                    <IonLabel>
-                        <p>
-                            <IonText color="dark">{{ sale.customer?.name }}</IonText>
-                        </p>
-                        <p class="font-medium">
-                            <IonText color="medium">
-                                {{ filters.date(sale.created_at as string, 'short') }}
-                            </IonText>
-                            <span class="ion-margin-horizontal">|</span>
-                            <IonText color="medium">
-                                {{ $tc('general.products', sale.sale_items_count as number, { count: sale.sale_items_count }) }}
-                            </IonText>
-                        </p>
-                        <p>
-                            <IonChip v-if="sale.isCreditSale()" color="primary" class="font-medium">
-                                {{ sale.sale_type?.name }}
-                            </IonChip>
-                        </p>
-                    </IonLabel>
-                    <IonButton slot="end" fill="clear" color="dark" class="ion-align-self-start ion-margin-top">
-                        <IonIcon :icon="ellipsisHorizontal"></IonIcon>
-                    </IonButton>
-                </IonItem>
-            </IonList>
+            <section v-show="!fetching">
+                <NoResults v-if="saleStore.sales?.length == 0"></NoResults>
+
+                <SalesList :sales="saleStore.sales"></SalesList>
+            </section>
+
+            <FilterSalesSheet
+                :isOpen="showFilterSheet"
+                @didDismiss="showFilterSheet = false"
+                @update="onFilterUpdate($event)"
+            ></FilterSalesSheet>
         </ion-content>
     </IonPage>
 </template>
@@ -82,11 +64,15 @@ import {
 } from '@ionic/vue';
 import ShopperHeader from '@/components/layout/ShopperHeader.vue';
 import { defineComponent } from 'vue';
-import { useSaleStore } from '../../../stores/SaleStore';
+import { useSaleStore } from '@/stores/SaleStore';
 import { mapStores } from 'pinia';
 import { arrowBack, ellipsisHorizontal, filter, optionsOutline, search, add } from 'ionicons/icons';
 import filters from '@/utilities/Filters';
-import Image from '../../../components/Image.vue';
+import Image from '@/components/Image.vue';
+import { formatMySQLDateTime } from '@/utilities';
+import NoResults from '@/components/layout/NoResults.vue';
+import SalesList from '../../../components/modules/sales/SalesList.vue';
+import FilterSalesSheet from '../../../components/modules/sales/FilterSalesSheet.vue';
 
 export default defineComponent({
 
@@ -115,7 +101,10 @@ export default defineComponent({
         IonSegmentButton,
         Image,
         IonFab,
-        IonFabButton
+        IonFabButton,
+        NoResults,
+        SalesList,
+        FilterSalesSheet
     },
 
     data() {
@@ -123,6 +112,7 @@ export default defineComponent({
             search, arrowBack, ellipsisHorizontal, filter, optionsOutline, add,
             fetching: false,
             filters,
+            showFilterSheet: false,
             searchFilters: {
                 start_dt: '',
                 end_dt: ''
@@ -135,28 +125,56 @@ export default defineComponent({
     },
 
     methods: {
-        showFilterSheet() {
-
-        },
-
         onAddSale() {
             this.saleStore.resetForNewSale();
             this.$router.push('/vendor/sales/add-sale/select-agent')
         },
 
         async fetchSales() {
-            this.fetching = true;
-            await this.saleStore.fetchSales();
-            this.fetching = false;
+            try {
+                this.fetching = true;
+                await this.saleStore.fetchSales(this.searchFilters);
+            } catch(error) {
+                console.log(error);
+            } finally {
+                this.fetching = false;
+            }
         },
 
-        onSegmentChanged(event: Event) {
-            console.log(event);
+        onSegmentChanged(event: CustomEvent) {
+            let start_dt = new Date();
+            let end_dt = new Date();
+            const option = event.detail.value;
+
+            switch (option) {
+                case 'pastmonth':
+                    start_dt.setMonth(start_dt.getMonth() - 1);
+                    break;
+
+                case 'today':
+                    start_dt.setDate(start_dt.getDate() - 1);
+                    break;
+
+                case 'thisweek':
+                    start_dt.setDate(start_dt.getDate() - 7);
+                    break;
+            }
+
+            this.searchFilters.start_dt = formatMySQLDateTime(start_dt.toISOString());
+            this.searchFilters.end_dt = formatMySQLDateTime(end_dt.toISOString());
+
+            this.fetchSales();
+        },
+
+        onFilterUpdate(event: { start_dt: string, end_dt: string }) {
+            this.searchFilters.start_dt = event.start_dt;
+            this.searchFilters.end_dt = event.end_dt || formatMySQLDateTime(new Date().toISOString());
+            this.fetchSales();
         }
     },
 
     mounted() {
-        this.fetchSales();
+        this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'thisweek' } }));
     }
 })
 </script>
