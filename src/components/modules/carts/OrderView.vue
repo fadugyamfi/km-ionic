@@ -1,5 +1,5 @@
 <template>
-  <IonItem>
+  <IonItem @click="viewOrderItems()">
     <section class="d-flex ion-align-items-stretch">
       <IonThumbnail>
         <Image :src="order?.business?.logo"></Image>
@@ -26,11 +26,14 @@
             <IonText color="medium" class="font-medium">
               GHS 3000 minimum reached
             </IonText>
-            <section>
-              {{ order.order_items }}
-              <!-- <IonThumbnail  class="cart-items">
-                <Image :src=""></Image>
-              </IonThumbnail> -->
+            <section class="d-flex">
+              <IonThumbnail
+                v-for="product in order?.order_items"
+                :key="product.products_id"
+                class="cart-items"
+              >
+                <Image :src="product.product_image"></Image>
+              </IonThumbnail>
             </section>
           </section>
 
@@ -99,6 +102,9 @@ export default defineComponent({
     removeOrder() {
       /// this.cartStore.removeProductFromSale(this.saleItem?.product as Product);
     },
+    viewOrderItems() {
+      this.$router.push(`/shopper/cart/${this.order?.businesses_id}`);
+    },
   },
 });
 </script>
@@ -127,6 +133,7 @@ ion-thumbnail {
 ion-thumbnail.cart-items {
   margin-top: 5px;
   min-width: 24px;
+  margin-right: 0px;
   height: 45px;
   --border-radius: 2px;
 }

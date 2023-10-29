@@ -5,7 +5,11 @@ export class OrderItem {
     public id?: number | string;
     public businesses_id?: number;
     public products_id? : number;
+    public product_name? : string;
+    public product_image? : string;
+    public product_price? : number;
     public currencies_id?: number;
+    public currency_symbol?: string;
     public product_units_id?: number;
     public unit_price?: number;
     public total_price?: number;

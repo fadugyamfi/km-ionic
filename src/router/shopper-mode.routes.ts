@@ -98,7 +98,7 @@ export const ShopperModeRoutes = [
         component: () => import('@/views/Shopper/OrderDetails.vue')
       },
       {
-        path: 'cart',
+        path: 'cart/:id',
         component: () => import('@/views/Shopper/Cart.vue')
       },
       {

@@ -9,59 +9,71 @@
       <IonSegment value="personal" mode="ios" v-model="viewing">
         <IonSegmentButton value="cart">
           <div class="segment-button">
-            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
-            <ion-badge class="badge" color="warning">{{ cartStore.orders.length }}</ion-badge>
+            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }"
+              >Cart</IonLabel
+            >
+            <ion-badge class="badge" color="warning">{{
+              cartStore.orders.length
+            }}</ion-badge>
           </div>
         </IonSegmentButton>
         <IonSegmentButton value="saved">
           <ion-label>Saved</ion-label>
         </IonSegmentButton>
       </IonSegment>
-
-      <ion-text class="space">2 Items from 1 Brand are ready for checkout</ion-text>
-
       <EmptyCart v-if="cartStore.orders.length === 0"></EmptyCart>
-
-      <!-- <BusinessInCart></BusinessInCart> -->
-
-      <IonList>
-        <OrderView v-for="order in cartStore.orders" :order="order" :key="order.businesses_id"></OrderView>
+      <IonList v-else>
+        <ion-text class="space"
+          >2 Items from 1 Brand are ready for checkout</ion-text
+        >
+        <OrderView
+          v-for="order in cartStore.orders"
+          :order="order"
+          :key="order.businesses_id"
+        ></OrderView>
       </IonList>
-
     </ion-content>
-
   </ion-page>
 </template>
 
 <script setup lang="ts">
-
-import { ref } from 'vue';
+import { ref } from "vue";
 import {
-  IonSegmentButton, IonLabel, IonThumbnail, IonImg,
-  IonBadge, IonItem, IonList, IonSegment, IonCol, IonPage,
-  IonContent, IonRow, IonText, IonButton, IonIcon
-} from '@ionic/vue';
-import { CartItem, useCartStore } from '@/stores/CartStore';
-import ShopperHeader from '@/components/layout/ShopperHeader.vue';
-import CartHeader from '@/components/header/CartHeader.vue';
-import EmptyCart from '@/components/cards/EmptyCart.vue';
-import OrderView from '@/components/modules/carts/OrderView.vue';
-
+  IonSegmentButton,
+  IonLabel,
+  IonThumbnail,
+  IonImg,
+  IonBadge,
+  IonItem,
+  IonList,
+  IonSegment,
+  IonCol,
+  IonPage,
+  IonContent,
+  IonRow,
+  IonText,
+  IonButton,
+  IonIcon,
+} from "@ionic/vue";
+import { CartItem, useCartStore } from "@/stores/CartStore";
+import ShopperHeader from "@/components/layout/ShopperHeader.vue";
+import CartHeader from "@/components/header/CartHeader.vue";
+import EmptyCart from "@/components/cards/EmptyCart.vue";
+import OrderView from "@/components/modules/carts/OrderView.vue";
 
 const cartStore = useCartStore();
 cartStore.loadFromStorage();
-const viewing = ref('cart');
+const viewing = ref("cart");
 
-const segmentValue = ref('cart');
+const segmentValue = ref("cart");
 const updateQuantity = (item: CartItem, newQuantity: number) => {
-  console.log('hello');
+  console.log("hello");
   item.quantity = newQuantity;
-}
+};
 
 const removeFromCart = (item: CartItem, index: number) => {
   cartStore.removeAtIndex(index);
-}
-
+};
 </script>
 
 <style scoped lang="scss">
@@ -95,7 +107,7 @@ ion-thumbnail {
 p {
   margin: 0;
   padding: 0;
-  color: #667085
+  color: #667085;
 }
 
 .segment-button {

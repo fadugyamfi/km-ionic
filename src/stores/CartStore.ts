@@ -117,7 +117,10 @@ export const useCartStore = defineStore("cart", {
         orderItem = new OrderItem({
           businesses_id: product.businesses_id,
           products_id: product.id,
+          product_price: product.product_price,
+          currency_symbol: product.currency?.symbol,
           product_image: product.image,
+          product_name: product.product_name,
           unit_price: product.product_price,
           quantity: quantity,
           total_price: quantity * (product.product_price || 0),
