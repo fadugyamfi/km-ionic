@@ -17,6 +17,10 @@ export const VendorModeRoutes = [
       if (!userStore.user && userStore.onboarded) {
         return { name: 'Login' };
       }
+
+      if( userStore.appMode == 'shopping' ) {
+        return { name: 'ShopperHome' };
+      }
     },
     children: [
       {
@@ -28,6 +32,7 @@ export const VendorModeRoutes = [
         component: HomePage,
         children: [
           {
+            name: 'VendorHome',
             path: '',
             component: () => import('@/views/Vendor/Home/Home.vue')
           },
@@ -82,6 +87,10 @@ export const VendorModeRoutes = [
           {
             path: 'history',
             component: () => import('@/views/Vendor/Sales/SalesHistory.vue')
+          },
+          {
+            path: ':id',
+            component: () => import('@/views/Vendor/Sales/SaleDetails.vue')
           }
         ]
       },

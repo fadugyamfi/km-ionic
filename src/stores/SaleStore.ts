@@ -111,6 +111,20 @@ export const useSaleStore = defineStore("sale", {
                 });
         },
 
+        async fetchSale(sale_id: number, options = {}): Promise<Sale | null> {
+            const params = { ...options };
+
+            return axios.get(`/v2/sales/${sale_id}`, { params })
+                .then(response => {
+                    return new Sale(response.data.data);
+                })
+                .catch(error => {
+                    handleAxiosRequestError(error);
+
+                    return null;
+                });
+        },
+
         async deleteSale(sale: Sale) {
             return axios.delete(`/v2/sales/${sale.id}`)
                 .then(() => {

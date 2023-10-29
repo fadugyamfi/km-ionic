@@ -19,6 +19,10 @@ export const ShopperModeRoutes = [
       if (!userStore.user && userStore.onboarded) {
         return { name: 'Login' };
       }
+
+      if( userStore.appMode == 'vendor' ) {
+        return { name: 'VendorHome' };
+      }
     },
     children: [
       {
@@ -30,6 +34,7 @@ export const ShopperModeRoutes = [
         component: HomePage,
         children: [
           {
+            name: 'ShopperHome',
             path: '',
             component: () => import('@/views/Shopper/Home/Home.vue')
           },

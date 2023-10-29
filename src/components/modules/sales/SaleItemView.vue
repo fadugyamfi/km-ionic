@@ -3,7 +3,7 @@
 
 
         <section class="d-flex ion-align-items-stretch">
-            <IonThumbnail>
+            <IonThumbnail :class="{ 'non-editable': !editable }">
                 <Image :src="saleItem?.product?.image"></Image>
             </IonThumbnail>
 
@@ -13,7 +13,7 @@
                     <section class="d-flex flex-column ion-justify-content-start">
                         <IonText class="fw-semibold">{{ saleItem?.product?.product_name || 'N/A' }}</IonText>
                         <IonText color="medium" class="font-medium">
-                            {{ saleItem?.product?.currency?.symbol }} {{ saleItem?.product?.product_price || 0 }}
+                            {{ saleItem?.product?.currency?.symbol || 'GHS' }} {{ saleItem?.total_price || 0 }}
                         </IonText>
                         <IonText color="medium" class="font-medium">
                             {{ $t('general.quantity') }}: {{ saleItem?.quantity }}
@@ -25,18 +25,25 @@
                         </IonText>
                     </section>
 
-                    <IonButton slot="end" fill="clear" color="dark"
-                               class="ion-no-margin ion-no-padding ion-align-self-start"
-                               @click="removeItem()">
+                    <IonButton
+                        v-if="editable"
+                        slot="end" fill="clear" color="dark"
+                        class="ion-no-margin ion-no-padding ion-align-self-start"
+                        @click="removeItem()"
+                    >
                         <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
                     </IonButton>
                 </section>
 
 
-                <ProductQuantitySelector
-                    :initial-quantity="saleItem?.quantity"
-                    @change="updateItemQuantity($event)"
-                ></ProductQuantitySelector>
+                <section>
+                    <ProductQuantitySelector
+                        v-if="editable"
+                        :initial-quantity="saleItem?.quantity"
+                        @change="updateItemQuantity($event)"
+                    ></ProductQuantitySelector>
+                </section>
+
             </section>
 
         </section>
@@ -71,6 +78,10 @@ export default defineComponent({
     props: {
         saleItem: {
             type: Object as PropType<SaleItem>
+        },
+
+        editable: {
+            default: true
         }
     },
 
@@ -112,5 +123,9 @@ ion-thumbnail {
     height: 140px;
     margin-right: 10px;
     --border-radius: 8px;
+}
+
+ion-thumbnail.non-editable {
+    height: 100px;
 }
 </style>

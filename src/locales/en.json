@@ -182,7 +182,10 @@
             "salesHistory": "Sales History",
             "recordRepayment": "Record Repayment",
             "confirmDeleteSale": "Delete sale?",
-            "actionIsUnreversible": "This action is unreversible"
+            "actionIsUnreversible": "This action is unreversible",
+            "saleDetails": "Sale Detais",
+            "noSaleItemsAvailable": "No Sale Items Available",
+            "addItemsToSaleToSeeThemHere": "Add items to sale to see them here"
         }
     },
     "modules": {

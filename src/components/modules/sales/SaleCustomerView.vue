@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { IonAvatar, IonCard, IonCardContent, IonCol, IonGrid, IonIcon, IonLabel, IonRow } from '@ionic/vue';
-import { defineComponent } from 'vue';
+import { PropType, defineComponent } from 'vue';
 import { mapStores } from 'pinia';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import { useSaleStore } from '@/stores/SaleStore';
@@ -36,10 +36,16 @@ import { location, locationOutline } from 'ionicons/icons';
 
 export default defineComponent({
 
+    props: {
+        customer: {
+            default: null,
+            type: Object as PropType<Business | null>
+        }
+    },
+
     data() {
         return {
-            location, locationOutline,
-            customer: null as Business | null
+            location, locationOutline
         }
     },
 
@@ -59,20 +65,6 @@ export default defineComponent({
         IonIcon
     },
 
-    methods: {
-        async loadSelectedCustomer() {
-            try {
-                const customers = await this.businessStore.getBusinessCustomers(this.userStore.activeBusiness as Business, 300);
-                this.customer = customers.find((c: Business) => c.id == this.saleStore.newSale.customer_id) as Business;
-            } catch (error) {
-                handleAxiosRequestError(error);
-            }
-        }
-    },
-
-    mounted() {
-        this.loadSelectedCustomer();
-    }
 })
 </script>
 

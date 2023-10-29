@@ -1,6 +1,6 @@
 <template>
     <IonList lines="full">
-        <IonItem v-for="(sale, index) in sales" :key="sale.id">
+        <IonItem v-for="(sale, index) in sales" :key="sale.id" @click="viewDetails(sale)">
             <IonAvatar slot="start" class="ion-align-self-start">
                 <Image :src="sale.customer?.logo"></Image>
             </IonAvatar>
@@ -24,7 +24,7 @@
                 </p>
             </IonLabel>
             <IonButton slot="end" fill="clear" color="dark" class="ion-align-self-start ion-margin-top"
-                       @click="openMenu($event, index)">
+                       @click.stop="openMenu($event, index)">
                 <IonIcon :icon="ellipsisHorizontal"></IonIcon>
             </IonButton>
 
@@ -132,6 +132,10 @@ export default defineComponent({
         async onConfirmDelete() {
             this.showConfirmDeleteModal = false;
             await this.saleStore.deleteSale(this.selectedSale as Sale);
+        },
+
+        viewDetails(sale: Sale) {
+            this.$router.push(`/vendor/sales/${sale.id}`);
         }
     }
 
