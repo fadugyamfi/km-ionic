@@ -4,6 +4,7 @@ import { Order } from "../models/Order";
 import { useToastStore } from "./ToastStore";
 import axios from "axios";
 import { handleAxiosRequestError } from "../utilities";
+import { useUserStore } from "./UserStore";
 
 
 const toastStore = useToastStore();
@@ -33,9 +34,38 @@ export const useOrderStore = defineStore('order', {
   },
 
   actions: {
-    async fetchOrders() {
+    async fetchPlacedOrders(options = {}) {
+      const userStore = useUserStore();
+
       try {
-        const response = await axios.get('/v2/orders');
+        const params = {
+          customer_id: userStore.activeBusiness?.id,
+          limit: 50,
+          ...options
+        };
+        const response = await axios.get('/v2/orders', { params });
+
+        if (response.status === 200) {
+          const ordersData = response.data.data;
+          this.orders = ordersData.map((data: any) => new Order(data));
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+    },
+
+    async fetchReceivedOrders(options = {}) {
+      try {
+        const userStore = useUserStore();
+
+        const params = {
+          businesses_id: userStore.activeBusiness?.id,
+          limit: 50,
+          ...options
+        };
+
+        const response = await axios.get('/v2/orders', { params });
+
         if (response.status === 200) {
           const ordersData = response.data.data;
           this.orders = ordersData.map((data: any) => new Order(data));

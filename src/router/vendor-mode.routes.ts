@@ -40,7 +40,18 @@ export const VendorModeRoutes = [
       },
       {
         path: 'orders',
-        component: () => import('@/views/Vendor/Orders.vue')
+        component: () => import('@/views/Vendor/Orders.vue'),
+        children: [
+          {
+            path: '',
+            redirect: '/vendor/orders/history'
+          },
+          {
+            name: 'VendorOrderHistory',
+            path: 'history',
+            component: () => import('@/views/Vendor/Orders/OrderHistory.vue')
+          }
+        ]
       },
       {
         path: 'sales',
