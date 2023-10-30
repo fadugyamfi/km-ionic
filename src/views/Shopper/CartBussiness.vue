@@ -20,11 +20,9 @@
           <ion-label>Saved</ion-label>
         </IonSegmentButton>
       </IonSegment>
+  
       <EmptyCart v-if="cartStore.orders.length === 0"></EmptyCart>
       <IonList v-else>
-        <ion-text class="space"
-          >2 Items from 1 Brand are ready for checkout</ion-text
-        >
         <OrderView
           v-for="order in cartStore.orders"
           :order="order"
@@ -80,6 +78,9 @@ ion-text.space {
   margin-bottom: 550px;
 }
 
+ion-segment{
+  margin-bottom: 20px;
+}
 .item-row {
   align-items: center;
 }
@@ -127,5 +128,10 @@ p {
 
 .item-row[data-v-c11d03b0] {
   align-items: baseline;
+}
+
+
+element.style {
+    margin-bottom: 20px;
 }
 </style>

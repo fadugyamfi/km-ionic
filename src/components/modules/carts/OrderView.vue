@@ -11,9 +11,9 @@
           class="d-flex ion-justify-content-between"
         >
           <section class="d-flex flex-column">
-            <IonText class="fw-semibold">{{
-              order?.business?.name || "Unknown"
-            }}</IonText>
+            <IonText class="fw-semibold" style="margin-bottom: 5px;">
+              {{ order?.business?.name || "Unknown" }}
+            </IonText>
             <IonText color="medium" class="font-medium">
               {{ $t("Item total") }}:
               {{
@@ -26,34 +26,35 @@
             <IonText color="medium" class="font-medium">
               GHS 3000 minimum reached
             </IonText>
-            <section class="d-flex">
-              <IonThumbnail
-                v-for="product in order?.order_items"
-                :key="product.products_id"
-                class="cart-items"
-              >
-                <Image :src="product.product_image"></Image>
-              </IonThumbnail>
-            </section>
+            <IonThumbnail
+              v-for="product in order?.order_items"
+              :key="product.products_id"
+              class="cart-items"
+            >
+              <Image :src="product.product_image"></Image>
+            </IonThumbnail>
           </section>
-
-          <IonButton
-            slot="end"
-            fill="clear"
-            color="dark"
-            class="ion-no-margin ion-no-padding ion-align-self-start"
-            @click="removeOrder()"
-          >
-            <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
-          </IonButton>
+          <div class="remove-button"> <!-- Use <div> or <section> here -->
+            <section class="d-flex align-right">
+              <IonButton
+                fill="clear"
+                color="dark"
+                class="ion-no-margin ion-no-padding ion-align-self-start"
+                @click="removeOrder()"
+              >
+                <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
+              </IonButton>
+            </section>
+          </div>
         </section>
       </section>
     </section>
   </IonItem>
 </template>
 
+
 <script lang="ts">
-import { IonButton, IonIcon, IonItem, IonText, IonThumbnail } from "@ionic/vue";
+import { IonButton, IonIcon, IonItem, IonText,IonCol, IonThumbnail } from "@ionic/vue";
 import { PropType, defineComponent } from "vue";
 import ProductQuantitySelector from "../products/ProductQuantitySelector.vue";
 import { closeCircleOutline } from "ionicons/icons";
@@ -73,6 +74,7 @@ export default defineComponent({
     IonButton,
     IonIcon,
     Image,
+    IonCol
   },
 
   props: {
