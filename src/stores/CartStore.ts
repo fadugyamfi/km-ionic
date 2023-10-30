@@ -141,12 +141,21 @@ export const useCartStore = defineStore("cart", {
       this.persist();
       return this;
     },
+    removeOrderAtIndex(order: any) {
+      const index = this.orders.findIndex(
+        (item) => item.businesses_id == order.businesses_id
+      );
+      this.orders.splice(index, 1);
+      const toastStore = useToastStore();
+      toastStore.showSuccess("Removed From Cart");
+      this.persist();
+      return this;
+    },
 
     removeAtItemIndex(business: Order, itemIndex: number) {
       const businessIndex = this.orders.findIndex(
         (order) => order.businesses_id == business.businesses_id
       );
-
       this.orders[businessIndex].order_items.splice(itemIndex, 1);
       const toastStore = useToastStore();
       toastStore.showSuccess("Removed From Cart");
@@ -156,10 +165,8 @@ export const useCartStore = defineStore("cart", {
 
     removeAtIndex(index: number) {
       this.orders.splice(index, 1);
-
       const toastStore = useToastStore();
       toastStore.showSuccess("Removed From Cart");
-
       this.persist();
       return this;
     },
@@ -188,7 +195,6 @@ export const useCartStore = defineStore("cart", {
 
     async persist() {
       await storage.set(KOLA_CART, this.orders, 30, "days");
-      console.log("persist", this.orders);
     },
   },
 });
