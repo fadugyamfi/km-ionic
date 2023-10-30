@@ -176,6 +176,7 @@
             "selectProductsToContinue": "Select Products To Continue",
             "cannotProceedWithTotalCostOfZero": "Cannot proceed with total cost of zero",
             "searchProducts": "Search Product Inventory",
+            "searchCustomers": "Find Customer By Name",
             "addNewSale": "Add New Sale",
             "done": "Done",
             "recordSale": "Record Sale",

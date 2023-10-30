@@ -16,7 +16,7 @@
       </IonHeader>
     </section>
 
-    <IonContent :fullscreen="true">
+    <IonContent>
       <IonRefresher ref="refresher" slot="fixed" @ionRefresh="handleRefresh($event)">
         <IonRefresherContent pullingIcon="crescent"></IonRefresherContent>
       </IonRefresher>

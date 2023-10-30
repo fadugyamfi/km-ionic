@@ -1,23 +1,34 @@
 <template>
   <IonPage>
-    <section class="ion-padding">
-      <IonHeader class="inner-header">
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/vendor/sales/add-sale/select-payment-mode" :icon="arrowBack" mode="md">
-            </IonBackButton>
-          </IonButtons>
-          <IonTitle size="small"><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle>
-          <IonButtons slot="end">
-            <ion-button @click="refresh()" color="dark">
-              <IonIcon :icon="search"></IonIcon>
-            </ion-button>
-          </IonButtons>
+    <section class="ion-padding" style="padding-bottom: 0.35em;">
+      <IonHeader classs="ion-no-border" style="box-shadow: none;">
+        <IonHeader class="inner-header">
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonBackButton defaultHref="/vendor/sales/add-sale/select-payment-mode" :icon="arrowBack" mode="md">
+              </IonBackButton>
+            </IonButtons>
+            <IonTitle size="small"><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle>
+            <IonButtons slot="end">
+              <ion-button @click="searchEnabled = !searchEnabled" color="dark">
+                <IonIcon :icon="search"></IonIcon>
+              </ion-button>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+
+        <IonToolbar v-if="searchEnabled">
+          <IonSearchbar
+              :placeholder="$t('vendor.sales.searchCustomers') + '...'"
+              class="search-input"
+              @keyup.enter="onSearch($event)"
+              @ion-change="onSearch($event)"
+          ></IonSearchbar>
         </IonToolbar>
       </IonHeader>
     </section>
 
-    <IonContent :fullscreen="true">
+    <IonContent>
       <IonRefresher ref="refresher" slot="fixed" @ionRefresh="handleRefresh($event)">
         <IonRefresherContent pullingIcon="crescent"></IonRefresherContent>
       </IonRefresher>
@@ -56,7 +67,7 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonButton, IonToolbar, IonIcon, IonTitle, IonButtons, IonHeader, IonBackButton, IonList, IonItem, IonListHeader, IonLabel, IonAvatar, IonCheckbox, IonText, IonFooter, IonImg, IonSpinner, IonRefresher, IonRefresherContent, RefresherCustomEvent } from '@ionic/vue';
+import { IonPage, IonContent, IonButton, IonToolbar, IonIcon, IonTitle, IonButtons, IonHeader, IonBackButton, IonList, IonItem, IonListHeader, IonLabel, IonAvatar, IonCheckbox, IonText, IonFooter, IonImg, IonSpinner, IonRefresher, IonRefresherContent, RefresherCustomEvent, IonSearchbar } from '@ionic/vue';
 import { arrowBack, close, refreshOutline, search } from 'ionicons/icons';
 import { defineComponent } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
@@ -93,7 +104,8 @@ export default defineComponent({
     Image,
     IonSpinner,
     IonRefresher,
-    IonRefresherContent
+    IonRefresherContent,
+    IonSearchbar
 },
 
   data() {
@@ -101,6 +113,7 @@ export default defineComponent({
       search, close, arrowBack,
       fetching: false,
       refreshing: false,
+      searchEnabled: true,
       customers: [] as Business[],
     }
   },
@@ -117,12 +130,12 @@ export default defineComponent({
       event.target.complete();
     },
 
-    async fetchCustomers() {
+    async fetchCustomers(options = {}) {
       this.fetching = true;
       const userStore = useUserStore();
       const businessStore = useBusinessStore();
 
-      this.customers = await businessStore.getBusinessCustomers(userStore.activeBusiness as Business, 300, this.refreshing);
+      this.customers = await businessStore.getBusinessCustomers(userStore.activeBusiness as Business, 300, options, this.refreshing);
 
       this.fetching = false;
     },
@@ -141,7 +154,13 @@ export default defineComponent({
       this.$router.push('/vendor/sales/add-sale/select-products')
     },
 
-    refresh() { }
+    async onSearch(event: Event) {
+      this.refreshing = true;
+      await this.fetchCustomers({
+        name_like: (event.target as HTMLIonSearchbarElement).value
+      });
+      this.refreshing = false;
+    }
   },
 
   mounted() {

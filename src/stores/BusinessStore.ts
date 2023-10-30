@@ -164,7 +164,7 @@ export const useBusinessStore = defineStore("business", {
       }
     },
 
-    async getBusinessCustomers(business: Business, limit: number = 50, refresh = false): Promise<Business[]> {
+    async getBusinessCustomers(business: Business, limit: number = 50, options = {}, refresh = false): Promise<Business[]> {
       const cacheKey = `kola.business.${business.id}.customers`;
 
       if( await storage.has(cacheKey) && !refresh ) {
@@ -174,7 +174,8 @@ export const useBusinessStore = defineStore("business", {
 
       try {
         const params = {
-          limit
+          limit,
+          ...options
         };
 
         const response = await axios.get(`/v2/businesses/${business.id}/customers`, { params });
