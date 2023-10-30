@@ -1,7 +1,7 @@
 <template>
     <section>
         <IonChip
-            v-for="tag in product.tags" :key="tag.name"
+            v-for="tag in product?.tags" :key="tag.name"
         >
             {{ tag.name }}
         </IonChip>

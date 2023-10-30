@@ -1,9 +1,8 @@
 <template>
     <section class="business-card">
         <ion-card @click="viewBusiness" class="ion-no-padding ion-no-margin">
-            <Image :alt="business.name" :src="business.logo" />
-
-            <IonCardHeader>
+            <Image :alt="business.name" :src="business?.logo" />
+           <IonCardHeader>
                 <IonCardTitle>{{ business.name }}</IonCardTitle>
                 <IonCardSubtitle>
                     <span v-if="business.min_order_amount">
@@ -29,6 +28,8 @@ import { defineComponent } from 'vue';
 import { locationOutline } from 'ionicons/icons';
 import Image from '@/components/Image.vue';
 import BusinessRatingAndReviews from '@/components/modules/business/BusinessRatingAndReviews.vue';
+import { mapStores } from 'pinia';
+import { useBusinessStore } from '../../../stores/BusinessStore';
 
 export default defineComponent({
     props: {
@@ -43,9 +44,15 @@ export default defineComponent({
             locationOutline
         };
     },
+
+    computed: {
+        ...mapStores( useBusinessStore )
+    },
+
     methods: {
         viewBusiness() {
-            this.$router.push(`/shopper/home/Businesses/${this.business.id}`);
+            this.businessStore.viewBusiness(this.business);
+            this.$router.push(`/shopper/home/businesses/${this.business.id}`);
         },
     },
 

@@ -78,13 +78,13 @@ import { IonIcon, IonText } from '@ionic/vue';
 import { locationOutline } from 'ionicons/icons';
 import { handleAxiosRequestError } from '@/utilities';
 import FollowButton from '@/components/modules/business/FollowButton.vue';
+import { mapStores } from 'pinia';
 
 export default defineComponent({
   data() {
     return {
       defaultBanner: '/images/vendor/banner.png',
       business: null as Business | null,
-      businessStore: useBusinessStore(),
       locationOutline,
     };
   },
@@ -114,6 +114,10 @@ export default defineComponent({
     IonText,
   },
 
+  computed: {
+    ...mapStores( useBusinessStore )
+  },
+
   methods: {
     async fetchBusinessDetails() {
       const businessId = +this.$route.params.id;
@@ -130,6 +134,7 @@ export default defineComponent({
   },
 
   mounted() {
+    this.business = this.businessStore.getSelectedForViewing();
     this.fetchBusinessDetails();
   },
 });

@@ -1,0 +1,40 @@
+ion-checkbox {
+    --size: 16px;
+    --checkbox-background-checked: #21D187;
+    --border-color-checked: #21D187;
+}
+
+.sales-select-list {
+
+    ion-list-header {
+        padding-left: 0px;
+        font-size: 0.9em;
+    }
+
+    ion-item {
+        --background: #FFFFFF;
+        border: solid 1px #F4F4F4;
+        border-radius: 12px;
+        margin-bottom: 0.5em;
+        box-shadow: 0px 4px 12px 0px #696F821A;
+    }
+
+    ion-item ion-label {
+        line-height: 1em;
+    }
+
+    ion-item ion-label p {
+        font-weight: bold;
+        color: #111;
+    }
+
+    &.simple {
+        ion-item {
+            border: solid 1px #F4F4F4;
+            border-radius: 12px;
+            margin-bottom: 0.5em;
+            box-shadow: none;
+            --background: none;
+        }
+    }
+}
