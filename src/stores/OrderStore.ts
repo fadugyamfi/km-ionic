@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import AppStorage from "./AppStorage";
-import { Order } from "@/models/Order.1";
+import { Order } from "@/models/Order";
 import { useToastStore } from "./ToastStore";
 import axios from "axios";
 import { handleAxiosRequestError } from "../utilities";

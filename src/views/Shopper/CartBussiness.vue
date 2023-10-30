@@ -1,6 +1,5 @@
 <template>
   <ion-page>
-    <ShopperHeader />
     <section class="ion-padding">
       <CartHeader />
     </section>
