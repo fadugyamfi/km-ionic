@@ -52,7 +52,7 @@
                             :showDescription="false"
                             :showAddToCart="false"
                             :showAddToFavorites="false"
-                            :showAddToSelected="false"
+                            :showAddToSelected="true"
                             :action="'toggleSelect'"
                             :initially-selected="isSelected(product)"
                             @toggleSelect="selectProduct($event)"

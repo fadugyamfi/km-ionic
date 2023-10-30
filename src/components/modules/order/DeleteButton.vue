@@ -9,14 +9,14 @@
 </template>
 
 <script lang="ts">
-import { IonButton,IonButtons,iontoolbar } from '@ionic/vue';
+import { IonButton,IonButtons, IonToolbar } from '@ionic/vue';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
     props: [],
 
     components: {
-        IonButton,iontoolbar,IonButtons
+        IonButton, IonToolbar, IonButtons
     }
 })
 </script>
@@ -34,5 +34,3 @@ export default defineComponent({
     font-size: 0.75em;
 }
 </style>
-
- 

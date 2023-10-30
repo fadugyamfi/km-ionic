@@ -81,7 +81,7 @@ export default defineComponent({
 
         onDone() {
             this.saleStore.resetForNewSale();
-            this.$router.push('/vendor/sales')
+            this.$router.push('/vendor/sales/history')
         }
     }
 })
