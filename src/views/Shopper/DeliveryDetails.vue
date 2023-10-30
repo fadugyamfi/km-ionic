@@ -1,22 +1,13 @@
 <template>
   <ion-page>
-    <ShopperHeader />
-    <section class="ion-padding">
-      <CartHeader>Cart</CartHeader>
-    </section>
+
+      <SaveForLaterHeader/>
+    
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
-      <IonSegment value="personal" mode="ios" v-model="viewing" class="segment-margin">
-        <IonSegmentButton value="cart">
-          <div class="segment-button">
-            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
-            <ion-badge class="badge" color="warning">{{ cartStore.items.length }}</ion-badge>
-          </div>
-        </IonSegmentButton>
-        <IonSegmentButton value="saved">
-          <ion-label>Saved</ion-label>
-        </IonSegmentButton>
-      </IonSegment>
+      <SaveForLaterHeader/>
+      <IonText>Add Delivery address</IonText>
+     
 
     </ion-content>
 
@@ -34,13 +25,15 @@ import { ref } from 'vue';
 import {
   IonSegmentButton, IonLabel, IonThumbnail, IonImg,
   IonBadge, IonItem, IonList, IonSegment, IonCol, IonPage,
-  IonContent, IonRow, IonButton, IonIcon, IonFooter
+  IonContent, IonText, IonButton, IonIcon, IonFooter
 } from '@ionic/vue';
 import { CartItem, useCartStore } from '@/stores/CartStore';
 import ShopperHeader from '@/components/layout/ShopperHeader.vue';
 import ProductQuantitySelector from '@/components/modules/products/ProductQuantitySelector.vue';
 import { closeCircleOutline } from 'ionicons/icons';
 import CartHeader from '@/components/header/CartHeader.vue';
+import SaveForLaterHeader from '@/components/header/SaveForLaterHeader.vue';
+import KolaInputField from '@/components/input/KolaInputField.v  header/SaveForLaterHeader.vue';
 import EmptyCart from '@/components/cards/EmptyCart.vue';
 import CartTotalCard from '@/components/cards/CartTotalCard.vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';

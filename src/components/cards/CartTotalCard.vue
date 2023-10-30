@@ -43,6 +43,8 @@ const totalCost = computed(() => {
   background: var(--card-background);
   box-shadow: var(--card-box-shadow);
   border-radius: 8px;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .row {

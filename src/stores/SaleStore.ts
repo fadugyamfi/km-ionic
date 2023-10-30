@@ -89,6 +89,53 @@ export const useSaleStore = defineStore("sale", {
 
                     return null;
                 });
+        },
+
+        async fetchSales(options = {}): Promise<Sale[]> {
+            const userStore = useUserStore();
+            const params = {
+                businesses_id: userStore.activeBusiness?.id,
+                limit: 50,
+                ...options
+            };
+
+            return axios.get('/v2/sales', { params })
+                .then(response => {
+                    this.sales = response.data.data.map((el: object) => new Sale(el));
+                    return this.sales;
+                })
+                .catch(error => {
+                    handleAxiosRequestError(error);
+
+                    return [];
+                });
+        },
+
+        async fetchSale(sale_id: number, options = {}): Promise<Sale | null> {
+            const params = { ...options };
+
+            return axios.get(`/v2/sales/${sale_id}`, { params })
+                .then(response => {
+                    return new Sale(response.data.data);
+                })
+                .catch(error => {
+                    handleAxiosRequestError(error);
+
+                    return null;
+                });
+        },
+
+        async deleteSale(sale: Sale) {
+            return axios.delete(`/v2/sales/${sale.id}`)
+                .then(() => {
+                    const index = this.sales.findIndex(s => s.id == sale.id);
+                    if( index > -1 ) {
+                        this.sales.splice(index, 1);
+                    }
+                })
+                .catch(error => {
+                    handleAxiosRequestError(error)
+                });
         }
     }
 });
