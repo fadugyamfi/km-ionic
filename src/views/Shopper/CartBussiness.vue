@@ -2,7 +2,7 @@
   <ion-page>
     <ShopperHeader />
     <section class="ion-padding">
-      <CartHeader />
+      <CartBusinessHeader />
     </section>
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
@@ -22,10 +22,10 @@
         </IonSegmentButton>
       </IonSegment>
       <EmptyCart v-if="cartStore.orders.length === 0"></EmptyCart>
-      <IonList v-else>
-        <ion-text class="space"
-          >2 Items from 1 Brand are ready for checkout</ion-text
-        >
+      <IonList class="order-view-wrapper" v-else>
+        <!-- <ion-text class="space"
+          >{{ cartStore.orders.length }} Items from 1 Brand are ready for checkout</ion-text
+        > -->
         <OrderView
           v-for="order in cartStore.orders"
           :order="order"
@@ -57,7 +57,7 @@ import {
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ShopperHeader from "@/components/layout/ShopperHeader.vue";
-import CartHeader from "@/components/header/CartHeader.vue";
+import CartBusinessHeader from "@/components/header/CartBusinessHeader.vue";
 import EmptyCart from "@/components/cards/EmptyCart.vue";
 import OrderView from "@/components/modules/carts/OrderView.vue";
 
@@ -83,6 +83,10 @@ ion-text.space {
 
 .item-row {
   align-items: center;
+}
+
+.order-view-wrapper {
+  margin-top: 16px;
 }
 
 ion-item {

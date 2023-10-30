@@ -2,7 +2,7 @@
   <IonHeader class="inner-header">
     <IonToolbar class="ion-align-items-center">
       <IonButtons slot="start">
-        <IonBackButton defaultHref="/shopper/home"></IonBackButton>
+        <IonBackButton defaultHref="/shopper/cart-business"></IonBackButton>
       </IonButtons>
       <IonTitle size="small" class="fw-bold">
         Cart

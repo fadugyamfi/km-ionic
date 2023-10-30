@@ -16,13 +16,16 @@ const businessStore = useBusinessStore();
 export type CartItem = {
   product: Product;
   quantity: number;
+  product_name: string;
+  product_image: string;
+  product_price: number;
+  currency_symbol: string;
 };
 
 export const useCartStore = defineStore("cart", {
   state: () => {
     return {
       items: [] as CartItem[],
-      businesses: [] as any,
       orders: [] as Order[],
     };
   },
@@ -136,24 +139,23 @@ export const useCartStore = defineStore("cart", {
         toastStore.showInfo("Increased quantity in cart");
       }
       this.persist();
+      return this;
+    },
 
-      // this.addProduct(product, quantity)
-      // const existingBusiness = this.businesses.find((item: any) => item.id == product.businesses_id)
-      // if (existingBusiness) {
-      //     const index = this.businesses.findIndex((item: any) => item.id == existingBusiness.id)
-      //     if (index > -1) {
-      //         this.businesses[index].cartItems.push({ product, quantity })
-      //     }
-      // } else {
-      //     const allBusinesses = businessStore.businesses
-      //     const business = allBusinesses?.find(business => business.id == product.businesses_id)
-      //     this.businesses.push({ id: product.businesses_id, business, cartItems: [{ product, quantity }] })
-      // }
+    removeAtItemIndex(business: Order, itemIndex: number) {
+      const businessIndex = this.orders.findIndex(
+        (order) => order.businesses_id == business.businesses_id
+      );
+
+      this.orders[businessIndex].order_items.splice(itemIndex, 1);
+      const toastStore = useToastStore();
+      toastStore.showSuccess("Removed From Cart");
+      this.persist();
       return this;
     },
 
     removeAtIndex(index: number) {
-      this.items.splice(index, 1);
+      this.orders.splice(index, 1);
 
       const toastStore = useToastStore();
       toastStore.showSuccess("Removed From Cart");
@@ -163,7 +165,7 @@ export const useCartStore = defineStore("cart", {
     },
 
     removeProduct(product: Product) {
-      const index = this.items.findIndex((el) => el.product.id == product.id);
+      const index = this.orders.findIndex((el) => el.product.id == product.id);
 
       if (index > -1) {
         return this.removeAtIndex(index);
@@ -186,6 +188,7 @@ export const useCartStore = defineStore("cart", {
 
     async persist() {
       await storage.set(KOLA_CART, this.orders, 30, "days");
+      console.log("persist", this.orders);
     },
   },
 });

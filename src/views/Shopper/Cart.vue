@@ -18,7 +18,7 @@
               >Cart</IonLabel
             >
             <ion-badge class="badge" color="warning">{{
-              cartStore.items.length
+              orderBusiness?.order_items?.length
             }}</ion-badge>
           </div>
         </IonSegmentButton>
@@ -26,7 +26,7 @@
           <ion-label>Saved</ion-label>
         </IonSegmentButton>
       </IonSegment>
-      <EmptyCart v-if="orderBusiness?.order_items?.length == 0"></EmptyCart>
+      <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
 
       <IonList v-else>
         <IonItem
@@ -42,7 +42,7 @@
               <p class="text-product">{{ item.product_name }}</p>
               <p>Quantity: {{ item.quantity }}</p>
               <p class="price">
-                {{ item.currency?.symbol || "GHS" }}
+                {{ item.currency_symbol || "GHS" }}
                 {{ item.quantity * (item.product_price || 0) }}
               </p>
               <ProductQuantitySelector
@@ -53,7 +53,7 @@
               <ion-button
                 fill="clear"
                 color=""
-                @click.prevent.stop="removeFromCart(item, index)"
+                @click.prevent.stop="removeFromCart(index)"
               >
                 <ion-icon
                   class="remove-icon"
@@ -100,7 +100,7 @@ import CartHeader from "@/components/header/CartHeader.vue";
 import EmptyCart from "@/components/cards/EmptyCart.vue";
 import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
-import Image from "@/components/Image.vue"
+import Image from "@/components/Image.vue";
 import { Order } from "@/models/types";
 import { useRoute } from "vue-router";
 
@@ -120,15 +120,17 @@ const updateQuantity = (item: CartItem, newQuantity: number) => {
   item.quantity = newQuantity;
 };
 
-const removeFromCart = (item: CartItem, index: number) => {
-  cartStore.removeAtIndex(index);
+const removeFromCart = (index: number) => {
+  cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
 
-const getOrderBusiness = () => {
+const getOrderBusiness = async () => {
+  await cartStore.persist();
   const business = orders.value.find(
     (order: any) => order?.businesses_id == route.params.id
   );
   orderBusiness.value = business;
+  // cartStore.items = orderBusiness.value?.order_items;
 };
 
 onMounted(() => {
