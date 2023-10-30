@@ -6,6 +6,7 @@ import { FavoritedProduct } from './types';
 export default class Product {
 
     public id?: number;
+    public businesses_id?: number;
     public product_name?: string;
     public product_description?: string;
     public product_price?: number = 0;
