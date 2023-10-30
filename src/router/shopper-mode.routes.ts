@@ -96,11 +96,23 @@ export const ShopperModeRoutes = [
       },
       {
         path: 'orders',
-        component: () => import('@/views/Shopper/Orders.vue')
-      },
-      {
-        path: 'orderdetails',
-        component: () => import('@/views/Shopper/OrderDetails.vue')
+        component: () => import('@/views/Shopper/Orders.vue'),
+        children: [
+          {
+            path: '',
+            redirect: '/shopper/orders/history'
+          },
+          {
+            name: 'ShopperOrderHistory',
+            path: 'history',
+            component: () => import('@/views/Shopper/Orders/OrderHistory.vue')
+          },
+          {
+            name: 'ShopperOrderDetails',
+            path: ':id',
+            component: () => import('@/views/Shopper/Orders/OrderDetails.vue')
+          }
+        ]
       },
       {
         path: 'cart/:id',
