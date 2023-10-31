@@ -54,7 +54,7 @@ export default defineComponent({
       if (status === 'Confirmed') {
         return 'checkmark-circle';
       } else if (status === 'Out for Delivery') {
-        return 'bicycle';
+        return 'truck';
       } else if (status === 'Delivered') {
         return 'checkmark-done';
       } else {
