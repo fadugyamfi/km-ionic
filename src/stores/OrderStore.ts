@@ -88,6 +88,43 @@ export const useOrderStore = defineStore('order', {
       }
     },
 
+    async updateOrder(orderId: any, updatedData: any) {
+  try {
+    const response = await axios.put(`/v2/orders/${orderId}`, updatedData); // Replace with your API endpoint for updating orders
+    if (response.status === 200) {
+      // Find the index of the updated order in the store
+      const orderIndex = this.orders.findIndex((order) => order.id === orderId);
+      if (orderIndex !== -1) {
+        // Update the order in the store with the new data
+        this.orders[orderIndex] = new Order(response.data.data);
+        toastStore.showSuccess('Order updated successfully.');
+      }
+    }
+  } catch (error) {
+    handleAxiosRequestError(error);
+    toastStore.showError('Failed to update order.');
+  }
+},
+async editOrder(orderId: any, editedData: any) {
+  try {
+    const response = await axios.put(`/v2/orders/${orderId}`, editedData); // Replace with your API endpoint for editing orders
+    if (response.status === 200) {
+      // Find the index of the edited order in the store
+      const orderIndex = this.orders.findIndex((order) => order.id === orderId);
+      if (orderIndex !== -1) {
+        // Update the order in the store with the edited data
+        this.orders[orderIndex] = new Order(response.data.data);
+        toastStore.showSuccess('Order edited successfully.');
+      }
+    }
+  } catch (error) {
+    handleAxiosRequestError(error);
+    toastStore.showError('Failed to edit order.');
+  }
+},
+
+
+
     async reorderOrder(orderId: number) {
       try {
 
