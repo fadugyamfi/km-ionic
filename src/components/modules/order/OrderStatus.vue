@@ -9,15 +9,15 @@
         <h3>{{ status }}</h3>
         <p>Estimated delivery time: {{ estimatedDeliveryTimes[index] }}</p>
       </ion-label>
-      <!-- Use a connector for all statuses except the last one -->
       <ion-icon slot="end" :icon="index < orderStatuses.length - 1 ? 'arrow-forward' : ''"></ion-icon>
     </ion-item>
   </ion-list>
 </template>
 
-<script lang="ts">
+<script>
 import { IonAvatar, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonSkeletonText } from '@ionic/vue';
-import { defineComponent } from 'vue';
+import { useOrderStore } from '@/stores/OrderStore';
+import { defineComponent, computed } from 'vue';
 
 export default defineComponent({
   components: {
@@ -29,10 +29,28 @@ export default defineComponent({
     IonListHeader,
     IonSkeletonText,
   },
-  data() {
+  setup() {
+    const orderStore = useOrderStore();
+
+    const orderStatuses = computed(() => orderStore.orders.map(order => order.order_status.name));
+
+    const estimatedDeliveryTimes = computed(() => {
+      return orderStatuses.value.map(status => {
+        if (status === 'Confirmed') {
+          return '2 hours';
+        } else if (status === 'Out for Delivery') {
+          return '4 hours';
+        } else if (status === 'Delivered') {
+          return '6 hours';
+        } else {
+          return 'N/A';
+        }
+      });
+    });
+
     return {
-      orderStatuses: ['Confirmed', 'Out for Delivery', 'Delivered'],
-      estimatedDeliveryTimes: ['2 hours', '4 hours', '6 hours'],
+      orderStatuses,
+      estimatedDeliveryTimes,
     };
   },
 });
