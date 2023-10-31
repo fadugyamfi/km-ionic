@@ -1,50 +1,64 @@
 <template>
   <ion-page>
-
-
-
-    <ion-content :fullscreen="true" class="ion-padding-horizontal">
-
+    <!-- Header -->
+    <section class="ion-padding">
       <SaveForLaterHeader />
+    </section>
+
+
+    <!-- Main Content -->
+    <ion-content :fullscreen="true" class="ion-padding-horizontal">
       <IonText>Add Delivery Address</IonText>
+      <section>
+        <IonInput class="kola-input ion-margin-bottom" type="email" name="emailAddress" placeholder="Town /Locality"> </IonInput>
 
-      <IonInput class="kola-input ion-margin-bottom" type="email" name="emailAddress"></IonInput>
+        <IonButton fill="clear" color="primary" style="text-transform: none" class="ion-margin-bottom">
+          <IonIcon :icon="navigateOutline" style="margin-right: 5px;"></IonIcon>
+          {{ $t("signup.vendor.location.useCurrentLocation") }}
+        </IonButton>
 
-      <IonInput class="kola-input ion-margin-bottom" type="email" name="emailAddress"></IonInput>
+        <IonInput class="kola-input ion-margin-bottom" type="email" name="emailAddress" placeholder="Nearest Landmark">
+        </IonInput>
+        <IonInput class="kola-input ion-margin-bottom" type="email" name="emailAddress"
+          placeholder="Preferred contact number"></IonInput>
 
-      <IonInput class="kola-input ion-margin-bottom" type="email" name="emailAddress"></IonInput>
-
-
-      <IonText>Add Delivery Address</IonText>
-      <IonText>Select delivery method</IonText>
-
+        <!-- Delivery Address -->
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Add Delivery Address</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            Select delivery method
+          </ion-card-content>
+        </ion-card>
+      </section>
+      <!-- Express Delivery Card -->
       <ion-card>
-    <ion-card-header>
-      <ion-card-title>Express Delivery</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      Want to speed up delivery and receive your order today? We can do that for you 
-    </ion-card-content>
-  </ion-card>
+        <ion-card-header>
+          <ion-card-title>Express Delivery</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          Want to speed up delivery and receive your order today? We can do that for you
+        </ion-card-content>
+      </ion-card>
     </ion-content>
 
-
+    <!-- Footer -->
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton> Continue</KolaYellowButton>
+      <KolaYellowButton>Continue</KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
 
 
-
 <script lang="ts">
 import {
-  IonAvatar, IonBackButton, IonButton, IonCard, IonCardHeader, IonCardTitle,IonCardContent,IonCardSubtitle,
+  IonAvatar, IonBackButton, IonButton, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonCardSubtitle,
   IonButtons, IonCol, IonContent, IonFooter, IonIcon, IonItem, IonLabel, IonList, IonPage, IonRow,
-  IonSearchbar, IonSkeletonText, IonTitle, IonToolbar, IonText, IonInput, 
+  IonSearchbar, IonSkeletonText, IonTitle, IonToolbar, IonText, IonInput, IonImg
 } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { close, heartOutline, heart, cart, cartOutline, shareOutline } from 'ionicons/icons'
+import { close, heartOutline, heart, cart, cartOutline, shareOutline, navigateOutline } from 'ionicons/icons';
 import Product from '@/models/Product';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { mapStores } from 'pinia';
@@ -54,7 +68,7 @@ import Image from '@/components/Image.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import NoResults from '../../components/layout/NoResults.vue';
 import SaveForLaterHeader from "@/components/header/SaveForLaterHeader.vue";
-import { handleAxiosRequestError } from '../../utilities';
+import { useForm } from '@/composables/form';
 
 export default defineComponent({
 
@@ -86,11 +100,12 @@ export default defineComponent({
     IonRow,
     IonCol,
     NoResults,
-    IonInput, 
+    IonInput,
     IonCardHeader,
     IonCardSubtitle,
+    IonImg,
+    IonCardTitle,
 
-    
 
   },
 
@@ -99,7 +114,6 @@ export default defineComponent({
     return {
       close, heartOutline, cartOutline, shareOutline, cart, heart,
       fetching: false,
-      products: null as Product[] | null,
       defaultBanner: '/images/vendor/banner.png'
     }
   },
@@ -109,39 +123,14 @@ export default defineComponent({
   },
 
   methods: {
-    async fetchSearchedProducts() {
-      this.fetching = true;
-      try {
-        this.products = await this.productStore.fetchSearchedProducts();
-      } catch (error) {
-        handleAxiosRequestError(error);
-      } finally {
-        this.fetching = false;
-      }
-    },
 
-    onSearch(event: any) {
-      this.productStore.searchTerm = event.target?.value;
-      this.products = [];
-      this.fetchSearchedProducts();
-    },
-
-    onLoadError(event: Event) {
-      (event.target as HTMLImageElement).src = this.defaultBanner;
-    },
-
-    viewProduct(product: Product) {
-      this.$router.push(`/shopper/products/${product.id}`)
-    }
   },
 
   mounted() {
-    this.fetchSearchedProducts();
+
   }
 })
 </script>
 
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>
