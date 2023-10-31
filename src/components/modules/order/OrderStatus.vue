@@ -3,7 +3,8 @@
     <ion-list-header>Order Status</ion-list-header>
     <ion-item v-for="(status, index) in orderStatuses" :key="index">
       <ion-avatar slot="start">
-        <ion-skeleton-text :animated="true" style="width: 40px; height: 40px;"></ion-skeleton-text>
+        <!-- Add icons here based on the status -->
+        <ion-icon :icon="getIconForStatus(status)"></ion-icon>
       </ion-avatar>
       <ion-label>
         <h3>{{ status }}</h3>
@@ -48,9 +49,23 @@ export default defineComponent({
       });
     });
 
+    // Add a function to get the corresponding icon for each status
+    const getIconForStatus = (status) => {
+      if (status === 'Confirmed') {
+        return 'checkmark-circle';
+      } else if (status === 'Out for Delivery') {
+        return 'bicycle';
+      } else if (status === 'Delivered') {
+        return 'checkmark-done';
+      } else {
+        return 'alert-circle';
+      }
+    };
+
     return {
       orderStatuses,
       estimatedDeliveryTimes,
+      getIconForStatus,
     };
   },
 });
