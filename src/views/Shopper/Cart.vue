@@ -16,9 +16,7 @@
             <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }"
               >Cart</IonLabel
             >
-            <ion-badge class="badge" color="warning">{{
-              orderBusiness?.order_items?.length
-            }}</ion-badge>
+            <IonBadge>{{ orderBusiness?.order_items?.length }}</IonBadge>
           </div>
         </IonSegmentButton>
         <IonSegmentButton value="saved">
@@ -167,18 +165,11 @@ p {
   display: flex;
   align-items: center;
 }
-
-.badge {
-  background: yellow;
-  border-radius: 50%;
-  padding: 4px;
-  color: black;
-  font-size: 14px;
-  font-family: Poppins;
-  font-weight: 500;
-  line-height: 20px;
+ion-badge {
+  --background: rgba(245, 170, 41, 0.38);
+  --color: #344054;
+  margin-left: 8px;
 }
-
 .custom-thumbnail {
   width: 94px;
   height: 120px;

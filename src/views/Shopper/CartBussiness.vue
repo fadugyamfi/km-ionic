@@ -11,16 +11,14 @@
             <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }"
               >Cart</IonLabel
             >
-            <ion-badge class="badge" color="warning">{{
-              cartStore.orders.length
-            }}</ion-badge>
+            <IonBadge>{{ cartStore.orders.length }}</IonBadge>
           </div>
         </IonSegmentButton>
         <IonSegmentButton value="saved">
           <ion-label>Saved</ion-label>
         </IonSegmentButton>
       </IonSegment>
-  
+
       <EmptyCart v-if="cartStore.orders.length === 0"></EmptyCart>
       <IonList v-else>
         <OrderView
@@ -78,7 +76,7 @@ ion-text.space {
   margin-bottom: 550px;
 }
 
-ion-segment{
+ion-segment {
   margin-bottom: 20px;
 }
 .item-row {
@@ -118,24 +116,17 @@ p {
   display: flex;
   align-items: center;
 }
-
-.badge {
-  background: yellow;
-  border-radius: 50%;
-  padding: 4px;
-  color: black;
-  font-size: 14px;
-  font-family: Poppins;
-  font-weight: 500;
-  line-height: 20px;
+ion-badge {
+  --background: rgba(245, 170, 41, 0.38);
+  --color: #344054;
+  margin-left: 8px;
 }
 
 .item-row[data-v-c11d03b0] {
   align-items: baseline;
 }
 
-
 element.style {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 </style>
