@@ -3,11 +3,10 @@
     <section class="ion-padding">
       <IonHeader class="inner-header">
         <IonToolbar class="ion-align-items-center">
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/shopper/home"></IonBackButton>
-          </IonButtons>
+         
+
           <IonTitle size="small" class="fw-bold">
-            {{ order }}
+            {{ order.id }}
           </IonTitle>
           <IonButtons slot="start">
             <IonBackButton defaultHref="/shopper/home"></IonBackButton>
@@ -19,11 +18,11 @@
       </IonHeader>
     </section>
     <ion-content :fullscreen="true">
-      <Orderslides></Orderslides>
-      <OrderSupplierCard></OrderSupplierCard>
-      <OrdersCard></OrdersCard>
-      <UpdateButon></UpdateButon>
-      <OrderStatus></OrderStatus>
+      <Orderslides/>
+<OrderSuppliercard/>
+      <OrdersCard/>
+      <UpdateButon/>
+    <OrderStatus/>
     </ion-content>
   </IonPage>
 </template>

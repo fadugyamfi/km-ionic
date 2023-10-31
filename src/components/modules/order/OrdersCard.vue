@@ -38,5 +38,5 @@ const orderCost = ref(0);
   border-radius: 8px;
 }
 
-/* Rest of your CSS styles... */
+
 </style>

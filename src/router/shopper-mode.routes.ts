@@ -111,7 +111,8 @@ export const ShopperModeRoutes = [
             name: 'ShopperOrderDetails',
             path: ':id',
             component: () => import('@/views/Shopper/Orders/OrderDetails.vue')
-          }
+          },
+         
         ]
       },
       {

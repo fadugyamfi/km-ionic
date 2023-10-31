@@ -1,22 +1,59 @@
-<template>
-  <IonCard>
-    <IonItem v-for="order in  orders " :key="order.id">
-      <IonAvatar slot="start">
-        <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
-      </IonAvatar>
-      <IonLabel>
-        <h2>{{ order.id }}</h2>
-      </IonLabel>
-      <IonIcon :icon="chevronDownOutline" slot="end"></IonIcon>
-    </IonItem>
-  </IonCard>
-</template>
+<ion-accordion :value="isAccordionOpen ? 'first' : undefined">
+  <ion-item slot="header" color="light">
+    <IonThumbnail slot="start">
+      <Image :src="order?.business?.logo"></Image>
+    </IonThumbnail>
+    <ion-label>First Accordion</ion-label>
+    <ion-icon slot="end" :icon="isAccordionOpen ? 'chevron-up-outline' : 'chevron-down-outline'" @click="toggleAccordion()"></ion-icon>
+    <ion-icon v-if="isAccordionOpen" slot="end" :icon="isAccordionOpen ? 'create-outline' : ''" @click="OrderUpdate()"></ion-icon>
+  </ion-item>
+  <ion-item class="ion-padding" slot="content">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">Order ID: {{ order.id }}</ion-col>
+        <ion-col size="6" class="ion-text-end">Total Price: {{ order.totalPrice }}</ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item>
 
-<script setup lang="ts">
-import { IonAvatar, IonCard, IonIcon, IonItem, IonLabel } from '@ionic/vue';
-import { chevronDownOutline } from 'ionicons/icons';
-import { Ref, ref } from 'vue';
-import { Order } from '../../../models/Order';
+</ion-accordion>
 
-const orders: Ref<Order[]> = ref([])
+
+<script lang=ts>
+import { Order } from "@/models/types";
+import { IonAccordion, IonItem, IonLabel, IonThumbnail, IonIcon } from "@ionic/vue";
+import { defineComponent } from 'vue';
+
+
+
+ 
+
+export default defineComponent({
+  components: {
+    IonAccordion,
+    IonItem,
+    IonLabel,
+    IonThumbnail,
+    IonIcon,
+  },
+  props: {
+    order: {
+      type: Object as () => Order,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      isAccordionOpen: false,
+    };
+  },
+  methods: {
+    toggleAccordion() {
+      this.isAccordionOpen = !this.isAccordionOpen;
+    },
+    update() {
+      this.$router.push({ name: 'OrderUpdate', params: { id: this.order.id } });
+    },
+  },
+});
 </script>
