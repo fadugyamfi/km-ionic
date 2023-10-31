@@ -1,138 +1,147 @@
 <template>
   <ion-page>
 
-      <SaveForLaterHeader/>
-    
+
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
-      <SaveForLaterHeader/>
-      <IonText>Add Delivery address</IonText>
-     
 
+      <SaveForLaterHeader />
+      <IonText>Add Delivery Address</IonText>
+
+      <IonInput class="kola-input ion-margin-bottom" type="email" name="emailAddress"></IonInput>
+
+      <IonInput class="kola-input ion-margin-bottom" type="email" name="emailAddress"></IonInput>
+
+      <IonInput class="kola-input ion-margin-bottom" type="email" name="emailAddress"></IonInput>
+
+
+      <IonText>Add Delivery Address</IonText>
+      <IonText>Select delivery method</IonText>
+
+      <ion-card>
+    <ion-card-header>
+      <ion-card-title>Express Delivery</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      Want to speed up delivery and receive your order today? We can do that for you 
+    </ion-card-content>
+  </ion-card>
     </ion-content>
 
-    <IonFooter class="ion-padding ion-no-border" v-if="cartStore.items.length">
-      <KolaYellowButton>
-        Proceed to Checkout
-      </KolaYellowButton>
+
+    <IonFooter class="ion-padding ion-no-border">
+      <KolaYellowButton> Continue</KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
 
-<script setup lang="ts">
 
-import { ref } from 'vue';
+
+<script lang="ts">
 import {
-  IonSegmentButton, IonLabel, IonThumbnail, IonImg,
-  IonBadge, IonItem, IonList, IonSegment, IonCol, IonPage,
-  IonContent, IonText, IonButton, IonIcon, IonFooter
+  IonAvatar, IonBackButton, IonButton, IonCard, IonCardHeader, IonCardTitle,IonCardContent,IonCardSubtitle,
+  IonButtons, IonCol, IonContent, IonFooter, IonIcon, IonItem, IonLabel, IonList, IonPage, IonRow,
+  IonSearchbar, IonSkeletonText, IonTitle, IonToolbar, IonText, IonInput, 
 } from '@ionic/vue';
-import { CartItem, useCartStore } from '@/stores/CartStore';
-import ShopperHeader from '@/components/layout/ShopperHeader.vue';
-import ProductQuantitySelector from '@/components/modules/products/ProductQuantitySelector.vue';
-import { closeCircleOutline } from 'ionicons/icons';
-import CartHeader from '@/components/header/CartHeader.vue';
-import SaveForLaterHeader from '@/components/header/SaveForLaterHeader.vue';
-import KolaInputField from '@/components/input/KolaInputField.v  header/SaveForLaterHeader.vue';
-import EmptyCart from '@/components/cards/EmptyCart.vue';
-import CartTotalCard from '@/components/cards/CartTotalCard.vue';
+import { defineComponent } from 'vue';
+import { close, heartOutline, heart, cart, cartOutline, shareOutline } from 'ionicons/icons'
+import Product from '@/models/Product';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
+import { mapStores } from 'pinia';
+import { useProductStore } from '@/stores/ProductStore';
+import KolaWhiteButton from '@/components/KolaWhiteButton.vue';
+import Image from '@/components/Image.vue';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import NoResults from '../../components/layout/NoResults.vue';
+import SaveForLaterHeader from "@/components/header/SaveForLaterHeader.vue";
+import { handleAxiosRequestError } from '../../utilities';
 
+export default defineComponent({
 
-const cartStore = useCartStore();
-cartStore.loadFromStorage();
-const viewing = ref('cart');
+  components: {
+    IonPage,
+    SaveForLaterHeader,
+    IonText,
+    IonToolbar,
+    IonButtons,
+    IonBackButton,
+    IonTitle,
+    IonCard,
+    IonButton,
+    IonIcon,
+    IonCardContent,
+    IonContent,
+    IonFooter,
+    KolaYellowButton,
+    KolaWhiteButton,
+    Image,
+    Swiper,
+    SwiperSlide,
+    IonAvatar,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonSearchbar,
+    IonSkeletonText,
+    IonRow,
+    IonCol,
+    NoResults,
+    IonInput, 
+    IonCardHeader,
+    IonCardSubtitle,
 
-const segmentValue = ref('cart');
-const updateQuantity = (item: CartItem, newQuantity: number) => {
-  console.log('hello');
-  item.quantity = newQuantity;
-}
+    
 
-const removeFromCart = (item: CartItem, index: number) => {
-  cartStore.removeAtIndex(index);
-}
+  },
+
+  data() {
+
+    return {
+      close, heartOutline, cartOutline, shareOutline, cart, heart,
+      fetching: false,
+      products: null as Product[] | null,
+      defaultBanner: '/images/vendor/banner.png'
+    }
+  },
+
+  computed: {
+    ...mapStores(useProductStore)
+  },
+
+  methods: {
+    async fetchSearchedProducts() {
+      this.fetching = true;
+      try {
+        this.products = await this.productStore.fetchSearchedProducts();
+      } catch (error) {
+        handleAxiosRequestError(error);
+      } finally {
+        this.fetching = false;
+      }
+    },
+
+    onSearch(event: any) {
+      this.productStore.searchTerm = event.target?.value;
+      this.products = [];
+      this.fetchSearchedProducts();
+    },
+
+    onLoadError(event: Event) {
+      (event.target as HTMLImageElement).src = this.defaultBanner;
+    },
+
+    viewProduct(product: Product) {
+      this.$router.push(`/shopper/products/${product.id}`)
+    }
+  },
+
+  mounted() {
+    this.fetchSearchedProducts();
+  }
+})
 </script>
 
+
 <style scoped lang="scss">
-.item-row {
-  align-items: center;
-}
 
-
-.remove-button {
-  text-align: end;
-}
-
-.item-row ion-col {
-  margin: 0;
-  padding: 0;
-}
-
-.text-product,
-p {
-  margin: 0;
-  padding: 0;
-  color: #667085
-}
-
-.custom-thumbnail {
-  align-self: flex-start;
-  margin-right: 16px;
-}
-
-.segment-button {
-  display: flex;
-  align-items: center;
-}
-
-.badge {
-  background: yellow;
-  border-radius: 50%;
-  padding: 4px;
-  color: black;
-  font-size: 14px;
-  font-family: Poppins;
-  font-weight: 500;
-  line-height: 20px;
-}
-
-.custom-thumbnail {
-  width: 94px;
-  height: 120px;
-}
-
-.custom-label {
-  color: black;
-
-  p {
-    font-size: 14px;
-    font-family: "Poppins";
-    font-weight: 400;
-    text-transform: capitalize;
-    line-height: 22px;
-    word-wrap: break-word;
-  }
-
-  .price {
-    font-size: 14px;
-    font-weight: 400;
-    text-transform: capitalize;
-    line-height: 18px;
-    word-wrap: break-word;
-  }
-}
-
-.item-row[data-v-c11d03b0] {
-  align-items: baseline;
-}
-
-ion-icon.remove-icon {
-  color: #000;
-  vertical-align: text-top;
-}
-
-.text-product {
-  color: black;
-}
 </style>

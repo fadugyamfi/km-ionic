@@ -1,28 +1,32 @@
 <template>
-  <ion-segment value="default">
-    <ion-segment-button value="segment">
+  <IonHeader class="inner-header">
+    <IonToolbar class="ion-align-items-center">
       <IonButtons slot="start">
-        <IonBackButton defaultHref="/shopper/home"></IonBackButton>
+        <IonBackButton defaultHref="/shopper/cart-business"></IonBackButton>
       </IonButtons>
-      <ion-label>Shipping Details</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="default" class="custom-segment-button">
-      <ion-label>Save For Later</ion-label>
-    </ion-segment-button>
-  </ion-segment>
+      <IonTitle size="small" class="fw-bold">
+        Cart
+      </IonTitle>
+      <IonButtons slot="end">
+        <IonButtons>Save For Later</IonButtons>
+      </IonButtons>
+    </IonToolbar>
+  </IonHeader>
 </template>
 
 <script lang="ts">
-import { IonSegment, IonSegmentButton, IonLabel,IonButtons, IonBackButton} from '@ionic/vue';
-import { defineComponent } from 'vue';
+import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle } from '@ionic/vue';
+import NotificationButton from '@/components/notifications/NotificationButton.vue';
 
-export default defineComponent({
-  components: { IonSegment, IonSegmentButton, IonLabel, IonButtons,IonBackButton },
-});
+export default {
+  components: {
+     
+    NotificationButton,
+    IonTitle,
+    IonButtons,
+    IonHeader,
+    IonBackButton,
+    IonToolbar,
+  },
+};
 </script>
-
-<style scoped>
-.custom-segment-button {
-
-}
-</style>
