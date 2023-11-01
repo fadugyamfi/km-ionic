@@ -7,7 +7,7 @@
 
     <!-- Main Content -->
     <ion-content class="ion-padding">
-      <h6 class="fw-semibold">Add Delivery Address</h6>
+      <h6 class="fw-semibold" style="margin-top: 0px;">Add Delivery Address</h6>
       <form>
         <IonInput
           class="kola-input delivery-details-input"
