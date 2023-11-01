@@ -1,17 +1,25 @@
 <template>
   <IonPage>
     <section class="ion-padding">
-      <IonHeader class="inner-header">
-        <IonToolbar>
+      <IonHeader class="ion-no-border" style="box-shadow: none;">
+        <IonToolbar class="inner-header">
           <IonButtons slot="start">
             <IonBackButton defaultHref="/vendor/sales" :icon="arrowBack" mode="md"></IonBackButton>
           </IonButtons>
           <IonTitle size="small"><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle>
           <IonButtons slot="end">
-            <ion-button @click="refresh()" color="dark">
+            <ion-button @click="searchEnabled = !searchEnabled" color="dark">
               <IonIcon :icon="search"></IonIcon>
             </ion-button>
           </IonButtons>
+        </IonToolbar>
+        <IonToolbar v-if="searchEnabled">
+          <IonSearchbar
+              :placeholder="$t('vendor.sales.filterAgents') + '...'"
+              class="search-input"
+              @keyup="onSearch($event)"
+              @ion-change="onSearch($event)"
+          ></IonSearchbar>
         </IonToolbar>
       </IonHeader>
     </section>
@@ -30,7 +38,7 @@
           <IonLabel class="fw-bold">{{ $t("vendor.sales.selectSaleAgent") }}</IonLabel>
         </IonListHeader>
 
-        <IonItem v-for="agent in agents" :key="agent.id" @click="selectAgent(agent)">
+        <IonItem v-for="agent in filteredAgents" :key="agent.id" @click="selectAgent(agent)">
           <IonAvatar slot="start">
             <Image :src="agent.image"></Image>
           </IonAvatar>
@@ -60,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonButton, IonToolbar, IonIcon, IonTitle, IonButtons, IonHeader, IonBackButton, IonList, IonItem, IonListHeader, IonLabel, IonAvatar, IonCheckbox, IonText, IonFooter, IonImg, IonSpinner, RefresherCustomEvent, IonRefresher, IonRefresherContent } from '@ionic/vue';
+import { IonPage, IonContent, IonButton, IonToolbar, IonIcon, IonTitle, IonButtons, IonHeader, IonBackButton, IonList, IonItem, IonListHeader, IonLabel, IonAvatar, IonCheckbox, IonText, IonFooter, IonImg, IonSpinner, RefresherCustomEvent, IonRefresher, IonRefresherContent, IonSearchbar } from '@ionic/vue';
 import { arrowBack, close, refreshOutline, search } from 'ionicons/icons';
 import { defineComponent } from 'vue';
 import User from '@/models/User';
@@ -100,7 +108,8 @@ export default defineComponent({
     Image,
     IonSpinner,
     IonRefresher,
-    IonRefresherContent
+    IonRefresherContent,
+    IonSearchbar
 },
 
   data() {
@@ -108,7 +117,9 @@ export default defineComponent({
       search, close, arrowBack,
       fetching: false,
       refreshing: false,
+      searchEnabled: false,
       agents: [] as User[],
+      filteredAgents: [] as User[]
     }
   },
 
@@ -129,6 +140,7 @@ export default defineComponent({
 
       try {
         this.agents = await this.businessStore.getBusinessSaleAgents(this.userStore.activeBusiness as Business, 200, this.refreshing)
+        this.filteredAgents = this.agents;
       } catch(error) {
         handleAxiosRequestError(error);
       } finally {
@@ -150,7 +162,10 @@ export default defineComponent({
       this.$router.push('/vendor/sales/add-sale/select-sale-type')
     },
 
-    refresh() {}
+    onSearch(event: Event) {
+      const term = (event.target as HTMLIonSearchbarElement)?.value as string;
+      this.filteredAgents = this.agents.filter(agent => agent.name?.toLowerCase().includes(term.toLowerCase()))
+    }
   },
 
   mounted() {

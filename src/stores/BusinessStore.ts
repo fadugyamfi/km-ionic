@@ -175,6 +175,7 @@ export const useBusinessStore = defineStore("business", {
       try {
         const params = {
           limit,
+          sort: 'name:asc',
           ...options
         };
 
@@ -206,7 +207,8 @@ export const useBusinessStore = defineStore("business", {
       try {
         const params = {
           businesses_id: business.id,
-          limit
+          limit,
+          sort: 'name:asc'
         };
 
         const response = await axios.get(`/v2/sale-agents`, { params });

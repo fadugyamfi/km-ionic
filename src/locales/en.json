@@ -177,6 +177,7 @@
             "cannotProceedWithTotalCostOfZero": "Cannot proceed with total cost of zero",
             "searchProducts": "Search Product Inventory",
             "searchCustomers": "Find Customer By Name",
+            "filterAgents": "Filter Agents List",
             "addNewSale": "Add New Sale",
             "done": "Done",
             "recordSale": "Record Sale",

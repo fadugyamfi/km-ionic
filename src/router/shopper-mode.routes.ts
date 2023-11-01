@@ -91,10 +91,6 @@ export const ShopperModeRoutes = [
         component: () => import('@/views/Shopper/ProductSearchResults.vue')
       },
       {
-        path: 'no-business-results',
-        component: () => import('@/views/Shopper/NoBusinessResults.vue')
-      },
-      {
         path: 'orders',
         component: () => import('@/views/Shopper/Orders.vue'),
         children: [
@@ -112,7 +108,7 @@ export const ShopperModeRoutes = [
             path: ':id',
             component: () => import('@/views/Shopper/Orders/OrderDetails.vue')
           },
-         
+
         ]
       },
       {
