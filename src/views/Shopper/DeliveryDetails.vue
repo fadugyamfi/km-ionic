@@ -2,135 +2,142 @@
   <ion-page>
     <!-- Header -->
     <section class="ion-padding">
-      <SaveForLaterHeader />
+      <DeliveryDetailsHeader />
     </section>
 
-
     <!-- Main Content -->
-    <ion-content :fullscreen="true" class="ion-padding-horizontal">
-      <IonText>Add Delivery Address</IonText>
-      <section>
-        <IonInput class="kola-input ion-margin-bottom" type="email" name="emailAddress" placeholder="Town /Locality"> </IonInput>
+    <ion-content class="ion-padding">
+      <h6 class="fw-semibold">Add Delivery Address</h6>
+      <form>
+        <IonInput
+          class="kola-input delivery-details-input"
+          :class="{ 'ion-invalid ion-touched': form.errors.location }"
+          label="Town/Locality"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.location"
+          name="location"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
 
-        <IonButton fill="clear" color="primary" style="text-transform: none" class="ion-margin-bottom">
-          <IonIcon :icon="navigateOutline" style="margin-right: 5px;"></IonIcon>
+        <IonButton
+          fill="clear"
+          size="small"
+          style="text-transform: none"
+          class="ion-margin-bottom use-location ion-text-start"
+          @click="getLocation()"
+        >
+          <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
           {{ $t("signup.vendor.location.useCurrentLocation") }}
         </IonButton>
 
-        <IonInput class="kola-input ion-margin-bottom" type="email" name="emailAddress" placeholder="Nearest Landmark">
-        </IonInput>
-        <IonInput class="kola-input ion-margin-bottom" type="email" name="emailAddress"
-          placeholder="Preferred contact number"></IonInput>
-
-        <!-- Delivery Address -->
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Add Delivery Address</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            Select delivery method
-          </ion-card-content>
-        </ion-card>
-      </section>
-      <!-- Express Delivery Card -->
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>Express Delivery</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          Want to speed up delivery and receive your order today? We can do that for you
-        </ion-card-content>
-      </ion-card>
+        <IonInput
+          class="kola-input delivery-details-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.landmark }"
+          label="Nearest Landmark"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.landmark"
+          name="landmark"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+        <h6 class="fw-semibold">Delivery Date</h6>
+        <IonInput
+          class="kola-input delivery-details-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.delivery_date }"
+          label="DD/MM/YY"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.delivery_date"
+          name="delivery-date"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+        <section>
+          <section class="d-flex flex-column ion-margin-bottom">
+            <IonText class="fw-semibold">Delivery</IonText>
+            <IonText color="medium" class="font-medium"
+              >Select delivery method</IonText
+            >
+          </section>
+          <DeliveryMethod />
+        </section>
+      </form>
     </ion-content>
-
-    <!-- Footer -->
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton>Continue</KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
 
-
-<script lang="ts">
+<script setup lang="ts">
 import {
-  IonAvatar, IonBackButton, IonButton, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonCardSubtitle,
-  IonButtons, IonCol, IonContent, IonFooter, IonIcon, IonItem, IonLabel, IonList, IonPage, IonRow,
-  IonSearchbar, IonSkeletonText, IonTitle, IonToolbar, IonText, IonInput, IonImg
-} from '@ionic/vue';
-import { defineComponent } from 'vue';
-import { close, heartOutline, heart, cart, cartOutline, shareOutline, navigateOutline } from 'ionicons/icons';
-import Product from '@/models/Product';
-import KolaYellowButton from '@/components/KolaYellowButton.vue';
-import { mapStores } from 'pinia';
-import { useProductStore } from '@/stores/ProductStore';
-import KolaWhiteButton from '@/components/KolaWhiteButton.vue';
-import Image from '@/components/Image.vue';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import NoResults from '../../components/layout/NoResults.vue';
-import SaveForLaterHeader from "@/components/header/SaveForLaterHeader.vue";
-import { useForm } from '@/composables/form';
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonFooter,
+  IonIcon,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonText,
+  IonInput,
+} from "@ionic/vue";
+import { defineComponent } from "vue";
+import {
+  close,
+  heartOutline,
+  heart,
+  cart,
+  cartOutline,
+  shareOutline,
+  navigateOutline,
+} from "ionicons/icons";
+import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import { useToastStore } from "@/stores/ToastStore";
+import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
+import { useGeolocation } from "@/composables/useGeolocation";
+import DeliveryDetailsHeader from "@/components/header/DeliveryDetailsHeader.vue";
+import DeliveryMethod from "@/components/modules/deliveryDetails/DeliveryMethod.vue";
+import { useForm } from "@/composables/form";
 
-export default defineComponent({
+const toastStore = useToastStore();
+const form = useForm({
+  // name: '',
+  // business_location: '',
+  // business_name: '',
+  // pin: '',
+  // pin_confirmation: ''
+});
 
-  components: {
-    IonPage,
-    SaveForLaterHeader,
-    IonText,
-    IonToolbar,
-    IonButtons,
-    IonBackButton,
-    IonTitle,
-    IonCard,
-    IonButton,
-    IonIcon,
-    IonCardContent,
-    IonContent,
-    IonFooter,
-    KolaYellowButton,
-    KolaWhiteButton,
-    Image,
-    Swiper,
-    SwiperSlide,
-    IonAvatar,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonSearchbar,
-    IonSkeletonText,
-    IonRow,
-    IonCol,
-    NoResults,
-    IonInput,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonImg,
-    IonCardTitle,
+const getLocation = async () => {
+  const toastStore = useToastStore();
+  const { getCurrentLocation } = useGeolocation();
 
+  try {
+    const coordinates = await getCurrentLocation();
 
-  },
-
-  data() {
-
-    return {
-      close, heartOutline, cartOutline, shareOutline, cart, heart,
-      fetching: false,
-      defaultBanner: '/images/vendor/banner.png'
+    if (coordinates) {
+      form.fields.business_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
     }
-  },
-
-  computed: {
-    ...mapStores(useProductStore)
-  },
-
-  methods: {
-
-  },
-
-  mounted() {
-
+  } catch (error) {
+    toastStore.showError("Cannot retrieve location info");
+    console.log(error);
   }
-})
+};
 </script>
 
-
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.delivery-details-input {
+  color: #74787c;
+  --padding-end: 10px;
+  --padding-start: 10px;
+}
+.use-location {
+  --color: #666eed;
+  --padding-start: 0px;
+}
+</style>
