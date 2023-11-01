@@ -19,6 +19,8 @@
               class="search-input"
               @keyup="onSearch($event)"
               @ion-change="onSearch($event)"
+              @ion-clear="onSearch($event)"
+              @ion-cancel="onSearch($event)"
           ></IonSearchbar>
         </IonToolbar>
       </IonHeader>
