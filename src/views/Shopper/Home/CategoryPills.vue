@@ -19,8 +19,7 @@
 </template>
 
 <script lang="ts">
-import 'swiper/scss';
-import '@ionic/vue/css/ionic-swiper.css';
+
 
 import { IonCol, IonGrid, IonRow, IonSearchbar, IonSkeletonText } from '@ionic/vue';
 import { defineComponent } from 'vue';

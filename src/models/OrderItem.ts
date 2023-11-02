@@ -1,4 +1,5 @@
 
+import Currency from './Currency';
 import Product from './Product';
 export class OrderItem {
 
@@ -16,6 +17,7 @@ export class OrderItem {
     public quantity?: number = 1;
 
     public _product?: Product | null;
+    public _currency?: Currency;
 
     constructor(data: object) {
         Object.assign(this, data);
@@ -31,5 +33,13 @@ export class OrderItem {
 
     set product(value: object) {
         this._product = value ? new Product(value): null;
+    }
+
+    get currency(): Currency | undefined {
+        return this._currency;
+    }
+
+    set currency(value: object) {
+        this._currency = new Currency(value || { symbol: 'GHS' });
     }
 }

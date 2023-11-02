@@ -128,3 +128,10 @@ export default defineComponent({
     }
 });
 </script>
+
+<style scoped>
+ion-img {
+    object-fit: cover;
+    object-position: center;
+}
+</style>

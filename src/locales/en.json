@@ -142,6 +142,10 @@
             "productDetails": "Product Details",
             "buyNow": "Buy Now",
             "addToCart": "Add To Cart"
+        },
+        "orders": {
+            "orderDetails": "Order Details",
+            "orderStatus": "Order Status"
         }
     },
     "vendor": {

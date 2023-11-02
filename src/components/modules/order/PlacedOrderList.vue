@@ -111,7 +111,7 @@ export default defineComponent({
 
     viewDetails(order: Order) {
       this.$emit('view-details', order);
-      // this.$router.push(`/vendor/sales/${sale.id}`);
+      this.$router.push(`/shopper/orders/${order.id}`);
     }
   }
 })
