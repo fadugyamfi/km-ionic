@@ -24,25 +24,21 @@
         <IonText class="fw-semibold">Pay Now</IonText>
         <IonText color="medium" class="font-medium">Select a pay later option</IonText>
       </section>
-
-      <ion-card class="main-container">
+      <section class="d-flex flex-column ion-margin-bottom">
+      <ion-card>
         <ion-card-header class="pay-text">
           Pay over 2 weeks
         </ion-card-header>
-        <ion-card-content class="image-wrapper">
-        
-        </ion-card-content>
       </ion-card>
+      </section>
 
-
-      <ion-card class="main-container">
+      <section class="d-flex flex-column ion-margin-bottom">
+      <ion-card>
         <ion-card-header class="pay-text">
           Pay over 4 weeks  
         </ion-card-header>
-        <ion-card-content class="image-wrapper">
-        
-        </ion-card-content>
       </ion-card>
+      </section>
       </main>
      
     </ion-content>
@@ -142,7 +138,7 @@ export default defineComponent({
   display: flex;
 padding: 16px;
 flex-direction: column;
-align-items: flex-start;
+
 gap: 8px;
 border-radius: 8px;
 background: #FFF;

@@ -1,47 +1,47 @@
 <template>
-  <ion-card class="custom-card">
-    <ion-row class="row">
-      <ion-col size="auto">
-        <ion-text class="item-text">Item total</ion-text>
-      </ion-col>
-      <ion-col class="ion-text-end">
-        <ion-text class="item-price">{{ totalCost }}</ion-text>
-      </ion-col>
-    </ion-row>
-    <ion-row class="divider-row">
-      <ion-col class="divider-col"></ion-col>
-    </ion-row>
-    <ion-row class="row">
-      <ion-col size="auto">
-        <ion-text class="item-text">Delivery</ion-text>
-      </ion-col>
-      <ion-col class="ion-text-end">
-        <ion-text class="item-price">TBD</ion-text>
-      </ion-col>
-    </ion-row>
-    <ion-row class="row">
-      <ion-col size="auto">
-        <ion-text class="item-text">Delivery</ion-text>
-      </ion-col>
-      <ion-col class="ion-text-end">
-        <ion-text class="item-price">TBD</ion-text>
-      </ion-col>
-    </ion-row>
-    <ion-row class="row">
-      <ion-col size="auto">
-        <ion-text class="item-text">Delivery</ion-text>
-      </ion-col>
-      <ion-col class="ion-text-end">
-        <ion-text class="item-price">TBD</ion-text>
-      </ion-col>
-    </ion-row>
-  </ion-card>
+  <IonCard>
+    <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
+      <IonText class="fw-semibold">Items total</IonText>
+      <section class="d-flex ion-align-items-center">
+        <IonText class="fw-semibold ion-margin-end">GHS 10.00</IonText>
+      </section>
+    </section>
+    <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
+      <IonText class="fw-semibold">Delivery</IonText>
+      <section class="d-flex ion-align-items-center">
+        <IonText class="fw-semibold ion-margin-end">GHS 10.00</IonText>
+      </section>
+    </section>
+    <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
+      <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+        <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>Achimota Golf Club, 180a
+      </IonText>
+      <section class="d-flex ion-align-items-center">
+        <IonText class="ion-margin-end date-color">Change address</IonText>
+      </section>
+    </section>
+    <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
+      <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+        <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon>Delivery Date - 2.08.2023
+      </IonText>
+      <section class="d-flex ion-align-items-center">
+        <IonText class="ion-margin-end date-color">Change Date</IonText>
+      </section>
+    </section>
+    <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
+      <IonText class="fw-semibold">Total Cost</IonText>
+      <section class="d-flex ion-align-items-center">
+        <IonText class="fw-semibold ion-margin-end">GHS 10.00</IonText>
+      </section>
+    </section>
+  </IonCard>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { IonCol, IonText, IonRow, IonCard } from '@ionic/vue';
+import { IonText, IonCard, IonIcon, } from '@ionic/vue';
 import { useCartStore } from '@/stores/CartStore';
+import { locationOutline, timeOutline } from "ionicons/icons";
 
 const cartStore = useCartStore();
 cartStore.loadFromStorage();
@@ -53,41 +53,18 @@ const totalCost = computed(() => {
 </script>
 
 <style scoped lang="scss">
-.custom-card {
-  height: 85px;
-  padding: 12px 16px;
-  background: var(--card-background);
-  box-shadow: var(--card-box-shadow);
-  border-radius: 8px;
-  margin-left: 0px;
-  margin-right: 0px;
+.date-color {
+  color: #666EED;
 }
 
-.row {
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-}
-
-ion-col.ion-text-end {
-  justify-content: flex-end;
-}
-
-.item-text, .item-price {
-  color: #000;
+.fw-semibold {
+  flex: 1 0 0;
+  color: var(--text-primary, #000);
+  font-family: Poppins;
   font-size: 14px;
-  font-family: "Poppins";
+  font-style: normal;
   font-weight: 400;
-  text-transform: capitalize;
   line-height: 22px;
-  word-wrap: break-word;
+  text-transform: capitalize;
 }
-
-.item-price {
-  line-height: 18px;
-  row-gap: 49px;
-  justify-content: flex-end;
-  align-items: flex-end;
-}
-
 </style>

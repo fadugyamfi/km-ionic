@@ -64,8 +64,8 @@
       </IonList>
     </ion-content>
 
-    <IonFooter class="ion-padding ion-no-border" v-if="cartStore.items.length">
-      <KolaYellowButton> Proceed to Checkout </KolaYellowButton>
+    <IonFooter class="ion-padding ion-no-border">
+      <KolaYellowButton @click="proceedToCheckout">Proceed to Checkout</KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -99,7 +99,7 @@ import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import Image from "@/components/Image.vue";
 import { Order } from "@/models/types";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 
@@ -109,7 +109,8 @@ const orderBusiness = ref<any>(null);
 const orders = computed(() => cartStore.orders);
 
 cartStore.loadFromStorage();
-const viewing = ref("cart");
+
+
 
 const segmentValue = ref("cart");
 const updateQuantity = (item: CartItem, newQuantity: number) => {
@@ -121,6 +122,7 @@ const removeFromCart = (index: number) => {
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
 
+// 77
 const getOrderBusiness = async () => {
   await cartStore.persist();
   const business = orders.value.find(

@@ -1,35 +1,16 @@
 <template>
   <ion-page>
     <section class="ion-padding">
-      <SaveForLaterHeader />
+      <OrderSummaryHeader />
     </section>
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
-      <IonSegment
-        value="personal"
-        mode="ios"
-        v-model="viewing"
-        class="segment-margin"
-      >
-        <IonSegmentButton value="cart">
-          <div class="segment-button">
-            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }"
-              >Cart</IonLabel
-            >
-            <IonBadge>{{ orderBusiness?.order_items?.length }}</IonBadge>
-          </div>
-        </IonSegmentButton>
-        <IonSegmentButton value="saved">
-          <ion-label>Saved</ion-label>
-        </IonSegmentButton>
-      </IonSegment>
-      <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
-
-      <IonList v-else>
-        <IonItem
-          v-for="(item, index) in orderBusiness?.order_items"
-          :key="item.product?.id"
-        >
+      <section class="ion-padding">
+        <IonText>Racy Ventures </IonText>
+        <p>GHS 3000 minimum reached</p>
+      </section>
+      <IonList>
+        <IonItem v-for="(item, index) in orderBusiness?.order_items" :key="item.product?.id">
           <ion-thumbnail slot="start" class="custom-thumbnail">
             <Image :src="item.product_image"></Image>
           </ion-thumbnail>
@@ -42,20 +23,11 @@
                 {{ item.currency_symbol || "GHS" }}
                 {{ item.quantity * (item.product_price || 0) }}
               </p>
-              <ProductQuantitySelector
-                @change="updateQuantity(item, $event)"
-              ></ProductQuantitySelector>
+              <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
             </ion-col>
             <ion-col size="1" class="remove-button">
-              <ion-button
-                fill="clear"
-                color=""
-                @click.prevent.stop="removeFromCart(index)"
-              >
-                <ion-icon
-                  class="remove-icon"
-                  :icon="closeCircleOutline"
-                ></ion-icon>
+              <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
+                <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
               </ion-button>
             </ion-col>
           </ion-row>
@@ -64,8 +36,8 @@
       </IonList>
     </ion-content>
 
-    <IonFooter class="ion-padding ion-no-border" v-if="cartStore.items.length">
-      <KolaYellowButton> Proceed to Checkout </KolaYellowButton>
+    <IonFooter class="ion-padding ion-no-border">
+      <KolaYellowButton> Continue </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -73,14 +45,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import {
-  IonSegmentButton,
-  IonLabel,
   IonThumbnail,
-  IonImg,
-  IonBadge,
   IonItem,
   IonList,
-  IonSegment,
   IonCol,
   IonPage,
   IonContent,
@@ -88,21 +55,18 @@ import {
   IonButton,
   IonIcon,
   IonFooter,
+  IonText
 
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
-import ShopperHeader from "@/components/layout/ShopperHeader.vue";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
 import { closeCircleOutline } from "ionicons/icons";
-import CartHeader from "@/components/header/CartHeader.vue";
-import EmptyCart from "@/components/cards/EmptyCart.vue";
-import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import ItemReview from "@/components/cards/ItemReview.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
 import Image from "@/components/Image.vue";
-import { Order } from "@/models/types";
 import { useRoute } from "vue-router";
-import SaveForLaterHeader from "@/components/header/SaveForLaterHeader";
+
 
 const route = useRoute();
 
@@ -152,6 +116,15 @@ onMounted(() => {
   padding: 0;
 }
 
+p {
+  color: #667085;
+  font-family: Poppins;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 140%;
+}
+
 .text-product,
 p {
   margin: 0;
@@ -168,11 +141,13 @@ p {
   display: flex;
   align-items: center;
 }
+
 ion-badge {
   --background: rgba(245, 170, 41, 0.38);
   --color: #344054;
   margin-left: 8px;
 }
+
 .custom-thumbnail {
   width: 94px;
   height: 120px;
