@@ -16,7 +16,7 @@
                 <IonLabel>Company Profile</IonLabel>
             </IonItem>
 
-            <IonItem :detail="true" class="profile-item">
+            <IonItem :detail="true" class="profile-item" router-link="/shopper/profile/company/customers">
                 <IonAvatar slot="start">
                     <img src="/images/ic_password.svg" class="action-img" />
                 </IonAvatar>
