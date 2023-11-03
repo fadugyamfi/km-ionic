@@ -5,59 +5,92 @@
       <PaymentOptionsHeader />
     </section>
 
-
     <!-- Main Content -->
-    <ion-content :fullscreen="true"  class="ion-padding-horizontal">
-      <main>
+    <ion-content :fullscreen="true" class="ion-padding-horizontal">
 
       <section class="d-flex flex-column ion-margin-bottom">
         <IonText class="fw-semibold">Pay Now</IonText>
         <IonText color="medium" class="font-medium">Select a payment method</IonText>
       </section>
-   
-   
-      <section>
-          <PayOnDelivery />
-        </section>
+
+      <section class="d-flex flex-column ion-margin-bottom">
+        <PayOnDelivery />
+      </section>
 
       <section class="d-flex flex-column ion-margin-bottom">
         <IonText class="fw-semibold">Pay Now</IonText>
         <IonText color="medium" class="font-medium">Select a pay later option</IonText>
       </section>
-      <section class="d-flex flex-column ion-margin-bottom">
-      <ion-card>
-        <ion-card-header class="pay-text">
-          Pay over 2 weeks
-        </ion-card-header>
-      </ion-card>
-      </section>
 
       <section class="d-flex flex-column ion-margin-bottom">
-      <ion-card>
-        <ion-card-header class="pay-text">
-          Pay over 4 weeks  
-        </ion-card-header>
-      </ion-card>
+      
+    <ion-card>
+      <ion-card-content>
+        <section class="d-flex ion-justify-content-between ion-align-items-center">
+          <IonText class="fw-semibold">Pay over 2 weeks</IonText>
+          <section class="d-flex ion-align-items-center">
+            <img
+              loading="lazy"
+              src="/img/icons/chevron-down.svg"
+              class="image"
+              @click="toggleDropdown"
+            />
+          </section>
+        </section>
+      </ion-card-content> 
+    </ion-card>
+    <ion-card>
+    <section v-if="showDropdown" class="wrapper ion-padding ion-margin-bottom">
+    <ion-radio-group>
+      <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
+        <IonText class="fw-semibold">Pay 50% instalment each week</IonText>
+        <section class="d-flex ion-align-items-center">
+          <IonText class="fw-semibold ion-margin-end"></IonText>
+          <ion-radio></ion-radio>
+        </section>
       </section>
-      </main>
-     
+
+    </ion-radio-group>
+  </section>
+  <section v-if="showDropdown" class="wrapper ion-padding ion-margin-bottom">
+    <ion-radio-group>
+      <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
+        <IonText class="fw-semibold">Pay 100% on due date</IonText>
+        <section class="d-flex ion-align-items-center">
+          <IonText class="fw-semibold ion-margin-end"></IonText>
+          <ion-radio></ion-radio>
+        </section>
+      </section>  
+    </ion-radio-group>
+  </section>
+</ion-card>
+        <ion-card>
+          <ion-card-content>
+            <section class="d-flex ion-justify-content-between ion-align-items-center">
+              <IonText class="fw-semibold">Pay over 4 weeks</IonText>
+              <section class="d-flex ion-align-items-center">
+                <img loading="lazy" src="/img/icons/chevron-down.svg" class="image" />
+              </section>
+            </section>
+          </ion-card-content>
+        </ion-card>
+      </section>
     </ion-content>
-    <!-- Footer -->
+
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton>Continue</KolaYellowButton>
+      <KolaYellowButton @click="viewItemReview">Continue</KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
-
-
 <script lang="ts">
 import {
-  IonAvatar, IonBackButton, IonButton, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonCardSubtitle,
-  IonButtons, IonCol, IonContent, IonFooter, IonIcon, IonItem, IonLabel, IonList, IonPage, IonRow,
-  IonSearchbar, IonSkeletonText, IonTitle, IonToolbar, IonText, IonInput, IonImg
+  IonPage, IonText, IonToolbar, IonButtons, IonBackButton, IonTitle, IonCard, IonButton,
+  IonIcon, IonCardContent, IonContent, IonFooter, IonAvatar, IonList, IonItem, IonLabel,
+  IonSearchbar, IonSkeletonText, IonRow, IonCol, IonInput, IonImg, IonCardHeader, IonCardSubtitle,
+  IonCardTitle
 } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { close, heartOutline, heart, cart, cartOutline, shareOutline } from 'ionicons/icons';
+import { close, heartOutline, heart, cart, cartOutline, shareOutline ,locationOutline, timeOutline } from 'ionicons/icons';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { mapStores } from 'pinia';
 import { useProductStore } from '@/stores/ProductStore';
@@ -69,106 +102,39 @@ import PaymentOptionsHeader from "@/components/header/PaymentOptionsHeader.vue";
 import PayOnDelivery from "@/components/modules/deliveryDetails/PayOnDelivery.vue";
 
 export default defineComponent({
-
   components: {
-    IonPage,
-    IonText,
-    IonToolbar,
-    IonButtons,
-    IonBackButton,
-    IonTitle,
-    IonCard,
-    IonButton,
-    IonIcon,
-    IonCardContent,
-    IonContent,
-    IonFooter,
-    KolaYellowButton,
-    KolaWhiteButton,
-    Image,
-    Swiper,
-    SwiperSlide,
-    IonAvatar,
-    IonList,
-    IonItem,
-    IonLabel,
-    IonSearchbar,
-    IonSkeletonText,
-    IonRow,
-    IonCol,
-    NoResults,
-    IonInput,
-    IonCardHeader,
-    IonCardSubtitle,
-    IonImg,
-    IonCardTitle,
-    PaymentOptionsHeader,
-    PayOnDelivery
-   
-
-
+    IonPage, IonText, IonToolbar, IonButtons, IonBackButton, IonTitle, IonCard, IonButton,
+    IonIcon, IonCardContent, IonContent, IonFooter, KolaYellowButton, KolaWhiteButton, Image,
+    Swiper, SwiperSlide, IonAvatar, IonList, IonItem, IonLabel, IonSearchbar, IonSkeletonText,
+    IonRow, IonCol, NoResults, IonInput, IonCardHeader, IonCardSubtitle, IonImg, IonCardTitle,
+    PaymentOptionsHeader, PayOnDelivery
   },
-
   data() {
-
     return {
       close, heartOutline, cartOutline, shareOutline, cart, heart,
       fetching: false,
-      defaultBanner: '/images/vendor/banner.png'
-    }
+      defaultBanner: '/images/vendor/banner.png',
+      showDropdown: false, // Define showDropdown here
+    };
   },
-
   computed: {
     ...mapStores(useProductStore)
   },
-
   methods: {
-
+    viewItemReview() {
+      this.$router.push('/shopper/item-review');
+    },
+    toggleDropdown() {
+      this.showDropdown = !this.showDropdown;
+    },
   },
-
-  mounted() {
-
-  }
-})
+});
 </script>
 
 
 <style scoped lang="scss">
-.main-container {
-  display: flex;
-padding: 16px;
-flex-direction: column;
-
-gap: 8px;
-border-radius: 8px;
-background: #FFF;
-
-}
-
-main{
-  width: 390px;
-height: 844px;
-}
-.pay-text {
-  color: var(--text-primary, #000);
-font-family: Poppins;
-font-size: 14px;
-font-style: normal;
-font-weight: 400;
-line-height: 22px; 
-  text-align: left;
-  padding: 16px 0;
-}
-
-.image-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
-
-.img {
-  max-width: 100%;
-  object-fit: contain;
+ion-card {
+  margin: 2px;
+  color: #000000;
 }
 </style>

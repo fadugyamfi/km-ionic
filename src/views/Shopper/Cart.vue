@@ -5,17 +5,10 @@
     </section>
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
-      <IonSegment
-        value="personal"
-        mode="ios"
-        v-model="viewing"
-        class="segment-margin"
-      >
+      <IonSegment value="personal" mode="ios" v-model="viewing" class="segment-margin">
         <IonSegmentButton value="cart">
           <div class="segment-button">
-            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }"
-              >Cart</IonLabel
-            >
+            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
             <IonBadge>{{ orderBusiness?.order_items?.length }}</IonBadge>
           </div>
         </IonSegmentButton>
@@ -26,10 +19,7 @@
       <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
 
       <IonList v-else>
-        <IonItem
-          v-for="(item, index) in orderBusiness?.order_items"
-          :key="item.product?.id"
-        >
+        <IonItem v-for="(item, index) in orderBusiness?.order_items" :key="item.product?.id">
           <ion-thumbnail slot="start" class="custom-thumbnail">
             <Image :src="item.product_image"></Image>
           </ion-thumbnail>
@@ -42,20 +32,11 @@
                 {{ item.currency_symbol || "GHS" }}
                 {{ item.quantity * (item.product_price || 0) }}
               </p>
-              <ProductQuantitySelector
-                @change="updateQuantity(item, $event)"
-              ></ProductQuantitySelector>
+              <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
             </ion-col>
             <ion-col size="1" class="remove-button">
-              <ion-button
-                fill="clear"
-                color=""
-                @click.prevent.stop="removeFromCart(index)"
-              >
-                <ion-icon
-                  class="remove-icon"
-                  :icon="closeCircleOutline"
-                ></ion-icon>
+              <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
+                <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
               </ion-button>
             </ion-col>
           </ion-row>
@@ -63,9 +44,8 @@
         <CartTotalCard />
       </IonList>
     </ion-content>
-
-    <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="proceedToCheckout">Proceed to Checkout</KolaYellowButton>
+    <IonFooter class="ion-padding ion-no-border" v-if="orderBusiness?.order_items?.length > 0">
+      <KolaYellowButton @click="viewDeliveryDetails"> Proceed to Checkout </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -90,7 +70,6 @@ import {
   IonFooter,
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
-import ShopperHeader from "@/components/layout/ShopperHeader.vue";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
 import { closeCircleOutline } from "ionicons/icons";
 import CartHeader from "@/components/header/CartHeader.vue";
@@ -99,8 +78,10 @@ import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import Image from "@/components/Image.vue";
 import { Order } from "@/models/types";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from 'vue-router';
+import { useRoute } from "vue-router";
 
+const router = useRouter();
 const route = useRoute();
 
 const cartStore = useCartStore();
@@ -109,8 +90,7 @@ const orderBusiness = ref<any>(null);
 const orders = computed(() => cartStore.orders);
 
 cartStore.loadFromStorage();
-
-
+const viewing = ref("cart");
 
 const segmentValue = ref("cart");
 const updateQuantity = (item: CartItem, newQuantity: number) => {
@@ -122,7 +102,9 @@ const removeFromCart = (index: number) => {
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
 
-// 77
+const viewDeliveryDetails = () => {
+  router.push('/shopper/delivery-details'); 
+};
 const getOrderBusiness = async () => {
   await cartStore.persist();
   const business = orders.value.find(
@@ -167,11 +149,13 @@ p {
   display: flex;
   align-items: center;
 }
+
 ion-badge {
   --background: rgba(245, 170, 41, 0.38);
   --color: #344054;
   margin-left: 8px;
 }
+
 .custom-thumbnail {
   width: 94px;
   height: 120px;

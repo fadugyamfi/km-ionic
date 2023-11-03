@@ -1,52 +1,48 @@
 <template>
   <section class="wrapper ion-padding ion-margin-bottom">
-    <ion-radio-group>
-      <section
-        class="d-flex ion-justify-content-between ion-align-items-center"
-        style="margin-bottom: 8px"
-      >
+    <ion-radio-group v-model="selectedDelivery">
+      <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
         <IonText class="fw-semibold">Standard Delivery</IonText>
         <section class="d-flex ion-align-items-center">
           <IonText class="fw-semibold ion-margin-end">GHS 10.00</IonText>
-          <ion-radio></ion-radio>
+          <ion-radio value="standard"></ion-radio>
         </section>
       </section>
       <section class="d-flex flex-column">
-        <IonText color="medium" class="font-medium" style="margin-bottom: 8px"
-          ><IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon
-          >Achimota Golf Club, 180a
+        <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+          <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>Achimota Golf Club, 180a
         </IonText>
-        <IonText color="medium" class="font-medium" style="margin-bottom: 8px"
-          ><IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon
-          >Delivery Date - 2.08.2023
+        <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+          <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon>Delivery Date - 2.08.2023
         </IonText>
       </section>
     </ion-radio-group>
   </section>
   <section class="wrapper ion-padding">
-    <ion-radio-group>
-      <section
-        class="d-flex ion-justify-content-between ion-align-items-center"
-        style="margin-bottom: 8px"
-      >
+    <ion-radio-group v-model="selectedDelivery">
+      <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
         <IonText class="fw-semibold">Express Delivery</IonText>
         <section class="d-flex ion-align-items-center">
           <IonText class="fw-semibold ion-margin-end">GHS 10.00</IonText>
-          <ion-radio></ion-radio>
+          <ion-radio value="express"></ion-radio>
         </section>
       </section>
       <section class="d-flex flex-column">
-        <IonText color="medium" class="font-medium" style="margin-bottom: 8px"
-          >Want to speed up delivery and receive your order today? We can do
+        <IonText color="medium" class="font-medium" style="margin-bottom: 8px">Want to speed up delivery and receive your
+          order today? We can do
           that for you
         </IonText>
       </section>
     </ion-radio-group>
   </section>
 </template>
+
 <script setup>
 import { locationOutline, timeOutline } from "ionicons/icons";
 import { IonIcon, IonText, IonRadio, IonRadioGroup } from "@ionic/vue";
+import { ref } from "vue";
+const selectedDelivery = ref("standard"); // Initialize with a default value
+
 </script>
 
 <style scoped>
@@ -55,6 +51,7 @@ import { IonIcon, IonText, IonRadio, IonRadioGroup } from "@ionic/vue";
   background: #fff;
   box-shadow: 0px 4px 24px 0px rgba(105, 111, 130, 0.1);
 }
+
 ion-radio::part(container) {
   width: 18px;
   height: 18px;
