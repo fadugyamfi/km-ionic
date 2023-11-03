@@ -103,8 +103,7 @@
           name="payment-method"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption value="f"> helo</IonSelectOption>
-          <IonSelectOption value="y">sd </IonSelectOption>
+          <IonSelectOption></IonSelectOption>
         </IonSelect>
       </form>
     </ion-content>
