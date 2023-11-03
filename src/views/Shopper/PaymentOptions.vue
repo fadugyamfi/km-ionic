@@ -23,65 +23,90 @@
       </section>
 
       <section class="d-flex flex-column ion-margin-bottom">
-      
-    <ion-card>
-      <ion-card-content>
-        <section class="d-flex ion-justify-content-between ion-align-items-center">
-          <IonText class="fw-semibold">Pay over 2 weeks</IonText>
-          <section class="d-flex ion-align-items-center">
-            <img
-              loading="lazy"
-              src="/img/icons/chevron-down.svg"
-              class="image"
-              @click="toggleDropdown"
-            />
-          </section>
-        </section>
-      </ion-card-content> 
-    </ion-card>
-    <ion-card>
-    <section v-if="showDropdown" class="wrapper ion-padding ion-margin-bottom">
-    <ion-radio-group>
-      <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
-        <IonText class="fw-semibold">Pay 50% instalment each week</IonText>
-        <section class="d-flex ion-align-items-center">
-          <IonText class="fw-semibold ion-margin-end"></IonText>
-          <ion-radio></ion-radio>
-        </section>
-      </section>
 
-    </ion-radio-group>
-  </section>
-  <section v-if="showDropdown" class="wrapper ion-padding ion-margin-bottom">
-    <ion-radio-group>
-      <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
-        <IonText class="fw-semibold">Pay 100% on due date</IonText>
-        <section class="d-flex ion-align-items-center">
-          <IonText class="fw-semibold ion-margin-end"></IonText>
-          <ion-radio></ion-radio>
-        </section>
-      </section>  
-    </ion-radio-group>
-  </section>
-</ion-card>
+        <ion-card>
+          <ion-card-content>
+            <section class="d-flex ion-justify-content-between ion-align-items-center">
+              <IonText class="fw-semibold">Pay over 2 weeks</IonText>
+              <section class="d-flex ion-align-items-center">
+                <img loading="lazy" src="/img/icons/chevron-down.svg" class="image"
+                  @click="toggleDropdown('pay2Weeks')" />
+              </section>
+            </section>
+          </ion-card-content>
+        </ion-card>
+        <ion-card v-if="showDropdown.pay2Weeks">
+          <section class="card-section">
+            <ion-radio-group>
+              <section class="radio-section">
+                <p class="radio-text">Pay 50% instalment each week</p>
+                <section class="d-flex ion-align-items-center">
+                  <IonText class="fw-semibold ion-margin-end"></IonText>
+                  <ion-radio></ion-radio>
+                </section>
+              </section>
+            </ion-radio-group>
+            <ion-radio-group>
+              <section class="radio-section">
+                <p class="radio-text">Pay 100% on the due date</p>
+                <section class="d-flex ion-align-items-center">
+                  <IonText class="fw-semibold ion-margin-end"></IonText>
+                  <ion-radio></ion-radio>
+                </section>
+              </section>
+            </ion-radio-group>
+            <p class="radio-text">Subject to Approval. Markup of 2.5% will be added to the total price</p>
+          </section>
+        </ion-card>
+
         <ion-card>
           <ion-card-content>
             <section class="d-flex ion-justify-content-between ion-align-items-center">
               <IonText class="fw-semibold">Pay over 4 weeks</IonText>
               <section class="d-flex ion-align-items-center">
-                <img loading="lazy" src="/img/icons/chevron-down.svg" class="image" />
+                <img loading="lazy" src="/img/icons/chevron-down.svg" class="image"
+                  @click="toggleDropdown('pay4Weeks')" />
               </section>
             </section>
           </ion-card-content>
         </ion-card>
+        <ion-card v-if="showDropdown.pay4Weeks">
+          <section class="card-section">
+            <ion-radio-group>
+              <section class="radio-section">
+                <p class="radio-text">Pay 25% instalment each week</p>
+                <section class="d-flex ion-align-items-center">
+                  <IonText class="fw-semibold ion-margin-end"></IonText>
+                  <ion-radio></ion-radio>
+                </section>
+              </section>
+            </ion-radio-group>
+            <ion-radio-group>
+              <section class="radio-section">
+                <p class="radio-text">Pay 50% instalment every 2 weeks</p>
+                <section class="d-flex ion-align-items-center">
+                  <IonText class="fw-semibold ion-margin-end"></IonText>
+                  <ion-radio></ion-radio>
+                </section>
+              </section>
+            </ion-radio-group>
+            <ion-radio-group>
+              <section class="radio-section">
+                <p class="radio-text">Pay 100% on the due date</p>
+                <section class="d-flex ion-align-items-center">
+                  <IonText class="fw-semibold ion-margin-end"></IonText>
+                  <ion-radio></ion-radio>
+                </section>
+              </section>
+            </ion-radio-group>
+            <p class="radio-text">Subject to Approval. Markup of 2.5% will be added to the total price</p>
+          </section>
+        </ion-card>
       </section>
     </ion-content>
-
-    <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="viewItemReview">Continue</KolaYellowButton>
-    </IonFooter>
   </ion-page>
 </template>
+
 <script lang="ts">
 import {
   IonPage, IonText, IonToolbar, IonButtons, IonBackButton, IonTitle, IonCard, IonButton,
@@ -90,7 +115,7 @@ import {
   IonCardTitle
 } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { close, heartOutline, heart, cart, cartOutline, shareOutline ,locationOutline, timeOutline } from 'ionicons/icons';
+import { close, heartOutline, heart, cart, cartOutline, shareOutline } from 'ionicons/icons';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { mapStores } from 'pinia';
 import { useProductStore } from '@/stores/ProductStore';
@@ -100,6 +125,8 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import NoResults from '../../components/layout/NoResults.vue';
 import PaymentOptionsHeader from "@/components/header/PaymentOptionsHeader.vue";
 import PayOnDelivery from "@/components/modules/deliveryDetails/PayOnDelivery.vue";
+
+type DropdownName = 'pay2Weeks' | 'pay4Weeks';
 
 export default defineComponent({
   components: {
@@ -114,7 +141,11 @@ export default defineComponent({
       close, heartOutline, cartOutline, shareOutline, cart, heart,
       fetching: false,
       defaultBanner: '/images/vendor/banner.png',
-      showDropdown: false, // Define showDropdown here
+      showDropdown: {
+        pay2Weeks: false,
+        pay4Weeks: false,
+      },
+      showPayDropdown: false,
     };
   },
   computed: {
@@ -124,8 +155,9 @@ export default defineComponent({
     viewItemReview() {
       this.$router.push('/shopper/item-review');
     },
-    toggleDropdown() {
-      this.showDropdown = !this.showDropdown;
+
+    toggleDropdown(dropdownName: DropdownName) {
+      this.showDropdown[dropdownName] = !this.showDropdown[dropdownName];
     },
   },
 });
@@ -136,5 +168,20 @@ export default defineComponent({
 ion-card {
   margin: 2px;
   color: #000000;
+}
+
+.card-section {
+  margin: 0;
+}
+
+.radio-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.radio-text {
+  color: #787486;
 }
 </style>
