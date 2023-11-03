@@ -32,13 +32,14 @@
                 {{ item.currency_symbol || "GHS" }}
                 {{ item.quantity * (item.product_price || 0) }}
               </p>
-              <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
+
             </ion-col>
             <ion-col size="1" class="remove-button">
               <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
                 <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
               </ion-button>
             </ion-col>
+            <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
           </ion-row>
         </IonItem>
         <CartTotalCard />
@@ -103,7 +104,7 @@ const removeFromCart = (index: number) => {
 };
 
 const viewDeliveryDetails = () => {
-  router.push('/shopper/delivery-details'); 
+  router.push('/shopper/delivery-details');
 };
 const getOrderBusiness = async () => {
   await cartStore.persist();
