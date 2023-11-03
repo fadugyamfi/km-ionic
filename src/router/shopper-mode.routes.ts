@@ -143,20 +143,7 @@ export const ShopperModeRoutes = [
         path: "profile",
         component: () => import("@/views/Shopper/Profile.vue"),
       },
-      {
-        path: "profile/company",
-        component: () => import("@/views/Shopper/Company.vue"),
-        children: [
-          {
-            path: "customers",
-            component: () => import("@/views/Shopper/Company/Customers.vue"),
-          },
-          {
-            path: "customers/add-customer",
-            component: () => import("@/views/Shopper/Company/AddCustomer.vue"),
-          },
-        ],
-      },
+      
     ],
   },
 ];
