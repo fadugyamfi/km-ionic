@@ -8,7 +8,7 @@
               color="dark"
               :icon="arrowBackOutline"
               text=""
-              defaultHref="/shopper/home"
+              defaultHref="/shopper/profile"
             ></ion-back-button>
           </ion-buttons>
           <IonTitle size="small" class="fw-bold">Customers</IonTitle>
