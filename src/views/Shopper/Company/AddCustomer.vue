@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <IonHeader class="ion-padding ion-no-border">
-      <ion-header class="inner-header  ion-no-border">
+      <ion-header class="inner-header ion-no-border">
         <ion-toolbar class="ion-align-items-center">
           <ion-buttons slot="start">
             <ion-back-button
@@ -11,7 +11,9 @@
               defaultHref="/shopper/profile/company/customers"
             ></ion-back-button>
           </ion-buttons>
-          <IonTitle size="small" class="fw-bold">Add Customer</IonTitle>
+          <IonTitle size="small" class="fw-bold">{{
+            $t("profile.customers.addCustomer")
+          }}</IonTitle>
         </ion-toolbar>
       </ion-header>
     </IonHeader>
@@ -20,7 +22,7 @@
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.full_name }"
-          label="Full Name"
+          :label="$t('profile.customers.fullName')"
           labelPlacement="stacked"
           fill="solid"
           v-model="form.fields.full_name"
@@ -31,7 +33,7 @@
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.business_name }"
-          label="Business Name"
+          :label="$t('profile.customers.businessName')"
           labelPlacement="stacked"
           fill="solid"
           v-model="form.fields.business_name"
@@ -42,7 +44,7 @@
         <IonInput
           class="kola-input"
           :class="{ 'ion-invalid ion-touched': form.errors.business_location }"
-          label="Business Location"
+          :label="$t('profile.customers.businessLocation')"
           labelPlacement="stacked"
           fill="solid"
           v-model="form.fields.business_location"
@@ -58,7 +60,7 @@
           @click="getLocation()"
         >
           <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
-          {{ $t("signup.vendor.location.useCurrentLocation") }}
+          {{ $t("profile.customers.location.useCurrentLocation") }}
         </IonButton>
         <IonInput
           class="kola-input ion-margin-bottom"
@@ -71,10 +73,10 @@
           @ion-input="form.validate($event)"
           required
         ></IonInput>
-        <h6>Assign to a sales agent or manager</h6>
+        <h6>{{ $t("profile.customers.assignToSalesAgentOrManager") }}</h6>
         <IonSelect
           class="kola-input ion-margin-bottom"
-          label="Select a sales agent"
+          :label="$t('profile.customers.selectSaleAgent')"
           :class="{
             'ion-invalid ion-touched': form.errors.primary_product_category_id,
           }"
@@ -88,10 +90,10 @@
         >
           <IonSelectOption> </IonSelectOption>
         </IonSelect>
-        <h6>How do they usually pay</h6>
+        <h6>{{ $t("profile.customers.howDoTheyUsuallyPay") }}</h6>
         <IonSelect
           class="kola-input ion-margin-bottom"
-          label="Select payment method"
+          :label="$t('profile.customers.selectPaymentMethod')"
           :class="{
             'ion-invalid ion-touched': form.errors.primary_product_category_id,
           }"
@@ -108,7 +110,7 @@
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton>Save</KolaYellowButton>
+      <KolaYellowButton>{{ $t("profile.customers.save") }}</KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -126,7 +128,7 @@ import {
   IonText,
   IonInput,
   IonSelect,
-  IonSelectOption
+  IonSelectOption,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import {
@@ -138,7 +140,7 @@ import {
   shareOutline,
   navigateOutline,
   arrowBackOutline,
-  chevronDownOutline
+  chevronDownOutline,
 } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
@@ -185,6 +187,6 @@ h6 {
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
-  color: #74787C;
+  color: #74787c;
 }
 </style>
