@@ -151,6 +151,10 @@ export const ShopperModeRoutes = [
             path: "customers",
             component: () => import("@/views/Shopper/Company/Customers.vue"),
           },
+          {
+            path: "customers/add-customer",
+            component: () => import("@/views/Shopper/Company/AddCustomer.vue"),
+          },
         ],
       },
     ],
