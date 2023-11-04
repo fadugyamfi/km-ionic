@@ -4,29 +4,30 @@
       <IonButtons slot="start">
         <IonBackButton defaultHref="/shopper/cart-business"></IonBackButton>
       </IonButtons>
-      <IonTitle size="small" class="fw-bold">
-        Cart
-      </IonTitle>
-      <IonButtons slot="end">
-        <NotificationButton></NotificationButton>
-      </IonButtons>
+      <IonTitle size="small" class="fw-bold">Order summary </IonTitle>
+      <SaveForLaterButton />
     </IonToolbar>
   </IonHeader>
 </template>
 
 <script lang="ts">
-import { IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle } from '@ionic/vue';
-import NotificationButton from '@/components/notifications/NotificationButton.vue';
+import {
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonTitle,
+} from "@ionic/vue";
+import SaveForLaterButton from "@/components/buttons/SaveForLaterButton.vue";
 
 export default {
   components: {
-     
-    NotificationButton,
     IonTitle,
     IonButtons,
     IonHeader,
     IonBackButton,
     IonToolbar,
+    SaveForLaterButton,
   },
 };
 </script>

@@ -12,7 +12,14 @@
               defaultHref="/vendor/profile"
             ></ion-back-button>
           </ion-buttons>
-          <IonTitle size="small" class="fw-bold">Customers</IonTitle>
+          <IonTitle size="small" class="fw-bold">
+            <section
+              class="d-flex ion-align-items-center ion-justify-content-center"
+            >
+              <IonLabel>Customers</IonLabel>
+              <ion-badge color="warning">{{ customers.length }}</ion-badge>
+            </section></IonTitle
+          >
           <ion-buttons slot="end">
             <IonButton>
               <img src="/images/user-plus.svg" alt="" />
@@ -59,7 +66,7 @@
               :trigger="`popover-button-${customer.id}`"
               :dismiss-on-select="true"
             >
-              <IonContent>
+              <IonContent scroll-y="false">
                 <IonList>
                   <IonItem :button="true" :detail="false">
                     <IonIcon :icon="createOutline"></IonIcon> Update customer
@@ -100,6 +107,7 @@ import {
   IonChip,
   IonIcon,
   IonPopover,
+  IonBadge,
 } from "@ionic/vue";
 import { onMounted, ref } from "vue";
 import {

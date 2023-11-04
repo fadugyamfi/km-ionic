@@ -1,8 +1,7 @@
 <template>
   <ion-page>
-    <ShopperHeader />
     <section class="ion-padding">
-      <CartHeader />
+      <CartBusinessHeader />
     </section>
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
@@ -12,20 +11,16 @@
             <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }"
               >Cart</IonLabel
             >
-            <ion-badge class="badge" color="warning">{{
-              cartStore.orders.length
-            }}</ion-badge>
+            <IonBadge>{{ cartStore.orders.length }}</IonBadge>
           </div>
         </IonSegmentButton>
         <IonSegmentButton value="saved">
           <ion-label>Saved</ion-label>
         </IonSegmentButton>
       </IonSegment>
+
       <EmptyCart v-if="cartStore.orders.length === 0"></EmptyCart>
       <IonList v-else>
-        <ion-text class="space"
-          >2 Items from 1 Brand are ready for checkout</ion-text
-        >
         <OrderView
           v-for="order in cartStore.orders"
           :order="order"
@@ -57,7 +52,7 @@ import {
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ShopperHeader from "@/components/layout/ShopperHeader.vue";
-import CartHeader from "@/components/header/CartHeader.vue";
+import CartBusinessHeader from "@/components/header/CartBusinessHeader.vue";
 import EmptyCart from "@/components/cards/EmptyCart.vue";
 import OrderView from "@/components/modules/carts/OrderView.vue";
 
@@ -81,8 +76,15 @@ ion-text.space {
   margin-bottom: 550px;
 }
 
+ion-segment {
+  margin-bottom: 20px;
+}
 .item-row {
   align-items: center;
+}
+
+.order-view-wrapper {
+  margin-top: 16px;
 }
 
 ion-item {
@@ -114,19 +116,17 @@ p {
   display: flex;
   align-items: center;
 }
-
-.badge {
-  background: yellow;
-  border-radius: 50%;
-  padding: 4px;
-  color: black;
-  font-size: 14px;
-  font-family: Poppins;
-  font-weight: 500;
-  line-height: 20px;
+ion-badge {
+  --background: rgba(245, 170, 41, 0.38);
+  --color: #344054;
+  margin-left: 8px;
 }
 
 .item-row[data-v-c11d03b0] {
   align-items: baseline;
+}
+
+element.style {
+  margin-bottom: 20px;
 }
 </style>

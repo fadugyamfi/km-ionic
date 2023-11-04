@@ -128,8 +128,8 @@ export const ShopperModeRoutes = [
         component: () => import("@/views/Shopper/DeliveryDetails.vue"),
       },
       {
-        path: "payment-options",
-        component: () => import("@/views/Shopper/DeliveryDetails.vue"),
+        path: 'payment-options',
+        component: () => import('@/views/Shopper/PaymentOptions.vue')
       },
       {
         path: "item-review",

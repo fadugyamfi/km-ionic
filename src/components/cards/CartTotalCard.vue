@@ -29,9 +29,10 @@ import { useCartStore } from '@/stores/CartStore';
 
 const cartStore = useCartStore();
 cartStore.loadFromStorage();
+const cartItems = computed(() => cartStore.items)
 
 const totalCost = computed(() => {
-  return `GHS ${cartStore.items.reduce((total, item) => total + (item.product.product_price || 0), 0).toFixed(2)}`;
+  return `GHS ${cartItems.value.reduce((total, item) => total + (item.product_price || 0), 0).toFixed(2)}`;
 });
 </script>
 
@@ -42,6 +43,8 @@ const totalCost = computed(() => {
   background: var(--card-background);
   box-shadow: var(--card-box-shadow);
   border-radius: 8px;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .row {

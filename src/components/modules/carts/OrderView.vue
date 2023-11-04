@@ -1,19 +1,19 @@
 <template>
-  <IonItem @click="viewOrderItems()">
-    <section class="d-flex ion-align-items-stretch">
+  <IonItem class="d-flex w-100 ion-align-items-stretch">
+    <section class="d-flex w-100" @click="viewOrderItems()">
       <IonThumbnail>
         <Image :src="order?.business?.logo"></Image>
       </IonThumbnail>
 
-      <section>
+      <section class="w-100">
         <section
           style="height: 100%"
           class="d-flex ion-justify-content-between"
         >
-          <section class="d-flex flex-column">
-            <IonText class="fw-semibold">{{
-              order?.business?.name || "Unknown"
-            }}</IonText>
+          <section class="d-flex flex-column business-description">
+            <IonText class="fw-semibold ellipsis" style="margin-bottom: 5px">
+              {{ order?.business?.name || "Unknown" }}
+            </IonText>
             <IonText color="medium" class="font-medium">
               {{ $t("Item total") }}:
               {{
@@ -36,24 +36,35 @@
               </IonThumbnail>
             </section>
           </section>
-
-          <IonButton
-            slot="end"
-            fill="clear"
-            color="dark"
-            class="ion-no-margin ion-no-padding ion-align-self-start"
-            @click="removeOrder()"
-          >
-            <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
-          </IonButton>
         </section>
+      </section>
+    </section>
+
+    <section class="remove-button">
+      <!-- Use <div> or <section> here -->
+      <section class="d-flex align-right">
+        <IonButton
+          fill="clear"
+          color="dark"
+          class="ion-no-margin ion-no-padding ion-align-self-start"
+          @click="removeOrder()"
+        >
+          <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
+        </IonButton>
       </section>
     </section>
   </IonItem>
 </template>
 
 <script lang="ts">
-import { IonButton, IonIcon, IonItem, IonText, IonThumbnail } from "@ionic/vue";
+import {
+  IonButton,
+  IonIcon,
+  IonItem,
+  IonText,
+  IonCol,
+  IonThumbnail,
+} from "@ionic/vue";
 import { PropType, defineComponent } from "vue";
 import ProductQuantitySelector from "../products/ProductQuantitySelector.vue";
 import { closeCircleOutline } from "ionicons/icons";
@@ -73,6 +84,7 @@ export default defineComponent({
     IonButton,
     IonIcon,
     Image,
+    IonCol,
   },
 
   props: {
@@ -100,7 +112,7 @@ export default defineComponent({
     },
 
     removeOrder() {
-      /// this.cartStore.removeProductFromSale(this.saleItem?.product as Product);
+      this.cartStore.removeOrderAtIndex(this.order);
     },
     viewOrderItems() {
       this.$router.push(`/shopper/cart/${this.order?.businesses_id}`);
@@ -136,5 +148,8 @@ ion-thumbnail.cart-items {
   margin-right: 0px;
   height: 45px;
   --border-radius: 2px;
+}
+.business-description {
+  width: 239px;
 }
 </style>

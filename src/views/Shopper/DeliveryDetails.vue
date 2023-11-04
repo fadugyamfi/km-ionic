@@ -1,145 +1,109 @@
 <template>
   <ion-page>
-    <ShopperHeader />
+    <!-- Header -->
     <section class="ion-padding">
-      <CartHeader>Cart</CartHeader>
+      <DeliveryDetailsHeader />
     </section>
 
-    <ion-content :fullscreen="true" class="ion-padding-horizontal">
-      <IonSegment value="personal" mode="ios" v-model="viewing" class="segment-margin">
-        <IonSegmentButton value="cart">
-          <div class="segment-button">
-            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
-            <ion-badge class="badge" color="warning">{{ cartStore.items.length }}</ion-badge>
-          </div>
-        </IonSegmentButton>
-        <IonSegmentButton value="saved">
-          <ion-label>Saved</ion-label>
-        </IonSegmentButton>
-      </IonSegment>
+    <!-- Main Content -->
+    <ion-content class="ion-padding">
+      <h6 class="fw-semibold" style="margin-top: 0px;">Add Delivery Address</h6>
+      <form>
+        <IonInput class="kola-input delivery-details-input" :class="{ 'ion-invalid ion-touched': form.errors.location }"
+          label="Town/Locality" labelPlacement="stacked" fill="solid" v-model="form.fields.location" name="location"
+          @ion-input="form.validate($event)" required></IonInput>
 
+        <IonButton fill="clear" size="small" style="text-transform: none"
+          class="ion-margin-bottom use-location ion-text-start" @click="getLocation()">
+          <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
+          {{ $t("signup.vendor.location.useCurrentLocation") }}
+        </IonButton>
+
+        <IonInput class="kola-input delivery-details-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.landmark }" label="Nearest Landmark" labelPlacement="stacked"
+          fill="solid" v-model="form.fields.landmark" name="landmark" @ion-input="form.validate($event)" required>
+        </IonInput>
+        <h6 class="fw-semibold">Delivery Date</h6>
+        <IonInput class="kola-input delivery-details-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.delivery_date }" label="DD/MM/YY" labelPlacement="stacked"
+          fill="solid" v-model="form.fields.delivery_date" name="delivery-date" @ion-input="form.validate($event)"
+          required></IonInput>
+        <section>
+          <section class="d-flex flex-column ion-margin-bottom">
+            <IonText class="fw-semibold">Delivery</IonText>
+            <IonText color="medium" class="font-medium">Select delivery method</IonText>
+          </section>
+          <DeliveryMethod  :location="form.fields.location"  :delivery-date="form.fields.delivery_date"/>
+        </section>
+      </form>
     </ion-content>
-
-    <IonFooter class="ion-padding ion-no-border" v-if="cartStore.items.length">
-      <KolaYellowButton>
-        Proceed to Checkout
-      </KolaYellowButton>
+    <IonFooter class="ion-padding ion-no-border">
+      <KolaYellowButton @click="viewPaymentOptions">Continue</KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-
-import { ref } from 'vue';
 import {
-  IonSegmentButton, IonLabel, IonThumbnail, IonImg,
-  IonBadge, IonItem, IonList, IonSegment, IonCol, IonPage,
-  IonContent, IonRow, IonButton, IonIcon, IonFooter
-} from '@ionic/vue';
-import { CartItem, useCartStore } from '@/stores/CartStore';
-import ShopperHeader from '@/components/layout/ShopperHeader.vue';
-import ProductQuantitySelector from '@/components/modules/products/ProductQuantitySelector.vue';
-import { closeCircleOutline } from 'ionicons/icons';
-import CartHeader from '@/components/header/CartHeader.vue';
-import EmptyCart from '@/components/cards/EmptyCart.vue';
-import CartTotalCard from '@/components/cards/CartTotalCard.vue';
-import KolaYellowButton from '@/components/KolaYellowButton.vue';
+  IonButton,
+  IonContent,
+  IonFooter,
+  IonIcon,
+  IonPage,
+  IonText,
+  IonInput,
+} from "@ionic/vue";
+import { defineComponent } from "vue";
+import {
+  navigateOutline,
+} from "ionicons/icons";
+import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import { useToastStore } from "@/stores/ToastStore";
+import { useGeolocation } from "@/composables/useGeolocation";
+import DeliveryDetailsHeader from "@/components/header/DeliveryDetailsHeader.vue";
+import DeliveryMethod from "@/components/modules/deliveryDetails/DeliveryMethod.vue";
+import { useForm } from "@/composables/form";
+import { useRouter } from 'vue-router';
+import { useRoute } from "vue-router";
 
+const router = useRouter();
+const route = useRoute();
+const toastStore = useToastStore();
+const form = useForm({
+location: "",
+landmark: "",
+delivery_date: ""
+});
 
-const cartStore = useCartStore();
-cartStore.loadFromStorage();
-const viewing = ref('cart');
+const viewPaymentOptions = () => {
+  router.push('/shopper/payment-options');
+};
+const getLocation = async () => {
+  const toastStore = useToastStore();
+  const { getCurrentLocation } = useGeolocation();
 
-const segmentValue = ref('cart');
-const updateQuantity = (item: CartItem, newQuantity: number) => {
-  console.log('hello');
-  item.quantity = newQuantity;
-}
+  try {
+    const coordinates = await getCurrentLocation();
 
-const removeFromCart = (item: CartItem, index: number) => {
-  cartStore.removeAtIndex(index);
-}
+    if (coordinates) {
+      form.fields.business_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
+    }
+  } catch (error) {
+    toastStore.showError("Cannot retrieve location info");
+    console.log(error);
+  }
+};
 </script>
 
 <style scoped lang="scss">
-.item-row {
-  align-items: center;
+.delivery-details-input {
+  color: #74787c;
+  --padding-end: 10px;
+  --padding-start: 10px;
 }
 
-
-.remove-button {
-  text-align: end;
-}
-
-.item-row ion-col {
-  margin: 0;
-  padding: 0;
-}
-
-.text-product,
-p {
-  margin: 0;
-  padding: 0;
-  color: #667085
-}
-
-.custom-thumbnail {
-  align-self: flex-start;
-  margin-right: 16px;
-}
-
-.segment-button {
-  display: flex;
-  align-items: center;
-}
-
-.badge {
-  background: yellow;
-  border-radius: 50%;
-  padding: 4px;
-  color: black;
-  font-size: 14px;
-  font-family: Poppins;
-  font-weight: 500;
-  line-height: 20px;
-}
-
-.custom-thumbnail {
-  width: 94px;
-  height: 120px;
-}
-
-.custom-label {
-  color: black;
-
-  p {
-    font-size: 14px;
-    font-family: "Poppins";
-    font-weight: 400;
-    text-transform: capitalize;
-    line-height: 22px;
-    word-wrap: break-word;
-  }
-
-  .price {
-    font-size: 14px;
-    font-weight: 400;
-    text-transform: capitalize;
-    line-height: 18px;
-    word-wrap: break-word;
-  }
-}
-
-.item-row[data-v-c11d03b0] {
-  align-items: baseline;
-}
-
-ion-icon.remove-icon {
-  color: #000;
-  vertical-align: text-top;
-}
-
-.text-product {
-  color: black;
+.use-location {
+  --color: #666eed;
+  --padding-start: 0px;
 }
 </style>
