@@ -1,148 +1,164 @@
-import { useUserStore } from '@/stores/UserStore';
-import TabsPage from '@/views/Shopper/TabsPage.vue';
-import HomePage from '@/views/Shopper/HomePage.vue';
-import OrderDetails from  '@/views/Shopper/OrderDetails.vue';
-
+import { useUserStore } from "@/stores/UserStore";
+import TabsPage from "@/views/Shopper/TabsPage.vue";
+import HomePage from "@/views/Shopper/HomePage.vue";
+import OrderDetails from "@/views/Shopper/OrderDetails.vue";
 
 export const ShopperModeRoutes = [
   {
-    path: '/shopper/',
+    path: "/shopper/",
     component: TabsPage,
-    beforeEnter: async function () { // to, from
+    beforeEnter: async function () {
+      // to, from
       const userStore = useUserStore();
-      await userStore.loadStoredData()
+      await userStore.loadStoredData();
 
       if (!userStore.user && !userStore.onboarded) {
-        return { name: 'Onboarding' };
+        return { name: "Onboarding" };
       }
 
       if (!userStore.user && userStore.onboarded) {
-        return { name: 'Login' };
+        return { name: "Login" };
       }
 
-      if( userStore.appMode == 'vendor' ) {
-        return { name: 'VendorHome' };
+      if (userStore.appMode == "vendor") {
+        return { name: "VendorHome" };
       }
     },
     children: [
       {
-        path: '',
-        redirect: '/shopper/home'
+        path: "",
+        redirect: "/shopper/home",
       },
       {
-        path: 'home',
+        path: "home",
         component: HomePage,
         children: [
           {
-            name: 'ShopperHome',
-            path: '',
-            component: () => import('@/views/Shopper/Home/Home.vue')
+            name: "ShopperHome",
+            path: "",
+            component: () => import("@/views/Shopper/Home/Home.vue"),
           },
           {
-            path: 'categories',
-            component: () => import('@/views/Shopper/Categories/Categories.vue'),
+            path: "categories",
+            component: () =>
+              import("@/views/Shopper/Categories/Categories.vue"),
           },
           {
-            path: 'categories/:id',
-            component: () => import('@/views/Shopper/Categories/CategoryDetails.vue'),
+            path: "categories/:id",
+            component: () =>
+              import("@/views/Shopper/Categories/CategoryDetails.vue"),
           },
           {
-            path: 'brands',
-            component: () => import('@/views/Shopper/Brands/Brands.vue'),
+            path: "brands",
+            component: () => import("@/views/Shopper/Brands/Brands.vue"),
           },
           {
-            path: 'brands/:id',
-            component: () => import('@/views/Shopper/Brands/BrandDetails.vue'),
+            path: "brands/:id",
+            component: () => import("@/views/Shopper/Brands/BrandDetails.vue"),
           },
 
           {
-            path: 'brands/:id/products',
-            component: () => import('@/views/Shopper/Brands/BrandByProduct.vue'),
+            path: "brands/:id/products",
+            component: () =>
+              import("@/views/Shopper/Brands/BrandByProduct.vue"),
           },
           {
-            path: 'suppliers',
-            component: () => import('@/views/Shopper/Businesses/Businesses.vue'),
+            path: "suppliers",
+            component: () =>
+              import("@/views/Shopper/Businesses/Businesses.vue"),
             meta: {
               title: "Suppliers",
-              businessType: "supplier"
-            }
+              businessType: "supplier",
+            },
           },
           {
-            path: 'businesses',
-            component: () => import('@/views/Shopper/Businesses/Businesses.vue'),
+            path: "businesses",
+            component: () =>
+              import("@/views/Shopper/Businesses/Businesses.vue"),
           },
           {
-            path: 'businesses/:id',
-            component: () => import('@/views/Shopper/Businesses/BusinessDetails.vue'),
+            path: "businesses/:id",
+            component: () =>
+              import("@/views/Shopper/Businesses/BusinessDetails.vue"),
           },
           {
-            path: 'businesses/:id/products',
-            component: () => import('@/views/Shopper/Businesses/BusinessProducts.vue'),
+            path: "businesses/:id/products",
+            component: () =>
+              import("@/views/Shopper/Businesses/BusinessProducts.vue"),
           },
         ],
       },
       {
-        path: 'products/:id',
-        component: () => import('@/views/Shopper/ProductDetails.vue')
+        path: "products/:id",
+        component: () => import("@/views/Shopper/ProductDetails.vue"),
       },
       {
-
-        path: 'search-results',
-        component: () => import('@/views/Shopper/ProductSearchResults.vue')
+        path: "search-results",
+        component: () => import("@/views/Shopper/ProductSearchResults.vue"),
       },
       {
-        path: 'no-business-results',
-        component: () => import('@/views/Shopper/NoBusinessResults.vue')
+        path: "no-business-results",
+        component: () => import("@/views/Shopper/NoBusinessResults.vue"),
       },
       {
-        path: 'orders',
-        component: () => import('@/views/Shopper/Orders.vue'),
+        path: "orders",
+        component: () => import("@/views/Shopper/Orders.vue"),
         children: [
           {
-            path: '',
-            redirect: '/shopper/orders/history'
+            path: "",
+            redirect: "/shopper/orders/history",
           },
           {
-            name: 'ShopperOrderHistory',
-            path: 'history',
-            component: () => import('@/views/Shopper/Orders/OrderHistory.vue')
+            name: "ShopperOrderHistory",
+            path: "history",
+            component: () => import("@/views/Shopper/Orders/OrderHistory.vue"),
           },
           {
-            name: 'ShopperOrderDetails',
-            path: ':id',
-            component: () => import('@/views/Shopper/Orders/OrderDetails.vue')
-          }
-        ]
+            name: "ShopperOrderDetails",
+            path: ":id",
+            component: () => import("@/views/Shopper/Orders/OrderDetails.vue"),
+          },
+        ],
       },
       {
-        path: 'cart/:id',
-        component: () => import('@/views/Shopper/Cart.vue')
+        path: "cart",
+        component: () => import("@/views/Shopper/Cart.vue"),
+        children: [
+          {
+            path: "",
+            redirect: "/shopper/cart/business",
+          },
+          {
+            path: "business",
+            component: () => import("@/views/Shopper/Cart/Bussiness.vue"),
+          },
+          {
+            path: "business/:id/orders",
+            component: () => import("@/views/Shopper/Cart/BusinessCart.vue"),
+          },
+          {
+            path: "business/:id/delivery-details",
+            component: () => import("@/views/Shopper/Cart/DeliveryDetails.vue"),
+          },
+          {
+            path: "business/:id/payment-options",
+            component: () => import("@/views/Shopper/Cart/PaymentOptions.vue"),
+          },
+          {
+            path: "business/:id/item-review",
+            component: () => import("@/views/Shopper/Cart/ItemReview.vue"),
+          },
+        ],
       },
-      {
-        path: 'cart-business',
-        component: () => import('@/views/Shopper/CartBussiness.vue')
-      },
-      {
-        path: 'delivery-details',
-        component: () => import('@/views/Shopper/DeliveryDetails.vue')
-      },
-      {
-        path: 'payment-options',
-        component: () => import('@/views/Shopper/PaymentOptions.vue')
-      },
-      {
-        path: 'item-review',
-        component: () => import('@/views/Shopper/ItemReview.vue')
-      },
-      {
-        path: 'credits',
-        component: () => import('@/views/Shopper/Credits.vue')
-      },
-      {
-        path: 'profile',
-        component: () => import('@/views/Shopper/Profile.vue'),
 
+      {
+        path: "credits",
+        component: () => import("@/views/Shopper/Credits.vue"),
       },
-    ]
+      {
+        path: "profile",
+        component: () => import("@/views/Shopper/Profile.vue"),
+      },
+    ],
   },
 ];
