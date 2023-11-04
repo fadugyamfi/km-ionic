@@ -9,7 +9,7 @@
               :icon="arrowBackOutline"
               text=""
               style="margin-left: 10px"
-              defaultHref="/shopper/profile/company/customers"
+              :defaultHref="`${path}/company/customers`"
             ></ion-back-button>
           </ion-buttons>
           <IonTitle size="small" class="fw-bold">{{
@@ -19,7 +19,7 @@
       </ion-header>
     </IonHeader>
     <ion-content class="ion-padding">
-      <form method="post" ref="form" @submit.prevent="createCustomer()">
+      <form @submit.prevent="createCustomer()">
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.name }"
@@ -89,7 +89,7 @@
           :toggle-icon="chevronDownOutline"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption> </IonSelectOption>
+          <IonSelectOption></IonSelectOption>
         </IonSelect>
         <h6>{{ $t("profile.customers.howDoTheyUsuallyPay") }}</h6>
         <IonSelect
@@ -106,12 +106,16 @@
           name="payment-method"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption></IonSelectOption>
+          <IonSelectOption>Mobile money</IonSelectOption>
+          <IonSelectOption>Cash</IonSelectOption>
+          <IonSelectOption>Bank transfer</IonSelectOption>
         </IonSelect>
         <IonFooter class="ion-padding-top ion-no-border">
-          <KolaYellowButton type="submit">{{
-            $t("profile.customers.save")
-          }}</KolaYellowButton>
+          <KolaYellowButton
+            :disabled="!formValid"
+            @click.prevent="createCustomer"
+            >{{ $t("profile.customers.save") }}</KolaYellowButton
+          >
         </IonFooter>
       </form>
     </ion-content>
@@ -132,9 +136,9 @@ import {
   IonInput,
   IonSelect,
   IonSelectOption,
+  IonCheckbox,
   IonHeader,
 } from "@ionic/vue";
-import { defineComponent } from "vue";
 import {
   close,
   heartOutline,
@@ -148,32 +152,72 @@ import {
 } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
+import { useCustomerStore } from "@/stores/CustomerStore";
 import { useGeolocation } from "@/composables/useGeolocation";
 import { useForm } from "@/composables/form";
 import axios from "axios";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { computed, ref } from "vue";
 
 const toastStore = useToastStore();
+const customerStore = useCustomerStore();
+
 const route = useRoute();
-
-
+const router = useRouter();
 
 const form = useForm({
   name: "",
   location: "",
   business_name: "",
   phone_number: "",
-  cms_users_id: "",
+  cms_users_id: 1,
   payment_method: "",
 });
 
-const createCustomer = () => {
-  if (form.hasErrors()) {
-    return;
+const path = computed(() => {
+  if (route.fullPath.includes("vendor")) {
+    return "/vendor/profile";
   }
-  form.submit(() => {
-    axios.post('/')
-  });
+  return "/shopper/profile";
+});
+
+const formValid = computed(() => {
+  const fields = form.fields;
+
+  return (
+    fields.name.length > 0 &&
+    fields.business_name.length > 0 &&
+    fields.location.length > 0 &&
+    isNaN(Number(fields.cms_users_id)) == false &&
+    fields.phone_number.length > 0 &&
+    fields.payment_method
+  );
+});
+
+const createCustomer = async () => {
+  try {
+    toastStore.blockUI("Hold On As We Add Your Customer");
+    const customer = await customerStore.createBusinessCustomer({
+      ...form.fields,
+      business_types_id: 1,
+    });
+    if (customer) {
+      toastStore.unblockUI();
+      router.push(`${path.value}/company/customers`);
+      toastStore.showSuccess("Customer has been added successfully");
+    } else {
+      toastStore.unblockUI();
+      toastStore.showError(
+        "Failed to add Customer. Please try again",
+        "",
+        "bottom",
+        "footer"
+      );
+    }
+  } catch (error) {
+  } finally {
+    toastStore.unblockUI();
+  }
 };
 
 const getLocation = async () => {
@@ -188,7 +232,6 @@ const getLocation = async () => {
     }
   } catch (error) {
     toastStore.showError("Cannot retrieve location info");
-    console.log(error);
   }
 };
 </script>
