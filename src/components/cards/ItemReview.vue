@@ -56,7 +56,9 @@ const totalCost = computed(() => {
 .date-color {
   color: #666EED;
 }
-
+ion-card{
+  padding:9px;
+}
 .fw-semibold {
   flex: 1 0 0;
   color: var(--text-primary, #000);

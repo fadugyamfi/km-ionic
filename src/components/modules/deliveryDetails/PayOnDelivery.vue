@@ -1,11 +1,11 @@
 <template>
   <section class="wrapper ion-padding ion-margin-bottom">
-    <ion-radio-group>
+    <ion-radio-group v-model="selectedOptionPayNow">
       <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
         <IonText class="fw-semibold">Pay Now</IonText>
         <section class="d-flex ion-align-items-center">
           <IonText class="fw-semibold ion-margin-end"></IonText>
-          <ion-radio></ion-radio>
+          <ion-radio value="payNow"></ion-radio>
         </section>
       </section>
       <section class="d-flex flex-column">
@@ -13,38 +13,48 @@
           <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>1% Discount Per Box
         </IonText>
         <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
-          <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon>Guaranted 3- Day Delivery
+          <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon>Guaranteed 3-Day Delivery
         </IonText>
       </section>
     </ion-radio-group>
   </section>
   <section class="wrapper ion-padding">
-    <ion-radio-group>
+    <ion-radio-group v-model="selectedOptionPayOnDelivery">
       <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
         <IonText class="fw-semibold">Pay on Delivery</IonText>
         <section class="d-flex ion-align-items-center">
-
-          <ion-radio></ion-radio>
+          <ion-radio value="payOnDelivery"></ion-radio>
         </section>
       </section>
       <section class="d-flex flex-column">
-        <IonText color="medium" class="font-medium" style="margin-bottom: 8px">Standard Pricing
-        </IonText>
+        <IonText color="medium" class="font-medium" style="margin-bottom: 8px">Standard Pricing</IonText>
       </section>
     </ion-radio-group>
   </section>
 </template>
+
 <script setup>
 import { locationOutline, timeOutline } from "ionicons/icons";
-import { IonIcon, IonText, IonRadio, IonRadioGroup } from "@ionic/vue";
+import { IonText, IonRadioGroup } from "@ionic/vue";
+import { ref, watch } from "vue";
+
+const selectedOptionPayNow = ref(null);
+const selectedOptionPayOnDelivery = ref(null);
+
+watch(selectedOptionPayNow, (newValue) => {
+  if (newValue === "payNow") {
+    selectedOptionPayOnDelivery.value = null; 
+  }
+});
+
+watch(selectedOptionPayOnDelivery, (newValue) => {
+  if (newValue === "payOnDelivery") {
+    selectedOptionPayNow.value = null; 
+  }
+});
 </script>
 
 <style scoped>
-.wrapper {
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0px 4px 24px 0px rgba(105, 111, 130, 0.1);
-}
 
 ion-radio::part(container) {
   width: 18px;
