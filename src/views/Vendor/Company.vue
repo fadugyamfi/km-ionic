@@ -1,5 +1,4 @@
 
-import { IonRouterOutlet } from '@ionic/vue';
 <template>
     <ion-page>
         <IonRouterOutlet></IonRouterOutlet>
