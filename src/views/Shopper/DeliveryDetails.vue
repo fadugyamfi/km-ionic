@@ -33,7 +33,7 @@
             <IonText class="fw-semibold">Delivery</IonText>
             <IonText color="medium" class="font-medium">Select delivery method</IonText>
           </section>
-          <DeliveryMethod />
+          <DeliveryMethod  :location="form.fields.location"  :delivery-date="form.fields.delivery_date"/>
         </section>
       </form>
     </ion-content>
@@ -68,14 +68,11 @@ import { useRoute } from "vue-router";
 
 const router = useRouter();
 const route = useRoute();
-
 const toastStore = useToastStore();
 const form = useForm({
-  // name: '',
-  // business_location: '',
-  // business_name: '',
-  // pin: '',
-  // pin_confirmation: ''
+location: "",
+landmark: "",
+delivery_date: ""
 });
 
 const viewPaymentOptions = () => {

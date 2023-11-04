@@ -7,7 +7,7 @@
 
     <!-- Main Content -->
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
-
+      <form>
       <section class="d-flex flex-column ion-margin-bottom">
         <IonText class="fw-semibold">Pay Now</IonText>
         <IonText color="medium" class="font-medium">Select a payment method</IonText>
@@ -18,7 +18,7 @@
       </section>
 
       <section class="d-flex flex-column ion-margin-bottom">
-        <IonText class="fw-semibold">Pay Now</IonText>
+        <IonText class="fw-semibold">Pay Later</IonText>
         <IonText color="medium" class="font-medium">Select a pay later option</IonText>
       </section>
 
@@ -42,7 +42,8 @@
                 <p class="radio-text">Pay 50% instalment each week</p>
                 <section class="d-flex ion-align-items-center">
                   <IonText class="fw-semibold ion-margin-end"></IonText>
-                  <ion-radio></ion-radio>
+                  <ion-radio  v-model="form.fields.pay_50_instalment"></ion-radio>
+
                 </section>
               </section>
             </ion-radio-group>
@@ -51,7 +52,7 @@
                 <p class="radio-text">Pay 100% on the due date</p>
                 <section class="d-flex ion-align-items-center">
                   <IonText class="fw-semibold ion-margin-end"></IonText>
-                  <ion-radio></ion-radio>
+                  <ion-radio   v-model="form.fields.pay_50_instalment"></ion-radio>
                 </section>
               </section>
             </ion-radio-group>
@@ -86,7 +87,7 @@
                 <p class="radio-text">Pay 50% instalment every 2 weeks</p>
                 <section class="d-flex ion-align-items-center">
                   <IonText class="fw-semibold ion-margin-end"></IonText>
-                  <ion-radio></ion-radio>
+                  <ion-radio  v-model="form.fields.pay_50_instalment"></ion-radio>
                 </section>
               </section>
             </ion-radio-group>
@@ -95,7 +96,7 @@
                 <p class="radio-text">Pay 100% on the due date</p>
                 <section class="d-flex ion-align-items-center">
                   <IonText class="fw-semibold ion-margin-end"></IonText>
-                  <ion-radio></ion-radio>
+                  <ion-radio  v-model="form.fields.pay_50_instalment"></ion-radio>
                 </section>
               </section>
             </ion-radio-group>
@@ -103,6 +104,11 @@
           </section>
         </ion-card>
       </section>
+      
+      <IonFooter class="ion-padding ion-no-border">
+      <KolaYellowButton @click="viewItemReview">Continue</KolaYellowButton>
+    </IonFooter>
+  </form>
     </ion-content>
   </ion-page>
 </template>
@@ -112,12 +118,13 @@ import {
   IonPage, IonText, IonToolbar, IonButtons, IonBackButton, IonTitle, IonCard, IonButton,
   IonIcon, IonCardContent, IonContent, IonFooter, IonAvatar, IonList, IonItem, IonLabel,
   IonSearchbar, IonSkeletonText, IonRow, IonCol, IonInput, IonImg, IonCardHeader, IonCardSubtitle,
-  IonCardTitle, IonRadio, IonRadioGroup 
+  IonCardTitle, IonRadio, IonRadioGroup
 } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { close, heartOutline, heart, cart, cartOutline, shareOutline} from 'ionicons/icons';
+import { close, heartOutline, heart, cart, cartOutline, shareOutline } from 'ionicons/icons';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { mapStores } from 'pinia';
+import { useForm } from "@/composables/form";
 import { useProductStore } from '@/stores/ProductStore';
 import KolaWhiteButton from '@/components/KolaWhiteButton.vue';
 import Image from '@/components/Image.vue';
@@ -152,6 +159,12 @@ export default defineComponent({
     ...mapStores(useProductStore)
   },
   methods: {
+    const form = useForm({
+location: "Accra",
+landmark: "",
+delivery_date: "12/02/2022"
+});
+
     viewItemReview() {
       this.$router.push('/shopper/item-review');
     },
@@ -168,6 +181,7 @@ export default defineComponent({
 ion-card {
   margin: 2px;
   color: #000000;
+  padding: 9px;
 }
 
 .card-section {

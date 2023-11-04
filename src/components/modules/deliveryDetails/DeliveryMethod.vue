@@ -10,10 +10,10 @@
       </section>
       <section class="d-flex flex-column">
         <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
-          <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>Achimota Golf Club, 180a
+          <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>{{ location || "Not available" }}
         </IonText>
         <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
-          <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon>Delivery Date - 2.08.2023
+          <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon>{{ deliveryDate || "Not available" }}
         </IonText>
       </section>
     </ion-radio-group>
@@ -40,8 +40,10 @@
 <script setup>
 import { locationOutline, timeOutline } from "ionicons/icons";
 import { IonIcon, IonText, IonRadio, IonRadioGroup } from "@ionic/vue";
-import { ref } from "vue";
-const selectedDelivery = ref("standard"); // Initialize with a default value
+import { ref }  from "vue";
+const selectedDelivery = ref("standard");
+
+const props = defineProps(['location', 'deliveryDate',]);
 
 </script>
 
