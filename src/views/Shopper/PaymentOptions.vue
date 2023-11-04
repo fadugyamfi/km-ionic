@@ -112,10 +112,10 @@ import {
   IonPage, IonText, IonToolbar, IonButtons, IonBackButton, IonTitle, IonCard, IonButton,
   IonIcon, IonCardContent, IonContent, IonFooter, IonAvatar, IonList, IonItem, IonLabel,
   IonSearchbar, IonSkeletonText, IonRow, IonCol, IonInput, IonImg, IonCardHeader, IonCardSubtitle,
-  IonCardTitle
+  IonCardTitle, IonRadio, IonRadioGroup 
 } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import { close, heartOutline, heart, cart, cartOutline, shareOutline } from 'ionicons/icons';
+import { close, heartOutline, heart, cart, cartOutline, shareOutline} from 'ionicons/icons';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { mapStores } from 'pinia';
 import { useProductStore } from '@/stores/ProductStore';
@@ -181,7 +181,42 @@ ion-card {
   margin-bottom: 2px;
 }
 
+ion-radio.radio-checked::part(container) {
+  background: #21d187;
+  border-color: transparent;
+}
+
 .radio-text {
   color: #787486;
+}
+
+ion-radio::part(container) {
+  width: 18px;
+  height: 18px;
+
+  border-radius: 20px;
+  border: 1.5px solid #e7eaec;
+}
+
+ion-radio::part(mark) {
+  background: none;
+  transition: none;
+  transform: none;
+  border-radius: 0;
+}
+
+ion-radio.radio-checked::part(container) {
+  background: #21d187;
+  border-color: transparent;
+}
+
+ion-radio.radio-checked::part(mark) {
+  width: 6px;
+  height: 9px;
+  border-width: 0px 2px 2px 0px;
+  border-style: solid;
+  border-color: #fff;
+  transform: rotate(45deg);
+
 }
 </style>
