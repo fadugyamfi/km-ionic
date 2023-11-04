@@ -218,7 +218,12 @@
             "selectSaleAgent": "Select a sales agent",
             "howDoTheyUsuallyPay": "How do they usually pay",
             "selectPaymentMethod": "Select payment method",
-            "save": "Save"
+            "save": "Save",
+            "locationUnknown":" Location Unknown",
+            "updateCustomer": "Update customer",
+            "removeCustomer": "Remove customer",
+            "searchCustomers": "Find Customer By Name"
+
         }
     }
 }

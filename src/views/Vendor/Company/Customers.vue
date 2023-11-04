@@ -17,16 +17,31 @@
               class="d-flex ion-align-items-center ion-justify-content-center"
             >
               <IonLabel>Customers</IonLabel>
-              <ion-badge color="warning">{{ customers.length }}</ion-badge>
+              <ion-badge class="badge">{{ customers.length }}</ion-badge>
             </section></IonTitle
           >
           <ion-buttons slot="end">
-            <IonButton>
+            <IonButton v-if="customers.length <= 0">
               <img src="/images/user-plus.svg" alt="" />
             </IonButton>
+            <ion-button
+              v-else
+              @click="searchEnabled = !searchEnabled"
+              color="dark"
+            >
+              <IonIcon :icon="search"></IonIcon>
+            </ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
+      <IonToolbar v-if="searchEnabled">
+        <IonSearchbar
+          :placeholder="$t('profile.customers.searchCustomers') + '...'"
+          class="search-input"
+          @keyup.enter="onSearch($event)"
+          @ion-change="onSearch($event)"
+        ></IonSearchbar>
+      </IonToolbar>
     </IonHeader>
     <ion-content>
       <IonRefresher
@@ -40,45 +55,17 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <section v-show="!fetching">
-        <!-- <EmptyCustomers></EmptyCustomers> -->
+        <EmptyCustomers v-if="customers.length <= 0"></EmptyCustomers>
         <IonList
-          v-if="!fetching"
+          v-else
           lines="none"
           class="ion-padding-horizontal customers-select-list simple"
         >
-          <IonItem v-for="customer in customers" :key="customer.id">
-            <IonAvatar slot="start">
-              <Image :src="customer.logo"></Image>
-            </IonAvatar>
-            <IonLabel>
-              <p class="ion-no-margin">{{ customer.name }}</p>
-              <IonText color="medium" class="font-medium">
-                {{ customer.location || "Location Unknown" }}
-              </IonText>
-              <IonText><IonChip>new</IonChip></IonText>
-            </IonLabel>
-            <ion-icon
-              :id="`popover-button-${customer.id}`"
-              color="medium"
-              :icon="ellipsisHorizontal"
-            ></ion-icon>
-            <IonPopover
-              :trigger="`popover-button-${customer.id}`"
-              :dismiss-on-select="true"
-            >
-              <IonContent scroll-y="false">
-                <IonList>
-                  <IonItem :button="true" :detail="false">
-                    <IonIcon :icon="createOutline"></IonIcon> Update customer
-                  </IonItem>
-                  <IonItem :button="true" :detail="false">
-                    <IonIcon :icon="trashOutline"></IonIcon>
-                    Remove customer</IonItem
-                  >
-                </IonList>
-              </IonContent>
-            </IonPopover>
-          </IonItem>
+          <CustomersList
+            v-for="customer in customers"
+            :key="customer.id"
+            :customer="customer"
+          />
         </IonList>
       </section>
     </ion-content>
@@ -99,30 +86,24 @@ import {
   RefresherCustomEvent,
   IonRefresherContent,
   IonRefresher,
-  IonList,
-  IonAvatar,
   IonLabel,
-  IonText,
-  IonItem,
-  IonChip,
   IonIcon,
-  IonPopover,
   IonBadge,
+  IonSearchbar,
+  IonList,
 } from "@ionic/vue";
 import { onMounted, ref } from "vue";
-import {
-  arrowBackOutline,
-  ellipsisHorizontal,
-  createOutline,
-  trashOutline,
-} from "ionicons/icons";
+import { arrowBackOutline, search } from "ionicons/icons";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import Business from "@/models/Business";
-import Image from "@/components/Image.vue";
+import EmptyCustomers from "@/components/modules/customers/EmptyCustomers.vue";
+import CustomersList from "@/components/modules/customers/CustomersList.vue";
 
 const fetching = ref(false);
 const refreshing = ref(false);
+
+const searchEnabled = ref(false);
 
 const customers = ref<Business[]>([]);
 
@@ -131,6 +112,14 @@ const handleRefresh = async (event: RefresherCustomEvent) => {
   await fetchCustomers();
   refreshing.value = false;
   event.target.complete();
+};
+
+const onSearch = async (event: Event) => {
+  refreshing.value = true;
+  await fetchCustomers({
+    name_like: (event.target as HTMLIonSearchbarElement).value,
+  });
+  refreshing.value = false;
 };
 
 const fetchCustomers = async (options = {}) => {
@@ -154,53 +143,9 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.customers-select-list {
-  ion-list-header {
-    padding-left: 0px;
-    font-size: 0.9em;
-  }
-
-  ion-item {
-    --background: #ffffff;
-    border: solid 1px #f4f4f4;
-    border-radius: 12px;
-    margin-bottom: 0.5em;
-    box-shadow: 0px 4px 12px 0px #696f821a;
-  }
-  ion-item ion-chip {
-    --background: #eaecf5;
-    --color: #304296;
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-bottom: 0px;
-  }
-
-  ion-item ion-label {
-    line-height: 1em;
-    display: flex;
-    flex-direction: column;
-  }
-
-  ion-item ion-label p {
-    font-weight: bold;
-    color: #111;
-  }
-
-  &.simple {
-    ion-item {
-      border: solid 1px #f4f4f4;
-      border-radius: 12px;
-      margin-bottom: 0.5em;
-      box-shadow: none;
-      --background: none;
-    }
-  }
-}
-ion-popover {
-  --width: 220px;
-}
-
-ion-icon {
-  margin-right: 10px;
+ion-badge.badge {
+  --background: rgba(245, 170, 41, 0.38);
+  --color: #344054;
+  margin-left: 8px;
 }
 </style>

@@ -21,11 +21,11 @@
 <script lang="ts">
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import KolaGreenButton from "@/components/KolaGreenButton.vue";
-import { IonText } from "@ionic/vue";
+import { IonText, IonFooter } from "@ionic/vue";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  components: { IonText, KolaYellowButton, KolaGreenButton },
+  components: { IonText, IonFooter, KolaYellowButton, KolaGreenButton },
 
   computed: {
     fullPath(): string {

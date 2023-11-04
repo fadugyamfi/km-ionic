@@ -166,7 +166,6 @@ export const useBusinessStore = defineStore("business", {
 
     async getBusinessCustomers(business: Business, limit: number = 50, options = {}, refresh = false): Promise<Business[]> {
       const cacheKey = `kola.business.${business.id}.customers`;
-
       if( await storage.has(cacheKey) && !refresh ) {
         const data = await storage.get(cacheKey);
         return data.map((el: object) => new Business(el));
