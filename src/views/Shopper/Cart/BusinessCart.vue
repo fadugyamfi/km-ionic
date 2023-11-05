@@ -5,10 +5,17 @@
     </section>
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
-      <IonSegment value="personal" mode="ios" v-model="viewing" class="segment-margin">
+      <IonSegment
+        value="personal"
+        mode="ios"
+        v-model="viewing"
+        class="segment-margin"
+      >
         <IonSegmentButton value="cart">
           <div class="segment-button">
-            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
+            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }"
+              >Cart</IonLabel
+            >
             <IonBadge>{{ orderBusiness?.order_items?.length }}</IonBadge>
           </div>
         </IonSegmentButton>
@@ -19,7 +26,10 @@
       <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
 
       <IonList v-else>
-        <IonItem v-for="(item, index) in orderBusiness?.order_items" :key="item.product?.id">
+        <IonItem
+          v-for="(item, index) in orderBusiness?.order_items"
+          :key="item.product?.id"
+        >
           <ion-thumbnail slot="start" class="custom-thumbnail">
             <Image :src="item.product_image"></Image>
           </ion-thumbnail>
@@ -30,23 +40,40 @@
               <p>Quantity: {{ item.quantity }}</p>
               <p class="price">
                 {{ item.currency_symbol || "GHS" }}
-                {{ item.quantity * (item.product_price || 0) }}
+                {{
+                  formatAmountWithCommas(
+                    item.quantity * (item.product_price || 0)
+                  )
+                }}
               </p>
-
             </ion-col>
             <ion-col size="1" class="remove-button">
-              <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
-                <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
+              <ion-button
+                fill="clear"
+                color=""
+                @click.prevent.stop="removeFromCart(index)"
+              >
+                <ion-icon
+                  class="remove-icon"
+                  :icon="closeCircleOutline"
+                ></ion-icon>
               </ion-button>
             </ion-col>
-            <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
+            <ProductQuantitySelector
+              @change="updateQuantity(item, $event)"
+            ></ProductQuantitySelector>
           </ion-row>
         </IonItem>
         <CartTotalCard />
       </IonList>
     </ion-content>
-    <IonFooter class="ion-padding ion-no-border" v-if="orderBusiness?.order_items?.length > 0">
-      <KolaYellowButton @click="viewDeliveryDetails"> Proceed to Checkout </KolaYellowButton>
+    <IonFooter
+      class="ion-padding ion-no-border"
+      v-if="orderBusiness?.order_items?.length > 0"
+    >
+      <KolaYellowButton @click="viewDeliveryDetails">
+        Proceed to Checkout
+      </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -77,9 +104,10 @@ import CartHeader from "@/components/header/CartHeader.vue";
 import EmptyCart from "@/components/cards/EmptyCart.vue";
 import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import { formatAmountWithCommas } from "@/utilities";
 import Image from "@/components/Image.vue";
 import { Order } from "@/models/types";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 
 const router = useRouter();
@@ -95,8 +123,8 @@ const viewing = ref("cart");
 
 const segmentValue = ref("cart");
 const updateQuantity = (item: CartItem, newQuantity: number) => {
-  console.log("hello");
   item.quantity = newQuantity;
+  item.total_price = item.quantity * item.product_price;
 };
 
 const removeFromCart = (index: number) => {
