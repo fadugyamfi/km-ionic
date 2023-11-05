@@ -1,6 +1,7 @@
 import { useUserStore } from "@/stores/UserStore";
 import TabsPage from "@/views/Shopper/TabsPage.vue";
 import HomePage from "@/views/Shopper/HomePage.vue";
+import OrderDetails from "@/views/Shopper/OrderDetails.vue";
 
 export const ShopperModeRoutes = [
   {
@@ -96,6 +97,10 @@ export const ShopperModeRoutes = [
         component: () => import("@/views/Shopper/ProductSearchResults.vue"),
       },
       {
+        path: "no-business-results",
+        component: () => import("@/views/Shopper/NoBusinessResults.vue"),
+      },
+      {
         path: "orders",
         component: () => import("@/views/Shopper/Orders.vue"),
         children: [
@@ -116,25 +121,36 @@ export const ShopperModeRoutes = [
         ],
       },
       {
-        path: "cart/:id",
+        path: "cart",
         component: () => import("@/views/Shopper/Cart.vue"),
+        children: [
+          {
+            path: "",
+            redirect: "/shopper/cart/business",
+          },
+          {
+            path: "business",
+            component: () => import("@/views/Shopper/Cart/Bussiness.vue"),
+          },
+          {
+            path: "business/:id/orders",
+            component: () => import("@/views/Shopper/Cart/BusinessCart.vue"),
+          },
+          {
+            path: "business/:id/delivery-details",
+            component: () => import("@/views/Shopper/Cart/DeliveryDetails.vue"),
+          },
+          {
+            path: "business/:id/payment-options",
+            component: () => import("@/views/Shopper/Cart/PaymentOptions.vue"),
+          },
+          {
+            path: "business/:id/item-review",
+            component: () => import("@/views/Shopper/Cart/ItemReview.vue"),
+          },
+        ],
       },
-      {
-        path: "cart-business",
-        component: () => import("@/views/Shopper/CartBussiness.vue"),
-      },
-      {
-        path: "delivery-details",
-        component: () => import("@/views/Shopper/DeliveryDetails.vue"),
-      },
-      {
-        path: 'payment-options',
-        component: () => import('@/views/Shopper/PaymentOptions.vue')
-      },
-      {
-        path: "item-review",
-        component: () => import("@/views/Shopper/ItemReview.vue"),
-      },
+
       {
         path: "credits",
         component: () => import("@/views/Shopper/Credits.vue"),
@@ -143,7 +159,6 @@ export const ShopperModeRoutes = [
         path: "profile",
         component: () => import("@/views/Shopper/Profile.vue"),
       },
-      
     ],
   },
 ];

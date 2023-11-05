@@ -48,11 +48,6 @@ const props = defineProps(['location', 'deliveryDate',]);
 </script>
 
 <style scoped>
-.wrapper {
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0px 4px 24px 0px rgba(105, 111, 130, 0.1);
-}
 
 ion-radio::part(container) {
   width: 18px;

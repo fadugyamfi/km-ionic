@@ -23,16 +23,31 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { IonCol, IonText, IonRow, IonCard } from '@ionic/vue';
-import { useCartStore } from '@/stores/CartStore';
+import { computed } from "vue";
+import { IonCol, IonText, IonRow, IonCard } from "@ionic/vue";
+import { useCartStore } from "@/stores/CartStore";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 
 const cartStore = useCartStore();
+
 cartStore.loadFromStorage();
-const cartItems = computed(() => cartStore.items)
+const cartOrders = computed(() => cartStore.orders);
 
 const totalCost = computed(() => {
-  return `GHS ${cartItems.value.reduce((total, item) => total + (item.product_price || 0), 0).toFixed(2)}`;
+  const business = cartOrders.value.find(
+    (business: any) => business?.businesses_id == route.params.id
+  );
+  if (business) {
+    const total = business.order_items.reduce(
+      (total, item) => total + (item.total_price || 0),
+      0
+    );
+    if (total) {
+      return total.toFixed(2);
+    }
+  }
 });
 </script>
 
@@ -57,7 +72,8 @@ ion-col.ion-text-end {
   justify-content: flex-end;
 }
 
-.item-text, .item-price {
+.item-text,
+.item-price {
   color: #000;
   font-size: 14px;
   font-family: "Poppins";
@@ -73,5 +89,4 @@ ion-col.ion-text-end {
   justify-content: flex-end;
   align-items: flex-end;
 }
-
 </style>

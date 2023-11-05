@@ -115,7 +115,9 @@ export default defineComponent({
       this.cartStore.removeOrderAtIndex(this.order);
     },
     viewOrderItems() {
-      this.$router.push(`/shopper/cart/${this.order?.businesses_id}`);
+      this.$router.push(
+        `/shopper/cart/business/${this.order?.businesses_id}/orders`
+      );
     },
   },
 });
