@@ -101,7 +101,7 @@ import EmptyCart from "@/components/cards/EmptyCart.vue";
 import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import Image from "@/components/Image.vue"
-import { Order } from "@/models/types";
+import { Order } from "@/models/Order";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
