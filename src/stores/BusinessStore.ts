@@ -49,9 +49,9 @@ export const useBusinessStore = defineStore("business", {
         number_of_small_retailers: '',
         catalog_update_frequency: '',
         number_of_stores: '',
-        business_is_in_large_retail_chain: "No",
+        brand_is_in_large_retail_chain: "No",
         how_you_heard_about_kola: '',
-        goals_and_expectation_of_kolamarket: ""
+        goals_and_expectation_of_kolamarket: "",
       },
       user: {
         pin: '',
@@ -175,6 +175,7 @@ export const useBusinessStore = defineStore("business", {
       try {
         const params = {
           limit,
+          sort: 'name:asc',
           ...options
         };
 
@@ -206,7 +207,8 @@ export const useBusinessStore = defineStore("business", {
       try {
         const params = {
           businesses_id: business.id,
-          limit
+          limit,
+          sort: 'name:asc'
         };
 
         const response = await axios.get(`/v2/sale-agents`, { params });

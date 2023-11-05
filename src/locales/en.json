@@ -25,7 +25,11 @@
         "today": "Today",
         "thisWeek": "This Week",
         "pastMonth": "Past Month",
-        "delete": "Delete"
+        "delete": "Delete",
+        "units": {
+            "box": "Box | Boxes",
+            "piece": "Piece | Pieces"
+        }
     },
     "onboarding": {
         "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -142,6 +146,11 @@
             "productDetails": "Product Details",
             "buyNow": "Buy Now",
             "addToCart": "Add To Cart"
+        },
+        "orders": {
+            "orderDetails": "Order Details",
+            "orderStatus": "Order Status",
+            "delivery": "Delivery"
         }
     },
     "vendor": {
@@ -177,6 +186,7 @@
             "cannotProceedWithTotalCostOfZero": "Cannot proceed with total cost of zero",
             "searchProducts": "Search Product Inventory",
             "searchCustomers": "Find Customer By Name",
+            "filterAgents": "Filter Agents List",
             "addNewSale": "Add New Sale",
             "done": "Done",
             "recordSale": "Record Sale",

@@ -24,11 +24,3 @@ export type FavoritedBusiness = {
     updated_at?: string
     deleted_at?: string | null;
 }
-export type Order = {
-    id?: number | null;
-    cms_users_id?: number | null;
-    businesses_id: number;
-    created_at?: string;
-    updated_at?: string
-    deleted_at?: string | null;
-}

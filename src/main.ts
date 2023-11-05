@@ -24,6 +24,9 @@ import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 import "intl-tel-input/build/css/intlTelInput.css";
 
+import 'swiper/scss';
+import '@ionic/vue/css/ionic-swiper.css';
+
 /* Theme variables */
 // import './theme/variables.css';
 import './theme/app.scss';
