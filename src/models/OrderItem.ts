@@ -1,6 +1,7 @@
 
 import Currency from './Currency';
 import Product from './Product';
+import ProductUnit from './ProductUnit';
 export class OrderItem {
 
     public id?: number | string;
@@ -18,6 +19,7 @@ export class OrderItem {
 
     public _product?: Product | null;
     public _currency?: Currency;
+    public _product_unit?: ProductUnit;
 
     constructor(data: object) {
         Object.assign(this, data);
@@ -41,5 +43,13 @@ export class OrderItem {
 
     set currency(value: object) {
         this._currency = new Currency(value || { symbol: 'GHS' });
+    }
+
+    get product_unit(): ProductUnit | undefined {
+        return this._product_unit;
+    }
+
+    set product_unit(value: object) {
+        this._product_unit = new ProductUnit(value || {});
     }
 }

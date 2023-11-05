@@ -25,7 +25,11 @@
         "today": "Today",
         "thisWeek": "This Week",
         "pastMonth": "Past Month",
-        "delete": "Delete"
+        "delete": "Delete",
+        "units": {
+            "box": "Box | Boxes",
+            "piece": "Piece | Pieces"
+        }
     },
     "onboarding": {
         "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -145,7 +149,8 @@
         },
         "orders": {
             "orderDetails": "Order Details",
-            "orderStatus": "Order Status"
+            "orderStatus": "Order Status",
+            "delivery": "Delivery"
         }
     },
     "vendor": {
