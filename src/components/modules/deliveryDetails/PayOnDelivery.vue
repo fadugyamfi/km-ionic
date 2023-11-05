@@ -1,35 +1,38 @@
 <template>
-  <section class="wrapper ion-padding ion-margin-bottom">
-    <ion-radio-group v-model="selectedOptionPayNow">
-      <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
-        <IonText class="fw-semibold">Pay Now</IonText>
-        <section class="d-flex ion-align-items-center">
-          <IonText class="fw-semibold ion-margin-end"></IonText>
-          <ion-radio value="payNow"></ion-radio>
+  <section>
+    <ion-card>
+      <ion-radio-group v-model="selectedOptionPayNow">
+        <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
+          <IonText class="fw-semibold">Pay Now</IonText>
+          <section class="d-flex ion-align-items-center">
+            <IonText class="fw-semibold ion-margin-end"></IonText>
+            <ion-radio value="payNow"></ion-radio>
+          </section>
         </section>
-      </section>
-      <section class="d-flex flex-column">
-        <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
-          <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>1% Discount Per Box
-        </IonText>
-        <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
-          <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon>Guaranteed 3-Day Delivery
-        </IonText>
-      </section>
-    </ion-radio-group>
-  </section>
-  <section class="wrapper ion-padding">
-    <ion-radio-group v-model="selectedOptionPayOnDelivery">
-      <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
-        <IonText class="fw-semibold">Pay on Delivery</IonText>
-        <section class="d-flex ion-align-items-center">
-          <ion-radio value="payOnDelivery"></ion-radio>
+        <section class="d-flex flex-column">
+          <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+            <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>1% Discount Per Box
+          </IonText>
+          <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+            <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon>Guaranteed 3-Day Delivery
+          </IonText>
         </section>
-      </section>
-      <section class="d-flex flex-column">
-        <IonText color="medium" class="font-medium" style="margin-bottom: 8px">Standard Pricing</IonText>
-      </section>
-    </ion-radio-group>
+      </ion-radio-group>
+    </ion-card>
+
+    <ion-card>
+      <ion-radio-group v-model="selectedOptionPayOnDelivery">
+        <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
+          <IonText class="fw-semibold">Pay on Delivery</IonText>
+          <section class="d-flex ion-align-items-center">
+            <ion-radio value="payOnDelivery"></ion-radio>
+          </section>
+        </section>
+        <section class="d-flex flex-column">
+          <IonText color="medium" class="font-medium" style="margin-bottom: 8px">Standard Pricing</IonText>
+        </section>
+      </ion-radio-group>
+    </ion-card>
   </section>
 </template>
 
@@ -43,18 +46,22 @@ const selectedOptionPayOnDelivery = ref(null);
 
 watch(selectedOptionPayNow, (newValue) => {
   if (newValue === "payNow") {
-    selectedOptionPayOnDelivery.value = null; 
+    selectedOptionPayOnDelivery.value = null;
   }
 });
 
 watch(selectedOptionPayOnDelivery, (newValue) => {
   if (newValue === "payOnDelivery") {
-    selectedOptionPayNow.value = null; 
+    selectedOptionPayNow.value = null;
   }
 });
 </script>
 
 <style scoped>
+ion-card {
+  margin: 6px;
+  padding: 9px;
+}
 
 ion-radio::part(container) {
   width: 18px;

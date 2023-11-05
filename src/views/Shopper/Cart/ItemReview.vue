@@ -6,7 +6,7 @@
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
       <section class="ion-padding">
-        <IonText>Racy Ventures </IonText>
+        <IonText>{{ orderBusiness.business.name }}</IonText>
         <p>GHS 3000 minimum reached</p>
       </section>
       <IonList>
@@ -60,11 +60,12 @@ import {
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
-import { closeCircleOutline } from "ionicons/icons";
+import { business, closeCircleOutline } from "ionicons/icons";
 import ItemReview from "@/components/cards/ItemReview.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
 import Image from "@/components/Image.vue";
+import { useBusinessStore } from '@/stores/BusinessStore';
 import { useRoute } from "vue-router";
 
 
@@ -78,6 +79,7 @@ const orders = computed(() => cartStore.orders);
 cartStore.loadFromStorage();
 const viewing = ref("cart");
 
+
 const segmentValue = ref("cart");
 const updateQuantity = (item: CartItem, newQuantity: number) => {
   console.log("hello");
@@ -87,6 +89,8 @@ const updateQuantity = (item: CartItem, newQuantity: number) => {
 const removeFromCart = (index: number) => {
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
+
+
 
 const getOrderBusiness = async () => {
   await cartStore.persist();
@@ -115,7 +119,9 @@ onMounted(() => {
   margin: 0;
   padding: 0;
 }
-
+.item-row[data-v-f6937d18] {
+    align-items: baseline;
+}
 p {
   color: #667085;
   font-family: Poppins;
