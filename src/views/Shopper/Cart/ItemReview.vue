@@ -6,7 +6,7 @@
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
       <section class="ion-padding">
-        <IonText>{{ orderBusiness.business.name }}</IonText>
+        <IonText>{{  }}</IonText>
         <p>GHS 3000 minimum reached</p>
       </section>
       <IonList>
