@@ -225,7 +225,8 @@
             "searchCustomers": "Find Customer By Name",
             "confirmDeleteCustomer": "Are you sure you want to remove this customer?",
             "actionIsUnreversible":"This action cannot be undone",
-            "remove": "Remove"
+            "remove": "Remove",
+            "new": "new"
 
         }
     }

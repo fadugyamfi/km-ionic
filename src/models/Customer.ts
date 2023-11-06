@@ -12,6 +12,7 @@ export default class Customer {
   public location: NullableString = null;
   public phone_number: NullableString = null;
   public description: NullableString = null;
+  public created_at?: string;
   public min_order_amount: NullableStringOrNumber = null;
   public currency_id: NullableNumber = null;
   public region_id: NullableNumber = null;

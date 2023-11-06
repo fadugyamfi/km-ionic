@@ -12,7 +12,9 @@
         <IonText color="medium" class="font-medium">
           {{ customer.location || $t("profile.customers.locationUnknown") }}
         </IonText>
-        <IonText><IonChip>new</IonChip></IonText>
+        <IonText v-if="isNewCustomer(customer.created_at)"
+          ><IonChip>{{ $t("profile.customers.new") }}</IonChip></IonText
+        >
       </IonLabel>
       <IonButton
         :id="`popover-button-${customer.id}`"
@@ -76,6 +78,7 @@ import Image from "@/components/Image.vue";
 import DeleteCustomerModal from "@/components/modules/customers/DeleteCustomerModal.vue";
 import Customer from "@/models/Customer";
 import { useCustomerStore } from "@/stores/CustomerStore";
+import { getDateFromNow } from "@/utilities";
 
 const props = defineProps({
   customers: {
@@ -83,15 +86,18 @@ const props = defineProps({
     default: () => [],
   },
 });
+
+const customerStore = useCustomerStore();
+
 const selectedCustomer = ref<Customer>();
 const showConfirmDeleteModal = ref(false);
-const customerStore = useCustomerStore();
+
+const isNewCustomer = (date: any) => getDateFromNow(7) < date;
 
 const deleteCustomer = (customer: Customer) => {
   selectedCustomer.value = customer;
   showConfirmDeleteModal.value = true;
 };
-
 const onConfirmDelete = async () => {
   showConfirmDeleteModal.value = false;
   await customerStore.deleteCustomer(selectedCustomer.value as Customer);

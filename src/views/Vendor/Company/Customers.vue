@@ -82,7 +82,7 @@ import {
   IonSearchbar,
   IonList,
 } from "@ionic/vue";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
