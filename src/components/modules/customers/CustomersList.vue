@@ -1,50 +1,56 @@
 <template>
-  <IonItem>
-    <IonAvatar slot="start">
-      <Image :src="customer.logo"></Image>
-    </IonAvatar>
-    <IonLabel>
-      <p class="ion-no-margin">{{ customer.name }}</p>
-      <IonText color="medium" class="font-medium">
-        {{ customer.location || $t("profile.customers.locationUnknown") }}
-      </IonText>
-      <IonText><IonChip>new</IonChip></IonText>
-    </IonLabel>
-    <ion-icon
-      :id="`popover-button-${customer.id}`"
-      color="medium"
-      :icon="ellipsisHorizontal"
-    ></ion-icon>
-    <IonPopover
-      :trigger="`popover-button-${customer.id}`"
-      :dismiss-on-select="true"
-    >
-      <IonContent scroll-y="false">
-        <IonList>
-          <IonItem lines="full" :button="true" :detail="false">
-            <IonIcon :icon="createOutline"></IonIcon>
-            {{ $t("profile.customers.updateCustomer") }}
-          </IonItem>
-          <IonItem
-            lines="none"
-            :button="true"
-            :detail="false"
-            @click="deleteCustomer(customer)"
-          >
-            <IonIcon :icon="trashOutline"></IonIcon>
-            {{ $t("profile.customers.removeCustomer") }}</IonItem
-          >
-        </IonList>
-      </IonContent>
-    </IonPopover>
-  </IonItem>
-
-  <RemoveCustomerModal
+  <IonList
+    lines="none"
+    class="ion-padding-horizontal customers-select-list simple"
+  >
+    <IonItem v-for="customer in customers" :key="customer.id">
+      <IonAvatar slot="start">
+        <Image :src="customer.logo"></Image>
+      </IonAvatar>
+      <IonLabel>
+        <p class="ion-no-margin">{{ customer.name }}</p>
+        <IonText color="medium" class="font-medium">
+          {{ customer.location || $t("profile.customers.locationUnknown") }}
+        </IonText>
+        <IonText><IonChip>new</IonChip></IonText>
+      </IonLabel>
+      <IonButton
+        :id="`popover-button-${customer.id}`"
+        fill="clear"
+        color="dark"
+      >
+        <ion-icon color="medium" :icon="ellipsisHorizontal"></ion-icon>
+      </IonButton>
+      <IonPopover
+        :trigger="`popover-button-${customer.id}`"
+        :dismiss-on-select="true"
+      >
+        <IonContent scroll-y="false">
+          <IonList>
+            <IonItem lines="full" :button="true" :detail="false">
+              <IonIcon :icon="createOutline"></IonIcon>
+              {{ $t("profile.customers.updateCustomer") }}
+            </IonItem>
+            <IonItem
+              lines="none"
+              :button="true"
+              :detail="false"
+              @click="deleteCustomer(customer)"
+            >
+              <IonIcon :icon="trashOutline"></IonIcon>
+              {{ $t("profile.customers.removeCustomer") }}</IonItem
+            >
+          </IonList>
+        </IonContent>
+      </IonPopover>
+    </IonItem>
+  </IonList>
+  <DeleteCustomerModal
     :isOpen="showConfirmDeleteModal"
     :customer="selectedCustomer"
     @dismiss="showConfirmDeleteModal = false"
     @confirm="onConfirmDelete()"
-  ></RemoveCustomerModal>
+  />
 </template>
 <script lang="ts" setup>
 import {
@@ -57,6 +63,7 @@ import {
   IonContent,
   IonPopover,
   IonLabel,
+  IonButton,
 } from "@ionic/vue";
 import {
   ellipsisHorizontal,
@@ -66,14 +73,14 @@ import {
 import { PropType, ref } from "vue";
 
 import Image from "@/components/Image.vue";
-import RemoveCustomerModal from "@/components/modules/customers/RemoveCustomerModal.vue";
+import DeleteCustomerModal from "@/components/modules/customers/DeleteCustomerModal.vue";
 import Customer from "@/models/Customer";
 import { useCustomerStore } from "@/stores/CustomerStore";
 
 const props = defineProps({
-  customer: {
-    type: Object as PropType<Customer>,
-    default: () => ({}),
+  customers: {
+    type: Object as PropType<Customer[]>,
+    default: () => [],
   },
 });
 const selectedCustomer = ref<Customer>();

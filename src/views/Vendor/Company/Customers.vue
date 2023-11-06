@@ -55,18 +55,8 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <section v-show="!fetching">
-        <EmptyCustomers v-if="customers.length <= 0"></EmptyCustomers>
-        <IonList
-          v-else
-          lines="none"
-          class="ion-padding-horizontal customers-select-list simple"
-        >
-          <CustomersList
-            v-for="customer in customers"
-            :key="customer.id"
-            :customer="customer"
-          />
-        </IonList>
+        <EmptyCustomers v-if="customers.length == 0"></EmptyCustomers>
+        <CustomersList :customers="customers" />
       </section>
     </ion-content>
   </ion-page>
