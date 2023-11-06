@@ -7,7 +7,7 @@
 // global intlTelInputUtils
 
 import { defineComponent } from 'vue';
-import { intlTelInput } from "intl-tel-input";
+import intlTelInput from "intl-tel-input";
 
 let intlInput: any = null;
 
