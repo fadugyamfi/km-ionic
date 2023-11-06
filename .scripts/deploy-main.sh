@@ -11,6 +11,6 @@ echo "Deployment started ..."
 git restore package-lock.json
 git pull
 npm install
-ionic build --prod
+npm run build --prod
 
 echo "Deployment finished!"
