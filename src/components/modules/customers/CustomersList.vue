@@ -25,7 +25,12 @@
             <IonIcon :icon="createOutline"></IonIcon>
             {{ $t("profile.customers.updateCustomer") }}
           </IonItem>
-          <IonItem lines="none" :button="true" :detail="false">
+          <IonItem
+            lines="none"
+            :button="true"
+            :detail="false"
+            @click="deleteCustomer(customer)"
+          >
             <IonIcon :icon="trashOutline"></IonIcon>
             {{ $t("profile.customers.removeCustomer") }}</IonItem
           >
@@ -33,6 +38,13 @@
       </IonContent>
     </IonPopover>
   </IonItem>
+
+  <RemoveCustomerModal
+    :isOpen="showConfirmDeleteModal"
+    :customer="selectedCustomer"
+    @dismiss="showConfirmDeleteModal = false"
+    @confirm="onConfirmDelete()"
+  ></RemoveCustomerModal>
 </template>
 <script lang="ts" setup>
 import {
@@ -51,15 +63,34 @@ import {
   createOutline,
   trashOutline,
 } from "ionicons/icons";
+import { PropType, ref } from "vue";
+
 import Image from "@/components/Image.vue";
+import RemoveCustomerModal from "@/components/modules/customers/RemoveCustomerModal.vue";
+import Customer from "@/models/Customer";
+import { useCustomerStore } from "@/stores/CustomerStore";
 
 const props = defineProps({
   customer: {
-    type: Object,
+    type: Object as PropType<Customer>,
     default: () => ({}),
   },
 });
+const selectedCustomer = ref<Customer>();
+const showConfirmDeleteModal = ref(false);
+const customerStore = useCustomerStore();
+
+const deleteCustomer = (customer: Customer) => {
+  selectedCustomer.value = customer;
+  showConfirmDeleteModal.value = true;
+};
+
+const onConfirmDelete = async () => {
+  showConfirmDeleteModal.value = false;
+  await customerStore.deleteCustomer(selectedCustomer.value as Customer);
+};
 </script>
+
 <style lang="scss" scoped>
 .customers-select-list {
   ion-list-header {

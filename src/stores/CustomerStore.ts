@@ -24,5 +24,23 @@ export const useCustomerStore = defineStore("customer", {
         })
         .catch((error) => handleAxiosRequestError(error));
     },
+
+    async deleteCustomer(customer: Customer) {
+      const userStore = useUserStore();
+
+      return axios
+        .delete(
+          `/v2/businesses/${userStore.activeBusiness?.id}/customers/${customer.id}`
+        )
+        .then(() => {
+          const index = this.customers.findIndex((c) => c.id == customer.id);
+          if (index > -1) {
+            this.customers.splice(index, 1);
+          }
+        })
+        .catch((error) => {
+          handleAxiosRequestError(error);
+        });
+    },
   },
 });
