@@ -22,7 +22,7 @@
       <IonItem
         :detail="true"
         class="profile-item"
-        :router-link="`${path}/company/customers`"
+        router-link="/profile/company/customers"
       >
         <IonAvatar slot="start">
           <img src="/images/ic_password.svg" class="action-img" />
@@ -80,12 +80,6 @@ export default defineComponent({
 
   computed: {
     ...mapStores(useUserStore),
-    path() {
-      if (this.$route.fullPath.includes("vendor")) {
-        return "/vendor/profile";
-      }
-      return "/shopper/profile";
-    },
   },
 
   data() {

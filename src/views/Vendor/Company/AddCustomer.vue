@@ -9,7 +9,7 @@
               :icon="arrowBackOutline"
               text=""
               style="margin-left: 10px"
-              :defaultHref="`${path}/company/customers`"
+              defaultHref="/profile/company/customers"
             ></ion-back-button>
           </ion-buttons>
           <IonTitle size="small" class="fw-bold">{{
@@ -174,13 +174,6 @@ const form = useForm({
   payment_method: "",
 });
 
-const path = computed(() => {
-  if (route.fullPath.includes("vendor")) {
-    return "/vendor/profile";
-  }
-  return "/shopper/profile";
-});
-
 const formValid = computed(() => {
   const fields = form.fields;
 
@@ -203,7 +196,7 @@ const createCustomer = async () => {
     });
     if (customer) {
       toastStore.unblockUI();
-      router.push(`${path.value}/company/customers`);
+      router.push("profile/company/customers");
       toastStore.showSuccess("Customer has been added successfully");
     } else {
       toastStore.unblockUI();

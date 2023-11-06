@@ -27,14 +27,9 @@ import { defineComponent } from "vue";
 export default defineComponent({
   components: { IonText, IonFooter, KolaYellowButton, KolaGreenButton },
 
-  computed: {
-    fullPath(): string {
-      return this.$route.fullPath;
-    },
-  },
   methods: {
     addCustomer() {
-      this.$router.push(`${this.fullPath}/add-customer`);
+      this.$router.push('/profile/company/customers/add-customer');
     },
   },
 });
