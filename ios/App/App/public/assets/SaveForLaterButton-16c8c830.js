@@ -1,0 +1,1 @@
+import{_ as t,d as e,r as n,x as s,o as a,c as r,w as c,g as _}from"./index-f92ce253.js";const p=e({components:{IonButton:n}});function i(l,d,f,m,u,x){const o=s("ion-button");return a(),r(o,{size:"small",slot:"end",color:"light"},{default:c(()=>[_("Save for later")]),_:1})}const $=t(p,[["render",i]]);export{$ as S};

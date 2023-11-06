@@ -1,0 +1,8 @@
+{
+	"appId": "market.kola.app",
+	"appName": "Kola Market",
+	"webDir": "dist",
+	"server": {
+		"androidScheme": "https"
+	}
+}

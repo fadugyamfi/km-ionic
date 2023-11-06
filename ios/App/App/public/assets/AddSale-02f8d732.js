@@ -1,0 +1,1 @@
+import{d as n,ay as a,i as s,_ as c,x as e,o as r,c as _,w as p,e as u}from"./index-f92ce253.js";const l=n({components:{IonRouterOutlet:a,IonPage:s}});function d(f,m,i,I,x,$){const o=e("IonRouterOutlet"),t=e("IonPage");return r(),_(t,null,{default:p(()=>[u(o)]),_:1})}const C=c(l,[["render",d]]);export{C as default};
