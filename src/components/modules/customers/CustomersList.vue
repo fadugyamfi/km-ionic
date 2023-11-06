@@ -29,7 +29,12 @@
       >
         <IonContent scroll-y="false">
           <IonList>
-            <IonItem lines="full" :button="true" :detail="false">
+            <IonItem
+              @click="updateCustomer(customer)"
+              lines="full"
+              :button="true"
+              :detail="false"
+            >
               <IonIcon :icon="createOutline"></IonIcon>
               {{ $t("profile.customers.updateCustomer") }}
             </IonItem>
@@ -73,7 +78,7 @@ import {
   trashOutline,
 } from "ionicons/icons";
 import { PropType, ref } from "vue";
-
+import { useRouter } from "vue-router";
 import Image from "@/components/Image.vue";
 import DeleteCustomerModal from "@/components/modules/customers/DeleteCustomerModal.vue";
 import Customer from "@/models/Customer";
@@ -87,6 +92,7 @@ const props = defineProps({
   },
 });
 
+const router = useRouter();
 const customerStore = useCustomerStore();
 
 const selectedCustomer = ref<Customer>();
@@ -101,6 +107,10 @@ const deleteCustomer = (customer: Customer) => {
 const onConfirmDelete = async () => {
   showConfirmDeleteModal.value = false;
   await customerStore.deleteCustomer(selectedCustomer.value as Customer);
+};
+
+const updateCustomer = (customer: Customer) => {
+  router.push(`/profile/company/customers/${customer.id}/update-customer`);
 };
 </script>
 
