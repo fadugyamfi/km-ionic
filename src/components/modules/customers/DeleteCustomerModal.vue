@@ -4,24 +4,21 @@
       <div class="ion-text-center">
         <p class="d-flex ion-justify-content-center">
           <IonAvatar>
-            <!-- <IonIcon :icon="warningOutline" color="danger"></IonIcon> -->
             <Image src="/images/vendor/alert-triangle-icon.svg" />
           </IonAvatar>
         </p>
         <h6 class="fw-semibold">
-          <!-- {{ $t("vendor.sales.confirmDeleteSale") }} -->
-          Are you sure you want to remove this customer?
+          {{ $t("profile.customers.confirmDeleteCustomer") }}
         </h6>
         <p>
           <IonText color="muted">
-            <!-- {{ $t("vendor.sales.actionIsUnreversible") }} -->
-            This action cannot be undone
+            {{ $t("profile.customers.actionIsUnreversible") }}
           </IonText>
         </p>
       </div>
 
       <KolaYellowButton class="ion-margin-top" @click="confirm()">{{
-        $t("general.delete")
+        $t("profile.customers.remove")
       }}</KolaYellowButton>
       <KolaWhiteButton style="margin-top: 8px" @click="dismiss()">{{
         $t("general.cancel")
@@ -101,7 +98,6 @@ ion-modal#delete-customer-modal ion-icon {
   height: 28px;
   padding: 4px 0;
   background: var(--warning-100, #fef0c7);
- 
 }
 
 ion-modal#delete-customer-modal .wrapper {

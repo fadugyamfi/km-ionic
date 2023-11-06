@@ -16,16 +16,16 @@
             <section
               class="d-flex ion-align-items-center ion-justify-content-center"
             >
-              <IonLabel>Customers</IonLabel>
+              <IonLabel>{{ $t("profile.customers.customers") }}</IonLabel>
               <ion-badge class="badge">{{ customers.length }}</ion-badge>
             </section></IonTitle
           >
           <ion-buttons slot="end">
-            <IonButton v-if="customers.length <= 0">
-              <img src="/images/user-plus.svg" alt="" />
+            <IonButton color="dark" @click="addCustomer()">
+              <IonIcon :icon="personAddOutline" color="dark"></IonIcon>
             </IonButton>
             <ion-button
-              v-else
+              v-if="customers.length > 0"
               @click="searchEnabled = !searchEnabled"
               color="dark"
             >
@@ -83,15 +83,17 @@ import {
   IonList,
 } from "@ionic/vue";
 import { onMounted, ref } from "vue";
-import { arrowBackOutline, search } from "ionicons/icons";
+import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import Business from "@/models/Business";
 import EmptyCustomers from "@/components/modules/customers/EmptyCustomers.vue";
 import CustomersList from "@/components/modules/customers/CustomersList.vue";
+import { useRouter } from "vue-router";
 
 const fetching = ref(false);
 const refreshing = ref(false);
+const router = useRouter();
 
 const searchEnabled = ref(false);
 
@@ -110,6 +112,10 @@ const onSearch = async (event: Event) => {
     name_like: (event.target as HTMLIonSearchbarElement).value,
   });
   refreshing.value = false;
+};
+
+const addCustomer = () => {
+  router.push("/profile/company/customers/add-customer");
 };
 
 const fetchCustomers = async (options = {}) => {
