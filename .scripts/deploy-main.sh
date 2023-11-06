@@ -14,4 +14,6 @@ npm install -g @ionic/cli
 npm install
 npm run build --prod
 
+cp ../public/manifest.webmanifest ../dist/manifest.webmanifest
+
 echo "Deployment finished!"
