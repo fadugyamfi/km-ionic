@@ -30,4 +30,17 @@
     },
   };
   </script>
+
+<style scoped="scss">
+ion-title {
+  color: #000;
+font-family: Poppins;
+font-size: 12px;
+font-style: normal;
+font-weight: 400;
+line-height: 140%; 
+}
+
+</style>
+
   
