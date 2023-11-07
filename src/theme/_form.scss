@@ -12,9 +12,7 @@
     &::part(label) {
       color: #74787c;
     }
-    
   }
-  
 
   overflow: hidden;
 
@@ -96,4 +94,14 @@ p.optional {
   text-transform: none;
   font-weight: 600;
   font-size: 0.75em;
+}
+.save-for-later-button {
+  --background: #f0f0f0 !important;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  --color: #8d9093;
+  --border-radius: 8px;
+  text-transform: none;
+  font-weight: 600;
+  font-size: 12px;
 }

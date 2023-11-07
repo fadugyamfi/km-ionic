@@ -2,10 +2,17 @@
   <IonHeader class="inner-header">
     <IonToolbar class="ion-align-items-center">
       <IonButtons slot="start">
-        <IonBackButton :defaultHref="`/shopper/cart/business/${$route.params.id}/orders`"></IonBackButton>
+        <IonBackButton
+          :defaultHref="`/shopper/cart/business/${$route.params.id}/orders`"
+        ></IonBackButton>
+        
       </IonButtons>
       <IonTitle size="small" class="fw-bold"> Shipping Details </IonTitle>
-      <SaveForLaterButton />
+      <IonButtons slot="end" style="margin-right: 10px;">
+        <IonButton class="save-for-later-button" 
+          >Save for later</IonButton
+        >
+      </IonButtons>
     </IonToolbar>
   </IonHeader>
 </template>
@@ -15,6 +22,7 @@ import {
   IonHeader,
   IonToolbar,
   IonButtons,
+  IonButton,
   IonBackButton,
   IonTitle,
 } from "@ionic/vue";
@@ -28,6 +36,7 @@ export default {
     IonBackButton,
     IonToolbar,
     SaveForLaterButton,
+    IonButton,
   },
 };
 </script>
