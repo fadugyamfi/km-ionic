@@ -24,6 +24,7 @@ export default class Customer {
   public rating?: number = 1;
   public distance?: number = 0;
   public deliveryTime?: string;
+  public business_types_id?: number | string;
   public tags?: Tag[];
 
   constructor(data: object | null) {

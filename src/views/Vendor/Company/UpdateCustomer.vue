@@ -13,16 +13,16 @@
             ></ion-back-button>
           </ion-buttons>
           <IonTitle size="small" class="fw-bold">
-            <!-- {{$t("profile.customers.addCustomer") }} -->
-            Update customer information
+            {{ $t("profile.customers.updateCustomerInfo") }}
           </IonTitle>
         </ion-toolbar>
       </ion-header>
     </IonHeader>
     <ion-content class="ion-padding">
-      <form @submit.prevent="updateCustomer()">
-        {{ businessStore.customers }}
-
+      <div class="ion-padding ion-text-center" v-show="fetching">
+        <IonSpinner name="crescent"></IonSpinner>
+      </div>
+      <form v-show="!fetching" @submit.prevent="updateCustomer()">
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.name }"
@@ -92,26 +92,34 @@
           :toggle-icon="chevronDownOutline"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption></IonSelectOption>
+          <IonSelectOption
+            v-for="agent in salesAgents"
+            :key="agent.id"
+            :value="agent.id"
+            >{{ agent.name }}</IonSelectOption
+          >
         </IonSelect>
         <h6>{{ $t("profile.customers.howDoTheyUsuallyPay") }}</h6>
         <IonSelect
           class="kola-input ion-margin-bottom"
           :label="$t('profile.customers.selectPaymentMethod')"
           :class="{
-            'ion-invalid ion-touched': form.errors.payment_method,
+            'ion-invalid ion-touched': form.errors.business_types_id,
           }"
           labelPlacement="stacked"
           :toggle-icon="chevronDownOutline"
           fill="solid"
-          v-model="form.fields.payment_method"
+          v-model="form.fields.business_types_id"
           required
           name="payment-method"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption>Mobile money</IonSelectOption>
-          <IonSelectOption>Cash</IonSelectOption>
-          <IonSelectOption>Bank transfer</IonSelectOption>
+          <IonSelectOption
+            v-for="mode in paymentModes"
+            :key="mode.id"
+            :value="mode.id"
+            >{{ mode.name }}</IonSelectOption
+          >
         </IonSelect>
         <IonFooter class="ion-padding-top ion-no-border">
           <KolaYellowButton
@@ -140,6 +148,7 @@ import {
   IonSelect,
   IonSelectOption,
   IonCheckbox,
+  IonSpinner,
   IonHeader,
 } from "@ionic/vue";
 import {
@@ -160,8 +169,12 @@ import { useGeolocation } from "@/composables/useGeolocation";
 import { useForm } from "@/composables/form";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useBusinessStore } from "@/stores/BusinessStore";
+import { useUserStore } from "@/stores/UserStore";
+import User from "@/models/User";
+import Customer from "@/models/Customer";
+import Business from "@/models/Business";
 
 const toastStore = useToastStore();
 const customerStore = useCustomerStore();
@@ -170,13 +183,18 @@ const businessStore = useBusinessStore();
 const route = useRoute();
 const router = useRouter();
 
+const fetching = ref(false);
+const customer = ref<Customer>();
+const paymentModes = ref<any>([]);
+const salesAgents = ref<User[]>([]);
+
 const form = useForm({
   name: "",
   location: "",
   business_name: "",
   phone_number: "",
-  cms_users_id: 1,
-  payment_method: "",
+  cms_users_id: "",
+  business_types_id: "",
 });
 
 const formValid = computed(() => {
@@ -188,24 +206,21 @@ const formValid = computed(() => {
     fields.location.length > 0 &&
     isNaN(Number(fields.cms_users_id)) == false &&
     fields.phone_number.length > 0 &&
-    fields.payment_method
+    fields.business_types_id
   );
 });
 
-const customer = computed(() =>
-  businessStore?.customers?.find((c) => c.id == route.params.id)
-);
 const updateCustomer = async () => {
   try {
     toastStore.blockUI("Hold On As We Update Your Customer");
-    const customer = await customerStore.createBusinessCustomer({
-      ...form.fields,
-      business_types_id: 1,
-    });
+    const customer = await customerStore.updateCustomer(
+      form.fields,
+      route.params.id
+    );
     if (customer) {
       toastStore.unblockUI();
       router.push("profile/company/customers");
-      toastStore.showSuccess("Customer has been update successfully");
+      toastStore.showSuccess("Customer has been updated successfully");
     } else {
       toastStore.unblockUI();
       toastStore.showError(
@@ -235,14 +250,48 @@ const getLocation = async () => {
     toastStore.showError("Cannot retrieve location info");
   }
 };
+const fetchCustomer = async () => {
+  fetching.value = true;
+  const userStore = useUserStore();
+  customer.value = await customerStore.getCustomer(
+    userStore.activeBusiness as Business,
+    route.params.id
+  );
+  fetching.value = false;
+  form.fields.name = customer.value.name;
+  form.fields.location = customer.value.location;
+  form.fields.phone_number = customer.value.phone_number;
+  form.fields.business_types_id = customer.value.business_types_id;
+};
+const getPaymentModes = async () => {
+  try {
+    fetching.value = true;
+    const response = await axios.get("/v2/payment-modes");
+    if (response) {
+      fetching.value = false;
+      paymentModes.value = response.data.data;
+    }
+  } catch (error) {}
+};
+const fetchBusinessSalesAgent = async () => {
+  fetching.value = true;
+  const userStore = useUserStore();
+  const businessStore = useBusinessStore();
+  salesAgents.value = await businessStore.getBusinessSaleAgents(
+    userStore.activeBusiness as Business,
+    50
+  );
+  fetching.value = false;
+};
+
+onMounted(() => {
+  fetchCustomer();
+  getPaymentModes();
+  fetchBusinessSalesAgent();
+});
 </script>
 
 <style scoped lang="scss">
-ion-input {
-  color: #74787c;
-  --padding-end: 10px;
-  --padding-start: 10px;
-}
 .use-location {
   --color: #666eed;
   --padding-start: 0px;
