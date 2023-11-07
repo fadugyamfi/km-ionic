@@ -12,8 +12,50 @@ const storage = new AppStorage();
 export const useCustomerStore = defineStore("customer", {
   state: () => ({
     customers: [] as Customer[],
+    nextLink: null as string | null,
+    meta: {},
   }),
   actions: {
+    async getBusinessCustomers(
+      business: Business,
+      limit: number = 100,
+      options = {},
+      refresh = false
+    ): Promise<any> {
+      try {
+        const params = {
+          limit,
+          sort: "name:asc",
+          name_like: "",
+          ...options,
+        };
+        if (refresh) {
+          this.customers = [];
+          this.nextLink = null;
+        }
+        if (this.customers.length && !this.nextLink) {
+          return;
+        }
+        if (params.name_like) {
+          this.nextLink = null;
+        }
+        const link = this.nextLink || `/v2/businesses/${business.id}/customers`;
+
+        const response = await axios.get(link, { params });
+        if (response) {
+          const { data, links, meta } = response.data;
+          this.customers = [...this.customers, ...data];
+          this.meta = meta;
+          this.nextLink = links.next;
+
+          return this.customers;
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+
+      return [];
+    },
     async createBusinessCustomer(postData: Object): Promise<Customer | null> {
       const userStore = useUserStore();
       return axios

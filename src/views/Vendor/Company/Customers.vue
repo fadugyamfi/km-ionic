@@ -17,7 +17,7 @@
               class="d-flex ion-align-items-center ion-justify-content-center"
             >
               <IonLabel>{{ $t("profile.customers.customers") }}</IonLabel>
-              <ion-badge class="badge">{{ customers.length }}</ion-badge>
+              <ion-badge class="badge">{{ customers?.length }}</ion-badge>
             </section></IonTitle
           >
           <ion-buttons slot="end">
@@ -25,7 +25,7 @@
               <IonIcon :icon="personAddOutline" color="dark"></IonIcon>
             </IonButton>
             <ion-button
-              v-if="customers.length > 0"
+              v-if="customers?.length > 0"
               @click="searchEnabled = !searchEnabled"
               color="dark"
             >
@@ -55,9 +55,12 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <section v-show="!fetching">
-        <EmptyCustomers v-if="customers.length == 0"></EmptyCustomers>
+        <EmptyCustomers v-if="customers?.length == 0"></EmptyCustomers>
         <CustomersList :customers="customers" />
       </section>
+      <ion-infinite-scroll @ionInfinite="ionInfinite">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </ion-content>
   </ion-page>
 </template>
@@ -81,6 +84,9 @@ import {
   IonBadge,
   IonSearchbar,
   IonList,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  InfiniteScrollCustomEvent
 } from "@ionic/vue";
 import { computed, onMounted, ref } from "vue";
 import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
@@ -90,17 +96,21 @@ import Business from "@/models/Business";
 import EmptyCustomers from "@/components/modules/customers/EmptyCustomers.vue";
 import CustomersList from "@/components/modules/customers/CustomersList.vue";
 import { useRouter } from "vue-router";
+import { useCustomerStore } from "@/stores/CustomerStore";
 
 const fetching = ref(false);
 const refreshing = ref(false);
+const currentPage = ref(1);
 const router = useRouter();
 
 const searchEnabled = ref(false);
 
-const customers = ref<Business[]>([]);
+const customers = ref<any[]>([]);
+const paginatedCustomers = ref<Business[]>([]);
 
 const handleRefresh = async (event: RefresherCustomEvent) => {
   refreshing.value = true;
+  fetching.value = true;
   await fetchCustomers();
   refreshing.value = false;
   event.target.complete();
@@ -108,6 +118,7 @@ const handleRefresh = async (event: RefresherCustomEvent) => {
 
 const onSearch = async (event: Event) => {
   refreshing.value = true;
+  fetching.value = true;
   await fetchCustomers({
     name_like: (event.target as HTMLIonSearchbarElement).value,
   });
@@ -118,14 +129,21 @@ const addCustomer = () => {
   router.push("/profile/company/customers/add-customer");
 };
 
-const fetchCustomers = async (options = {}) => {
-  fetching.value = true;
-  const userStore = useUserStore();
-  const businessStore = useBusinessStore();
+const ionInfinite = async (ev: InfiniteScrollCustomEvent) => {
+  await fetchCustomers();
+  ev.target.complete();
+};
 
-  customers.value = await businessStore.getBusinessCustomers(
+const fetchCustomers = async (options = {}) => {
+  if (customers.value?.length == 0) {
+    fetching.value = true;
+  }
+  const userStore = useUserStore();
+  const customerStore = useCustomerStore();
+
+  customers.value = await customerStore.getBusinessCustomers(
     userStore.activeBusiness as Business,
-    300,
+    100,
     options,
     refreshing.value
   );
