@@ -119,6 +119,10 @@ let creating = ref(false);
 const router = useRouter();
 const toastStore = useToastStore();
 
+const loginDisabled = computed(() => {
+    return !!import.meta.env.VITE_LOGIN_DISABLED == true;
+})
+
 const form = useForm({
     name: '',
     business_location: '',
@@ -163,10 +167,14 @@ const onContinue = async () => {
                 pin_confirmation: form.fields.pin_confirmation
             });
 
-            await userStore.fetchUserInfo();
-            await userStore.fetchUserBusinesses();
+            if( !loginDisabled ) {
+                await userStore.fetchUserInfo();
+                await userStore.fetchUserBusinesses();
 
-            router.push('/shopper');
+                router.push('/shopper');
+            } else {
+                router.push('/signup/vendor/signup-complete')
+            }
         } else {
             toastStore.unblockUI();
             toastStore.showError("Account Registration Failed. Please try again", '', 'bottom', 'footer')

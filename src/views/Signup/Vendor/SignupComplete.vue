@@ -12,7 +12,7 @@
         </IonContent>
 
         <IonFooter class="ion-padding ion-no-border">
-            <KolaYellowButton router-link="/shopper" class="ion-margin-bottom">
+            <KolaYellowButton v-if="!loginDisabled" router-link="/shopper" class="ion-margin-bottom">
                 {{  $t('signup.vendor.continueToShopping') }}
             </KolaYellowButton>
 
@@ -44,13 +44,20 @@ export default defineComponent({
     },
 
     computed: {
-        ...mapStores( useBusinessStore, useUserStore )
+        ...mapStores( useBusinessStore, useUserStore ),
+
+        loginDisabled() {
+            return !!import.meta.env.VITE_LOGIN_DISABLED == true;
+        }
     },
 
     mounted() {
         this.businessStore.loadCachedRegistrationInfo();
-        this.userStore.fetchUserInfo();
-        this.userStore.fetchUserBusinesses();
+
+        if( !this.loginDisabled ) {
+            this.userStore.fetchUserInfo();
+            this.userStore.fetchUserBusinesses();
+        }
     },
 })
 </script>
