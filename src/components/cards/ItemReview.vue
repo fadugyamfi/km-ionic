@@ -3,7 +3,7 @@
     <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
       <IonText class="fw-semibold">Items total</IonText>
       <section class="d-flex ion-align-items-center">
-        <IonText class="fw-semibold ion-margin-end">GHS 10.00</IonText>
+        <IonText class="fw-semibold ion-margin-end">{{ totalCost }}</IonText>
       </section>
     </section>
     <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
@@ -14,7 +14,7 @@
     </section>
     <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
       <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
-        <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>Achimota Golf Club, 180a
+        <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>Delivery Address
       </IonText>
       <section class="d-flex ion-align-items-center">
         <IonText class="ion-margin-end date-color">Change address</IonText>
@@ -31,34 +31,52 @@
     <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
       <IonText class="fw-semibold">Total Cost</IonText>
       <section class="d-flex ion-align-items-center">
-        <IonText class="fw-semibold ion-margin-end">GHS 10.00</IonText>
+        <IonText class="fw-semibold ion-margin-end">{{ totalCost }}</IonText>
       </section>
     </section>
   </IonCard>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { IonText, IonCard, IonIcon, } from '@ionic/vue';
-import { useCartStore } from '@/stores/CartStore';
+import { computed } from "vue";
+import { IonText, IonCard } from "@ionic/vue";
+import { useCartStore } from "@/stores/CartStore";
 import { locationOutline, timeOutline } from "ionicons/icons";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 
 const cartStore = useCartStore();
+
 cartStore.loadFromStorage();
-const cartItems = computed(() => cartStore.items)
+const cartOrders = computed(() => cartStore.orders);
 
 const totalCost = computed(() => {
-  return `GHS ${cartItems.value.reduce((total, item) => total + (item.product_price || 0), 0).toFixed(2)}`;
+  const business = cartOrders.value.find(
+    (business: any) => business?.businesses_id == route.params.id
+  );
+  if (business) {
+    const total = business.order_items.reduce(
+      (total, item) => total + (item.total_price || 0),
+      0
+    );
+    if (total) {
+      return total.toFixed(2);
+    }
+  }
 });
 </script>
+
 
 <style scoped lang="scss">
 .date-color {
   color: #666EED;
 }
-ion-card{
-  padding:9px;
+
+ion-card {
+  padding: 9px;
 }
+
 .fw-semibold {
   flex: 1 0 0;
   color: var(--text-primary, #000);
