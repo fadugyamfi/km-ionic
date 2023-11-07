@@ -1,97 +1,102 @@
 <template>
-    <section class="quantity-selector d-flex ion-align-items-center ion-justify-content-center">
-        <IonButton fill="clear" size="small" @click="decreaseQuantity()">
-            <IonIcon slot="icon-only" :icon="remove" color="dark"></IonIcon>
-        </IonButton>
+  <section
+    class="quantity-selector d-flex ion-align-items-center ion-justify-content-center"
+  >
+    <IonButton fill="clear" size="small" @click="decreaseQuantity()">
+      <IonIcon slot="icon-only" :icon="remove" color="dark"></IonIcon>
+    </IonButton>
 
-        <IonInput
-            v-model="quantity"
-            type="number"
-            fill="outline"
-            @ion-change="updateQuantity()"
-            @ion-blur="updateQuantity()"
-        ></IonInput>
+    <IonInput
+      v-model="quantity"
+      type="number"
+      fill="outline"
+      @ion-input="updateQuantity()"
+      @ion-blur="updateQuantity()"
+    ></IonInput>
 
-        <IonButton fill="clear" size="small" @click="increaseQuantity()">
-            <IonIcon slot="icon-only" :icon="add" color="dark"></IonIcon>
-        </IonButton>
-    </section>
+    <IonButton fill="clear" size="small" @click="increaseQuantity()">
+      <IonIcon slot="icon-only" :icon="add" color="dark"></IonIcon>
+    </IonButton>
+  </section>
 </template>
 
 <script lang="ts">
-import { IonButton, IonIcon, IonInput, IonItem } from '@ionic/vue';
-import { defineComponent } from 'vue';
-import { add, remove } from 'ionicons/icons';
+import { IonButton, IonIcon, IonInput, IonItem } from "@ionic/vue";
+import { defineComponent } from "vue";
+import { add, remove } from "ionicons/icons";
 
 export default defineComponent({
+  components: { IonItem, IonButton, IonInput, IonIcon },
 
-    components: { IonItem, IonButton, IonInput, IonIcon },
+  data() {
+    return {
+      add,
+      remove,
+      quantity: 0,
+    };
+  },
 
-    data() {
-        return {
-            add,
-            remove,
-            quantity: 0,
-        }
+  props: {
+    initialQuantity: {
+      default: 1,
+      type: Number,
+    },
+    item: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+
+  emits: ["change"],
+
+  mounted() {
+    this.quantity = this.initialQuantity;
+  },
+
+  methods: {
+    decreaseQuantity() {
+      if (this.quantity == 0) {
+        return;
+      }
+
+      --this.quantity;
+      this.$emit("change", this.quantity);
     },
 
-    props: {
-        initialQuantity: {
-            default: 1,
-            type: Number
-        }
+    increaseQuantity() {
+      if (this.quantity >= 1000) {
+        return;
+      }
+
+      ++this.quantity;
+      console.log(this.quantity);
+      this.$emit("change", this.quantity);
     },
 
-    emits: ['change'],
-
-    mounted() {
-        this.quantity = this.initialQuantity;
+    updateQuantity() {
+      this.$emit("change", +this.quantity);
     },
-
-    methods: {
-        decreaseQuantity() {
-            if( this.quantity == 0 ) {
-                return;
-            }
-
-            --this.quantity;
-            this.$emit('change', this.quantity);
-        },
-
-        increaseQuantity() {
-            if( this.quantity >= 1000 ) {
-                return;
-            }
-
-            ++this.quantity;
-            console.log(this.quantity)
-            this.$emit('change', this.quantity);
-        },
-
-        updateQuantity() {
-            this.$emit('change', +this.quantity);
-        }
-    }
-})
+  },
+});
 </script>
 
 <style scoped lang="scss">
 .quantity-selector {
-    background-color: #F5F5F5;
-    border: none;
-    border-radius: 12px;
-    margin: 10px 0px;
-    padding: 5px 10px;
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 12px;
+  margin: 10px 0px;
+  padding: 5px 10px;
 
-    ion-input {
-        text-align: center;
-        font-size: 16px;
-        font-weight: bold;
-        width: 30%;
-        min-height: 32px !important;
-        height: 32px;
-        border-radius: 8px;
-        margin: 0px 15px;
-    }
+  ion-input {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    width: 30%;
+    min-height: 32px !important;
+    height: 32px;
+    border-radius: 8px;
+    margin: 0px 15px;
+  }
 }
 </style>
