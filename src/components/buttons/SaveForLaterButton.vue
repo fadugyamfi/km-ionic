@@ -13,7 +13,7 @@ export default defineComponent({
 });
 </script>
 
-<style scope="scss">
+<style scope lang="scss">
 ion-buttom{
 font-family: Poppins;
 font-size: 12px;

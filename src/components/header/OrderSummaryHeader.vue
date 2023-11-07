@@ -34,7 +34,7 @@ export default {
 };
 </script>
 
-<style scoped="scss">
+<style scoped lang="scss">
 ion-title{
   color: #000;
 font-family: Poppins;
