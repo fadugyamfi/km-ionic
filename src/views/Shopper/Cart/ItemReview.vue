@@ -34,8 +34,8 @@
         </IonItem>
         <ItemReview />
       </IonList>
+      <UpdateDeliveryDate></UpdateDeliveryDate>
     </ion-content>
-
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton> Continue </KolaYellowButton>
     </IonFooter>
@@ -67,6 +67,7 @@ import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
 import Image from "@/components/Image.vue";
 import { useBusinessStore } from '@/stores/BusinessStore';
 import { useRoute } from "vue-router";
+import UpdateDeliveryDate from "@/components/modules/carts/UpdateDeliveryDate.vue";
 
 
 const route = useRoute();

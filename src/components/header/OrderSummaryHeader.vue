@@ -6,7 +6,7 @@
           :defaultHref="`/shopper/cart/business/${$route.params.id}/payment-options`"
         ></IonBackButton>
       </IonButtons>
-      <IonTitle size="small" class="fw-bold">Order summary </IonTitle>
+      <IonTitle>Order summary </IonTitle>
       <SaveForLaterButton />
     </IonToolbar>
   </IonHeader>
@@ -33,3 +33,16 @@ export default {
   },
 };
 </script>
+
+<style scoped="scss">
+ion-title{
+  color: #000;
+font-family: Poppins;
+font-size: 12px;
+font-style: normal;
+font-weight: 400;
+line-height: 140%; /* 16.8px */
+}
+
+
+</style>
