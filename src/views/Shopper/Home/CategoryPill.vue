@@ -4,7 +4,6 @@
             <Image alt="category name" :src="category.image" />
         </IonAvatar>
         <p>{{ category.name }}</p>
-
     </section>
 </template>
 
@@ -46,10 +45,13 @@ export default defineComponent({
     ion-avatar {
         width: 60px;
         height: 60px;
+        min-height: 60px;
+        background-color: #f9f9f9;
 
         img {
             width: 60px !important;
             height: 60px !important;
+            min-height: 60px;
             object-fit: cover;
         }
     }

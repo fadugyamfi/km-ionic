@@ -45,6 +45,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/Signup/Shopper.vue'),
   },
 
+
   // Vendor Signup Routes
   ...VendorSignupRoutes,
 

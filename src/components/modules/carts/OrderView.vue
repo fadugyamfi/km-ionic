@@ -1,0 +1,157 @@
+<template>
+  <IonItem class="d-flex w-100 ion-align-items-stretch">
+    <section class="d-flex w-100" @click="viewOrderItems()">
+      <IonThumbnail>
+        <Image :src="order?.business?.logo"></Image>
+      </IonThumbnail>
+
+      <section class="w-100">
+        <section
+          style="height: 100%"
+          class="d-flex ion-justify-content-between"
+        >
+          <section class="d-flex flex-column business-description">
+            <IonText class="fw-semibold ellipsis" style="margin-bottom: 5px">
+              {{ order?.business?.name || "Unknown" }}
+            </IonText>
+            <IonText color="medium" class="font-medium">
+              {{ $t("Item total") }}:
+              {{
+                order?.getTotal().toLocaleString("en-GB", {
+                  style: "currency",
+                  currency: "GHS",
+                })
+              }}
+            </IonText>
+            <IonText color="medium" class="font-medium">
+              GHS 3000 minimum reached
+            </IonText>
+            <section class="d-flex">
+              <IonThumbnail
+                v-for="product in order?.order_items"
+                :key="product.products_id"
+                class="cart-items"
+              >
+                <Image :src="product.product_image"></Image>
+              </IonThumbnail>
+            </section>
+          </section>
+        </section>
+      </section>
+    </section>
+
+    <section class="remove-button">
+      <!-- Use <div> or <section> here -->
+      <section class="d-flex align-right">
+        <IonButton
+          fill="clear"
+          color="dark"
+          class="ion-no-margin ion-no-padding ion-align-self-start"
+          @click="removeOrder()"
+        >
+          <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
+        </IonButton>
+      </section>
+    </section>
+  </IonItem>
+</template>
+
+<script lang="ts">
+import {
+  IonButton,
+  IonIcon,
+  IonItem,
+  IonText,
+  IonCol,
+  IonThumbnail,
+} from "@ionic/vue";
+import { PropType, defineComponent } from "vue";
+import ProductQuantitySelector from "../products/ProductQuantitySelector.vue";
+import { closeCircleOutline } from "ionicons/icons";
+import Image from "@/components/Image.vue";
+import { mapStores } from "pinia";
+import { useSaleStore } from "@/stores/SaleStore";
+import { useCartStore } from "@/stores/CartStore";
+import Product from "@/models/Product";
+import { Order } from "@/models/Order";
+
+export default defineComponent({
+  components: {
+    IonItem,
+    IonThumbnail,
+    IonText,
+    ProductQuantitySelector,
+    IonButton,
+    IonIcon,
+    Image,
+    IonCol,
+  },
+
+  props: {
+    order: {
+      type: Object as PropType<Order>,
+    },
+  },
+
+  data() {
+    return {
+      closeCircleOutline,
+    };
+  },
+
+  computed: {
+    ...mapStores(useSaleStore, useCartStore),
+  },
+
+  methods: {
+    updateItemQuantity(quantity: number) {
+      this.order?.update({
+        quantity,
+        total_price: quantity * (this.order?.product?.product_price || 0),
+      });
+    },
+
+    removeOrder() {
+      this.cartStore.removeOrderAtIndex(this.order);
+    },
+    viewOrderItems() {
+      this.$router.push(
+        `/shopper/cart/business/${this.order?.businesses_id}/orders`
+      );
+    },
+  },
+});
+</script>
+
+<style scoped>
+ion-item {
+  --inner-padding-start: 0px;
+  --inner-padding-end: 0px;
+  --padding-start: 0px;
+  margin-bottom: 10px;
+}
+
+.custom-image {
+  width: 24px;
+  height: 24px;
+  border-radius: 2px;
+}
+
+ion-thumbnail {
+  min-width: 85px;
+  height: 120px;
+  margin-right: 10px;
+  --border-radius: 8px;
+}
+
+ion-thumbnail.cart-items {
+  margin-top: 5px;
+  min-width: 24px;
+  margin-right: 0px;
+  height: 45px;
+  --border-radius: 2px;
+}
+.business-description {
+  width: 239px;
+}
+</style>

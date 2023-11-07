@@ -15,7 +15,7 @@
           <ion-label>{{ $t('general.orders') }}</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="tab3" href="/shopper/cart">
+        <ion-tab-button tab="tab3" href="/shopper/cart/business">
           <img src="/images/navigation/cart.svg" />
           <img class="active" src="/images/navigation/cart_active.svg" />
           <ion-label>{{ $t('general.cart') }}</ion-label>

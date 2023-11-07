@@ -63,6 +63,7 @@ import { search, createOutline, powerOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { useToastStore } from '../../stores/ToastStore';
 import { handleAxiosRequestError } from '../../utilities';
+import { AxiosError } from 'axios';
 
 
 export default defineComponent({
@@ -92,9 +93,17 @@ export default defineComponent({
             this.userStore.logout()
                 .then(() => {
                     this.router.replace('/auth/login');
-                    toastStore.unblockUI();
                 })
-                .catch(error => handleAxiosRequestError(error));
+                .catch((error: AxiosError) => {
+                    handleAxiosRequestError(error);
+
+                    // account not authenticated
+                    if( error.response?.status == 403 || error.code == 'ERR_NETWORK' ) {
+                        this.userStore.clearSessionInfo();
+                        this.router.replace('/auth/login');
+                    }
+                })
+                .finally(() => toastStore.unblockUI());
         }
     }
 });

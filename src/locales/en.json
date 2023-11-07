@@ -12,7 +12,24 @@
         "credit": "Credits",
         "orders": "Orders",
         "profile": "Profile",
-        "cart": "Cart"
+        "cart": "Cart",
+        "businesses": "Businesses",
+        "retailer": "Retailer",
+        "wholesaler": "Wholesaler",
+        "keyDistributor": "Key Distributor",
+        "supplier": "Supplier",
+        "search": "Search",
+        "totalCost": "Total Cost",
+        "quantity": "Quantity",
+        "products": "1 product | {count} products",
+        "today": "Today",
+        "thisWeek": "This Week",
+        "pastMonth": "Past Month",
+        "delete": "Delete",
+        "units": {
+            "box": "Box | Boxes",
+            "piece": "Piece | Pieces"
+        }
     },
     "onboarding": {
         "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -112,6 +129,80 @@
             "loadingYourAccountInfo": "Loading Your Account Info",
             "pinResetFailed": "PIN Reset Failed. Please try again",
             "phoneNumberRequired": "Phone Number For Reset Required"
+        }
+    },
+    "shopper": {
+        "home": {
+            "viewAll": "View all",
+            "suppliersNearYou": "Suppliers Near You",
+            "showAll": "Show All",
+            "newArrivals": "New Arrivals"
+        },
+        "businesses": {
+            "noResultsAvailable": "No Results Available",
+            "pleaseTryYourSearchAgain": "Please try your search again"
+        },
+        "productDetails": {
+            "productDetails": "Product Details",
+            "buyNow": "Buy Now",
+            "addToCart": "Add To Cart"
+        },
+        "orders": {
+            "orderDetails": "Order Details",
+            "orderStatus": "Order Status",
+            "delivery": "Delivery"
+        }
+    },
+    "vendor": {
+        "home": {
+            "yourOrderListIsEmpty": "Your Order List Is Empty",
+            "emptyListInstruction": "Looks like your haven't received any orders yet. Please follow these steps to Get more orders!",
+            "inviteCustomers": "Invite Customers",
+            "chatWithUs": "Chat With Us To Learn More",
+            "youHaveXNewOrders": "You have %{orders} New Order(s)",
+            "pleaseTapOrdersButtonBelowToSeeThem": "Please click \"orders\" button below to see all"
+        },
+        "sales": {
+            "selectSaleAgent": "Select sale agent",
+            "selectSaleType": "Select Sale Type",
+            "selectPaymentMethod": "Select Payment Method",
+            "selectCustomer": "Select Customer",
+            "selectProducts": "Select Products",
+            "itemsSelected": "%{total} Item Selected",
+            "saleAgent": "Sale Agent",
+            "addSale": "Add Sale",
+            "cashSale": "Cash Sale",
+            "creditSale": "Credit Sale",
+            "cash": "Cash",
+            "mobileMoney": "Mobile Money",
+            "cheque": "Cheque",
+            "saleConfirmation": "Sale Confirmation",
+            "saleHasBeenRecorded": "Sale has been recorded",
+            "selectAgentToContinue": "Select Sale Agent To Continue",
+            "selectSaleTypeToContinue": "Select Sale Type To Continue",
+            "selectPaymentModeToContinue": "Select Payment Mode To Continue",
+            "selectCustomerToContinue": "Select Customer To Continue",
+            "selectProductsToContinue": "Select Products To Continue",
+            "cannotProceedWithTotalCostOfZero": "Cannot proceed with total cost of zero",
+            "searchProducts": "Search Product Inventory",
+            "searchCustomers": "Find Customer By Name",
+            "filterAgents": "Filter Agents List",
+            "addNewSale": "Add New Sale",
+            "done": "Done",
+            "recordSale": "Record Sale",
+            "salesHistory": "Sales History",
+            "recordRepayment": "Record Repayment",
+            "confirmDeleteSale": "Delete sale?",
+            "actionIsUnreversible": "This action is unreversible",
+            "saleDetails": "Sale Detais",
+            "noSaleItemsAvailable": "No Sale Items Available",
+            "addItemsToSaleToSeeThemHere": "Add items to sale to see them here"
+        }
+    },
+    "modules": {
+        "business": {
+            "noDescriptAvailable": "No Description Available",
+            "unknownLocation": "Unknown Location"
         }
     }
 }

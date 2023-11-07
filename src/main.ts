@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router';
 
 // Added by the CLI
-import './registerServiceWorker';
+// import './registerServiceWorker';
 
 import { IonicVue } from '@ionic/vue';
 
@@ -23,6 +23,9 @@ import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 import "intl-tel-input/build/css/intlTelInput.css";
+
+import 'swiper/scss';
+import '@ionic/vue/css/ionic-swiper.css';
 
 /* Theme variables */
 // import './theme/variables.css';

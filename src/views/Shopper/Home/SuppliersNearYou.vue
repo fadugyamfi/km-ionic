@@ -1,23 +1,36 @@
 <template>
     <section class="suppliers-near-you shopper-home-section">
         <header class="ion-padding-horizontal">
-            <h6>Suppliers Near You</h6>
+            <h6>{{ $t("shopper.home.suppliersNearYou") }}</h6>
 
-            <a router-link="/shopper/suppliers">
-                View all
-            </a>
+            <router-link to="/shopper/home/suppliers">
+                {{ $t("shopper.home.viewAll") }}
+            </router-link>
         </header>
 
         <main>
-            <Swiper>
+            <section v-if="slides.length == 0">
+                <IonGrid>
+                    <IonRow>
+                        <IonCol>
+                            <IonSkeletonText class="skeleton-card" :animated="true"></IonSkeletonText>
+                        </IonCol>
+                        <IonCol>
+                            <IonSkeletonText class="skeleton-card" :animated="true"></IonSkeletonText>
+                        </IonCol>
+                    </IonRow>
+                </IonGrid>
+            </section>
+
+            <Swiper v-else>
                 <SwiperSlide v-for="(slide, index) of slides" :key="slide">
                     <IonGrid>
                         <IonRow>
                             <IonCol size="6">
-                                <SupplierCard :supplier="slide[0]"></SupplierCard>
+                                <BusinessCard :business="slide[0]"></BusinessCard>
                             </IonCol>
                             <IonCol size="6" v-if="slide[1]">
-                                <SupplierCard :supplier="slide[1]"></SupplierCard>
+                                <BusinessCard :business="slide[1]"></BusinessCard>
                             </IonCol>
                         </IonRow>
                     </IonGrid>
@@ -35,19 +48,22 @@ import '@ionic/vue/css/ionic-swiper.css';
 import axios from 'axios';
 import { defineComponent } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import SupplierCard from '@/components/cards/SupplierCard.vue';
 import Business from '@/models/Business';
-import { IonCol, IonGrid, IonRow } from '@ionic/vue';
+import { IonCol, IonGrid, IonRow, IonSkeletonText } from '@ionic/vue';
+import BusinessCard from '@/components/modules/business/BusinessCard.vue';
+import { useBusinessStore } from '@/stores/BusinessStore';
+import { mapStores } from 'pinia';
 
 export default defineComponent({
 
     components: {
         Swiper,
         SwiperSlide,
-        SupplierCard,
         IonGrid,
         IonRow,
-        IonCol
+        IonCol,
+        BusinessCard,
+        IonSkeletonText
     },
 
     data() {
@@ -58,20 +74,16 @@ export default defineComponent({
         }
     },
 
+    computed: {
+        ...mapStores( useBusinessStore )
+    },
+
     methods: {
         async fetchSuppliers() {
-            const params = {
-                business_types_id: 3,
-                limit: 6
-            }
+            this.slides = [];
 
             try {
-                const response = await axios.get('/v2/businesses', { params });
-                const suppliers = response.data.data;
-
-                this.suppliers = suppliers.map((element: any) => new Business(element));
-
-                this.slides = [];
+                this.suppliers = await this.businessStore.getSuppliers();
 
                 for(let i = 0; i < this.suppliers.length; i += 2) {
                     if( this.suppliers[i + 1] ) {
@@ -87,7 +99,7 @@ export default defineComponent({
                     this.backOff += 1;
                 }, 100 * this.backOff);
             }
-        }
+        },
     },
 
     mounted() {
@@ -95,3 +107,11 @@ export default defineComponent({
     }
 });
 </script>
+
+<style scoped>
+.skeleton-card {
+    width: 100%;
+    height: 200px;
+    border-radius: 10px;
+}
+</style>
