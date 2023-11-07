@@ -4,7 +4,7 @@
       <IonButtons slot="start">
         <IonBackButton defaultHref="/shopper/cart/business"></IonBackButton>
       </IonButtons>
-      <IonTitle size="small" class="fw-bold"> Cart </IonTitle>
+      <IonTitle class="fw-bold">Cart</IonTitle>
       <IonButtons slot="end">
         <NotificationButton></NotificationButton>
       </IonButtons>

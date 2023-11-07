@@ -7,7 +7,7 @@
         ></IonBackButton>
         
       </IonButtons>
-      <IonTitle size="small" class="fw-bold"> Shipping Details </IonTitle>
+      <IonTitle class="fw-bold"> Shipping Details </IonTitle>
       <IonButtons slot="end" style="margin-right: 10px;">
         <IonButton class="save-for-later-button" 
           >Save for later</IonButton
@@ -41,13 +41,5 @@ export default {
 };
 </script>
 <style scoped="scss">
-ion-title {
-  color: #000;
-font-family: Poppins;
-font-size: 12px;
-font-style: normal;
-font-weight: 400;
-line-height: 140%; 
-}
 
 </style>

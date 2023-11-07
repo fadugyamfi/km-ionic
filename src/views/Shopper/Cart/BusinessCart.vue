@@ -18,7 +18,6 @@
       </IonSegment>
       <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
 
-
       <IonList v-else>
         <IonItem v-for="(item, index) in orderBusiness?.order_items" :key="item.product?.id">
           <ion-thumbnail slot="start" class="custom-thumbnail">
