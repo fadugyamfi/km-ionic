@@ -229,6 +229,8 @@ export default defineComponent({
     IonCardTitle,
     PaymentOptionsHeader,
     PayOnDelivery,
+    IonRadio,
+    IonRadioGroup,
   },
   data() {
     return {
