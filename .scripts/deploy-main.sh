@@ -14,6 +14,8 @@ npm install -g @ionic/cli
 npm install
 npm run build --prod
 
-cp ../public/manifest.webmanifest ../dist/manifest.webmanifest
+# cp ../public/manifest.webmanifest ../dist/manifest.webmanifest
+# TODO: Make the following line server agnostic
+cp /var/www/m.kola.market/public/manifest.webmanifest /var/www/m.kola.market/dist/manifest.webmanifest
 
 echo "Deployment finished!"
