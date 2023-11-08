@@ -30,7 +30,11 @@
         <IonLabel>Customers</IonLabel>
       </IonItem>
 
-      <IonItem :detail="true" class="profile-item">
+      <IonItem
+        :detail="true"
+        class="profile-item"
+        router-link="/profile/company/stocks"
+      >
         <IonAvatar slot="start">
           <img src="/images/ic_notification.svg" class="action-img" />
         </IonAvatar>

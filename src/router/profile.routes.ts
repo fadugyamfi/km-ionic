@@ -30,6 +30,14 @@ export const ProfileRoutes = [
         path: "customers/:id/update-customer",
         component: () => import("@/views/Vendor/Company/UpdateCustomer.vue"),
       },
+      {
+        path: "stocks",
+        component: () => import("@/views/Vendor/Company/Stock/Stocks.vue"),
+      },
+      {
+        path: "stocks/add-stock",
+        component: () => import("@/views/Vendor/Company/Stock/AddStock.vue"),
+      },
     ],
   },
 ];
