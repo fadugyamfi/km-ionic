@@ -4,7 +4,7 @@
       <IonCardHeader class="ion-no-padding">
         <IonItem lines="none">
           <IonThumbnail slot="start">
-            <Image :src="order?.business?.logo"></Image>
+            <Image :src="order?.customer?.logo"></Image>
           </IonThumbnail>
 
           <IonLabel class="font-medium">{{ order?.customer?.name }}</IonLabel>
@@ -50,12 +50,21 @@
             </IonLabel>
           </IonItem>
 
-          <IonItem>
+          <IonItem lines="full" class="ion-padding-bottom">
             <IonLabel color="medium" class="font-medium">
               {{ order?.delivery_date || 'TBD' }}
             </IonLabel>
             <IonLabel color="primary" slot="end" class="font-medium">
               Change Date
+            </IonLabel>
+          </IonItem>
+
+          <IonItem>
+            <IonLabel color="dark" class="font-medium">
+              {{ 'Total Cost' }}
+            </IonLabel>
+            <IonLabel color="dark" slot="end" class="font-medium fw-bold">
+              {{ Filters.currency( order?.getTotal(), order?.currency?.symbol ) }}
             </IonLabel>
           </IonItem>
         </IonList>
