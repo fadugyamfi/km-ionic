@@ -3,7 +3,11 @@
     lines="none"
     class="ion-padding-horizontal customers-select-list simple"
   >
-    <IonItem v-for="customer in customers" :key="customer.id">
+    <IonItem
+      @click="$router.push(`/profile/company/customers/${customer.id}/profile`)"
+      v-for="customer in customers"
+      :key="customer.id"
+    >
       <IonAvatar slot="start">
         <Image :src="customer.logo"></Image>
       </IonAvatar>
