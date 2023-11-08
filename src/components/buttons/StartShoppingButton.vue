@@ -8,7 +8,7 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue';
 import { IonButton, IonButtons, IonToolbar } from '@ionic/vue';
 

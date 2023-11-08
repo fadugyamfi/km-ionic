@@ -1,21 +1,7 @@
 <template>
-        <IonInput
-            class="kola-input"
-            :class="{ 'ion-invalid ion-touched': hasError }"
-            :type="type"
-            :label="label"
-            :label-placement="labelPlacement"
-            fill="outline"
-            :value="modelValue"
-            @change="onChange($event.target.value)"
-            :required="required"
-            :error-text="errorText"
-            :maxlength="maxlength"
-            :counter="counter"
-        >
-        </IonInput>
-    </section>
-</template>
+    <IonInput class="kola-input" :class="{ 'ion-invalid ion-touched': hasError }" @change="onChange($event.target.value)">
+    </IonInput>
+</section></template>
 
 <script lang="ts">
 import { IonInput } from '@ionic/vue';
@@ -23,33 +9,14 @@ import { PropType, defineComponent } from 'vue';
 
 export default defineComponent({
     props: {
-        label: {
-            default: 'Enter Label',
-        },
-        labelPlacement: {
-            default: 'floating'
-        },
-        type: {
-            default: 'text',
-            type: String
-        },
         modelValue: {
             required: false
         },
-        required: {
-            default: false
-        },
-        errorText: {
-            default: ''
-        },
-        hasError: {
-            default: false
-        },
-        counter: {
-            default: false
-        },
-        maxlength: {
+    },
 
+    data() {
+        return {
+            hasError: false
         }
     },
 
@@ -79,6 +46,4 @@ export default defineComponent({
         }
     }
 }
-
-
 </style>

@@ -10,9 +10,7 @@
       <form>
         <section class="d-flex flex-column ion-margin-bottom">
           <IonText class="fw-semibold">Pay Now</IonText>
-          <IonText color="medium" class="font-medium"
-            >Select a payment method</IonText
-          >
+          <IonText color="medium" class="font-medium">Select a payment method</IonText>
         </section>
 
         <ion-radio-group v-model="form.fields.payment_option">
@@ -122,6 +120,7 @@
           </section>
         </ion-radio-group>
       </form>
+
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton @click="storePaymentOption">Continue</KolaYellowButton>

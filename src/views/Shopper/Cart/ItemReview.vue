@@ -46,6 +46,7 @@
         </IonItem>
         <ItemReview />
       </IonList>
+      <UpdateDeliveryDate></UpdateDeliveryDate>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton> Continue </KolaYellowButton>
@@ -75,8 +76,8 @@ import ItemReview from "@/components/cards/ItemReview.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
 import Image from "@/components/Image.vue";
-import { useBusinessStore } from "@/stores/BusinessStore";
 import { useRoute } from "vue-router";
+
 
 const route = useRoute();
 
@@ -85,6 +86,10 @@ const cartStore = useCartStore();
 const orderBusiness = ref<any>(null);
 const orders = computed(() => cartStore.orders);
 
+cartStore.loadFromStorage();
+const viewing = ref("cart");
+
+const segmentValue = ref("cart");
 const updateQuantity = (item: CartItem, newQuantity: number) => {
   item.quantity = newQuantity;
   item.total_price = item.quantity * item.product_price;
@@ -93,6 +98,8 @@ const updateQuantity = (item: CartItem, newQuantity: number) => {
 const removeFromCart = (index: number) => {
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
+
+
 
 const getOrderBusiness = async () => {
   await cartStore.persist();
@@ -122,10 +129,6 @@ onMounted(async () => {
 .item-row ion-col {
   margin: 0;
   padding: 0;
-}
-
-.item-row[data-v-f6937d18] {
-  align-items: baseline;
 }
 
 p {

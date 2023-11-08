@@ -2,6 +2,10 @@ import { useUserStore } from "@/stores/UserStore";
 import TabsPage from "@/views/Shopper/TabsPage.vue";
 import HomePage from "@/views/Shopper/HomePage.vue";
 import OrderDetails from "@/views/Shopper/OrderDetails.vue";
+import { useUserStore } from '@/stores/UserStore';
+import TabsPage from '@/views/Shopper/TabsPage.vue';
+import HomePage from '@/views/Shopper/HomePage.vue';
+
 
 export const ShopperModeRoutes = [
   {
@@ -103,6 +107,8 @@ export const ShopperModeRoutes = [
       {
         path: "orders",
         component: () => import("@/views/Shopper/Orders.vue"),
+        path: 'orders',
+        component: () => import('@/views/Shopper/Orders.vue'),
         children: [
           {
             path: "",
@@ -119,6 +125,12 @@ export const ShopperModeRoutes = [
             component: () => import("@/views/Shopper/Orders/OrderDetails.vue"),
           },
         ],
+            name: 'ShopperOrderDetails',
+            path: ':id',
+            component: () => import('@/views/Shopper/Orders/OrderDetails.vue')
+          },
+
+        ]
       },
       {
         path: "cart",
