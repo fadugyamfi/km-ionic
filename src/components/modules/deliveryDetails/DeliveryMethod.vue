@@ -57,7 +57,7 @@
   </ion-radio-group>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { locationOutline, timeOutline } from "ionicons/icons";
 import { IonIcon, IonText, IonRadio, IonRadioGroup } from "@ionic/vue";
 import { ref, watch } from "vue";

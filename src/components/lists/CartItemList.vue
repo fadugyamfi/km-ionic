@@ -1,6 +1,6 @@
 <template>
   <IonList>
-    <IonItem v-for="(item, index) in items" :key="item.product?.id">
+    <IonItem v-for="(item, index) in cartStore.items" :key="item.product?.id">
       <ion-thumbnail slot="start" class="custom-thumbnail">
         <IonImg :src="item.product?.image"></IonImg>
       </ion-thumbnail>
@@ -36,7 +36,8 @@ import { CartItem, useCartStore } from '@/stores/CartStore';
 import { closeCircleOutline } from 'ionicons/icons';
 
 const items = ref([]);
-const updateQuantity = (item, newQuantity) => {
+const cartStore = useCartStore();
+const updateQuantity = (item: CartItem, newQuantity: number) => {
   console.log('hello');
   item.quantity = newQuantity;
 };
