@@ -92,7 +92,7 @@
           @ion-input="form.validate($event)"
           required
         ></IonInput>
-        <h6>{{ $t("profile.customers.assignToSalesAgentOrManager") }}</h6>
+        <!-- <h6>{{ $t("profile.customers.assignToSalesAgentOrManager") }}</h6>
         <IonSelect
           class="kola-input ion-margin-bottom"
           :label="$t('profile.customers.selectSaleAgent')"
@@ -113,7 +113,7 @@
             :value="agent.id"
             >{{ agent.name }}</IonSelectOption
           >
-        </IonSelect>
+        </IonSelect> -->
         <h6>{{ $t("profile.customers.howDoTheyUsuallyPay") }}</h6>
         <IonSelect
           class="kola-input ion-margin-bottom"
@@ -306,7 +306,7 @@ const fetchBusinessSalesAgent = async () => {
 onMounted(async () => {
   fetchCustomer();
   // getPaymentModes();
-  fetchBusinessSalesAgent();
+  // fetchBusinessSalesAgent();
 });
 </script>
 

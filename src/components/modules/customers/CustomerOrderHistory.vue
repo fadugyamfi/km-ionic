@@ -1,27 +1,38 @@
 <template>
-  <section class="profile-home-section ion-padding-top">
-    <header class="ion-padding-horizontal">
-      <h6>Order history</h6>
-      <IonText color="primary" router-link=""> View all </IonText>
-    </header>
+  <section v-for="order in orders" :key="order.id" class="ion-margin-bottom">
+    <section class="profile-home-section ion-padding-top">
+      <header class="ion-padding-horizontal">
+        <h6>Order history</h6>
+        <IonText
+          color="primary"
+          :router-link="`/profile/company/customers/${route.params.id}/orders`"
+        >
+          View all
+        </IonText>
+      </header>
+    </section>
+    <IonList
+      lines="none"
+      class="ion-padding-horizontal customers-select-list simple"
+    >
+      <IonItem class="ion-align-items-start">
+        <IonAvatar slot="start">
+          <Image :src="order.customer?.logo"></Image>
+        </IonAvatar>
+        <IonLabel>
+          <p class="ion-no-margin">
+            Frytol Oil + 3<span style="color: #787486; font-weight: 400"
+              >-#388903</span
+            >
+          </p>
+          <IonText
+            ><IonChip>{{ order.order_status?.name }}</IonChip></IonText
+          >
+        </IonLabel>
+        <IonText>22/07/2023</IonText>
+      </IonItem>
+    </IonList>
   </section>
-  <IonList
-    lines="none"
-    class="ion-padding-horizontal customers-select-list simple"
-  >
-    <IonItem class="ion-align-items-start">
-      <IonAvatar slot="start">
-        <Image :src="customer.logo"></Image>
-      </IonAvatar>
-      <IonLabel>
-        <p class="ion-no-margin">
-          Frytol Oil + 3<span style="color: #787486; font-weight: 400;">-#388903</span>
-        </p>
-        <IonText><IonChip>completed</IonChip></IonText>
-      </IonLabel>
-      <IonText>22/07/2023</IonText>
-    </IonItem>
-  </IonList>
 </template>
 <script lang="ts" setup>
 import {
@@ -34,25 +45,32 @@ import {
   IonLabel,
 } from "@ionic/vue";
 import { PropType, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Image from "@/components/Image.vue";
 import Customer from "@/models/Customer";
 import { useCustomerStore } from "@/stores/CustomerStore";
+import { Order } from "@/models/Order";
 
-const props = defineProps({
-  customers: {
-    type: Object as PropType<Customer[]>,
-    default: () => [],
+// const props = defineProps({
+//   orders: {
+//     type: Object as PropType<Order[]>,
+//     default: () => [],
+//   },
+// });
+
+const route = useRoute();
+
+const orders = ref([
+  {
+    id: 1,
+    customer: {
+      logo: "",
+    },
+    order_status: {
+      name: "Completed",
+    },
   },
-});
-
-const customer = ref({
-  id: 1,
-  logo: "",
-});
-
-const router = useRouter();
-const customerStore = useCustomerStore();
+]);
 </script>
 
 <style lang="scss" scoped>
@@ -105,7 +123,7 @@ const customerStore = useCustomerStore();
 
   ion-text {
     font-size: 14px;
-    color: #9B9EA0;
+    color: #9b9ea0;
   }
 
   ion-item ion-label p {

@@ -121,24 +121,6 @@ export const VendorModeRoutes = [
         path: "profile",
         component: () => import("@/views/Vendor/Profile.vue"),
       },
-      {
-        path: "profile/company",
-        component: () => import("@/views/Vendor/Company.vue"),
-        children: [
-          {
-            path: "customers",
-            component: () => import("@/views/Vendor/Company/Customers.vue"),
-          },
-          {
-            path: "customers/add-customer",
-            component: () => import("@/views/Vendor/Company/AddCustomer.vue"),
-          },
-          {
-            path: "customers/update-customer",
-            component: () => import("@/views/Vendor/Company/UpdateCustomer.vue"),
-          },
-        ],
-      },
     ],
   },
 ];

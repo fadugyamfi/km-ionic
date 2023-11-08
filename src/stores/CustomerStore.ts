@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import Customer from "@/models/Customer";
 import { useUserStore } from "./UserStore";
 import { handleAxiosRequestError } from "@/utilities";
+import { Order } from "@/models/Order";
 import Business from "@/models/Business";
 import User from "@/models/User";
 import AppStorage from "./AppStorage";
@@ -13,6 +14,21 @@ export const useCustomerStore = defineStore("customer", {
   state: () => ({
     customers: [] as Customer[],
     nextLink: null as string | null,
+    orders: [
+      new Order({
+        id: 1,
+        businesses_id: 71,
+        customer_id: 72,
+        start_dt: "2023-10-25 10:00:00",
+        created_at: "2023-10-25 10:00:00",
+        due_date: "2023-11-01",
+        order_status_id: 8,
+        order_status: {
+          id: 8,
+          name: "Cancelled",
+        },
+      }),
+    ] as Order[],
     meta: {},
   }),
   actions: {
@@ -118,6 +134,42 @@ export const useCustomerStore = defineStore("customer", {
         .catch((error) => {
           handleAxiosRequestError(error);
         });
+    },
+    async fetchPlacedOrders(customerId: any, options = {}) {
+      const userStore = useUserStore();
+
+      try {
+        const params = {
+          customer_id: customerId,
+          limit: 50,
+          ...options,
+        };
+        const response = await axios.get("/v2/orders", { params });
+
+        if (response.status === 200) {
+          const ordersData = response.data.data;
+          this.orders = ordersData.map((data: any) => new Order(data));
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+    },
+    async fetchOrder(orderId: number): Promise<Order | null> {
+      try {
+        const response = await axios.get(`/v2/orders/${orderId}`);
+        if (response.status == 200) {
+          const order = new Order(response.data.data);
+          return order;
+        }
+
+        return null;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return null;
+      }
+    },
+    clearCustomers() {
+      this.customers = [];
     },
   },
 });
