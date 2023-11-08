@@ -25,23 +25,25 @@
       <form v-show="!fetching" @submit.prevent="updateCustomer()">
         <IonInput
           class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.name }"
+          :class="{
+            'ion-invalid ion-touched': form.errors.business_owner_name,
+          }"
           :label="$t('profile.customers.fullName')"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.name"
-          name="name"
+          v-model="form.fields.business_owner_name"
+          name="business_owner_name"
           @ion-input="form.validate($event)"
           required
         ></IonInput>
         <IonInput
           class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.business_name }"
+          :class="{ 'ion-invalid ion-touched': form.errors.name }"
           :label="$t('profile.customers.businessName')"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.business_name"
-          name="business_name"
+          v-model="form.fields.name"
+          name="name"
           @ion-input="form.validate($event)"
           required
         ></IonInput>
@@ -114,12 +116,8 @@
           name="payment-method"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption
-            v-for="mode in paymentModes"
-            :key="mode.id"
-            :value="mode.id"
-            >{{ mode.name }}</IonSelectOption
-          >
+          <IonSelectOption value="1"> Cash </IonSelectOption>
+          <IonSelectOption value="2"> Credit </IonSelectOption>
         </IonSelect>
         <IonFooter class="ion-padding-top ion-no-border">
           <KolaYellowButton
@@ -177,7 +175,6 @@ import Customer from "@/models/Customer";
 import Business from "@/models/Business";
 
 const toastStore = useToastStore();
-const customerStore = useCustomerStore();
 const businessStore = useBusinessStore();
 
 const route = useRoute();
@@ -191,7 +188,7 @@ const salesAgents = ref<User[]>([]);
 const form = useForm({
   name: "",
   location: "",
-  business_name: "",
+  business_owner_name: "",
   phone_number: "",
   cms_users_id: "",
   business_types_id: "",
@@ -201,11 +198,11 @@ const formValid = computed(() => {
   const fields = form.fields;
 
   return (
-    fields.name.length > 0 &&
-    fields.business_name.length > 0 &&
-    fields.location.length > 0 &&
+    fields.name?.length > 0 &&
+    fields.business_owner_name?.length > 0 &&
+    fields.location?.length > 0 &&
     isNaN(Number(fields.cms_users_id)) == false &&
-    fields.phone_number.length > 0 &&
+    fields.phone_number?.length > 0 &&
     fields.business_types_id
   );
 });
@@ -213,6 +210,7 @@ const formValid = computed(() => {
 const updateCustomer = async () => {
   try {
     toastStore.blockUI("Hold On As We Update Your Customer");
+    const customerStore = useCustomerStore();
     const customer = await customerStore.updateCustomer(
       form.fields,
       route.params.id
@@ -251,17 +249,22 @@ const getLocation = async () => {
   }
 };
 const fetchCustomer = async () => {
+  console.log("hit me");
   fetching.value = true;
   const userStore = useUserStore();
+  // console.log( userStore.activeBusiness, route.params.id)
+
+  const customerStore = useCustomerStore();
+  console.log(customerStore);
   customer.value = await customerStore.getCustomer(
     userStore.activeBusiness as Business,
     route.params.id
   );
   fetching.value = false;
-  form.fields.name = customer.value.name;
-  form.fields.location = customer.value.location;
-  form.fields.phone_number = customer.value.phone_number;
-  form.fields.business_types_id = customer.value.business_types_id;
+  form.fields.name = customer.value?.name;
+  form.fields.location = customer.value?.location;
+  form.fields.phone_number = customer.value?.phone_number;
+  form.fields.business_types_id = customer.value?.business_types_id;
 };
 const getPaymentModes = async () => {
   try {
@@ -284,9 +287,9 @@ const fetchBusinessSalesAgent = async () => {
   fetching.value = false;
 };
 
-onMounted(() => {
+onMounted(async () => {
   fetchCustomer();
-  getPaymentModes();
+  // getPaymentModes();
   fetchBusinessSalesAgent();
 });
 </script>

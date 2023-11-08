@@ -15,11 +15,16 @@
       </IonAvatar>
       <IonLabel>
         <p class="ion-no-margin">Racy Ventures</p>
-        <IonText style="margin-bottom: 5px !important;" color="medium" class="font-medium">
+        <IonText
+          style="margin-bottom: 5px !important"
+          color="medium"
+          class="font-medium"
+        >
           Payment made on 22/07/2023
         </IonText>
-        <IonText color="medium" class="font-medium">
+        <IonText color="medium" class="font-medium d-flex">
           paid via mobile money
+          <Image class="momo" src="/images/momo.svg"></Image>
         </IonText>
       </IonLabel>
       <IonText>GHS 500.00</IonText>
@@ -90,6 +95,7 @@ const customerStore = useCustomerStore();
   ion-item {
     --padding-start: 0px;
   }
+
   ion-item ion-chip {
     --background: #eaecf5;
     --color: #304296;
@@ -107,20 +113,26 @@ const customerStore = useCustomerStore();
     ion-text {
       margin-bottom: 5px !important;
       font-size: 12px;
-      
     }
   }
 
   ion-text {
-      font-size: 14px;
-      color: #787486 !important;
-    }
+    font-size: 14px;
+    color: #787486 !important;
+  }
 
   ion-item ion-label p {
     font-weight: bold;
     color: #111;
     margin-bottom: 5px;
   }
-
+}
+.momo {
+  max-width: 20px;
+  margin-left: 5px;
+}
+ion-item::part(native).item-inner {
+  padding-right: 0px;
+  --padding-end: 0px;
 }
 </style>

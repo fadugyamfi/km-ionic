@@ -26,23 +26,25 @@
       <form v-show="!fetching" @submit.prevent="createCustomer()">
         <IonInput
           class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.name }"
+          :class="{
+            'ion-invalid ion-touched': form.errors.business_owner_name,
+          }"
           :label="$t('profile.customers.fullName')"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.name"
-          name="name"
+          v-model="form.fields.business_owner_name"
+          name="business_owner_name"
           @ion-input="form.validate($event)"
           required
         ></IonInput>
         <IonInput
           class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.business_name }"
+          :class="{ 'ion-invalid ion-touched': form.errors.name }"
           :label="$t('profile.customers.businessName')"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.business_name"
-          name="business_name"
+          v-model="form.fields.name"
+          name="name"
           @ion-input="form.validate($event)"
           required
         ></IonInput>
@@ -191,7 +193,7 @@ const salesAgents = ref<User[]>([]);
 const form = useForm({
   name: "",
   location: "",
-  business_name: "",
+  business_owner_name: "",
   phone_number: "",
   cms_users_id: "",
   business_types_id: "",
@@ -202,7 +204,7 @@ const formValid = computed(() => {
 
   return (
     fields.name.length > 0 &&
-    fields.business_name.length > 0 &&
+    fields.business_owner_name.length > 0 &&
     fields.location.length > 0 &&
     isNaN(Number(fields.cms_users_id)) == false &&
     fields.phone_number.length > 0 &&
@@ -217,7 +219,11 @@ const createCustomer = async () => {
     if (customer) {
       toastStore.unblockUI();
       router.push("profile/company/customers");
-      toastStore.showSuccess("Customer has been added successfully");
+      toastStore.showSuccess(
+        "Customer has been added successfully",
+        "",
+        "bottom"
+      );
     } else {
       toastStore.unblockUI();
       toastStore.showError(

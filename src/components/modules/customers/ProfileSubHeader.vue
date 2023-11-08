@@ -12,7 +12,7 @@
       </ion-buttons>
     </section>
     <IonItem class="sub-header" lines="none">
-      <div class="d-flex ion-margin-end">
+      <div class="d-flex" style="margin-right: 10px;">
         <IonIcon
           size="small"
           :icon="locationOutline"
@@ -96,7 +96,7 @@ const onConfirmDelete = async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 16px 6px;
+  padding: 0px 16px 5px;
   border-bottom: 1px solid #f1f1f1;
   ion-icon {
     font-size: 20px;
