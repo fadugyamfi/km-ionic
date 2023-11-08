@@ -38,6 +38,19 @@
         ></IonInput>
         <IonInput
           class="kola-input ion-margin-bottom"
+          :class="{
+            'ion-invalid ion-touched': form.errors.business_owner_phone,
+          }"
+          :label="$t('profile.customers.businessOwnerPhone')"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.business_owner_phone"
+          name="business_owner_phone"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+        <IonInput
+          class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.name }"
           :label="$t('profile.customers.businessName')"
           labelPlacement="stacked"
@@ -192,6 +205,7 @@ const form = useForm({
   phone_number: "",
   cms_users_id: "",
   business_types_id: "",
+  business_owner_phone: "",
 });
 
 const formValid = computed(() => {
@@ -203,6 +217,7 @@ const formValid = computed(() => {
     fields.location?.length > 0 &&
     isNaN(Number(fields.cms_users_id)) == false &&
     fields.phone_number?.length > 0 &&
+    fields.business_owner_phone.length > 0 &&
     fields.business_types_id
   );
 });
@@ -265,6 +280,7 @@ const fetchCustomer = async () => {
   form.fields.location = customer.value?.location;
   form.fields.phone_number = customer.value?.phone_number;
   form.fields.business_types_id = customer.value?.business_types_id;
+  form.fields.business_owner_phone = customer.value?.business_owner_phone;
 };
 const getPaymentModes = async () => {
   try {
