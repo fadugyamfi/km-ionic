@@ -168,5 +168,8 @@ export const useCustomerStore = defineStore("customer", {
         return null;
       }
     },
+    clearCustomers() {
+      this.customers = [];
+    },
   },
 });
