@@ -20,15 +20,23 @@ export const ProfileRoutes = [
     children: [
       {
         path: "customers",
-        component: () => import("@/views/Vendor/Company/Customers.vue"),
+        component: () =>
+          import("@/views/Vendor/Company/Customer/Customers.vue"),
       },
       {
         path: "customers/add-customer",
-        component: () => import("@/views/Vendor/Company/AddCustomer.vue"),
+        component: () =>
+          import("@/views/Vendor/Company/Customer/AddCustomer.vue"),
       },
       {
         path: "customers/:id/update-customer",
-        component: () => import("@/views/Vendor/Company/UpdateCustomer.vue"),
+        component: () =>
+          import("@/views/Vendor/Company/Customer/UpdateCustomer.vue"),
+      },
+      {
+        path: "customers/:id/profile",
+        component: () =>
+          import("@/views/Vendor/Company/Customer/CustomerProfile.vue"),
       },
       {
         path: "stocks",

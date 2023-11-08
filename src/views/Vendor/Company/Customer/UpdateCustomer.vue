@@ -12,37 +12,38 @@
               defaultHref="/profile/company/customers"
             ></ion-back-button>
           </ion-buttons>
-          <IonTitle size="small" class="fw-bold">{{
-            $t("profile.customers.addCustomer")
-          }}</IonTitle>
+          <IonTitle size="small" class="fw-bold">
+            {{ $t("profile.customers.updateCustomerInfo") }}
+          </IonTitle>
         </ion-toolbar>
       </ion-header>
     </IonHeader>
-
     <ion-content class="ion-padding">
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-      <form v-show="!fetching" @submit.prevent="createCustomer()">
+      <form v-show="!fetching" @submit.prevent="updateCustomer()">
         <IonInput
           class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.name }"
+          :class="{
+            'ion-invalid ion-touched': form.errors.business_owner_name,
+          }"
           :label="$t('profile.customers.fullName')"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.name"
-          name="name"
+          v-model="form.fields.business_owner_name"
+          name="business_owner_name"
           @ion-input="form.validate($event)"
           required
         ></IonInput>
         <IonInput
           class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.business_name }"
+          :class="{ 'ion-invalid ion-touched': form.errors.name }"
           :label="$t('profile.customers.businessName')"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.business_name"
-          name="business_name"
+          v-model="form.fields.name"
+          name="name"
           @ion-input="form.validate($event)"
           required
         ></IonInput>
@@ -97,9 +98,8 @@
             v-for="agent in salesAgents"
             :key="agent.id"
             :value="agent.id"
+            >{{ agent.name }}</IonSelectOption
           >
-            {{ agent.name }}
-          </IonSelectOption>
         </IonSelect>
         <h6>{{ $t("profile.customers.howDoTheyUsuallyPay") }}</h6>
         <IonSelect
@@ -116,17 +116,13 @@
           name="payment-method"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption
-            v-for="mode in paymentModes"
-            :key="mode.id"
-            :value="mode.id"
-            >{{ mode.name }}</IonSelectOption
-          >
+          <IonSelectOption value="1"> Cash </IonSelectOption>
+          <IonSelectOption value="2"> Credit </IonSelectOption>
         </IonSelect>
         <IonFooter class="ion-padding-top ion-no-border">
           <KolaYellowButton
             :disabled="!formValid"
-            @click.prevent="createCustomer"
+            @click.prevent="updateCustomer"
             >{{ $t("profile.customers.save") }}</KolaYellowButton
           >
         </IonFooter>
@@ -150,8 +146,8 @@ import {
   IonSelect,
   IonSelectOption,
   IonCheckbox,
-  IonHeader,
   IonSpinner,
+  IonHeader,
 } from "@ionic/vue";
 import {
   close,
@@ -168,30 +164,31 @@ import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
 import { useCustomerStore } from "@/stores/CustomerStore";
 import { useGeolocation } from "@/composables/useGeolocation";
-import { useUserStore } from "@/stores/UserStore";
-import { useBusinessStore } from "@/stores/BusinessStore";
 import { useForm } from "@/composables/form";
-import Business from "@/models/Business";
-import User from "@/models/User";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { computed, onMounted, ref } from "vue";
+import { useBusinessStore } from "@/stores/BusinessStore";
+import { useUserStore } from "@/stores/UserStore";
+import User from "@/models/User";
+import Customer from "@/models/Customer";
+import Business from "@/models/Business";
 
 const toastStore = useToastStore();
-const customerStore = useCustomerStore();
-
-const fetching = ref(false);
+const businessStore = useBusinessStore();
 
 const route = useRoute();
 const router = useRouter();
 
+const fetching = ref(false);
+const customer = ref<Customer>();
 const paymentModes = ref<any>([]);
 const salesAgents = ref<User[]>([]);
 
 const form = useForm({
   name: "",
   location: "",
-  business_name: "",
+  business_owner_name: "",
   phone_number: "",
   cms_users_id: "",
   business_types_id: "",
@@ -201,27 +198,31 @@ const formValid = computed(() => {
   const fields = form.fields;
 
   return (
-    fields.name.length > 0 &&
-    fields.business_name.length > 0 &&
-    fields.location.length > 0 &&
+    fields.name?.length > 0 &&
+    fields.business_owner_name?.length > 0 &&
+    fields.location?.length > 0 &&
     isNaN(Number(fields.cms_users_id)) == false &&
-    fields.phone_number.length > 0 &&
+    fields.phone_number?.length > 0 &&
     fields.business_types_id
   );
 });
 
-const createCustomer = async () => {
+const updateCustomer = async () => {
   try {
-    toastStore.blockUI("Hold On As We Add Your Customer");
-    const customer = await customerStore.createBusinessCustomer(form.fields);
+    toastStore.blockUI("Hold On As We Update Your Customer");
+    const customerStore = useCustomerStore();
+    const customer = await customerStore.updateCustomer(
+      form.fields,
+      route.params.id
+    );
     if (customer) {
       toastStore.unblockUI();
       router.push("profile/company/customers");
-      toastStore.showSuccess("Customer has been added successfully");
+      toastStore.showSuccess("Customer has been updated successfully");
     } else {
       toastStore.unblockUI();
       toastStore.showError(
-        "Failed to add Customer. Please try again",
+        "Failed to update Customer. Please try again",
         "",
         "bottom",
         "footer"
@@ -233,6 +234,38 @@ const createCustomer = async () => {
   }
 };
 
+const getLocation = async () => {
+  const toastStore = useToastStore();
+  const { getCurrentLocation } = useGeolocation();
+
+  try {
+    const coordinates = await getCurrentLocation();
+
+    if (coordinates) {
+      form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
+    }
+  } catch (error) {
+    toastStore.showError("Cannot retrieve location info");
+  }
+};
+const fetchCustomer = async () => {
+  console.log("hit me");
+  fetching.value = true;
+  const userStore = useUserStore();
+  // console.log( userStore.activeBusiness, route.params.id)
+
+  const customerStore = useCustomerStore();
+  console.log(customerStore);
+  customer.value = await customerStore.getCustomer(
+    userStore.activeBusiness as Business,
+    route.params.id
+  );
+  fetching.value = false;
+  form.fields.name = customer.value?.name;
+  form.fields.location = customer.value?.location;
+  form.fields.phone_number = customer.value?.phone_number;
+  form.fields.business_types_id = customer.value?.business_types_id;
+};
 const getPaymentModes = async () => {
   try {
     fetching.value = true;
@@ -253,32 +286,15 @@ const fetchBusinessSalesAgent = async () => {
   );
   fetching.value = false;
 };
-const getLocation = async () => {
-  const toastStore = useToastStore();
-  const { getCurrentLocation } = useGeolocation();
 
-  try {
-    const coordinates = await getCurrentLocation();
-
-    if (coordinates) {
-      form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
-    }
-  } catch (error) {
-    toastStore.showError("Cannot retrieve location info");
-  }
-};
-onMounted(() => {
-  getPaymentModes();
+onMounted(async () => {
+  fetchCustomer();
+  // getPaymentModes();
   fetchBusinessSalesAgent();
 });
 </script>
 
 <style scoped lang="scss">
-ion-input {
-  color: #74787c;
-  --padding-end: 10px;
-  --padding-start: 10px;
-}
 .use-location {
   --color: #666eed;
   --padding-start: 0px;

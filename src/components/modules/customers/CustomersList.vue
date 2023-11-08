@@ -7,7 +7,11 @@
       <IonAvatar slot="start">
         <Image :src="customer.logo"></Image>
       </IonAvatar>
-      <IonLabel>
+      <IonLabel
+        @click="
+          $router.push(`/profile/company/customers/${customer.id}/profile`)
+        "
+      >
         <p class="ion-no-margin">{{ customer.name }}</p>
         <IonText color="medium" class="font-medium">
           {{ customer.location || $t("profile.customers.locationUnknown") }}
@@ -16,6 +20,7 @@
           ><IonChip>{{ $t("profile.customers.new") }}</IonChip></IonText
         >
       </IonLabel>
+
       <IonButton
         :id="`popover-button-${customer.id}`"
         fill="clear"
@@ -84,6 +89,9 @@ import DeleteCustomerModal from "@/components/modules/customers/DeleteCustomerMo
 import Customer from "@/models/Customer";
 import { useCustomerStore } from "@/stores/CustomerStore";
 import { getDateFromNow } from "@/utilities";
+import { useToastStore } from "@/stores/ToastStore";
+
+const toastStore = useToastStore();
 
 const props = defineProps({
   customers: {
@@ -105,8 +113,22 @@ const deleteCustomer = (customer: Customer) => {
   showConfirmDeleteModal.value = true;
 };
 const onConfirmDelete = async () => {
-  showConfirmDeleteModal.value = false;
-  await customerStore.deleteCustomer(selectedCustomer.value as Customer);
+  try {
+    showConfirmDeleteModal.value = false;
+    await customerStore.deleteCustomer(selectedCustomer.value as Customer);
+    toastStore.showSuccess(
+      "Customer has been removed successfully",
+      "",
+      "bottom"
+    );
+  } catch (error) {
+    toastStore.showError(
+      "Failed to remove Customer. Please try again",
+      "",
+      "bottom",
+      "footer"
+    );
+  }
 };
 
 const updateCustomer = (customer: Customer) => {
