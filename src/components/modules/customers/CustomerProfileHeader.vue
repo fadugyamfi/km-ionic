@@ -16,7 +16,7 @@ import { defineComponent } from "vue";
 import { mapStores } from "pinia";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useUserStore } from "@/stores/UserStore";
-import { getInitials } from "@/utilities/Initials";
+import Customer from "@/models/Customer";
 
 export default defineComponent({
   props: {
@@ -39,7 +39,6 @@ export default defineComponent({
   // },
 
   methods: {
-    getInitials,
     onLoadError(event: Event) {
       (event.target as HTMLImageElement).src = this.defaultBanner;
     },

@@ -44,7 +44,10 @@ export const useCustomerStore = defineStore("customer", {
         const response = await axios.get(link, { params });
         if (response) {
           const { data, links, meta } = response.data;
-          this.customers = [...this.customers, ...data];
+          this.customers = [
+            ...this.customers,
+            ...data.map((el: any) => new Customer(el)),
+          ];
           this.meta = meta;
           this.nextLink = links.next;
 
@@ -95,7 +98,8 @@ export const useCustomerStore = defineStore("customer", {
       await storage.has(cacheKey);
       const data = await storage.get(cacheKey);
       const customers = data.map((el: object) => new Business(el));
-      return customers.find((c: Customer) => c.id == customer_id);
+      const customer = customers.find((c: Customer) => c.id == customer_id);
+      return new Customer(customer);
     },
 
     async deleteCustomer(customer: Customer) {

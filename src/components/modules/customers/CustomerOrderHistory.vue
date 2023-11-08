@@ -87,6 +87,7 @@ const customerStore = useCustomerStore();
   ion-item {
     --padding-start: 0px;
   }
+
   ion-item ion-chip {
     --background: #ecfdf3;
     --color: #027a48;
