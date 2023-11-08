@@ -56,7 +56,7 @@ const totalCost = computed(() => {
     (business: any) => business?.businesses_id == route.params.id
   );
   if (business) {
-    const total = business.order_items.reduce(
+    const total = business.order_items?.reduce(
       (total, item) => total + (item.total_price || 0),
       0
     );

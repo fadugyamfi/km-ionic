@@ -6,12 +6,14 @@
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
       <section class="ion-padding">
-
-        <IonText>{{}}</IonText>
+        <IonText>{{ orderBusiness }}</IonText>
         <p>GHS 3000 minimum reached</p>
       </section>
       <IonList>
-        <IonItem v-for="(item, index) in orderBusiness?.order_items" :key="item.product?.id">
+        <IonItem
+          v-for="(item, index) in orderBusiness?.order_items"
+          :key="item.product?.id"
+        >
           <ion-thumbnail slot="start" class="custom-thumbnail">
             <Image :src="item.product_image"></Image>
           </ion-thumbnail>
@@ -24,20 +26,26 @@
                 {{ item.currency_symbol || "GHS" }}
                 {{ item.quantity * (item.product_price || 0) }}
               </p>
-
             </ion-col>
             <ion-col size="1" class="remove-button">
-              <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
-                <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
+              <ion-button
+                fill="clear"
+                color=""
+                @click.prevent.stop="removeFromCart(index)"
+              >
+                <ion-icon
+                  class="remove-icon"
+                  :icon="closeCircleOutline"
+                ></ion-icon>
               </ion-button>
             </ion-col>
-            <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
-
+            <ProductQuantitySelector
+              @change="updateQuantity(item, $event)"
+            ></ProductQuantitySelector>
           </ion-row>
         </IonItem>
         <ItemReview />
       </IonList>
-
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton> Continue </KolaYellowButton>
@@ -58,8 +66,7 @@ import {
   IonButton,
   IonIcon,
   IonFooter,
-  IonText
-
+  IonText,
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
@@ -68,9 +75,8 @@ import ItemReview from "@/components/cards/ItemReview.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
 import Image from "@/components/Image.vue";
-import { useBusinessStore } from '@/stores/BusinessStore';
+import { useBusinessStore } from "@/stores/BusinessStore";
 import { useRoute } from "vue-router";
-
 
 const route = useRoute();
 
@@ -78,8 +84,6 @@ const cartStore = useCartStore();
 
 const orderBusiness = ref<any>(null);
 const orders = computed(() => cartStore.orders);
-
-cartStore.loadFromStorage();
 
 const updateQuantity = (item: CartItem, newQuantity: number) => {
   item.quantity = newQuantity;
@@ -92,14 +96,16 @@ const removeFromCart = (index: number) => {
 
 const getOrderBusiness = async () => {
   await cartStore.persist();
-  const business = orders.value.find((order: any) => order?.businesses_id == route.params.id);
-  console.log('Found business:', business); // Add this line for debugging
+  const business = orders.value.find(
+    (order: any) => order?.businesses_id == route.params.id
+  );
+  console.log("Found business:", business); // Add this line for debugging
   orderBusiness.value = business;
-  // cartStore.items = orderBusiness.value?.order_items;
+  cartStore.items = orderBusiness.value?.order_items;
 };
 
-
-onMounted(() => {
+onMounted(async () => {
+  await cartStore.loadFromStorage();
   getOrderBusiness();
 });
 </script>
