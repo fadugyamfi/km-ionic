@@ -11,6 +11,7 @@ export default class Customer {
   public name?: string;
   public location: NullableString = null;
   public phone_number: NullableString = null;
+  public business_owner_phone: NullableString = null;
   public description: NullableString = null;
   public created_at?: string;
   public min_order_amount: NullableStringOrNumber = null;
@@ -24,6 +25,7 @@ export default class Customer {
   public rating?: number = 1;
   public distance?: number = 0;
   public deliveryTime?: string;
+  public business_types_id?: number | string;
   public tags?: Tag[];
 
   constructor(data: object | null) {

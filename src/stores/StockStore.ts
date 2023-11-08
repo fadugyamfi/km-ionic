@@ -1,6 +1,6 @@
 import axios from "axios";
 import { defineStore } from "pinia";
-import Customer from "@/models/Customer";
+import Stock from "@/models/Stock";
 import { useUserStore } from "./UserStore";
 import { handleAxiosRequestError } from "@/utilities";
 import Business from "@/models/Business";
@@ -9,9 +9,9 @@ import AppStorage from "./AppStorage";
 
 const storage = new AppStorage();
 
-export const useCustomerStore = defineStore("customer", {
+export const useCustomerStore = defineStore("stock", {
   state: () => ({
-    customers: [] as Customer[],
+    stocks: [] as Stock[],
     nextLink: null as string | null,
     meta: {},
   }),
@@ -30,10 +30,10 @@ export const useCustomerStore = defineStore("customer", {
           ...options,
         };
         if (refresh) {
-          this.customers = [];
+          this.stocks = [];
           this.nextLink = null;
         }
-        if (this.customers.length && !this.nextLink) {
+        if (this.stocks.length && !this.nextLink) {
           return;
         }
         if (params.name_like) {
@@ -44,14 +44,11 @@ export const useCustomerStore = defineStore("customer", {
         const response = await axios.get(link, { params });
         if (response) {
           const { data, links, meta } = response.data;
-          this.customers = [
-            ...this.customers,
-            ...data.map((el: any) => new Customer(el)),
-          ];
+          this.stocks = [...this.stocks, ...data];
           this.meta = meta;
           this.nextLink = links.next;
 
-          return this.customers;
+          return this.stocks;
         }
       } catch (error) {
         handleAxiosRequestError(error);
@@ -59,7 +56,7 @@ export const useCustomerStore = defineStore("customer", {
 
       return [];
     },
-    async createBusinessCustomer(postData: Object): Promise<Customer | null> {
+    async createBusinessCustomer(postData: Object): Promise<Stock | null> {
       const userStore = useUserStore();
       return axios
         .post(
@@ -77,7 +74,7 @@ export const useCustomerStore = defineStore("customer", {
     async updateCustomer(
       postData: Object,
       customer_id: any
-    ): Promise<Customer | null> {
+    ): Promise<Stock | null> {
       const userStore = useUserStore();
       return axios
         .put(
@@ -93,16 +90,15 @@ export const useCustomerStore = defineStore("customer", {
         .catch((error) => handleAxiosRequestError(error));
     },
 
-    async getCustomer(business: Business, customer_id: any): Promise<Customer> {
+    async getCustomer(business: Business, customer_id: any): Promise<Stock> {
       const cacheKey = `kola.business.${business.id}.customers`;
       await storage.has(cacheKey);
       const data = await storage.get(cacheKey);
       const customers = data.map((el: object) => new Business(el));
-      const customer = customers.find((c: Customer) => c.id == customer_id);
-      return new Customer(customer);
+      return customers.find((c: Stock) => c.id == customer_id);
     },
 
-    async deleteCustomer(customer: Customer) {
+    async deleteCustomer(customer: Stock) {
       const userStore = useUserStore();
 
       return axios
@@ -110,9 +106,9 @@ export const useCustomerStore = defineStore("customer", {
           `/v2/businesses/${userStore.activeBusiness?.id}/customers/${customer.id}`
         )
         .then(() => {
-          const index = this.customers.findIndex((c) => c.id == customer.id);
+          const index = this.stocks.findIndex((c) => c.id == customer.id);
           if (index > -1) {
-            this.customers.splice(index, 1);
+            this.stocks.splice(index, 1);
           }
         })
         .catch((error) => {

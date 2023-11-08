@@ -216,9 +216,10 @@
                 "useCurrentLocation": "Use Current Location"
             },
             "fullName": "Full Name",
+            "businessOwnerPhone": "Business Owner Phone Number",
             "businessName": "Business Name",
             "businessLocation": "Business Location",
-            "phoneNumber": "Phone number",
+            "phoneNumber": "Phone Number",
             "assignToSalesAgentOrManager": "Assign to a sales agent or manager",
             "selectSaleAgent": "Select a sales agent",
             "howDoTheyUsuallyPay": "How do they usually pay",
@@ -231,7 +232,9 @@
             "confirmDeleteCustomer": "Are you sure you want to remove this customer?",
             "actionIsUnreversible":"This action cannot be undone",
             "remove": "Remove",
-            "new": "new"
+            "new": "new",
+            "updateCustomerInfo": "Update customer information"
+            
 
         }
     }

@@ -7,7 +7,11 @@
       <IonAvatar slot="start">
         <Image :src="customer.logo"></Image>
       </IonAvatar>
-      <IonLabel>
+      <IonLabel
+        @click="
+          $router.push(`/profile/company/customers/${customer.id}/profile`)
+        "
+      >
         <p class="ion-no-margin">{{ customer.name }}</p>
         <IonText color="medium" class="font-medium">
           {{ customer.location || $t("profile.customers.locationUnknown") }}
@@ -16,6 +20,7 @@
           ><IonChip>{{ $t("profile.customers.new") }}</IonChip></IonText
         >
       </IonLabel>
+
       <IonButton
         :id="`popover-button-${customer.id}`"
         fill="clear"
@@ -29,7 +34,12 @@
       >
         <IonContent scroll-y="false">
           <IonList>
-            <IonItem lines="full" :button="true" :detail="false">
+            <IonItem
+              @click="updateCustomer(customer)"
+              lines="full"
+              :button="true"
+              :detail="false"
+            >
               <IonIcon :icon="createOutline"></IonIcon>
               {{ $t("profile.customers.updateCustomer") }}
             </IonItem>
@@ -73,12 +83,15 @@ import {
   trashOutline,
 } from "ionicons/icons";
 import { PropType, ref } from "vue";
-
+import { useRouter } from "vue-router";
 import Image from "@/components/Image.vue";
 import DeleteCustomerModal from "@/components/modules/customers/DeleteCustomerModal.vue";
 import Customer from "@/models/Customer";
 import { useCustomerStore } from "@/stores/CustomerStore";
 import { getDateFromNow } from "@/utilities";
+import { useToastStore } from "@/stores/ToastStore";
+
+const toastStore = useToastStore();
 
 const props = defineProps({
   customers: {
@@ -87,6 +100,7 @@ const props = defineProps({
   },
 });
 
+const router = useRouter();
 const customerStore = useCustomerStore();
 
 const selectedCustomer = ref<Customer>();
@@ -99,8 +113,26 @@ const deleteCustomer = (customer: Customer) => {
   showConfirmDeleteModal.value = true;
 };
 const onConfirmDelete = async () => {
-  showConfirmDeleteModal.value = false;
-  await customerStore.deleteCustomer(selectedCustomer.value as Customer);
+  try {
+    showConfirmDeleteModal.value = false;
+    await customerStore.deleteCustomer(selectedCustomer.value as Customer);
+    toastStore.showSuccess(
+      "Customer has been removed successfully",
+      "",
+      "bottom"
+    );
+  } catch (error) {
+    toastStore.showError(
+      "Failed to remove Customer. Please try again",
+      "",
+      "bottom",
+      "footer"
+    );
+  }
+};
+
+const updateCustomer = (customer: Customer) => {
+  router.push(`/profile/company/customers/${customer.id}/update-customer`);
 };
 </script>
 
