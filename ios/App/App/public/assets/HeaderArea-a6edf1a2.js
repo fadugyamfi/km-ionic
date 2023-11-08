@@ -1,1 +1,0 @@
-import{d as r,_ as n,o as s,A as o,f as t,t as a}from"./index-f92ce253.js";const d=r({props:{title:{default:"Title Text",type:String},subtext:{default:"Subtext here",type:String}},data(){return{}}});function p(e,_,l,c,u,i){return s(),o("header",null,[t("h5",null,a(e.title),1),t("p",null,a(e.subtext),1)])}const x=n(d,[["render",p],["__scopeId","data-v-1561f1d1"]]);export{x as H};

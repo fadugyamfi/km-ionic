@@ -1,1 +1,0 @@
-const r=(t,m=2)=>new Intl.NumberFormat("en",{maximumFractionDigits:m,minimumFractionDigits:m}).format(t),o=(t,m=2)=>new Intl.NumberFormat("en",{notation:"compact",maximumFractionDigits:m,minimumFractionDigits:m}).format(t),n=t=>t&&Number(t).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");export{r as a,n as b,o as f};
