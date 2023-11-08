@@ -106,7 +106,7 @@ import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { formatAmountWithCommas } from "@/utilities";
 import Image from "@/components/Image.vue";
-import { Order } from "@/models/types";
+import { Order } from "@/models/Order";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 

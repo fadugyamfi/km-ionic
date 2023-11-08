@@ -10,9 +10,7 @@
       <form>
         <section class="d-flex flex-column ion-margin-bottom">
           <IonText class="fw-semibold">Pay Now</IonText>
-          <IonText color="medium" class="font-medium"
-            >Select a payment method</IonText
-          >
+          <IonText color="medium" class="font-medium">Select a payment method</IonText>
         </section>
 
         <section class="d-flex flex-column ion-margin-bottom">
@@ -21,26 +19,17 @@
 
         <section class="d-flex flex-column ion-margin-bottom">
           <IonText class="fw-semibold">Pay Later</IonText>
-          <IonText color="medium" class="font-medium"
-            >Select a pay later option</IonText
-          >
+          <IonText color="medium" class="font-medium">Select a pay later option</IonText>
         </section>
 
         <section class="d-flex flex-column ion-margin-bottom">
           <!-----------Pay over 2 weeks----------------->
           <ion-card>
-            <ion-card-content>
-              <section
-                class="d-flex ion-justify-content-between ion-align-items-center"
-              >
+            <ion-card-content @click="toggleDropdown('pay2Weeks')">
+              <section class="d-flex ion-justify-content-between ion-align-items-center">
                 <IonText class="fw-semibold">Pay over 2 weeks</IonText>
                 <section class="d-flex ion-align-items-center">
-                  <img
-                    loading="lazy"
-                    src="/img/icons/chevron-down.svg"
-                    class="image"
-                    @click="toggleDropdown('pay2Weeks')"
-                  />
+                  <img loading="lazy" src="/img/icons/chevron-down.svg" class="image" />
                 </section>
               </section>
             </ion-card-content>
@@ -52,10 +41,8 @@
                   <p class="radio-text">Pay 50% installment each week</p>
                   <section class="d-flex ion-align-items-center">
                     <IonText class="fw-semibold ion-margin-end"></IonText>
-                    <ion-radio
-                      v-model="form.fields.payLaterDueDate"
-                      :disabled="form.fields.payLaterInstallmentWeeks"
-                    ></ion-radio>
+                    <ion-radio v-model="form.fields.payLaterDueDate"
+                      :disabled="form.fields.payLaterInstallmentWeeks"></ion-radio>
                   </section>
                 </section>
               </ion-radio-group>
@@ -64,10 +51,8 @@
                   <p class="radio-text">Pay 100% on the due date</p>
                   <section class="d-flex ion-align-items-center">
                     <IonText class="fw-semibold ion-margin-end"></IonText>
-                    <ion-radio
-                      v-model="form.fields.payLaterInstallmentWeeks"
-                      :disabled="form.fields.payLaterDueDate"
-                    ></ion-radio>
+                    <ion-radio v-model="form.fields.payLaterInstallmentWeeks"
+                      :disabled="form.fields.payLaterDueDate"></ion-radio>
                   </section>
                 </section>
               </ion-radio-group>
@@ -80,18 +65,11 @@
 
           <!-----------Pay over 4 weeks----------------->
           <ion-card>
-            <ion-card-content>
-              <section
-                class="d-flex ion-justify-content-between ion-align-items-center"
-              >
+            <ion-card-content @click="toggleDropdown('pay4Weeks')">
+              <section class="d-flex ion-justify-content-between ion-align-items-center">
                 <IonText class="fw-semibold">Pay over 4 weeks</IonText>
                 <section class="d-flex ion-align-items-center">
-                  <img
-                    loading="lazy"
-                    src="/img/icons/chevron-down.svg"
-                    class="image"
-                    @click="toggleDropdown('pay4Weeks')"
-                  />
+                  <img loading="lazy" src="/img/icons/chevron-down.svg" class="image" />
                 </section>
               </section>
             </ion-card-content>
@@ -103,9 +81,7 @@
                   <p class="radio-text">Pay 25% instalment each week</p>
                   <section class="d-flex ion-align-items-center">
                     <IonText class="fw-semibold ion-margin-end"></IonText>
-                    <ion-radio
-                      v-model="form.fields.payInstalmentWeek"
-                    ></ion-radio>
+                    <ion-radio v-model="form.fields.payInstalmentWeek"></ion-radio>
                   </section>
                 </section>
               </ion-radio-group>
@@ -135,11 +111,13 @@
           </ion-card>
         </section>
 
-        <IonFooter class="ion-padding ion-no-border">
-          <KolaYellowButton @click="viewItemReview">Continue</KolaYellowButton>
-        </IonFooter>
       </form>
+
     </ion-content>
+    <IonFooter class="ion-padding ion-no-border">
+      <KolaYellowButton @click="viewItemReview">Continue</KolaYellowButton>
+    </IonFooter>
+
   </ion-page>
 </template>
 

@@ -17,6 +17,7 @@ import Business from "./Business";
 import Currency from "./Currency";
 import { OrderItem } from "./OrderItem";
 import { OrderStatusHistory } from "./OrderStatusHistory";
+import ProductUnit from "./ProductUnit";
 
 export class Order {
     [x: string]: any;
@@ -26,10 +27,12 @@ export class Order {
     public customer_id?: number;
     public total_order_amount?: number;
     public order_status_id?: number;
-    public created_at: string | number | Date | undefined;
-    public order_status: any;
-    public start_dt: string | number | Date | undefined;
-    public product_units_id: number| undefined;
+    public created_at?: string | number | Date;
+    public order_status?: any;
+    public start_dt?: string | number | Date;
+    public product_units_id?: number;
+    public delivery_location?: string;
+    public delivery_date?: string;
 
     public _order_status_histories: OrderStatusHistory[] = [];
     public _order_items: OrderItem[] = [];
