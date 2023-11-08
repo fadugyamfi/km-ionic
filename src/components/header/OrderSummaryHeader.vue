@@ -6,8 +6,10 @@
           :defaultHref="`/shopper/cart/business/${$route.params.id}/payment-options`"
         ></IonBackButton>
       </IonButtons>
-      <IonTitle>Order summary </IonTitle>
-      <SaveForLaterButton />
+      <IonTitle class="fw-bold">Order summary </IonTitle>
+      <IonButtons slot="end" style="margin-right: 10px">
+        <IonButton class="save-for-later-button">Save for later</IonButton>
+      </IonButtons>
     </IonToolbar>
   </IonHeader>
 </template>
@@ -18,6 +20,7 @@ import {
   IonToolbar,
   IonButtons,
   IonBackButton,
+  IonButton,
   IonTitle,
 } from "@ionic/vue";
 import SaveForLaterButton from "@/components/buttons/SaveForLaterButton.vue";
@@ -26,6 +29,7 @@ export default {
   components: {
     IonTitle,
     IonButtons,
+    IonButton,
     IonHeader,
     IonBackButton,
     IonToolbar,
@@ -33,16 +37,5 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss">
-ion-title{
-  color: #000;
-font-family: Poppins;
-font-size: 12px;
-font-style: normal;
-font-weight: 400;
-line-height: 140%; /* 16.8px */
-}
-
-
+<style scoped="scss">
 </style>

@@ -75,16 +75,16 @@ export const useOrderStore = defineStore('order', {
       }
     },
 
-    async fetchOrder(orderId: number): Promise<Order|null> {
+    async fetchOrder(orderId: number): Promise<Order | null> {
       try {
         const response = await axios.get(`/v2/orders/${orderId}`);
-        if( response.status == 200 ) {
+        if (response.status == 200) {
           const order = new Order(response.data.data);
           return order;
         }
 
         return null;
-      } catch(error) {
+      } catch (error) {
         handleAxiosRequestError(error);
         return null;
       }
@@ -138,8 +138,6 @@ export const useOrderStore = defineStore('order', {
         toastStore.showError('Failed to edit order.');
       }
     },
-
-
 
     async reorderOrder(orderId: number) {
       try {

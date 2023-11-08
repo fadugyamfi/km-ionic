@@ -28,11 +28,13 @@
 
         <section class="ion-padding-horizontal update-button-section">
           <KolaYellowButton>
-            {{ 'Update' }}
+            {{ 'Accept Order' }}
+          </KolaYellowButton>
+
+          <KolaYellowButton>
+            {{ 'Cancel Order' }}
           </KolaYellowButton>
         </section>
-
-        <OrderStatusHistoryView :order="(order as Order)" />
       </section>
     </ion-content>
   </IonPage>

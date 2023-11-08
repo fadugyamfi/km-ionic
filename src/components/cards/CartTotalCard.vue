@@ -5,7 +5,8 @@
         <ion-text class="item-text">Item total</ion-text>
       </ion-col>
       <ion-col class="ion-text-end">
-        <ion-text class="item-price">{{ totalCost }}</ion-text>
+        <ion-text class="item-price">{{ 'GHS ' + (totalCost || 0) }}
+        </ion-text>
       </ion-col>
     </ion-row>
     <ion-row class="divider-row">
