@@ -54,7 +54,8 @@
           v-model="form.fields.delivery_date"
           name="delivery-date"
           @ion-input="form.validate($event)"
-          required
+      
+          readonly
         ></IonInput>
         <section>
           <section class="d-flex flex-column ion-margin-bottom">
@@ -100,6 +101,9 @@ import { useCartStore } from "@/stores/CartStore";
 import { useForm } from "@/composables/form";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
+import { onMounted } from 'vue';
+import { onMounted as onMountedVue3 } from '@vue/runtime-core';
+
 
 const router = useRouter();
 const route = useRoute();
@@ -108,11 +112,26 @@ const form = useForm({
   location: "",
   landmark: "",
   delivery_date: "",
-  delivery_method: 'standard'
+  delivery_method: ''
 });
-
 const selectDeliveryMethod = (method: string) => {
   form.fields.delivery_method = method;
+
+  // Define the number of days to add based on the method
+  let daysToAdd = method === 'standard' ? 5 : method === 'express' ? 2 : 0;
+
+  if (daysToAdd > 0) {
+    const today = new Date();
+    const deliveryDate = new Date(today);
+    deliveryDate.setDate(today.getDate() + daysToAdd);
+
+    // Format the date as DD/MM/YY
+    const dd = deliveryDate.getDate().toString().padStart(2, '0');
+    const mm = (deliveryDate.getMonth() + 1).toString().padStart(2, '0');
+    const yy = deliveryDate.getFullYear().toString().slice(-2);
+
+    form.fields.delivery_date = `${dd}/${mm}/${yy}`;
+  }
 };
 
 const storeDeliveryDetails = () => {
@@ -140,6 +159,13 @@ const getLocation = async () => {
     console.log(error);
   }
 };
+
+onMounted(() => {
+  // Set the delivery method here based on your requirement
+  // For example, setting it to 'standard' when the component is mounted
+  const initialDeliveryMethod = 'standard';
+  selectDeliveryMethod(initialDeliveryMethod);
+});
 </script>
 
 <style scoped lang="scss">
