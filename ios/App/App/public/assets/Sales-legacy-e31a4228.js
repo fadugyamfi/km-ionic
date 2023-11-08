@@ -1,0 +1,1 @@
+System.register(["./index-legacy-cc225d81.js"],(function(e,t){"use strict";var s,u,n,a,r,c,i,l;return{setters:[e=>{s=e.d,u=e.o,n=e.c,a=e.w,r=e.e,c=e.b,i=e.ay,l=e.i}],execute:function(){e("default",s({__name:"Sales",setup:e=>(e,t)=>(u(),n(c(l),null,{default:a((()=>[r(c(i))])),_:1}))}))}}}));
