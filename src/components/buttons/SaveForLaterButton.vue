@@ -1,8 +1,10 @@
 <template>
-  <ion-button size="small" slot="end" color="light"><ion-title>Save for later</ion-title></ion-button>
+  <ion-button size="small" slot="end" color="light">
+    <IonTitle size="small" > Save for later </IonTitle>
+  </ion-button>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from "vue";
 import { IonButton } from "@ionic/vue";
 
@@ -13,10 +15,11 @@ export default defineComponent({
 });
 </script>
 
-<style scope lang="scss">
-ion-buttom{
+<style scoped="scss">
+ion-title {
+  color: #8D9093;
 font-family: Poppins;
-font-size: 12px;
+font-size: 1px;
 font-style: normal;
 font-weight: 400;
 line-height: 100%; /* 12px */

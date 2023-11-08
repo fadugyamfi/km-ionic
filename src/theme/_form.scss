@@ -1,87 +1,107 @@
 .kola-input {
+  &.input-fill-solid,
+  &.select-fill-solid {
+    --border-color: #b4b4b4;
+    --border-style: solid;
+    --border-width: 1px;
+    --border-radius: 8px;
+    --background: #f6f6f6;
+    border-color: var(--border-color);
+    border-radius: var(--border-radius);
 
-    &.input-fill-solid {
-        --border-color: #b4b4b4;
-        --border-style: solid;
-        --border-width: 1px;
-        --border-radius: 8px;
-        --background: #F6F6F6;
-        border-color: var(--border-color);
-        border-radius: var(--border-radius);
+    &::part(label) {
+      color: #74787c;
     }
+  }
 
+  overflow: hidden;
+
+  .input-highlight,
+  .select-highlight,
+  .textarea-highlight {
+    display: none !important;
+  }
+
+  .input-wrapper,
+  .select-wrapper,
+  .textarea-wrapper {
+    border: solid 1px var(--border-color);
+    border-radius: 8px !important;
     overflow: hidden;
+  }
 
-    .input-highlight,
-    .select-highlight,
-    .textarea-highlight {
-        display: none !important;
-    }
-
-    .input-wrapper,
-    .select-wrapper,
-    .textarea-wrapper {
-        border: solid 1px var(--border-color);
-        border-radius: 8px !important;
-        overflow: hidden;
-    }
+  &.select-label-placement-stacked {
+    border: solid 1px var(--border-color);
+    border-radius: 8px !important;
+    overflow: hidden;
+    --padding-start: 10px;
+    --padding-end: 10px;
+  }
 }
 
 .kola-input-item {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 
-    ion-item {
-        --background: #F6F6F6;
-        --color: #74787C;
-        --border-color: #b4b4b4;
-        --border-width: 1px;
-        --border-style: solid;
-        --highlight-color-focused: #74787c;
-        --border-radius: 8px;
-        font-size: 0.9em;
-    }
+  ion-item {
+    --background: #f6f6f6;
+    --color: #74787c;
+    --border-color: #b4b4b4;
+    --border-width: 1px;
+    --border-style: solid;
+    --highlight-color-focused: #74787c;
+    --border-radius: 8px;
+    font-size: 0.9em;
+  }
 }
 p.optional {
-    margin-top: 2px;
-    font-size: 0.65em;
-    color: #a1a1a1;
+  margin-top: 2px;
+  font-size: 0.65em;
+  color: #a1a1a1;
 }
 
-
-
 .search-input {
-    --border: none;
-    --border-radius: 10px;
-    --box-shadow: 0px 4px 24px 0px #000B2B12;
-    font-size: 0.9em;
+  --border: none;
+  --border-radius: 10px;
+  --box-shadow: 0px 4px 24px 0px #000b2b12;
+  font-size: 0.9em;
 
-    &::placeholder {
-        font-size: 0.9em;
-    }
+  &::placeholder {
+    font-size: 0.9em;
+  }
 }
 
 .kola-white-button {
-    --background: #FFF !important;
-    --padding-top: 16px;
-    --padding-bottom: 16px;
-    --color: #101828;
-    --border-style: solid;
-    --border-color: #101828;
-    --border-width: 1px;
-    --border-radius: 0.8em;
-    --box-shadow: none;
-    text-transform: none;
-    font-weight: 600;
-    font-size: 0.75em;
+  --background: #fff !important;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  --color: #101828;
+  --border-style: solid;
+  --border-color: #101828;
+  --border-width: 1px;
+  --border-radius: 0.8em;
+  --box-shadow: none;
+  text-transform: none;
+  font-weight: 600;
+  font-size: 0.75em;
 }
 
 .kola-yellow-button {
-    --background: #F5AA29 !important;
-    --padding-top: 16px;
-    --padding-bottom: 16px;
-    --color: #101828;
-    --border-radius: 0.8em;
-    text-transform: none;
-    font-weight: 600;
-    font-size: 0.75em;
+  --background: #f5aa29 !important;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  --color: #101828;
+  --border-radius: 0.8em;
+  text-transform: none;
+  font-weight: 600;
+  font-size: 0.75em;
+}
+.save-for-later-button {
+  --background: #f0f0f0 !important;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  --color: #8d9093;
+  --border-radius: 8px;
+  text-transform: none;
+  font-weight: 600;
+  font-size: 12px;
 }

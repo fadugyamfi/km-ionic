@@ -66,12 +66,15 @@
           <DeliveryMethod
             :location="form.fields.location"
             :delivery-date="form.fields.delivery_date"
+            @onSelectDeliveryMethod="selectDeliveryMethod"
           />
         </section>
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="viewPaymentOptions">Continue</KolaYellowButton>
+      <KolaYellowButton @click="storeDeliveryDetails"
+        >Continue</KolaYellowButton
+      >
     </IonFooter>
   </ion-page>
 </template>
@@ -93,6 +96,7 @@ import { useToastStore } from "@/stores/ToastStore";
 import { useGeolocation } from "@/composables/useGeolocation";
 import DeliveryDetailsHeader from "@/components/header/DeliveryDetailsHeader.vue";
 import DeliveryMethod from "@/components/modules/deliveryDetails/DeliveryMethod.vue";
+import { useCartStore } from "@/stores/CartStore";
 import { useForm } from "@/composables/form";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
@@ -104,11 +108,23 @@ const form = useForm({
   location: "",
   landmark: "",
   delivery_date: "",
+  delivery_method: 'standard'
 });
 
-const viewPaymentOptions = () => {
+const selectDeliveryMethod = (method: string) => {
+  form.fields.delivery_method = method;
+};
+
+const storeDeliveryDetails = () => {
+  const cartStore = useCartStore();
+  const index = cartStore.orders.findIndex((b) => b.businesses_id == Number(route.params.id));
+  cartStore.orders[index] = {
+    ...cartStore.orders[index],
+    ...form.fields,
+  };
   router.push(`/shopper/cart/business/${route.params.id}/payment-options`);
 };
+
 const getLocation = async () => {
   const toastStore = useToastStore();
   const { getCurrentLocation } = useGeolocation();

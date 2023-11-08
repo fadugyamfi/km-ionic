@@ -15,7 +15,7 @@
               {{ order?.business?.name || "Unknown" }}
             </IonText>
             <IonText color="medium" class="font-medium">
-              {{ $t("Item total") }}:
+              Item total:
               {{
                 order?.getTotal().toLocaleString("en-GB", {
                   style: "currency",

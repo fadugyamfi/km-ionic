@@ -204,5 +204,35 @@
             "noDescriptAvailable": "No Description Available",
             "unknownLocation": "Unknown Location"
         }
+    },
+    "profile": {
+        "customers": {
+            "customers": "Customers",
+            "youHaveNoCustomer": "You Have No Customers",
+            "youCanStartByAddingNewCustomers": "You can start by adding new customers",
+            "addCustomer": "Add Customer",
+            "inviteCustomers": "Invite customers",
+            "location": {
+                "useCurrentLocation": "Use Current Location"
+            },
+            "fullName": "Full Name",
+            "businessName": "Business Name",
+            "businessLocation": "Business Location",
+            "phoneNumber": "Phone number",
+            "assignToSalesAgentOrManager": "Assign to a sales agent or manager",
+            "selectSaleAgent": "Select a sales agent",
+            "howDoTheyUsuallyPay": "How do they usually pay",
+            "selectPaymentMethod": "Select payment method",
+            "save": "Save",
+            "locationUnknown":" Location Unknown",
+            "updateCustomer": "Update customer",
+            "removeCustomer": "Remove customer",
+            "searchCustomers": "Find Customer By Name",
+            "confirmDeleteCustomer": "Are you sure you want to remove this customer?",
+            "actionIsUnreversible":"This action cannot be undone",
+            "remove": "Remove",
+            "new": "new"
+
+        }
     }
 }
