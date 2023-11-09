@@ -58,15 +58,13 @@ import {
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
-import { business, closeCircleOutline } from "ionicons/icons";
+import { closeCircleOutline } from "ionicons/icons";
 import ItemReview from "@/components/cards/ItemReview.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
 import Image from "@/components/Image.vue";
-import { useBusinessStore } from "@/stores/BusinessStore";
 import { useRoute } from "vue-router";
-import { useUserStore } from "@/stores/UserStore";
-import axios from "axios";
+
 
 const route = useRoute();
 
