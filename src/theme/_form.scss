@@ -1,6 +1,7 @@
 .kola-input {
   &.input-fill-solid,
-  &.select-fill-solid {
+  &.select-fill-solid,
+  &.textarea-fill-solid  {
     --border-color: #b4b4b4;
     --border-style: solid;
     --border-width: 1px;
@@ -11,7 +12,7 @@
     border-color: var(--border-color);
     border-radius: var(--border-radius);
 
-    .input-wrapper {
+    .input-wrapper, .textarea-wrapper {
       .label-text-wrapper {
         color: #74787c;
       }

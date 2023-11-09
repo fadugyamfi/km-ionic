@@ -231,6 +231,15 @@
             "updateCustomerInfo": "Update customer information"
             
 
+        },
+        "stock": {
+            "addStock": "Add Stock",
+            "addProductImage": "Add Product Image",
+            "category": "Category",
+            "productName": "Product name",
+            "variation": "Select size/variation",
+            "itemDescription": "Item description",
+            "quantityAvailable": "Quantity available"
         }
     }
 }

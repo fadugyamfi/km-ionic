@@ -13,26 +13,13 @@
             ></ion-back-button>
           </ion-buttons>
           <IonTitle size="small" class="fw-bold">
-            <section
-              class="d-flex ion-align-items-center ion-justify-content-center"
-            >
+            <section class="ion-align-items-center ion-justify-content-center">
               <IonLabel>
                 <!-- {{ $t("profile.customers.customers") }} -->
                 Stock
               </IonLabel>
             </section></IonTitle
           >
-          <ion-buttons slot="end">
-            <IonButton color="dark" @click="addStock()">
-              <IonIcon :icon="personAddOutline" color="dark"></IonIcon>
-            </IonButton>
-            <ion-button
-              v-if="customers?.length > 0"
-              @click="searchEnabled = !searchEnabled"
-              color="dark"
-            >
-            </ion-button>
-          </ion-buttons>
         </ion-toolbar>
       </ion-header>
       <EmptyStock></EmptyStock>
