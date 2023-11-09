@@ -17,7 +17,7 @@
 
         <ion-radio-group v-model="form.fields.payment_option">
           <section class="d-flex flex-column ion-margin-bottom">
-            <PayOnDelivery @onSelectPaymentOption="selectPaymentOption($event)" />
+            <PayOnDelivery />
           </section>
 
           <section class="d-flex flex-column ion-margin-bottom">
@@ -250,12 +250,7 @@ export default defineComponent({
         ...cartStore.orders[index],
         payment_option: this.form.fields.payment_option,
       };
-      this.$router.push(
-        `/shopper/cart/business/${this.$route.params.id}/item-review`
-      );
-    },
-
-    viewItemReview() {
+      cartStore.persist()
       this.$router.push(
         `/shopper/cart/business/${this.$route.params.id}/item-review`
       );
@@ -264,13 +259,13 @@ export default defineComponent({
     toggleDropdown(dropdownName: DropdownName) {
       this.showDropdown[dropdownName] = !this.showDropdown[dropdownName];
     },
-    selectPaymentOption(paymentOption:any) {
-      this.form.fields.payment_option = paymentOption;
-    },
   },
-  // mounted: {
-  //   // getCustomer() {},
-  // },
+  mounted() {
+    const cartStore = useCartStore()
+    if (cartStore.orders.length == 0) {
+       cartStore.loadFromStorage();
+    }
+  },
 });
 </script>
 

@@ -54,18 +54,9 @@
 
 <script setup>
 import { locationOutline, timeOutline } from "ionicons/icons";
-import { IonText, IonRadioGroup } from "@ionic/vue";
+import { IonText, IonRadioGroup, IonIcon, IonRadio, IonCard } from "@ionic/vue";
 import { ref, watch } from "vue";
 
-const emit = defineEmits();
-
-const seletedPaymentOption = ref("1");
-
-watch(seletedPaymentOption, (newValue) => {
-  if (newValue) {
-    emit("onSelectPaymentOption", seletedPaymentOption);
-  }
-});
 </script>
 
 <style lang="scss" scoped>

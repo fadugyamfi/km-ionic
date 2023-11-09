@@ -3,7 +3,6 @@
     <section class="ion-padding">
       <OrderSummaryHeader />
     </section>
-
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
       <section class="ion-padding">
         <IonText>{{ orderBusiness?._business.name }}</IonText>
@@ -67,6 +66,7 @@ import {
   IonIcon,
   IonFooter,
   IonText,
+  IonCard,
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
@@ -94,18 +94,19 @@ const removeFromCart = (index: number) => {
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
 
-const getOrderBusiness = async () => {
-  await cartStore.persist();
+const getOrderBusiness = () => {
+  console.log("jello");
   const business = orders.value.find(
     (order: any) => order?.businesses_id == route.params.id
   );
   console.log("Found business:", business); // Add this line for debugging
   orderBusiness.value = business;
-  cartStore.items = orderBusiness.value?.order_items;
 };
 
 onMounted(async () => {
-  await cartStore.loadFromStorage();
+  if (cartStore.orders.length == 0) {
+    await cartStore.loadFromStorage();
+  }
   getOrderBusiness();
 });
 </script>

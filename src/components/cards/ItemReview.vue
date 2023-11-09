@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { ref,computed } from "vue";
-import { IonText, IonCard } from "@ionic/vue";
+import { IonText, IonCard, IonIcon } from "@ionic/vue";
 import { useCartStore } from "@/stores/CartStore";
 import { locationOutline, timeOutline } from "ionicons/icons";
 import DeliveryAddressSheet from "@/components/modules/carts/DeliveryAddressSheet.vue";
@@ -47,7 +47,7 @@ const route = useRoute();
 
 const cartStore = useCartStore();
 
-cartStore.loadFromStorage();
+
 const cartOrders = computed(() => cartStore.orders);
 
 const totalCost = computed(() => {
