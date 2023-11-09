@@ -43,11 +43,27 @@
           <h5>GHS 3789.00</h5>
         </IonCard>
         <IonCard>
-          <p>Total value of stock</p>
-          <h5>GHS 3789.00</h5>
+          <p>Number of Items</p>
+          <h5>140</h5>
         </IonCard>
       </IonContent>
       <ion-searchbar></ion-searchbar>
+
+      <IonChip class="chip">
+        <IonLabel class="label"> All </IonLabel>
+      </IonChip>
+      <IonChip class="chip">
+        <IonLabel class="label"> Dental </IonLabel>
+      </IonChip>
+      <IonChip class="chip">
+        <IonLabel class="label"> Food </IonLabel>
+      </IonChip>
+      <IonChip class="chip">
+        <IonLabel class="label"> Fashion </IonLabel>
+      </IonChip>
+      <IonChip class="chip">
+        <IonLabel class="label"> Household </IonLabel>
+      </IonChip>
 
       <header
         class="ion-padding-horizontal d-flex ion-align-items-center ion-justify-content-between"
@@ -55,7 +71,7 @@
         <h4>Available Stock</h4>
 
         <IonText color="primary" router-link="/shopper/home/categories">
-          View all
+          Add New Stock
         </IonText>
       </header>
       <ProductStockList
@@ -83,6 +99,7 @@ import {
   IonSegmentButton,
   IonText,
   IonSearchbar,
+  IonChip,
 } from "@ionic/vue";
 import { computed, onMounted, ref } from "vue";
 import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
@@ -173,4 +190,39 @@ ion-badge.badge {
 .ion-segment {
   margin-top: 16px;
 }
+
+IonCard {
+  text-align: center;
+  border-radius: 6px;
+  background: #fff2eb;
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+IonCard h5 {
+  font-weight: 600;
+}
+
+ion-searchbar {
+  margin-bottom: 14px;
+}
+
+Header {
+  margin-top: 10px;
+}
+
+Header h4 {
+  font-weight: 600;
+}
+
+.chip {
+  border-radius: 16px;
+  background: var(--gray-100, #f2f4f7);
+}
+.label {
+  color: rgba(52, 64, 84, 1);
+  text-align: center;
+  font-family: Inter;
+  font-weight: 500;
+  line-height: 20px;}
 </style>
