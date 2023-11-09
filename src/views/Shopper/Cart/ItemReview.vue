@@ -5,8 +5,9 @@
     </section>
     <ion-content class="ion-padding-horizontal">
       <section class="ion-padding">
-        <IonText>{{ orderBusiness?._business.name }}</IonText>
+        <IonText>{{  orderBusiness?._business.name  || 'No Business'}}</IonText>
         <p>GHS 3000 minimum reached</p>
+    
       </section>
       <IonList>
         <IonItem
@@ -47,7 +48,7 @@
       </IonList>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton> Continue </KolaYellowButton>
+      <KolaYellowButton  @click="storeTotalOrderAmount"> Continue </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -66,7 +67,6 @@ import {
   IonIcon,
   IonFooter,
   IonText,
-  IonCard,
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
@@ -79,8 +79,6 @@ import { useBusinessStore } from "@/stores/BusinessStore";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-
-const cartStore = useCartStore();
 
 const orderBusiness = ref<any>(null);
 const orders = computed(() => cartStore.orders);
@@ -102,6 +100,53 @@ const getOrderBusiness = () => {
   console.log("Found business:", business); // Add this line for debugging
   orderBusiness.value = business;
 };
+
+const cartStore = useCartStore();
+
+cartStore.loadFromStorage();
+const cartOrders = computed(() => cartStore.orders);
+
+const totalCost = computed(() => {
+  const business = cartOrders.value.find(
+    (business: any) => business?.businesses_id == route.params.id
+  );
+  if (business) {
+    const total = business.order_items?.reduce(
+      (total, item) => total + (item.total_price || 0),
+      0
+    );
+    if (total) {
+      return total.toFixed(2);
+    }
+    cartStore.persist();
+  }
+});
+
+const storeTotalOrderAmount = () => {
+  const index = cartStore.orders.findIndex(
+    (b) => b.businesses_id === Number(route.params.id)
+  );
+  console.log(index);
+  
+  if (index !== -1) {
+    const totalCostValue = totalCost.value;
+
+    
+    if (totalCostValue !== undefined) {
+      // Convert the string to a number
+      const totalOrderAmount = parseFloat(totalCostValue);
+      
+      cartStore.orders[index] = {
+        ...cartStore.orders[index],
+        total_order_amount: totalOrderAmount.toFixed(2),
+
+      };
+    }
+  }
+};
+
+
+
 
 onMounted(async () => {
   if (cartStore.orders.length == 0) {

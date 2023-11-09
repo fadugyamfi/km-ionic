@@ -12,14 +12,14 @@
         <IonText class="fw-semibold ion-margin-end">GHS 10.00</IonText>
       </section>
     </section>
-    <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
-      <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
-        <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>Delivery Address
-      </IonText>
-      <section class="d-flex ion-align-items-center"  @click="showChangeAddressSheet = true">
-        <IonText class="ion-margin-end date-color">Change address</IonText>
-      </section>
+    <section class="d-flex ion-justify-content-between ion-align-items-center">
+    <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+      <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>Delivery Address
+    </IonText>
+    <section class="d-flex ion-align-items-center">
+      <IonText class="ion-margin-end date-color" @click="toggleFilterSheet">Change address</IonText>
     </section>
+  </section>
     <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
       <IonText class="fw-semibold">Total Cost</IonText>
       <section class="d-flex ion-align-items-center">
@@ -27,28 +27,27 @@
       </section>
     </section>
   </IonCard>
-  
-  <DeliveryAddressSheet :isOpen="showChangeAddressSheet" @didDismiss="showChangeAddressSheet = false">
-  </DeliveryAddressSheet>
+  <DeliveryAddressSheet   :isOpen="showFilterSheet" @didDismiss="showFilterSheet = false"></DeliveryAddressSheet>
 </template>
 
 <script setup lang="ts">
-import { ref,computed } from "vue";
-import { IonText, IonCard, IonIcon } from "@ionic/vue";
+import { computed, ref } from "vue";
+import { IonText, IonCard } from "@ionic/vue";
 import { useCartStore } from "@/stores/CartStore";
 import { locationOutline, timeOutline } from "ionicons/icons";
-import DeliveryAddressSheet from "@/components/modules/carts/DeliveryAddressSheet.vue";
-import { onMounted } from 'vue';
-
 import { useRoute } from "vue-router";
+import DeliveryAddressSheet from "@/components/modules/carts/DeliveryAddressSheet.vue";
 
-const showChangeAddressSheet = ref(false);
 
 const route = useRoute();
+const showFilterSheet = ref(false);
+const toggleFilterSheet = () => {
+  showFilterSheet.value = !showFilterSheet.value;
+};
 
 const cartStore = useCartStore();
 
-
+cartStore.loadFromStorage();
 const cartOrders = computed(() => cartStore.orders);
 
 const totalCost = computed(() => {
@@ -63,12 +62,8 @@ const totalCost = computed(() => {
     if (total) {
       return total.toFixed(2);
     }
+    cartStore.persist()
   }
-});
-
-onMounted(() => {
-  // Recalculate total cost when the component is mounted
-  totalCost.value;
 });
 </script>
 

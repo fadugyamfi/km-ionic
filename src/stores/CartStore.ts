@@ -21,6 +21,7 @@ export type CartItem = {
   product_price: number;
   currency_symbol: string;
   total_price: number;
+  total_order_amount: number;
 };
 
 export const useCartStore = defineStore("cart", {
