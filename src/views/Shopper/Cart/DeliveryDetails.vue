@@ -11,11 +11,11 @@
       <form>
         <IonInput
           class="kola-input delivery-details-input"
-          :class="{ 'ion-invalid ion-touched': form.errors.location }"
+          :class="{ 'ion-invalid ion-touched': form.errors.delivery_location }"
           label="Town/Locality"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.location"
+          v-model="form.fields.delivery_location"
           name="location"
           @ion-input="form.validate($event)"
           required
@@ -34,11 +34,11 @@
 
         <IonInput
           class="kola-input delivery-details-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.landmark }"
+          :class="{ 'ion-invalid ion-touched': form.errors.delivery_nearest_landmark}"
           label="Nearest Landmark"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.landmark"
+          v-model="form.fields.delivery_nearest_landmark"
           name="landmark"
           @ion-input="form.validate($event)"
           required
@@ -107,8 +107,8 @@ const router = useRouter();
 const route = useRoute();
 const toastStore = useToastStore();
 const form = useForm({
-  location: "",
-  landmark: "",
+  delivery_location: "",
+  delivery_nearest_landmark: "",
   delivery_date: "",
   delivery_method: "",
 });

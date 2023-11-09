@@ -38,6 +38,7 @@ import { IonText, IonCard, IonIcon } from "@ionic/vue";
 import { useCartStore } from "@/stores/CartStore";
 import { locationOutline, timeOutline } from "ionicons/icons";
 import DeliveryAddressSheet from "@/components/modules/carts/DeliveryAddressSheet.vue";
+import { onMounted } from 'vue';
 
 import { useRoute } from "vue-router";
 
@@ -63,6 +64,11 @@ const totalCost = computed(() => {
       return total.toFixed(2);
     }
   }
+});
+
+onMounted(() => {
+  // Recalculate total cost when the component is mounted
+  totalCost.value;
 });
 </script>
 
