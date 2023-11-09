@@ -5,7 +5,7 @@
     </section>
     <ion-content class="ion-padding-horizontal">
       <section class="ion-padding">
-        <IonText>{{ orderBusiness?._business.name || 'No Business' }}</IonText>
+        <IonText> {{ orderBusiness?._business.name ? orderBusiness._business.name : 'No Business' }} </IonText>
         <p>GHS 3000 minimum reached</p>
 
       </section>
@@ -101,8 +101,7 @@ const createOrder = () => {
     payment_modes_id: orderBusiness.value.payment_option_id,
     total_items: 1,
     order_items: orderBusiness.value._order_items,
-    product_units_id: 1
-
+   
   });
 
 }
