@@ -5,15 +5,12 @@
     </section>
     <ion-content class="ion-padding-horizontal">
       <section class="ion-padding">
-        <IonText>{{  orderBusiness?._business.name  || 'No Business'}}</IonText>
+        <IonText>{{ orderBusiness?._business.name || 'No Business' }}</IonText>
         <p>GHS 3000 minimum reached</p>
-    
+
       </section>
       <IonList>
-        <IonItem
-          v-for="(item, index) in orderBusiness?._order_items"
-          :key="item.products_id"
-        >
+        <IonItem v-for="(item, index) in orderBusiness?._order_items" :key="item.products_id">
           <ion-thumbnail slot="start" class="custom-thumbnail">
             <Image :src="item.product_image"></Image>
           </ion-thumbnail>
@@ -28,27 +25,18 @@
               </p>
             </ion-col>
             <ion-col size="1" class="remove-button">
-              <ion-button
-                fill="clear"
-                color=""
-                @click.prevent.stop="removeFromCart(index)"
-              >
-                <ion-icon
-                  class="remove-icon"
-                  :icon="closeCircleOutline"
-                ></ion-icon>
+              <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
+                <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
               </ion-button>
             </ion-col>
-            <ProductQuantitySelector
-              @change="updateQuantity(item, $event)"
-            ></ProductQuantitySelector>
+            <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
           </ion-row>
         </IonItem>
         <ItemReview />
       </IonList>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton  @click="storeTotalOrderAmount"> Continue </KolaYellowButton>
+      <KolaYellowButton @click="createOrder"> Continue </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -77,6 +65,8 @@ import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
 import Image from "@/components/Image.vue";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useRoute } from "vue-router";
+import { useUserStore } from "@/stores/UserStore";
+import axios from "axios";
 
 const route = useRoute();
 
@@ -101,50 +91,37 @@ const getOrderBusiness = () => {
   orderBusiness.value = business;
 };
 
-const cartStore = useCartStore();
+const cartStore = useCartStore(orderBusiness.value);
+
+const createOrder = () => {
+  const response = cartStore.createOrder({
+    ...orderBusiness.value,
+    total_order_amount: totalCost.value,
+    product_units_id: 1,
+    payment_modes_id: orderBusiness.value.payment_option_id,
+    total_items: 1,
+    order_items: orderBusiness.value._order_items,
+    product_units_id: 1
+
+  });
+
+}
 
 cartStore.loadFromStorage();
 const cartOrders = computed(() => cartStore.orders);
 
 const totalCost = computed(() => {
-  const business = cartOrders.value.find(
-    (business: any) => business?.businesses_id == route.params.id
+
+  const total = orderBusiness.value.order_items?.reduce(
+    (total: any, item: any) => total + (item.total_price || 0),
+    0
   );
-  if (business) {
-    const total = business.order_items?.reduce(
-      (total, item) => total + (item.total_price || 0),
-      0
-    );
-    if (total) {
-      return total.toFixed(2);
-    }
-    cartStore.persist();
+  if (total) {
+    return total.toFixed(2);
   }
+
+
 });
-
-const storeTotalOrderAmount = () => {
-  const index = cartStore.orders.findIndex(
-    (b) => b.businesses_id === Number(route.params.id)
-  );
-  console.log(index);
-  
-  if (index !== -1) {
-    const totalCostValue = totalCost.value;
-
-    
-    if (totalCostValue !== undefined) {
-      // Convert the string to a number
-      const totalOrderAmount = parseFloat(totalCostValue);
-      
-      cartStore.orders[index] = {
-        ...cartStore.orders[index],
-        total_order_amount: totalOrderAmount.toFixed(2),
-
-      };
-    }
-  }
-};
-
 
 
 

@@ -7,6 +7,7 @@ import { useBusinessStore } from "@/stores/BusinessStore";
 import AppStorage from "./AppStorage";
 import { useUserStore } from "./UserStore";
 import { OrderItem } from "../models/OrderItem";
+import { handleAxiosRequestError } from "@/utilities";
 
 const storage = new AppStorage();
 const KOLA_CART = "kola.cart";
@@ -33,6 +34,23 @@ export const useCartStore = defineStore("cart", {
   },
 
   actions: {
+    async createOrder(postData: Object): Promise<Order | null> {
+     // const userStore = useUserStore();
+      return axios
+        .post(
+          `/v2/orders`,
+          postData
+        )
+        .then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            const data = response.data.data;
+            return data;
+          }
+        })
+        .catch((error) => handleAxiosRequestError(error));
+    },
+
+
     async loadFromStorage() {
       let data = await storage.get(KOLA_CART);
 

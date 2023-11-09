@@ -52,7 +52,7 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { locationOutline, timeOutline } from "ionicons/icons";
 import { IonText, IonRadioGroup, IonIcon, IonRadio, IonCard } from "@ionic/vue";
 import { ref, watch } from "vue";
