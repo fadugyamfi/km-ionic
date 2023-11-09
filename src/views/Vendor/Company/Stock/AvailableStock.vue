@@ -1,10 +1,10 @@
 <template>
   <section class="top-categories shopper-home-section ion-padding-top">
-    <header class="ion-padding-horizontal">
-      <h6>Available Stock</h6>
+    <header class="">
+      <h6 class="fw-bold">Available Stock</h6>
 
       <IonText color="primary" router-link="/profile/company">
-        View all
+        Add New Stock
       </IonText>
     </header>
 
@@ -49,3 +49,27 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="scss" scoped>
+.shopper-home-section {
+  margin-bottom: 10px;
+  margin-top: 10px;
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-bottom: 10px;
+
+    h6 {
+      font-weight: bold;
+      font-size: 1em;
+      margin: 0px;
+    }
+
+    a {
+      padding: 3px 10px;
+    }
+  }
+}
+</style>

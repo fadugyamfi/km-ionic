@@ -77,8 +77,6 @@ export default defineComponent({
     width: 100%;
     display: flex;
     justify-content: space-around;
-    padding-left: 10px;
-    padding-right: 10px;
 
     .flex-column {
         width: 48%;
