@@ -17,7 +17,7 @@
 
         <ion-radio-group v-model="form.fields.payment_option">
           <section class="d-flex flex-column ion-margin-bottom">
-            <PayOnDelivery @onSelectPaymentOption="selectPaymentOption" />
+            <PayOnDelivery @onSelectPaymentOption="selectPaymentOption($event)" />
           </section>
 
           <section class="d-flex flex-column ion-margin-bottom">
@@ -264,8 +264,8 @@ export default defineComponent({
     toggleDropdown(dropdownName: DropdownName) {
       this.showDropdown[dropdownName] = !this.showDropdown[dropdownName];
     },
-    selectPaymentOption(paymentOption) {
-      form.fields.payment_option = paymentOption;
+    selectPaymentOption(paymentOption:any) {
+      this.form.fields.payment_option = paymentOption;
     },
   },
   // mounted: {

@@ -16,16 +16,8 @@
       <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
         <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>Delivery Address
       </IonText>
-      <section class="d-flex ion-align-items-center">
+      <section class="d-flex ion-align-items-center"  @click="showChangeAddressSheet = true">
         <IonText class="ion-margin-end date-color">Change address</IonText>
-      </section>
-    </section>
-    <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
-      <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
-        <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon>Delivery Date - 2.08.2023
-      </IonText>
-      <section class="d-flex ion-align-items-center">
-        <IonText class="ion-margin-end date-color">Change Date</IonText>
       </section>
     </section>
     <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
@@ -35,14 +27,21 @@
       </section>
     </section>
   </IonCard>
+  
+  <DeliveryAddressSheet :isOpen="showChangeAddressSheet" @didDismiss="showChangeAddressSheet = false">
+  </DeliveryAddressSheet>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { ref,computed } from "vue";
 import { IonText, IonCard } from "@ionic/vue";
 import { useCartStore } from "@/stores/CartStore";
 import { locationOutline, timeOutline } from "ionicons/icons";
+import DeliveryAddressSheet from "@/components/modules/carts/DeliveryAddressSheet.vue";
+
 import { useRoute } from "vue-router";
+
+const showChangeAddressSheet = ref(false);
 
 const route = useRoute();
 
