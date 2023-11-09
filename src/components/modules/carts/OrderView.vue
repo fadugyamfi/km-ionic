@@ -16,12 +16,12 @@
             </IonText>
             <IonText color="medium" class="font-medium">
               Item total:
-              <!-- {{
+              {{
                 order?.getTotal().toLocaleString("en-GB", {
                   style: "currency",
                   currency: "GHS",
                 })
-              }} -->
+              }}
             </IonText>
             <IonText color="medium" class="font-medium">
               GHS 3000 minimum reached

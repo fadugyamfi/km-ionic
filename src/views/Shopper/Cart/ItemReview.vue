@@ -3,15 +3,15 @@
     <section class="ion-padding">
       <OrderSummaryHeader />
     </section>
-    <ion-content :fullscreen="true" class="ion-padding-horizontal">
+    <ion-content class="ion-padding-horizontal">
       <section class="ion-padding">
         <IonText>{{ orderBusiness?._business.name }}</IonText>
         <p>GHS 3000 minimum reached</p>
       </section>
       <IonList>
         <IonItem
-          v-for="(item, index) in orderBusiness?.order_items"
-          :key="item.product?.id"
+          v-for="(item, index) in orderBusiness?._order_items"
+          :key="item.products_id"
         >
           <ion-thumbnail slot="start" class="custom-thumbnail">
             <Image :src="item.product_image"></Image>
