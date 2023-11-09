@@ -51,10 +51,10 @@ export const ProfileRoutes = [
         path: "stocks/add-stock",
         component: () => import("@/views/Vendor/Company/Stock/AddStock.vue"),
       },
-      {
-        path: "stocks/stock-list",
-        component: () => import("@/views/Vendor/Company/Stock/StockList.vue"),
-      },
+      // {
+      //   path: "stocks/stock-list",
+      //   component: () => import("@/views/Vendor/Company/Stock/Stoc.vue"),
+      // },
     ],
   },
 ];

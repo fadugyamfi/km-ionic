@@ -14,7 +14,7 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { locationOutline } from 'ionicons/icons';
-import ProductCategory from '../../../../models/ProductCategory';
+import ProductCategory from '@/models/ProductCategory';
 import Image from '@/components/Image.vue';
 
 export default defineComponent({
