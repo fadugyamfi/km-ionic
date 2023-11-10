@@ -1,6 +1,6 @@
 <template>
   <section class="ion-no-border">
-    <Swiper :slides-per-view="3">
+    <Swiper :slides-per-view="3.5">
       <SwiperSlide v-for="category of categories" :key="category.id">
         <StockChip
           :category="category"

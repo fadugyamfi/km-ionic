@@ -14,21 +14,7 @@ export const useCustomerStore = defineStore("customer", {
   state: () => ({
     customers: [] as Customer[],
     nextLink: null as string | null,
-    orders: [
-      new Order({
-        id: 1,
-        businesses_id: 71,
-        customer_id: 72,
-        start_dt: "2023-10-25 10:00:00",
-        created_at: "2023-10-25 10:00:00",
-        due_date: "2023-11-01",
-        order_status_id: 8,
-        order_status: {
-          id: 8,
-          name: "Cancelled",
-        },
-      }),
-    ] as Order[],
+    orders: [] as Order[],
     creditPayments: [],
     meta: {},
   }),
@@ -47,8 +33,8 @@ export const useCustomerStore = defineStore("customer", {
           ...options,
         };
         if (refresh) {
-          this.customers = [];
           this.nextLink = null;
+          this.customers = [];
         }
         if (this.customers.length && !this.nextLink) {
           return;
@@ -118,6 +104,16 @@ export const useCustomerStore = defineStore("customer", {
       const customer = customers.find((c: Customer) => c.id == customer_id);
       return new Customer(customer);
     },
+    // async getCustomer(business: Business, customer_id: any): Promise<Customer> {
+    //   return axios
+    //     .get(`/v2/businesses/${business.id}/customers/${customer_id}`)
+    //     .then((response) => {
+    //       if (response.status >= 200 && response.status < 300) {
+    //         const data = response.data.data;
+    //         return data;
+    //       }
+    //     });
+    // },
 
     async deleteCustomer(customer: Customer) {
       const userStore = useUserStore();
@@ -136,7 +132,7 @@ export const useCustomerStore = defineStore("customer", {
           handleAxiosRequestError(error);
         });
     },
-    async fetchPlacedOrders(customerId: any, options = {}) {
+    async receivedOrders(customerId: any, options = {}) {
       const userStore = useUserStore();
 
       try {

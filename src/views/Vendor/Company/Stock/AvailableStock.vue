@@ -3,7 +3,7 @@
     <header class="">
       <h6 class="fw-bold">Available Stock</h6>
 
-      <IonText color="primary" router-link="/profile/company">
+      <IonText color="primary" router-link="/profile/company/stocks/add-stock">
         Add New Stock
       </IonText>
     </header>

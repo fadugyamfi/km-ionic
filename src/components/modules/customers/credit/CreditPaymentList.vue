@@ -18,7 +18,7 @@
         >
           <IonContent class="ion-no-padding">
             <IonList lines="full" class="ion-no-padding">
-              <ion-item :button="true" lines="full" aria-label="sync">
+              <!-- <ion-item :button="true" lines="full" aria-label="sync">
                 <ion-icon
                   slot="start"
                   :icon="sync"
@@ -33,7 +33,7 @@
               <ion-item :button="true" lines="full">
                 <ion-icon slot="start" :icon="createOutline"></ion-icon>
                 Edit Order
-              </ion-item>
+              </ion-item> -->
               <ion-item :button="true" lines="full">
                 <ion-icon slot="start" :icon="trashOutline"></ion-icon>
                 Delete

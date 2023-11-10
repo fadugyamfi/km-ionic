@@ -49,7 +49,7 @@
       <section v-show="!fetching">
         <NoResults v-if="customerStore.orders?.length == 0"></NoResults>
 
-        <PlacedOrderList :orders="customerStore.orders"></PlacedOrderList>
+        <ReceivedOrderList :orders="customerStore.orders"></ReceivedOrderList>
       </section>
 
       <FilterOrdersSheet
@@ -82,7 +82,7 @@ import {
 import NotificationButton from "@/components/notifications/NotificationButton.vue";
 import { defineComponent, ref } from "vue";
 import { useOrderStore } from "@/stores/OrderStore";
-import PlacedOrderList from "@/components/modules/order/PlacedOrderList.vue";
+import ReceivedOrderList from "@/components/modules/order/ReceivedOrderList.vue";
 import {
   search,
   arrowBack,
@@ -129,7 +129,7 @@ export default defineComponent({
     IonBackButton,
     IonBadge,
     IonTitle,
-    PlacedOrderList,
+    ReceivedOrderList,
     NotificationButton,
     IonButton,
     IonIcon,
@@ -146,7 +146,7 @@ export default defineComponent({
     async fetchOrders() {
       try {
         this.fetching = true;
-        await this.customerStore.fetchPlacedOrders(
+        await this.customerStore.receivedOrders(
           this.$route.params.id,
           this.searchFilters
         );

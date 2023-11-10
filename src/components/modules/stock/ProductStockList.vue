@@ -72,11 +72,13 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .product-category-list {
     width: 100%;
     display: flex;
     justify-content: space-around;
+    padding-left: 0px;
+    padding-right: 0px;
 
     .flex-column {
         width: 48%;

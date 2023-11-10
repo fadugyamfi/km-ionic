@@ -54,12 +54,12 @@
         ></CreditPaymentList>
       </section>
 
-      <FilterOrdersSheet
+      <FilterCreditSheet
         :isOpen="showFilterSheet"
         @didDismiss="showFilterSheet = false"
         @update="onFilterUpdate($event)"
       >
-      </FilterOrdersSheet>
+      </FilterCreditSheet>
     </ion-content>
   </ion-page>
 </template>
@@ -96,7 +96,7 @@ import {
 import { mapStores } from "pinia";
 import { formatMySQLDateTime, handleAxiosRequestError } from "@/utilities";
 import filters from "@/utilities/Filters";
-import FilterOrdersSheet from "@/components/modules/order/FilterOrdersSheet.vue";
+import FilterCreditSheet from "@/components/modules/customers/credit/FilterCreditSheet.vue";
 import NoResults from "@/components/layout/NoResults.vue";
 import { useCustomerStore } from "@/stores/CustomerStore";
 
@@ -135,7 +135,7 @@ export default defineComponent({
     NotificationButton,
     IonButton,
     IonIcon,
-    FilterOrdersSheet,
+    FilterCreditSheet,
     NoResults,
     IonSpinner,
   },

@@ -96,7 +96,7 @@ const fetchCustomerOrders = async () => {
     fetching.value = true;
     const customer_id = route.params.id;
     const customerStore = useCustomerStore();
-    await customerStore.fetchPlacedOrders(customer_id);
+    await customerStore.receivedOrders(customer_id);
   } catch (error) {
     handleAxiosRequestError(error);
   } finally {

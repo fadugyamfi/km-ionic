@@ -53,7 +53,7 @@ import filters from "@/utilities/Filters";
 const props = defineProps({
   orders: {
     type: Object as PropType<Order[]>,
-    default: () => [],
+    default: true,
   },
 });
 
