@@ -29,6 +29,7 @@ export const useCustomerStore = defineStore("customer", {
         },
       }),
     ] as Order[],
+    creditPayments: [],
     meta: {},
   }),
   actions: {
@@ -149,6 +150,25 @@ export const useCustomerStore = defineStore("customer", {
         if (response.status === 200) {
           const ordersData = response.data.data;
           this.orders = ordersData.map((data: any) => new Order(data));
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+    },
+    async fetchCustomerCredits(customerId: any, options = {}) {
+      const userStore = useUserStore();
+
+      try {
+        const params = {
+          customer_id: customerId,
+          limit: 50,
+          ...options,
+        };
+        const response = await axios.get("/v2/sale-payments", { params });
+
+        if (response.status === 200) {
+          const creditData = response.data.data;
+          this.creditPayments = creditData.map((data: any) => new Order(data));
         }
       } catch (error) {
         handleAxiosRequestError(error);

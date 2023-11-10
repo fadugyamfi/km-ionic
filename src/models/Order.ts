@@ -26,7 +26,7 @@ export class Order {
     public customer_id?: number;
     public total_order_amount?: number;
     public order_status_id?: number;
-    public created_at: string | number | Date | undefined;
+    public created_at: any;
     public order_status: any;
     public start_dt: string | number | Date | undefined;
     public product_units_id: number| undefined;

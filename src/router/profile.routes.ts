@@ -44,6 +44,13 @@ export const ProfileRoutes = [
           import("@/views/Vendor/Company/Customer/Order/OrderHistory.vue"),
       },
       {
+        path: "customers/:id/credit-payments",
+        component: () =>
+          import(
+            "@/views/Vendor/Company/Customer/CreditPayment/CreditHistory.vue"
+          ),
+      },
+      {
         path: "stocks",
         component: () => import("@/views/Vendor/Company/Stock/Stocks.vue"),
       },

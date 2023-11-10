@@ -35,7 +35,7 @@
         <CustomerProfileHeader :customer="customer" />
         <ProfileSubHeader :customer="customer" />
         <CustomerOrderHistory :orders="orders" />
-        <CustomerCredit />
+        <CustomerCredit :credits="credits" />
       </section>
     </IonContent>
   </ion-page>
@@ -78,6 +78,7 @@ const route = useRoute();
 const fetching = ref(false);
 
 const orders = computed(() => useCustomerStore().orders.splice(0, 3));
+const credits = computed(() => useCustomerStore().creditPayments.splice(0, 3));
 
 const fetchCustomer = async () => {
   fetching.value = true;
@@ -102,9 +103,22 @@ const fetchCustomerOrders = async () => {
     fetching.value = false;
   }
 };
+const fetchCustomerCredits = async () => {
+  try {
+    fetching.value = true;
+    const customer_id = route.params.id;
+    const customerStore = useCustomerStore();
+    await customerStore.fetchCustomerCredits(customer_id);
+  } catch (error) {
+    handleAxiosRequestError(error);
+  } finally {
+    fetching.value = false;
+  }
+};
 onMounted(() => {
   fetchCustomerOrders();
   fetchCustomer();
+  fetchCustomerCredits();
 });
 </script>
 <style lang="scss" scoped>

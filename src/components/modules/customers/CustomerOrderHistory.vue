@@ -21,15 +21,15 @@
         </IonAvatar>
         <IonLabel>
           <p class="ion-no-margin">
-            Frytol Oil + 3<span style="color: #787486; font-weight: 400"
-              >-#388903</span
+            <span style="color: #787486; font-weight: 400"
+              >#{{ order.id }}</span
             >
           </p>
           <IonText
             ><IonChip>{{ order.order_status?.name }}</IonChip></IonText
           >
         </IonLabel>
-        <IonText>22/07/2023</IonText>
+        <IonText> {{ filters.date(order.created_at, "short") }}</IonText>
       </IonItem>
     </IonList>
   </section>
@@ -44,33 +44,20 @@ import {
   IonIcon,
   IonLabel,
 } from "@ionic/vue";
-import { PropType, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { PropType } from "vue";
+import { useRoute } from "vue-router";
 import Image from "@/components/Image.vue";
-import Customer from "@/models/Customer";
-import { useCustomerStore } from "@/stores/CustomerStore";
 import { Order } from "@/models/Order";
+import filters from "@/utilities/Filters";
 
-// const props = defineProps({
-//   orders: {
-//     type: Object as PropType<Order[]>,
-//     default: () => [],
-//   },
-// });
+const props = defineProps({
+  orders: {
+    type: Object as PropType<Order[]>,
+    default: () => [],
+  },
+});
 
 const route = useRoute();
-
-const orders = ref([
-  {
-    id: 1,
-    customer: {
-      logo: "",
-    },
-    order_status: {
-      name: "Completed",
-    },
-  },
-]);
 </script>
 
 <style lang="scss" scoped>
