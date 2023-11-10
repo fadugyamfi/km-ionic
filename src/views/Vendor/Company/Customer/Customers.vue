@@ -88,7 +88,7 @@ import {
   IonInfiniteScrollContent,
   InfiniteScrollCustomEvent,
 } from "@ionic/vue";
-import { computed, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
@@ -151,6 +151,10 @@ const fetchCustomers = async (options = {}) => {
 
 onMounted(() => {
   fetchCustomers();
+});
+onBeforeUnmount(() => {
+  const customerStore = useCustomerStore();
+  customerStore.clearCustomers();
 });
 </script>
 

@@ -13,22 +13,18 @@
             ></ion-back-button>
           </ion-buttons>
           <IonTitle size="small" class="fw-bold">
-            <!-- {{ $t("profile.customers.addCustomer") }} -->
-            Add Stock
+            {{ $t("profile.stock.addStock") }}
           </IonTitle>
         </ion-toolbar>
       </ion-header>
     </IonHeader>
-
     <ion-content class="ion-padding">
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-      <div class="ion-text-left ion-margin-bottom">
-        <p class="ion-margin-top" style="font-size: 0.88em; color: #74787c">
-          Add Product Image
-        </p>
-      </div>
+      <IonText style="font-size: 14px" color="medium" size="small">
+        {{ $t("profile.stock.addProductImage") }}
+      </IonText>
       <form v-show="!fetching" @submit.prevent="createMember()">
         <IonCard color="light">
           <IonImg
@@ -53,128 +49,118 @@
         </IonCard>
         <IonSelect
           class="kola-input ion-margin-bottom"
-          :label="$t('profile.stocks.categories')"
+          :label="$t('profile.stock.category')"
           :class="{
-            'ion-invalid ion-touched': form.errors.cms_users_id,
+            'ion-invalid ion-touched': form.errors.category,
           }"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.cms_users_id"
+          v-model="form.fields.category"
           required
-          name="sales-agent"
+          name="category"
           :toggle-icon="chevronDownOutline"
           @ion-change="form.validateSelectInput($event)"
         >
           <IonSelectOption
-            v-for="agent in salesAgents"
-            :key="agent.id"
-            :value="agent.id"
+            v-for="category in categories"
+            :key="category.id"
+            :value="category.id"
+            >{{ category.name }}</IonSelectOption
           >
-            {{ agent.name }}
-          </IonSelectOption>
         </IonSelect>
         <IonInput
           class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.productName }"
-          :label="$t('profile.stocks.productName')"
+          :class="{ 'ion-invalid ion-touched': form.errors.product_name }"
+          :label="$t('profile.stock.productName')"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.productName"
+          v-model="form.fields.product_name"
           name="name"
           @ion-input="form.validate($event)"
           required
         ></IonInput>
         <IonSelect
           class="kola-input ion-margin-bottom"
-          :label="$t('profile.stocks.variation')"
+          :label="$t('profile.stock.variation')"
           :class="{
-            'ion-invalid ion-touched': form.errors.cms_users_id,
+            'ion-invalid ion-touched': form.errors.size,
           }"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.cms_users_id"
+          v-model="form.fields.size"
           required
-          name="sales-agent"
+          name="variation"
           :toggle-icon="chevronDownOutline"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption
-            v-for="agent in salesAgents"
-            :key="agent.id"
-            :value="agent.id"
-          >
-            {{ agent.name }}
-          </IonSelectOption>
+          <IonSelectOption> </IonSelectOption>
         </IonSelect>
-        <IonInput
+        <IonTextarea
           class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.item_description }"
-          :label="$t('profile.stocks.itemDescription')"
+          :class="{ 'ion-invalid ion-touched': form.errors.description }"
+          :label="$t('profile.stock.itemDescription')"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.itemDescription"
-          name="new_role"
+          v-model="form.fields.description"
+          name="description"
           @ion-input="form.validate($event)"
           required
-        ></IonInput>
+        ></IonTextarea>
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.quantity_available }"
-          :label="$t('profile.stocks.newPermission')"
+          :label="$t('profile.stock.quantityAvailable')"
           labelPlacement="stacked"
           fill="solid"
           v-model="form.fields.quantity_available"
-          name="new_permission"
+          name="quantity_available"
           @ion-input="form.validate($event)"
           required
         ></IonInput>
-        <h6>Quantity Type</h6>
-        <ion-list>
-          <ion-item>
-            <ion-checkbox v-model="featureEnabled"></ion-checkbox>
-            <ion-label>Pieces</ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-checkbox v-model="featureEnabled"></ion-checkbox>
-            <ion-label>Boxes</ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-checkbox v-model="featureEnabled"></ion-checkbox>
-            <ion-label>Cases</ion-label>
-          </ion-item>
-          <ion-item>
-            <ion-checkbox v-model="featureEnabled"></ion-checkbox>
-            <ion-label>Cartons</ion-label>
-          </ion-item>
-        </ion-list>
+
+        <section class="radio-wrapper ion-margin-bottom">
+          <h6>Quantity Type</h6>
+          <ion-radio-group
+            :class="{
+              'ion-invalid ion-touched': form.errors.quantity_available,
+            }"
+            v-model="form.fields.quantity_type"
+          >
+            <div v-for="quantityT in quantityTypes" :key="quantityT.id">
+              <ion-radio :value="quantityT.name" label-placement="end"
+                >{{ quantityT.name }}
+              </ion-radio>
+            </div>
+          </ion-radio-group>
+        </section>
 
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.price }"
-          :label="$t('profile.stocks.newPermission')"
+          :label="$t('profile.stock.price')"
           labelPlacement="stacked"
           fill="solid"
           v-model="form.fields.price"
-          name="new_permission"
+          name="price"
           @ion-input="form.validate($event)"
           required
         ></IonInput>
 
-        <ion-item>
-          <ion-label position="stacked">Select a date</ion-label>
-          <ion-datetime-button datetime="datetime"></ion-datetime-button>
-          <ion-modal :keep-contents-mounted="true">
-            <ion-datetime id="datetime"></ion-datetime>
-          </ion-modal>
-        </ion-item>
+        <ion-input
+          label="Select a date"
+          label-placement="stacked"
+          class="kola-input"
+          type="date"
+          v-model="form.fields.date"
+        ></ion-input>
 
         <IonFooter class="ion-padding-top ion-no-border">
           <KolaYellowButton
             :disabled="!formValid"
             @click.prevent="createMember"
-            >{{ $t("profile.stocks.save") }}</KolaYellowButton
+            >{{ $t("profile.stock.save") }}</KolaYellowButton
           >
-          <KolaWhiteButton style="margin-top: 8px" @click="dismiss()">{{
+          <KolaWhiteButton style="margin-top: 8px" @click="cancel()">{{
             $t("general.cancel")
           }}</KolaWhiteButton>
         </IonFooter>
@@ -189,7 +175,6 @@ import {
   IonButtons,
   IonContent,
   IonFooter,
-  IonIcon,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -197,31 +182,22 @@ import {
   IonInput,
   IonSelect,
   IonSelectOption,
-  IonCheckbox,
   IonHeader,
   IonSpinner,
   IonImg,
   IonCardContent,
   IonCard,
-  IonDatetimeButton,
-  IonModal,
+  IonTextarea,
+  IonRadioGroup,
+  IonRadio,
+  IonItem,
+  IonLabel,
 } from "@ionic/vue";
-import {
-  close,
-  heartOutline,
-  heart,
-  cart,
-  cartOutline,
-  shareOutline,
-  navigateOutline,
-  arrowBackOutline,
-  chevronDownOutline,
-} from "ionicons/icons";
+import { arrowBackOutline, chevronDownOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
 import { useCustomerStore } from "@/stores/CustomerStore";
-import { useGeolocation } from "@/composables/useGeolocation";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useForm } from "@/composables/form";
@@ -231,37 +207,62 @@ import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { computed, onMounted, ref } from "vue";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
+import { useProductCategoryStore } from "@/stores/ProductCategoryStore";
 
 const toastStore = useToastStore();
 const customerStore = useCustomerStore();
 const businessStore = useBusinessStore();
-const fetching = ref(false);
+
 const route = useRoute();
 const router = useRouter();
-const paymentModes = ref<any>([]);
+
+const fetching = ref(false);
 const salesAgents = ref<User[]>([]);
-const emit = defineEmits(["dismiss", "confirm"]);
 const photo = ref();
-const selectedDate = ref(new Date().toISOString());
 
 const form = useForm({
-  name: "",
-  location: "",
-  business_name: "",
-  phone_number: "",
-  cms_users_id: "",
-  business_types_id: "",
+  product_image: "",
+  category: "",
+  product_name: "",
+  size: "",
+  description: "",
+  quantity_available: "",
+  quantity_type: "",
+  price: "",
+  date: "",
 });
+
+const categories = computed(() => useProductCategoryStore().categories);
+const quantityTypes = ref([
+  {
+    id: 1,
+    name: "Pieces",
+  },
+  {
+    id: 2,
+    name: "Boxes",
+  },
+  {
+    id: 3,
+    name: "Cases",
+  },
+  {
+    id: 4,
+    name: "Cartons",
+  },
+]);
 
 const formValid = computed(() => {
   const fields = form.fields;
   return (
-    fields.name.length > 0 &&
-    fields.business_name.length > 0 &&
-    fields.location.length > 0 &&
-    isNaN(Number(fields.cms_users_id)) == false &&
-    fields.phone_number.length > 0 &&
-    fields.business_types_id
+    fields.product_name.length > 0 &&
+    fields.description.length > 0 &&
+    fields.date.length > 0 &&
+    isNaN(Number(fields.size)) == false &&
+    isNaN(Number(fields.price)) == false &&
+    fields.category &&
+    fields.quantity_available &&
+    fields.quantity_type
   );
 });
 
@@ -288,41 +289,27 @@ const createMember = async () => {
   }
 };
 
-const getPaymentModes = async () => {
+const getProductCategories = async () => {
   try {
     fetching.value = true;
-    const response = await axios.get("/v2/payment-modes");
+    const productCategoryStore = useProductCategoryStore();
+    const response = await productCategoryStore.fetchCategories();
     if (response) {
       fetching.value = false;
-      paymentModes.value = response.data.data;
     }
   } catch (error) {}
 };
 
-const fetchBusinessSalesAgent = async () => {
-  fetching.value = true;
-  const userStore = useUserStore();
-  const businessStore = useBusinessStore();
-  salesAgents.value = await businessStore.getBusinessSaleAgents(
-    userStore.activeBusiness as Business,
-    50
-  );
-  fetching.value = false;
-};
-
-const getLocation = async () => {
-  const toastStore = useToastStore();
-  const { getCurrentLocation } = useGeolocation();
-  try {
-    const coordinates = await getCurrentLocation();
-
-    if (coordinates) {
-      form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
-    }
-  } catch (error) {
-    toastStore.showError("Cannot retrieve location info");
-  }
-};
+// const fetchBusinessSalesAgent = async () => {
+//   fetching.value = true;
+//   const userStore = useUserStore();
+//   const businessStore = useBusinessStore();
+//   salesAgents.value = await businessStore.getBusinessSaleAgents(
+//     userStore.activeBusiness as Business,
+//     50
+//   );
+//   fetching.value = false;
+// };
 
 const pickImages = async () => {
   const { takePhoto, photos, pickImages } = usePhotoGallery();
@@ -331,7 +318,7 @@ const pickImages = async () => {
 
     photo.value = photos.value ? photos.value[0] : null;
     if (photo.value) {
-      businessStore.registration.logo_image = photo.value.base64Data as string;
+      form.fields.product_image = photo.value.base64Data as string;
     }
   } catch (e) {
     console.log(e);
@@ -339,11 +326,11 @@ const pickImages = async () => {
 };
 
 onMounted(() => {
-  getPaymentModes();
-  fetchBusinessSalesAgent();
+  getProductCategories();
+  // fetchBusinessSalesAgent();
 });
 
-const dismiss = () => {
+const cancel = () => {
   router.push("/profile/company/stocks");
 };
 </script>
@@ -364,13 +351,48 @@ h6 {
   line-height: 16px;
   color: #74787c;
 }
-ion-checkbox {
-  --size: 1rem;
-  --checkbox-background-checked: #6815ec;
+ion-card {
+  margin: 20px 0px;
+  border-color: #b4b4b4;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 8px;
+}
+ion-radio {
+  --border-radius: 4px;
+  --inner-border-radius: 4px;
+
+  --color: #ddd;
+  --color-checked: #6815ec;
 }
 
-ion-checkbox::part(container) {
-  border-radius: 0.25rem;
-  border: 1px solid var(--Kola-Blue, #036);
+ion-radio.ios::part(container) {
+  width: 20px;
+  height: 20px;
+
+  border: 2px solid #ddd;
+  border-radius: 4px;
+}
+
+.radio-checked.ios::part(container) {
+  border-color: #6815ec;
+}
+.radio-wrapper {
+  background: #f6f6f6;
+  padding: 5px 10px;
+  border-color: #b4b4b4;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 8px;
+
+  div {
+    padding: 10px;
+    color: #344054;
+  }
+}
+.date-wrapper {
+  background: #f6f6f6;
+  ion-input {
+  }
 }
 </style>

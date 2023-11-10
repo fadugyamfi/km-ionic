@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import Customer from "@/models/Customer";
 import { useUserStore } from "./UserStore";
 import { handleAxiosRequestError } from "@/utilities";
+import { Order } from "@/models/Order";
 import Business from "@/models/Business";
 import User from "@/models/User";
 import AppStorage from "./AppStorage";
@@ -13,6 +14,8 @@ export const useCustomerStore = defineStore("customer", {
   state: () => ({
     customers: [] as Customer[],
     nextLink: null as string | null,
+    orders: [] as Order[],
+    creditPayments: [],
     meta: {},
   }),
   actions: {
@@ -30,8 +33,8 @@ export const useCustomerStore = defineStore("customer", {
           ...options,
         };
         if (refresh) {
-          this.customers = [];
           this.nextLink = null;
+          this.customers = [];
         }
         if (this.customers.length && !this.nextLink) {
           return;
@@ -101,6 +104,16 @@ export const useCustomerStore = defineStore("customer", {
       const customer = customers.find((c: Customer) => c.id == customer_id);
       return new Customer(customer);
     },
+    // async getCustomer(business: Business, customer_id: any): Promise<Customer> {
+    //   return axios
+    //     .get(`/v2/businesses/${business.id}/customers/${customer_id}`)
+    //     .then((response) => {
+    //       if (response.status >= 200 && response.status < 300) {
+    //         const data = response.data.data;
+    //         return data;
+    //       }
+    //     });
+    // },
 
     async deleteCustomer(customer: Customer) {
       const userStore = useUserStore();
@@ -118,6 +131,61 @@ export const useCustomerStore = defineStore("customer", {
         .catch((error) => {
           handleAxiosRequestError(error);
         });
+    },
+    async receivedOrders(customerId: any, options = {}) {
+      const userStore = useUserStore();
+
+      try {
+        const params = {
+          customer_id: customerId,
+          limit: 50,
+          ...options,
+        };
+        const response = await axios.get("/v2/orders", { params });
+
+        if (response.status === 200) {
+          const ordersData = response.data.data;
+          this.orders = ordersData.map((data: any) => new Order(data));
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+    },
+    async fetchCustomerCredits(customerId: any, options = {}) {
+      const userStore = useUserStore();
+
+      try {
+        const params = {
+          customer_id: customerId,
+          limit: 50,
+          ...options,
+        };
+        const response = await axios.get("/v2/sale-payments", { params });
+
+        if (response.status === 200) {
+          const creditData = response.data.data;
+          this.creditPayments = creditData.map((data: any) => new Order(data));
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+    },
+    async fetchOrder(orderId: number): Promise<Order | null> {
+      try {
+        const response = await axios.get(`/v2/orders/${orderId}`);
+        if (response.status == 200) {
+          const order = new Order(response.data.data);
+          return order;
+        }
+
+        return null;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return null;
+      }
+    },
+    clearCustomers() {
+      this.customers = [];
     },
   },
 });
