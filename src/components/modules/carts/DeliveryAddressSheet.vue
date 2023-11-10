@@ -12,7 +12,7 @@
               label="Town/Locality"
               labelPlacement="stacked"
               fill="solid"
-              v-model="form.fields.location"
+              v-model="form.fields.delivery_location"
               name="location"
               required
             ></IonInput>
@@ -49,7 +49,7 @@ import { useRoute } from "vue-router";
 
 interface FormData {
   fields: {
-    location: string;
+    delivery_location: string;
   };
   errors: Record<string, string | null>;
 }
@@ -70,7 +70,7 @@ export default defineComponent({
   setup() {
     const form = ref<FormData>({
       fields: {
-        location: "",
+        delivery_location: "",
       },
       errors: {},
     });

@@ -97,7 +97,7 @@ const createOrder = () => {
     total_order_amount: totalCost.value,
     product_units_id: 1,
     payment_modes_id: orderBusiness.value.payment_option_id,
-    total_items: 1,
+    total_items: orderBusiness.value._order_items.length,
     order_items: orderBusiness.value._order_items,
    
   });
