@@ -11,6 +11,7 @@
             <IonText class="fw-semibold ellipsis" style="margin-bottom: 5px">
               {{ order?.business?.name || "Unknown" }}
             </IonText>
+
             <IonText color="medium" class="font-medium">
               Item total:
               {{
@@ -22,11 +23,16 @@
                 : "N/A"
               }}
             </IonText>
+
             <IonText color="medium" class="font-medium">
-              GHS 3000 minimum reached
+              <BusinessMinimumOrderReached
+                :business="order?.business"
+                :total-cost="(order?.getTotal() as number)"
+              ></BusinessMinimumOrderReached>
             </IonText>
+
             <section class="d-flex">
-              <IonThumbnail v-for="product in order?.order_items" :key="product.products_id" class="cart-items">
+              <IonThumbnail v-for="product in topFiveItems" :key="product.products_id" class="cart-items">
                 <Image :src="product.product_image"></Image>
               </IonThumbnail>
             </section>
@@ -35,15 +41,9 @@
       </section>
     </section>
 
-    <section class="remove-button">
-      <!-- Use <div> or <section> here -->
-      <section class="d-flex align-right">
-        <IonButton fill="clear" color="dark" class="ion-no-margin ion-no-padding ion-align-self-start"
-          @click="removeOrder()">
-          <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
-        </IonButton>
-      </section>
-    </section>
+    <IonButton slot="end" fill="clear" color="dark" class="ion-no-margin ion-no-padding ion-align-self-start" @click="removeOrder()">
+      <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
+    </IonButton>
   </IonItem>
 </template>
 
@@ -65,6 +65,8 @@ import { useSaleStore } from "@/stores/SaleStore";
 import { useCartStore } from "@/stores/CartStore";
 import Product from "@/models/Product";
 import { Order } from "@/models/Order";
+import { OrderItem } from "../../../models/OrderItem";
+import BusinessMinimumOrderReached from "../business/BusinessMinimumOrderReached.vue";
 
 export default defineComponent({
   components: {
@@ -76,7 +78,8 @@ export default defineComponent({
     IonIcon,
     Image,
     IonCol,
-  },
+    BusinessMinimumOrderReached
+},
 
   props: {
     order: {
@@ -92,23 +95,19 @@ export default defineComponent({
 
   computed: {
     ...mapStores(useSaleStore, useCartStore),
+
+    topFiveItems() {
+      return this.order?.order_items.filter((oi, index) => index < 4);
+    }
   },
 
   methods: {
-    updateItemQuantity(quantity: number) {
-      this.order?.update({
-        quantity,
-        total_price: quantity * (this.order?.product?.product_price || 0),
-      });
-    },
-
     removeOrder() {
       this.cartStore.removeOrderAtIndex(this.order);
     },
+
     viewOrderItems() {
-      this.$router.push(
-        `/shopper/cart/business/${this.order?.businesses_id}/orders`
-      );
+      this.$router.push(`/shopper/cart/business/${this.order?.businesses_id}/orders`);
     },
   },
 });

@@ -4,7 +4,7 @@
       <CartHeader />
     </section>
 
-    <ion-content :fullscreen="true" class="ion-padding-horizontal">
+    <ion-content class="ion-padding-horizontal">
       <IonSegment
         value="personal"
         mode="ios"
@@ -39,8 +39,7 @@
               <p class="text-product">{{ item.product_name }}</p>
               <p>Quantity: {{ item.quantity }}</p>
               <p class="price">
-                {{ item.currency_symbol || "GHS" }}
-                {{ item.quantity * (item.product_price || 0) }}
+                {{ Filters.currency(item.quantity * (item.product_price || 0), item.currency_symbol) }}
               </p>
             </ion-col>
             <ion-col size="1" class="remove-button">
@@ -105,6 +104,7 @@ import { formatAmountWithCommas } from "@/utilities";
 import Image from "@/components/Image.vue";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
+import Filters from '@/utilities/Filters';
 
 const router = useRouter();
 const route = useRoute();

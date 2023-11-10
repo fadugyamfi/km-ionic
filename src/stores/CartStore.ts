@@ -163,6 +163,7 @@ export const useCartStore = defineStore("cart", {
       this.persist();
       return this;
     },
+
     removeOrderAtIndex(order: any) {
       const index = this.orders.findIndex(
         (item) => item.businesses_id == order.businesses_id
@@ -191,28 +192,6 @@ export const useCartStore = defineStore("cart", {
       toastStore.showSuccess("Removed From Cart");
       this.persist();
       return this;
-    },
-
-    removeProduct(product: Product) {
-      const index = this.orders.findIndex((el) => el.product.id == product.id);
-
-      if (index > -1) {
-        return this.removeAtIndex(index);
-      }
-
-      return this;
-    },
-
-    updateQuantity(product: Product, quantity: number = 0) {
-      // if (!this.hasProduct(product)) {
-      //     return;
-      // }
-      // const item = this.getProductItem(product);
-      // if (item) {
-      //     item.quantity = quantity ? quantity : item.quantity++;
-      //     this.persist();
-      // }
-      // return this;
     },
 
     async persist() {

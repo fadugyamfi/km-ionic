@@ -13,7 +13,7 @@
                     <section class="d-flex flex-column ion-justify-content-start">
                         <IonText class="fw-semibold">{{ orderItem?.product?.product_name || 'N/A' }}</IonText>
                         <IonText color="medium" class="font-medium">
-                            {{ orderItem?.product?.currency?.symbol }} {{ orderItem?.product?.product_price || 0 }}
+                            {{ Filters.currency(orderItem?.product?.product_price || 0, orderItem?.product?.currency?.symbol as string) }}
                         </IonText>
                         <IonText color="medium" class="font-medium">
                             {{ $t('general.quantity') }}: {{ orderItem?.quantity }}
@@ -28,7 +28,7 @@
                     </section>
 
                     <IonButton slot="end" fill="clear" color="dark"
-                        class="ion-no-margin ion-no-padding ion-align-self-start" @click="removeItem()">
+                               class="ion-no-margin ion-no-padding ion-align-self-start" @click="removeItem()">
                         <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
                     </IonButton>
                 </section>
@@ -51,6 +51,7 @@ import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
 import Product from '@/models/Product';
 import { OrderItem } from '@/models/OrderItem';
+import Filters from '../../../utilities/Filters';
 
 
 export default defineComponent({
@@ -76,7 +77,8 @@ export default defineComponent({
 
     data() {
         return {
-            closeCircleOutline
+            closeCircleOutline,
+            Filters
         }
     },
 

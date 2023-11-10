@@ -36,22 +36,13 @@ import { onMounted, ref } from "vue";
 import {
   IonSegmentButton,
   IonLabel,
-  IonThumbnail,
-  IonImg,
   IonBadge,
-  IonItem,
   IonList,
   IonSegment,
-  IonCol,
   IonPage,
   IonContent,
-  IonRow,
-  IonText,
-  IonButton,
-  IonIcon,
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
-import ShopperHeader from "@/components/layout/ShopperHeader.vue";
 import CartBusinessHeader from "@/components/header/CartBusinessHeader.vue";
 import EmptyCart from "@/components/cards/EmptyCart.vue";
 import OrderView from "@/components/modules/carts/OrderView.vue";

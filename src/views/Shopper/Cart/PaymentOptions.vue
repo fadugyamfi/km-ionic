@@ -162,6 +162,7 @@ import NoResults from "../../../components/layout/NoResults.vue";
 import PaymentOptionsHeader from "@/components/header/PaymentOptionsHeader.vue";
 import PayOnDelivery from "@/components/modules/deliveryDetails/PayOnDelivery.vue";
 import { useCartStore } from "@/stores/CartStore";
+import { Order } from "../../../models/Order";
 
 type DropdownName = "pay2Weeks" | "pay4Weeks";
 
@@ -228,24 +229,23 @@ export default defineComponent({
   methods: {
     storePaymentOption() {
       const cartStore = useCartStore();
-      const index = cartStore.orders.findIndex(
+      const order = cartStore.orders.find(
         (b) => b.businesses_id == Number(this.$route.params.id)
       );
-      console.log(index);
-      cartStore.orders[index] = {
-        ...cartStore.orders[index],
-        payment_option_id: this.form.fields.payment_option_id,
-      };
+
+      if( order ) {
+        order.payment_option_id = +this.form.fields.payment_option_id;
+      }
+
       cartStore.persist()
-      this.$router.push(
-        `/shopper/cart/business/${this.$route.params.id}/item-review`
-      );
+      this.$router.push(`/shopper/cart/business/${this.$route.params.id}/item-review`);
     },
 
     toggleDropdown(dropdownName: DropdownName) {
       this.showDropdown[dropdownName] = !this.showDropdown[dropdownName];
     },
   },
+
   mounted() {
     const cartStore = useCartStore()
     if (cartStore.orders.length == 0) {
@@ -256,14 +256,9 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-ion-card {
-  // margin: 2px;
-  color: #000000;
-  // padding: 9px;
-}
 
-.card-section {
-  // margin: 0;
+ion-card {
+  color: #000000;
 }
 
 .radio-section {
