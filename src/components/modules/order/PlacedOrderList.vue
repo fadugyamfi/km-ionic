@@ -13,19 +13,19 @@
                 <IonList lines="full" class="ion-no-padding">
                     <ion-item :button="true" lines="full" aria-label="sync">
                         <ion-icon slot="start" :icon="sync" aria-hidden="true"></ion-icon>
-                        Re-order
+                        {{ $t('general.reorder') }}
                     </ion-item>
                     <ion-item :button="true" lines="full">
                         <ion-icon slot="start" :icon="chatbubbleOutline"></ion-icon>
-                        Message Supplier
+                        {{ $t('vendor.orders.messageSupplier') }}
                     </ion-item>
                     <ion-item :button="true" lines="full">
                         <ion-icon slot="start" :icon="createOutline"></ion-icon>
-                        Edit Order
+                        {{ $t('general.edit') }}
                     </ion-item>
-                    <ion-item :button="true" lines="full">
+                    <ion-item :button="true" lines="full" @click="deleteOrder(order)">
                         <ion-icon slot="start" :icon="trashOutline"></ion-icon>
-                        Delete
+                        {{ $t('general.delete') }}
                     </ion-item>
                 </IonList>
             </IonContent>
@@ -33,6 +33,13 @@
       </template>
     </OrderListItem>
 
+    <DeleteModal
+      :title="$t('vendor.orders.deleteOrderFromList')"
+      :description="$t('vendor.orders.youCantUndoThisAction')"
+      :isOpen="showConfirmDeleteModal"
+      @dismiss="showConfirmDeleteModal = false"
+      @confirm="onConfirmDelete()"
+    ></DeleteModal>
   </IonList>
 </template>
 
@@ -50,6 +57,7 @@ import { mapStores } from 'pinia';
 import filters from '@/utilities/Filters';
 import Image from '../../Image.vue';
 import OrderListItem from './OrderListItem.vue';
+import DeleteModal from '../../modals/DeleteModal.vue';
 
 export default defineComponent({
 
@@ -66,7 +74,8 @@ export default defineComponent({
     IonChip,
     IonText,
     Image,
-    OrderListItem
+    OrderListItem,
+    DeleteModal
 },
 
   computed: {
@@ -98,7 +107,7 @@ export default defineComponent({
       this.event = null;
     },
 
-    deleteSale(order: Order) {
+    deleteOrder(order: Order) {
       this.selectedOrder = order;
       this.showConfirmDeleteModal = true;
       this.closeMenu();

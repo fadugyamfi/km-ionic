@@ -45,7 +45,7 @@
                 </IonCardContent>
             </IonCard>
 
-            <IonButton fill="clear" color="dark" expand="block" router-link="/auth/login" class="login-prompt">
+            <IonButton v-if="!loginDisabled" fill="clear" color="dark" expand="block" router-link="/auth/login" class="login-prompt">
                 {{ $t("signup.landing.alreadyHaveAnAccount") }}&nbsp;
                 <IonText color="primary" class="trigger">
                     {{ $t("signup.landing.logIn") }}
@@ -98,9 +98,9 @@ const redirectToSignup = () => {
     }
 }
 
-const doSubmit = function() {
-    alert("Submitting");
-}
+const loginDisabled = computed(() => {
+    return import.meta.env.VITE_LOGIN_DISABLED == 'true';
+})
 </script>
 
 <style scoped lang="css">

@@ -16,49 +16,27 @@
             <section
               class="d-flex ion-align-items-center ion-justify-content-center"
             >
-              <IonLabel>{{ $t("profile.customers.customers") }}</IonLabel>
-              <ion-badge class="badge">{{ customers.length }}</ion-badge>
+              <IonLabel>
+                <!-- {{ $t("profile.customers.customers") }} -->
+                Stock
+              </IonLabel>
             </section></IonTitle
           >
           <ion-buttons slot="end">
-            <IonButton color="dark" @click="addCustomer()">
+            <IonButton color="dark" @click="addStock()">
               <IonIcon :icon="personAddOutline" color="dark"></IonIcon>
             </IonButton>
             <ion-button
-              v-if="customers.length > 0"
+              v-if="customers?.length > 0"
               @click="searchEnabled = !searchEnabled"
               color="dark"
             >
-              <IonIcon :icon="search"></IonIcon>
             </ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <IonToolbar v-if="searchEnabled">
-        <IonSearchbar
-          :placeholder="$t('profile.customers.searchCustomers') + '...'"
-          class="search-input"
-          @keyup.enter="onSearch($event)"
-          @ion-change="onSearch($event)"
-        ></IonSearchbar>
-      </IonToolbar>
+      <EmptyStock></EmptyStock>
     </IonHeader>
-    <ion-content>
-      <IonRefresher
-        ref="refresher"
-        slot="fixed"
-        @ionRefresh="handleRefresh($event)"
-      >
-        <IonRefresherContent pullingIcon="crescent"></IonRefresherContent>
-      </IonRefresher>
-      <div class="ion-padding ion-text-center" v-show="fetching">
-        <IonSpinner name="crescent"></IonSpinner>
-      </div>
-      <section v-show="!fetching">
-        <EmptyCustomers v-if="customers.length == 0"></EmptyCustomers>
-        <CustomersList :customers="customers" />
-      </section>
-    </ion-content>
   </ion-page>
 </template>
 
@@ -81,26 +59,32 @@ import {
   IonBadge,
   IonSearchbar,
   IonList,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  InfiniteScrollCustomEvent,
 } from "@ionic/vue";
 import { computed, onMounted, ref } from "vue";
 import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import Business from "@/models/Business";
-import EmptyCustomers from "@/components/modules/customers/EmptyCustomers.vue";
-import CustomersList from "@/components/modules/customers/CustomersList.vue";
+import EmptyStock from "@/components/modules/customers/stock/EmptyStock.vue";
 import { useRouter } from "vue-router";
+import { useCustomerStore } from "@/stores/CustomerStore";
 
 const fetching = ref(false);
 const refreshing = ref(false);
+const currentPage = ref(1);
 const router = useRouter();
 
 const searchEnabled = ref(false);
 
-const customers = ref<Business[]>([]);
+const customers = ref<any[]>([]);
+const paginatedCustomers = ref<Business[]>([]);
 
 const handleRefresh = async (event: RefresherCustomEvent) => {
   refreshing.value = true;
+  fetching.value = true;
   await fetchCustomers();
   refreshing.value = false;
   event.target.complete();
@@ -108,24 +92,32 @@ const handleRefresh = async (event: RefresherCustomEvent) => {
 
 const onSearch = async (event: Event) => {
   refreshing.value = true;
+  fetching.value = true;
   await fetchCustomers({
     name_like: (event.target as HTMLIonSearchbarElement).value,
   });
   refreshing.value = false;
 };
 
-const addCustomer = () => {
-  router.push("/profile/company/customers/add-customer");
+const addStock = () => {
+  router.push("/profile/company/stocks/add-stock");
+};
+
+const ionInfinite = async (ev: InfiniteScrollCustomEvent) => {
+  await fetchCustomers();
+  ev.target.complete();
 };
 
 const fetchCustomers = async (options = {}) => {
-  fetching.value = true;
+  if (customers.value?.length == 0) {
+    fetching.value = true;
+  }
   const userStore = useUserStore();
-  const businessStore = useBusinessStore();
+  const customerStore = useCustomerStore();
 
-  customers.value = await businessStore.getBusinessCustomers(
+  customers.value = await customerStore.getBusinessCustomers(
     userStore.activeBusiness as Business,
-    300,
+    100,
     options,
     refreshing.value
   );

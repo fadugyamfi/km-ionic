@@ -7,7 +7,7 @@
             <IonBackButton defaultHref="/shopper/orders"></IonBackButton>
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
-            {{ $t('shopper.orders.orderDetails')}} - #{{ order?.id }}
+            {{ $t('shopper.orders.orderDetails') }} - #{{ order?.id }}
           </IonTitle>
           <IonButtons slot="end">
             <IonButton>
@@ -17,25 +17,28 @@
         </IonToolbar>
       </IonHeader>
     </section>
-    <ion-content :fullscreen="true">
+    <ion-content>
       <section v-if="loading" class="d-flex ion-justify-content-center ion-padding">
         <IonSpinner name="crescent"></IonSpinner>
       </section>
 
       <section v-else>
         <OrderImages :order="(order as Order)" />
-        <OrderDetailItems :order="(order as Order)" />
+        <OrderDetailItems :showChangeDate="false" :showChangeAddress="false" :order="(order as Order)" />
 
-        <section class="ion-padding-horizontal update-button-section">
+        <section class="ion-padding-horizontal update-button-section" v-if="canUpdate">
           <KolaYellowButton>
             {{ 'Update' }}
           </KolaYellowButton>
         </section>
 
+        <section class="ion-padding-horizontal update-button-section" v-if="canReorder">
+          <KolaYellowButton>
+            {{ 'Reorder' }}
+          </KolaYellowButton>
+        </section>
+
         <OrderStatusHistoryView :order="(order as Order)" />
-        <!-- <OrdersCard />
-        <UpdateButon />
-        <OrderStatus /> -->
       </section>
     </ion-content>
   </IonPage>
@@ -75,7 +78,7 @@ export default defineComponent({
     OrderDetailItems,
     KolaYellowButton,
     OrderStatusHistoryView
-},
+  },
 
   name: 'OrderDetails',
 
@@ -92,7 +95,15 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores( useOrderStore ),
+    ...mapStores(useOrderStore),
+
+    canUpdate() {
+      return false;
+    },
+
+    canReorder() {
+      return false;
+    }
   },
 
   methods: {
@@ -106,7 +117,7 @@ export default defineComponent({
       // fetch full order info from backend to overwrite the basic data
       try {
         this.order = await this.orderStore.fetchOrder(order_id);
-      } catch(error) {
+      } catch (error) {
         handleAxiosRequestError(error);
       } finally {
         this.loading = false;

@@ -77,7 +77,11 @@ export default defineComponent({
     },
 
     computed: {
-        ...mapStores( useUserStore, useToastStore )
+        ...mapStores( useUserStore, useToastStore ),
+
+        loginDisabled() {
+            return !!import.meta.env.VITE_LOGIN_DISABLED == true;
+        }
     },
 
     methods: {
@@ -106,6 +110,12 @@ export default defineComponent({
 
         handleOnChange() {},
         handleOnComplete() {}
+    },
+
+    mounted() {
+        if( this.loginDisabled ) {
+            this.$router.push('/signup');
+        }
     }
 })
 

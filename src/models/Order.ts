@@ -18,18 +18,33 @@ import Currency from "./Currency";
 import { OrderItem } from "./OrderItem";
 import { OrderStatusHistory } from "./OrderStatusHistory";
 
+export enum OrderStatus {
+    PENDING = 1,
+    PREAPPROVED = 2,
+    APPROVED = 3,
+    PARTIALLY_PAID = 4,
+    PAID = 5,
+    OUT_FOR_DELIVERY = 6,
+    DELIVERED = 7,
+    CANCELLED = 8,
+    REJECTED = 9,
+    REFUNDED = 10
+}
+
 export class Order {
-    [x: string]: any;
 
     public id?: number | string;
     public businesses_id?: number;
     public customer_id?: number;
     public total_order_amount?: number | string;
     public order_status_id?: number;
-    public created_at: string | number | Date | undefined;
-    public order_status: any;
-    public start_dt: string | number | Date | undefined;
-    public product_units_id: number| undefined;
+    public created_at?: string | number | Date;
+    public order_status?: any;
+    public start_dt?: string | number | Date;
+    public product_units_id?: number;
+    public delivery_location?: string;
+    public delivery_date?: string;
+    public order_items_count = 0;
 
     public _order_status_histories: OrderStatusHistory[] = [];
     public _order_items: OrderItem[] = [];
@@ -82,8 +97,31 @@ export class Order {
         this._order_status_histories = history?.map(h => new OrderStatusHistory(h));
     }
 
+    get currency(): Currency | undefined {
+        return this._currency;
+    }
+
+    set currency(value: object) {
+        this._currency = new Currency(value || {});
+    }
+
     getLastOrderStatusHistory(orderStatusId: number): OrderStatusHistory | undefined {
         return this.order_status_histories.find(h => h.order_status_id == orderStatusId);
     }
 
+    isPendingApproval() {
+        return this.order_status_id == 1;
+    }
+
+    isApproved() {
+        return [3,4,5,6,7].indexOf(this.order_status_id as number) > -1
+    }
+
+    isCancelled() {
+        return [8].indexOf(this.order_status_id as number) > -1;
+    }
+
+    isRejected() {
+        return this.order_status_id == 9;
+    }
 }

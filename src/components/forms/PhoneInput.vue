@@ -1,9 +1,11 @@
 <template>
     <input type="tel" ref="phone-input" class="form-control phone-input kola-input" :class="classes"
-           placeholder="020 000 0000" :value="modelValue" @change="onChange($event)" />
+           placeholder="020 000 0000" :value="modelValue" @change="onChange()" />
 </template>
 
 <script lang="ts">
+// global intlTelInputUtils
+
 import { defineComponent } from 'vue';
 import intlTelInput from "intl-tel-input";
 
