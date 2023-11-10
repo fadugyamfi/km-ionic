@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 import AppStorage from "./AppStorage";
-import { Order } from "@/models/Order";
+import { Order, OrderStatus } from "@/models/Order";
 import { useToastStore } from "./ToastStore";
 import axios from "axios";
 import { handleAxiosRequestError } from "../utilities";
 import { useUserStore } from "./UserStore";
+import { ChangeStatusRequest } from "../models/types";
 
 
 const toastStore = useToastStore();
@@ -30,6 +31,8 @@ export const useOrderStore = defineStore('order', {
           }
         })
       ] as Order[],
+      approving: false,
+      cancelling: false,
     }
   },
 
@@ -48,6 +51,8 @@ export const useOrderStore = defineStore('order', {
         if (response.status === 200) {
           const ordersData = response.data.data;
           this.orders = ordersData.map((data: any) => new Order(data));
+
+          return this.orders;
         }
       } catch (error) {
         handleAxiosRequestError(error);
@@ -69,38 +74,48 @@ export const useOrderStore = defineStore('order', {
         if (response.status === 200) {
           const ordersData = response.data.data;
           this.orders = ordersData.map((data: any) => new Order(data));
+
+          return this.orders;
         }
       } catch (error) {
         handleAxiosRequestError(error);
       }
     },
 
-    async fetchOrder(orderId: number): Promise<Order|null> {
+    async fetchOrder(orderId: number): Promise<Order | null> {
       try {
         const response = await axios.get(`/v2/orders/${orderId}`);
-        if( response.status == 200 ) {
+        if (response.status == 200) {
           const order = new Order(response.data.data);
           return order;
         }
 
         return null;
-      } catch(error) {
+      } catch (error) {
         handleAxiosRequestError(error);
         return null;
       }
     },
 
     async deleteOrder(orderId: number) {
+      const toastStore = useToastStore();
+
       try {
         const response = await axios.delete(`/v2/orders/${orderId}`); // Replace with your API endpoint
-        if (response.status === 204) {
+
+        if (response.status == 200) {
           this.orders = this.orders.filter((order) => order.id !== orderId);
           toastStore.showSuccess('Order deleted successfully.');
         }
+
+        return response;
       } catch (error) {
+        console.log(error);
         handleAxiosRequestError(error);
         toastStore.showError('Failed to delete order.');
       }
+
+      return null;
     },
 
     async updateOrder(orderId: any, updatedData: any) {
@@ -139,8 +154,6 @@ export const useOrderStore = defineStore('order', {
       }
     },
 
-
-
     async reorderOrder(orderId: number) {
       try {
 
@@ -171,5 +184,72 @@ export const useOrderStore = defineStore('order', {
         toastStore.showError('Failed to reorder order.');
       }
     },
+
+    async approveOrder(order: Order) {
+      const userStore = useUserStore();
+      this.approving = true;
+
+      try {
+        const response = await this.changeOrderStatus(order?.id as number, {
+          businesses_id: order?.businesses_id as number,
+          cms_users_id: userStore.user?.id as number,
+          order_id: order?.id as number,
+          order_status_id: OrderStatus.APPROVED,
+          comment: ''
+        });
+
+        return response;
+      } catch(error) {
+        handleAxiosRequestError(error);
+      } finally {
+        this.approving = false;
+      }
+
+    },
+
+    async cancelOrder(order: Order) {
+      const userStore = useUserStore();
+      this.cancelling = true;
+
+      try {
+        const response = await this.changeOrderStatus(order?.id as number, {
+          businesses_id: order?.businesses_id as number,
+          cms_users_id: userStore.user?.id as number,
+          order_id: order?.id as number,
+          order_status_id: OrderStatus.CANCELLED,
+          comment: ''
+        });
+
+        return response;
+      } catch(error) {
+        handleAxiosRequestError(error);
+      } finally {
+        this.cancelling = false;
+      }
+    },
+
+    async changeOrderStatus(orderId: number, payload: ChangeStatusRequest) {
+      try {
+        const response = await axios.put(`/v2/orders/${orderId}/status`, payload)
+
+        if( response?.status == 200 ) {
+          const order = this.orders.find(o => o.id == orderId);
+
+          if( order ) {
+            order.update({
+              order_status: response.data.data.order_status,
+              ...response.data.data.order
+            })
+          }
+          return response;
+        } else {
+
+        }
+      } catch(error) {
+        handleAxiosRequestError(error);
+
+        throw error;
+      }
+    }
   },
 });

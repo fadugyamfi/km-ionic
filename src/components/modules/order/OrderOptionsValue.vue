@@ -22,8 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from 'vue';
-import AlertCard from './AlertCard.vue';
+/**
+ * @deprecated Should be removed
+ */
+
+import { ref } from 'vue';
 
 const showAlert = ref(false);
 const alertIcon = ref('');
@@ -33,7 +36,7 @@ const actionText = ref('');
 const performAction = ref(null);
 const cancelAction = ref(null);
 
-const handleOptionClick = (option) => {
+const handleOptionClick = (option: string) => {
   showAlert.value = true;
   switch (option) {
     case 'reorder':
@@ -41,28 +44,28 @@ const handleOptionClick = (option) => {
       alertTitle.value = 'Re-order';
       alertMessage.value = 'Do you want to re-order this item?';
       actionText.value = 'Re-order';
-      performAction.value = reorderItem;
+      // performAction.value = reorderItem;
       break;
     case 'message':
       alertIcon.value = 'chatbubbleOutline';
       alertTitle.value = 'Message Supplier';
       alertMessage.value = 'Send a message to the supplier.';
       actionText.value = 'Send Message';
-      performAction.value = sendMessage;
+      // performAction.value = sendMessage;
       break;
     case 'editorder':
       alertIcon.value = 'createOutline';
       alertTitle.value = 'Edit Order';
       alertMessage.value = 'Edit the order details.';
       actionText.value = 'Edit Order';
-      performAction.value = editOrder;
+      // performAction.value = editOrder;
       break;
     case 'delete':
       alertIcon.value = 'trashOutline';
       alertTitle.value = 'Delete Order';
       alertMessage.value = 'Are you sure you want to delete this order?';
       actionText.value = 'Delete';
-      performAction.value = deleteOrder;
+      // performAction.value = deleteOrder;
       break;
   }
 };

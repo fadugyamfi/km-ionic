@@ -16,6 +16,7 @@ export type FavoritedBrand = {
     updated_at?: string
     deleted_at?: string | null;
 }
+
 export type FavoritedBusiness = {
     id?: number | null;
     cms_users_id?: number | null;
@@ -23,4 +24,12 @@ export type FavoritedBusiness = {
     created_at?: string;
     updated_at?: string
     deleted_at?: string | null;
+}
+
+export type ChangeStatusRequest = {
+    cms_users_id: number;
+    businesses_id: number;
+    order_id: number,
+    order_status_id: number,
+    comment: string
 }

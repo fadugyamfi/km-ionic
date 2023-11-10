@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router';
 
 // Added by the CLI
-import './registerServiceWorker';
+// import './registerServiceWorker';
 
 import { IonicVue } from '@ionic/vue';
 
@@ -54,7 +54,10 @@ const pinia = createPinia();
 // initialize the app
 const app = createApp(App)
   .component("v-otp-input", VOtpInput)
-  .use(IonicVue)
+  .use(IonicVue, {
+    rippleEffect: true,
+    mode: 'md'
+  })
   .use(i18n)
   .use(pinia)
   .use(router);

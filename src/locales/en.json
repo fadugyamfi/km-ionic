@@ -25,7 +25,14 @@
         "today": "Today",
         "thisWeek": "This Week",
         "pastMonth": "Past Month",
-        "delete": "Delete"
+        "delete": "Delete",
+        "accept": "Accept",
+        "edit": "Edit",
+        "reorder": "Reorder",
+        "units": {
+            "box": "Box | Boxes",
+            "piece": "Piece | Pieces"
+        }
     },
     "onboarding": {
         "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -145,7 +152,8 @@
         },
         "orders": {
             "orderDetails": "Order Details",
-            "orderStatus": "Order Status"
+            "orderStatus": "Order Status",
+            "delivery": "Delivery"
         }
     },
     "vendor": {
@@ -192,6 +200,14 @@
             "saleDetails": "Sale Detais",
             "noSaleItemsAvailable": "No Sale Items Available",
             "addItemsToSaleToSeeThemHere": "Add items to sale to see them here"
+        },
+        "orders": {
+            "orderHasBeenApproved": "Order has been approved",
+            "orderHasBeenCanceled": "Order has been canceled",
+            "messageCustomer": "Message Customer",
+            "messageSupplier": "Message Supplier",
+            "deleteOrderFromList": "Delete Order From List",
+            "youCantUndoThisAction": "You can't undo this action"
         }
     },
     "modules": {
@@ -229,7 +245,7 @@
             "remove": "Remove",
             "new": "new",
             "updateCustomerInfo": "Update customer information"
-            
+
 
         },
         "stock": {

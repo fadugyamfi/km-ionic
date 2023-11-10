@@ -1,5 +1,5 @@
 <template>
-    <IonItem>
+    <IonItem :button="true">
         <IonAvatar slot="start" class="ion-align-self-start">
             <Image :src="order.customer?.logo"></Image>
         </IonAvatar>
@@ -67,18 +67,18 @@ export default defineComponent({
             switch (orderStatusId) {
                 case 1:
                     return {
-                        color: 'primary',
+                        color: 'info',
                         label: 'Processing',
                     };
                 case 2:
-                case 3:
                 case 4:
                 case 5:
                 case 6:
                     return {
-                        color: 'warning',
+                        color: 'primary',
                         label: 'Pending',
                     };
+                case 3:
                 case 7:
                     return {
                         color: 'success',

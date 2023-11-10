@@ -19,24 +19,22 @@
                             {{ $t('general.quantity') }}: {{ orderItem?.quantity }}
                         </IonText>
                         <IonText color="medium" class="font-medium">
-                            <span v-if="orderItem?.product?.weight_value">{{ orderItem?.product?.weight_value || 0 }}kg</span>
+                            <span v-if="orderItem?.product?.weight_value">{{ orderItem?.product?.weight_value || 0
+                            }}kg</span>
                             <span v-if="orderItem?.product?.weight_value && orderItem?.product?.group_quantity"></span>
-                            <span v-if="orderItem?.product?.group_quantity">{{ orderItem?.product?.group_quantity || 0 }} pieces</span>
+                            <span v-if="orderItem?.product?.group_quantity">{{ orderItem?.product?.group_quantity || 0 }}
+                                pieces</span>
                         </IonText>
                     </section>
 
                     <IonButton slot="end" fill="clear" color="dark"
-                               class="ion-no-margin ion-no-padding ion-align-self-start"
-                               @click="removeItem()">
+                        class="ion-no-margin ion-no-padding ion-align-self-start" @click="removeItem()">
                         <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
                     </IonButton>
                 </section>
 
-
-                <ProductQuantitySelector
-                    :initial-quantity="orderItem?.quantity"
-                    @change="updateItemQuantity($event)"
-                ></ProductQuantitySelector>
+                <ProductQuantitySelector :initial-quantity="orderItem?.quantity" @change="updateItemQuantity($event)">
+                </ProductQuantitySelector>
             </section>
 
         </section>
@@ -83,7 +81,7 @@ export default defineComponent({
     },
 
     computed: {
-        ...mapStores( useSaleStore )
+        ...mapStores(useSaleStore)
     },
 
     methods: {

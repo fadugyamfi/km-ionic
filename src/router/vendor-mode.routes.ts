@@ -52,6 +52,11 @@ export const VendorModeRoutes = [
             path: "history",
             component: () => import("@/views/Vendor/Orders/OrderHistory.vue"),
           },
+          {
+            name: "VendorOrderDetails",
+            path: ":id",
+            component: () => import("@/views/Vendor/Orders/OrderDetails.vue"),
+          },
         ],
       },
       {
