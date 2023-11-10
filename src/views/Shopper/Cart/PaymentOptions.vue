@@ -15,9 +15,9 @@
           >
         </section>
 
-        <ion-radio-group v-model="form.fields.payment_option">
+        <ion-radio-group v-model="form.fields.payment_option_id">
           <section class="d-flex flex-column ion-margin-bottom">
-            <PayOnDelivery @onSelectPaymentOption="selectPaymentOption" />
+            <PayOnDelivery />
           </section>
 
           <section class="d-flex flex-column ion-margin-bottom">
@@ -234,7 +234,7 @@ export default defineComponent({
       showPayDropdown: false,
       form: {
         fields: {
-          payment_option: "1",
+          payment_option_id: "1",
         },
       },
     };
@@ -248,14 +248,9 @@ export default defineComponent({
       console.log(index);
       cartStore.orders[index] = {
         ...cartStore.orders[index],
-        payment_option: this.form.fields.payment_option,
+        payment_option_id: this.form.fields.payment_option_id,
       };
-      this.$router.push(
-        `/shopper/cart/business/${this.$route.params.id}/item-review`
-      );
-    },
-
-    viewItemReview() {
+      cartStore.persist()
       this.$router.push(
         `/shopper/cart/business/${this.$route.params.id}/item-review`
       );
@@ -264,13 +259,13 @@ export default defineComponent({
     toggleDropdown(dropdownName: DropdownName) {
       this.showDropdown[dropdownName] = !this.showDropdown[dropdownName];
     },
-    selectPaymentOption(paymentOption) {
-      form.fields.payment_option = paymentOption;
-    },
   },
-  // mounted: {
-  //   // getCustomer() {},
-  // },
+  mounted() {
+    const cartStore = useCartStore()
+    if (cartStore.orders.length == 0) {
+       cartStore.loadFromStorage();
+    }
+  },
 });
 </script>
 

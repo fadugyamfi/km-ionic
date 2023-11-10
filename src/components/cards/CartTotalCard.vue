@@ -33,7 +33,7 @@ const route = useRoute();
 
 const cartStore = useCartStore();
 
-cartStore.loadFromStorage();
+
 const cartOrders = computed(() => cartStore.orders);
 
 const totalCost = computed(() => {
@@ -41,7 +41,8 @@ const totalCost = computed(() => {
     (business: any) => business?.businesses_id == route.params.id
   );
   if (business) {
-    const total = business.order_items.reduce(
+    console.log(business.order_items)
+    const total = business.order_items?.reduce(
       (total, item) => total + (item.total_price || 0),
       0
     );
