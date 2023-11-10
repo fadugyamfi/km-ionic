@@ -2,7 +2,7 @@
     <IonModal ref="modal" :initial-breakpoint="0.50" :breakpoints="[0, 0.50]">
         <IonContent >
             <header class="fw-semibold ion-padding ion-text-center">
-                Filter Credit Payment History
+                Filter Credit Payments
             </header>
             <main class="ion-padding-vertical">
                 <IonGrid>
