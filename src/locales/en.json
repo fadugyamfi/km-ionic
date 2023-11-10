@@ -205,7 +205,9 @@
             "orderHasBeenApproved": "Order has been approved",
             "orderHasBeenCanceled": "Order has been canceled",
             "messageCustomer": "Message Customer",
-            "messageSupplier": "Message Supplier"
+            "messageSupplier": "Message Supplier",
+            "deleteOrderFromList": "Delete Order From List",
+            "youCantUndoThisAction": "You can't undo this action"
         }
     },
     "modules": {

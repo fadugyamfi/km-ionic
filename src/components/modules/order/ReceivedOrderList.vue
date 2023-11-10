@@ -6,7 +6,8 @@
         <IonPopover :event="event" :isOpen="openPopover == index" @didDismiss="openPopover = -1">
           <IonContent class="ion-no-padding">
             <IonList lines="full" class="ion-no-padding">
-              <ion-item :button="true" lines="full" aria-label="sync" v-if="order?.isPendingApproval()" @click="approveOrder(order)">
+              <ion-item :button="true" lines="full" aria-label="sync" v-if="order?.isPendingApproval()"
+                        @click="approveOrder(order)">
                 <ion-icon slot="start" :icon="checkmark" aria-hidden="true"></ion-icon>
                 {{ $t('general.accept') }}
               </ion-item>
@@ -18,7 +19,7 @@
                 <ion-icon slot="start" :icon="chatbubbleOutline"></ion-icon>
                 {{ $t('vendor.orders.messageCustomer') }}
               </ion-item>
-              <ion-item :button="true" lines="full">
+              <ion-item :button="true" lines="full" @click="deleteOrder(order)">
                 <ion-icon slot="start" :icon="trashOutline"></ion-icon>
                 {{ $t("general.delete") }}
               </ion-item>
@@ -28,6 +29,13 @@
       </template>
     </OrderListItem>
 
+    <DeleteModal
+      :title="$t('vendor.orders.deleteOrderFromList')"
+      :description="$t('vendor.orders.youCantUndoThisAction')"
+      :isOpen="showConfirmDeleteModal"
+      @dismiss="showConfirmDeleteModal = false"
+      @confirm="onConfirmDelete()"
+    ></DeleteModal>
   </IonList>
 </template>
 
@@ -39,10 +47,11 @@ import { useOrderStore } from '@/stores/OrderStore';
 import { Order } from '@/models/Order';
 import { mapStores } from 'pinia';
 import filters from '@/utilities/Filters';
-import Image from '../../Image.vue';
+import Image from '@/components/Image.vue';
 import OrderListItem from './OrderListItem.vue';
-import { useToastStore } from '../../../stores/ToastStore';
-import { handleAxiosRequestError } from '../../../utilities';
+import { useToastStore } from '@/stores/ToastStore';
+import { handleAxiosRequestError } from '@/utilities';
+import DeleteModal from '@/components/modals/DeleteModal.vue';
 
 export default defineComponent({
 
@@ -59,7 +68,8 @@ export default defineComponent({
     IonChip,
     IonText,
     Image,
-    OrderListItem
+    OrderListItem,
+    DeleteModal
   },
 
   computed: {
@@ -125,7 +135,7 @@ export default defineComponent({
       this.event = null;
     },
 
-    deleteSale(order: Order) {
+    deleteOrder(order: Order) {
       this.selectedOrder = order;
       this.showConfirmDeleteModal = true;
       this.closeMenu();
@@ -133,7 +143,8 @@ export default defineComponent({
 
     async onConfirmDelete() {
       this.showConfirmDeleteModal = false;
-      await this.orderStore.deleteOrder(this.selectedOrder?.id as number);
+      const response = await this.orderStore.deleteOrder(this.selectedOrder?.id as number);
+      console.log(response);
     },
 
     viewDetails(order: Order) {

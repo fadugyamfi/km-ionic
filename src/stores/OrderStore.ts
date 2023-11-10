@@ -51,6 +51,8 @@ export const useOrderStore = defineStore('order', {
         if (response.status === 200) {
           const ordersData = response.data.data;
           this.orders = ordersData.map((data: any) => new Order(data));
+
+          return this.orders;
         }
       } catch (error) {
         handleAxiosRequestError(error);
@@ -72,6 +74,8 @@ export const useOrderStore = defineStore('order', {
         if (response.status === 200) {
           const ordersData = response.data.data;
           this.orders = ordersData.map((data: any) => new Order(data));
+
+          return this.orders;
         }
       } catch (error) {
         handleAxiosRequestError(error);
@@ -94,16 +98,24 @@ export const useOrderStore = defineStore('order', {
     },
 
     async deleteOrder(orderId: number) {
+      const toastStore = useToastStore();
+
       try {
         const response = await axios.delete(`/v2/orders/${orderId}`); // Replace with your API endpoint
-        if (response.status === 204) {
+
+        if (response.status == 200) {
           this.orders = this.orders.filter((order) => order.id !== orderId);
           toastStore.showSuccess('Order deleted successfully.');
         }
+
+        return response;
       } catch (error) {
+        console.log(error);
         handleAxiosRequestError(error);
         toastStore.showError('Failed to delete order.');
       }
+
+      return null;
     },
 
     async updateOrder(orderId: any, updatedData: any) {

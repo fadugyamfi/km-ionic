@@ -23,7 +23,7 @@
                         <ion-icon slot="start" :icon="createOutline"></ion-icon>
                         {{ $t('general.edit') }}
                     </ion-item>
-                    <ion-item :button="true" lines="full">
+                    <ion-item :button="true" lines="full" @click="deleteOrder(order)">
                         <ion-icon slot="start" :icon="trashOutline"></ion-icon>
                         {{ $t('general.delete') }}
                     </ion-item>
@@ -33,6 +33,13 @@
       </template>
     </OrderListItem>
 
+    <DeleteModal
+      :title="$t('vendor.orders.deleteOrderFromList')"
+      :description="$t('vendor.orders.youCantUndoThisAction')"
+      :isOpen="showConfirmDeleteModal"
+      @dismiss="showConfirmDeleteModal = false"
+      @confirm="onConfirmDelete()"
+    ></DeleteModal>
   </IonList>
 </template>
 
@@ -50,6 +57,7 @@ import { mapStores } from 'pinia';
 import filters from '@/utilities/Filters';
 import Image from '../../Image.vue';
 import OrderListItem from './OrderListItem.vue';
+import DeleteModal from '../../modals/DeleteModal.vue';
 
 export default defineComponent({
 
@@ -66,7 +74,8 @@ export default defineComponent({
     IonChip,
     IonText,
     Image,
-    OrderListItem
+    OrderListItem,
+    DeleteModal
 },
 
   computed: {
@@ -98,7 +107,7 @@ export default defineComponent({
       this.event = null;
     },
 
-    deleteSale(order: Order) {
+    deleteOrder(order: Order) {
       this.selectedOrder = order;
       this.showConfirmDeleteModal = true;
       this.closeMenu();
