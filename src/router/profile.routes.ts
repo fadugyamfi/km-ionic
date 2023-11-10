@@ -1,9 +1,10 @@
 import { useUserStore } from "@/stores/UserStore";
+import TabsPage from "@/views/Profile/TabsPage.vue";
 
 export const ProfileRoutes = [
   {
     path: "/profile/company",
-    component: () => import("@/views/Vendor/Company.vue"),
+    component: TabsPage,
     beforeEnter: async function () {
       // to, from
       const userStore = useUserStore();
@@ -39,6 +40,18 @@ export const ProfileRoutes = [
           import("@/views/Vendor/Company/Customer/CustomerProfile.vue"),
       },
       {
+        path: "customers/:id/orders",
+        component: () =>
+          import("@/views/Vendor/Company/Customer/Order/OrderHistory.vue"),
+      },
+      {
+        path: "customers/:id/credit-payments",
+        component: () =>
+          import(
+            "@/views/Vendor/Company/Customer/CreditPayment/CreditHistory.vue"
+          ),
+      },
+      {
         path: "stocks",
         component: () => import("@/views/Vendor/Company/Stock/Stocks.vue"),
       },
@@ -46,6 +59,10 @@ export const ProfileRoutes = [
         path: "stocks/add-stock",
         component: () => import("@/views/Vendor/Company/Stock/AddStock.vue"),
       },
+      // {
+      //   path: "stocks/stock-list",
+      //   component: () => import("@/views/Vendor/Company/Stock/Stoc.vue"),
+      // },
     ],
   },
 ];

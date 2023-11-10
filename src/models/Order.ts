@@ -38,10 +38,10 @@ export class Order {
     public customer_id?: number;
     public total_order_amount?: number;
     public order_status_id?: number;
-    public created_at?: string | number | Date;
-    public order_status?: any;
-    public start_dt?: string | number | Date;
-    public product_units_id?: number;
+    public created_at: any;
+    public order_status: any;
+    public start_dt: string | number | Date | undefined;
+    public product_units_id: number| undefined;
     public delivery_location?: string;
     public delivery_date?: string;
     public order_items_count = 0;

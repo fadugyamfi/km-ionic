@@ -1,46 +1,36 @@
 <template>
-  <section class="profile-home-section ion-padding-top">
-    <header class="ion-padding-horizontal">
-      <h6>Credit payment</h6>
+  <IonItem class="ion-align-items-start ion-margin-bottom">
+    <IonAvatar slot="start">
+      <Image :src="credit.business?.logo"></Image>
+    </IonAvatar>
+    <IonLabel>
+      <p class="ion-no-margin">
+        {{ credit.business?.name }}
+      </p>
       <IonText
-        color="primary"
-        :router-link="`/profile/company/customers/${$route.params.id}/credit-payments`"
+        style="margin-bottom: 5px !important"
+        color="medium"
+        class="font-medium"
       >
-        View all
+        Payment made on {{ credit.payment_date.split(" ")[0] }}
       </IonText>
-    </header>
-  </section>
-  <IonList
-    lines="none"
-    class="ion-padding-horizontal customers-select-list simple"
-  >
-    <IonItem
-      v-for="credit in credits"
-      :key="credit.id"
-      class="ion-align-items-start ion-margin-bottom"
+      <IonText color="medium" class="font-medium d-flex">
+        paid via {{ credit.payment_mode.name }}
+        <Image class="momo" src="/images/momo.svg"></Image>
+      </IonText>
+      <IonText class="fw-bold">GHS {{ credit.amount }}</IonText></IonLabel
     >
-      <IonAvatar slot="start">
-        <Image :src="credit.business?.logo"></Image>
-      </IonAvatar>
-      <IonLabel>
-        <p class="ion-no-margin">
-          {{ credit.business?.name }}
-        </p>
-        <IonText
-          style="margin-bottom: 5px !important"
-          color="medium"
-          class="font-medium"
-        >
-          Payment made on {{ credit.payment_date.split(" ")[0] }}
-        </IonText>
-        <IonText color="medium" class="font-medium d-flex">
-          paid via {{ credit.payment_mode.name }}
-          <Image class="momo" src="/images/momo.svg"></Image> </IonText
-      ></IonLabel>
-
-      <IonText>GHS {{ credit.amount }}</IonText>
-    </IonItem>
-  </IonList>
+    <IonButton
+      slot="end"
+      fill="clear"
+      color="dark"
+      class="ion-align-self-start ion-margin-top"
+      @click.stop="openMenu($event)"
+    >
+      <IonIcon :icon="ellipsisHorizontal"></IonIcon>
+    </IonButton>
+    <slot name="popover"></slot>
+  </IonItem>
 </template>
 <script lang="ts" setup>
 import {
@@ -51,7 +41,9 @@ import {
   IonChip,
   IonIcon,
   IonLabel,
+  IonButton
 } from "@ionic/vue";
+import { ellipsisHorizontal} from "ionicons/icons"
 import { PropType, ref } from "vue";
 import { useRouter } from "vue-router";
 import Image from "@/components/Image.vue";
@@ -59,19 +51,18 @@ import Customer from "@/models/Customer";
 import { useCustomerStore } from "@/stores/CustomerStore";
 
 const props = defineProps({
-  credits: {
+  credit: {
     type: Object,
     default: () => [],
   },
 });
 
-const customer = ref({
-  id: 1,
-  logo: "",
-});
-
+const emit = defineEmits(["openMenu"]);
 const router = useRouter();
-const customerStore = useCustomerStore();
+
+const openMenu = (event: CustomEvent) => {
+  emit("openMenu", event);
+};
 </script>
 
 <style lang="scss" scoped>

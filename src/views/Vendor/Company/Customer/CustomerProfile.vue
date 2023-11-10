@@ -34,8 +34,8 @@
       <section v-if="!fetching">
         <CustomerProfileHeader :customer="customer" />
         <ProfileSubHeader :customer="customer" />
-        <CustomerOrderHistory />
-        <CustomerCredit />
+        <CustomerOrderHistory :orders="orders" />
+        <CustomerCredit :credits="credits" />
       </section>
     </IonContent>
   </ion-page>
@@ -60,19 +60,25 @@ import {
   IonSpinner,
 } from "@ionic/vue";
 import { chatbubbleOutline, arrowBackOutline } from "ionicons/icons";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { handleAxiosRequestError } from "@/utilities";
 import { useCustomerStore } from "@/stores/CustomerStore";
 import { useUserStore } from "@/stores/UserStore";
+import { Order } from "@/models/Order";
 import Business from "@/models/Business";
 import Customer from "@/models/Customer";
 import { useRoute } from "vue-router";
 
 const order = ref([]);
 const customer = ref<Customer>();
+// const orders = ref<Order[]>();
 
 const route = useRoute();
 
 const fetching = ref(false);
+
+const orders = computed(() => useCustomerStore().orders.splice(0, 3));
+const credits = computed(() => useCustomerStore().creditPayments.splice(0, 3));
 
 const fetchCustomer = async () => {
   fetching.value = true;
@@ -85,9 +91,34 @@ const fetchCustomer = async () => {
   );
   fetching.value = false;
 };
-
+const fetchCustomerOrders = async () => {
+  try {
+    fetching.value = true;
+    const customer_id = route.params.id;
+    const customerStore = useCustomerStore();
+    await customerStore.receivedOrders(customer_id);
+  } catch (error) {
+    handleAxiosRequestError(error);
+  } finally {
+    fetching.value = false;
+  }
+};
+const fetchCustomerCredits = async () => {
+  try {
+    fetching.value = true;
+    const customer_id = route.params.id;
+    const customerStore = useCustomerStore();
+    await customerStore.fetchCustomerCredits(customer_id);
+  } catch (error) {
+    handleAxiosRequestError(error);
+  } finally {
+    fetching.value = false;
+  }
+};
 onMounted(() => {
+  fetchCustomerOrders();
   fetchCustomer();
+  fetchCustomerCredits();
 });
 </script>
 <style lang="scss" scoped>
