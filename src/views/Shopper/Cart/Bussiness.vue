@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import {
   IonSegmentButton,
   IonLabel,
@@ -57,7 +57,6 @@ import EmptyCart from "@/components/cards/EmptyCart.vue";
 import OrderView from "@/components/modules/carts/OrderView.vue";
 
 const cartStore = useCartStore();
-cartStore.loadFromStorage();
 const viewing = ref("cart");
 
 const segmentValue = ref("cart");
@@ -69,6 +68,12 @@ const updateQuantity = (item: CartItem, newQuantity: number) => {
 const removeFromCart = (item: CartItem, index: number) => {
   cartStore.removeAtIndex(index);
 };
+
+onMounted(() => {
+  if ((cartStore.orders.length == 0)) {
+    cartStore.loadFromStorage();
+  }
+});
 </script>
 
 <style scoped lang="scss">

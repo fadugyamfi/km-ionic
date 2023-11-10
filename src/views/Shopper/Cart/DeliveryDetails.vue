@@ -11,11 +11,11 @@
       <form>
         <IonInput
           class="kola-input delivery-details-input"
-          :class="{ 'ion-invalid ion-touched': form.errors.location }"
+          :class="{ 'ion-invalid ion-touched': form.errors.delivery_location }"
           label="Town/Locality"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.location"
+          v-model="form.fields.delivery_location"
           name="location"
           @ion-input="form.validate($event)"
           required
@@ -34,11 +34,11 @@
 
         <IonInput
           class="kola-input delivery-details-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.landmark }"
+          :class="{ 'ion-invalid ion-touched': form.errors.delivery_nearest_landmark}"
           label="Nearest Landmark"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.landmark"
+          v-model="form.fields.delivery_nearest_landmark"
           name="landmark"
           @ion-input="form.validate($event)"
           required
@@ -54,7 +54,7 @@
           v-model="form.fields.delivery_date"
           name="delivery-date"
           @ion-input="form.validate($event)"
-          required
+          readonly
         ></IonInput>
         <section>
           <section class="d-flex flex-column ion-margin-bottom">
@@ -100,28 +100,48 @@ import { useCartStore } from "@/stores/CartStore";
 import { useForm } from "@/composables/form";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
+import { onMounted } from "vue";
+import { onMounted as onMountedVue3 } from "@vue/runtime-core";
 
 const router = useRouter();
 const route = useRoute();
 const toastStore = useToastStore();
 const form = useForm({
-  location: "",
-  landmark: "",
+  delivery_location: "",
+  delivery_nearest_landmark: "",
   delivery_date: "",
-  delivery_method: 'standard'
+  delivery_method: "",
 });
-
 const selectDeliveryMethod = (method: string) => {
   form.fields.delivery_method = method;
+
+  // Define the number of days to add based on the method
+  let daysToAdd = method === "standard" ? 5 : method === "express" ? 2 : 0;
+
+  if (daysToAdd > 0) {
+    const today = new Date();
+    const deliveryDate = new Date(today);
+    deliveryDate.setDate(today.getDate() + daysToAdd);
+
+    // Format the date as DD/MM/YY
+    const dd = deliveryDate.getDate().toString().padStart(2, "0");
+    const mm = (deliveryDate.getMonth() + 1).toString().padStart(2, "0");
+    const yy = deliveryDate.getFullYear().toString().slice(-2);
+
+    form.fields.delivery_date = `${dd}/${mm}/${yy}`;
+  }
 };
 
 const storeDeliveryDetails = () => {
   const cartStore = useCartStore();
-  const index = cartStore.orders.findIndex((b) => b.businesses_id == Number(route.params.id));
+  const index = cartStore.orders.findIndex(
+    (b) => b.businesses_id == Number(route.params.id)
+  );
   cartStore.orders[index] = {
     ...cartStore.orders[index],
     ...form.fields,
   };
+  cartStore.persist()
   router.push(`/shopper/cart/business/${route.params.id}/payment-options`);
 };
 
@@ -140,6 +160,17 @@ const getLocation = async () => {
     console.log(error);
   }
 };
+
+onMounted(async () => {
+  const cartStore = useCartStore();
+  if (cartStore.orders.length == 0) {
+    await cartStore.loadFromStorage();
+  }
+  // Set the delivery method here based on your requirement
+  // For example, setting it to 'standard' when the component is mounted
+  const initialDeliveryMethod = "standard";
+  selectDeliveryMethod(initialDeliveryMethod);
+});
 </script>
 
 <style scoped lang="scss">

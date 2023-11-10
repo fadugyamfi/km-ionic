@@ -6,10 +6,7 @@
       </IonThumbnail>
 
       <section class="w-100">
-        <section
-          style="height: 100%"
-          class="d-flex ion-justify-content-between"
-        >
+        <section style="height: 100%" class="d-flex ion-justify-content-between">
           <section class="d-flex flex-column business-description">
             <IonText class="fw-semibold ellipsis" style="margin-bottom: 5px">
               {{ order?.business?.name || "Unknown" }}
@@ -17,21 +14,19 @@
             <IonText color="medium" class="font-medium">
               Item total:
               {{
-                order?.getTotal().toLocaleString("en-GB", {
+                order && order.getTotal
+                ? order.getTotal().toLocaleString("en-GB", {
                   style: "currency",
                   currency: "GHS",
                 })
+                : "N/A"
               }}
             </IonText>
             <IonText color="medium" class="font-medium">
               GHS 3000 minimum reached
             </IonText>
             <section class="d-flex">
-              <IonThumbnail
-                v-for="product in order?.order_items"
-                :key="product.products_id"
-                class="cart-items"
-              >
+              <IonThumbnail v-for="product in order?.order_items" :key="product.products_id" class="cart-items">
                 <Image :src="product.product_image"></Image>
               </IonThumbnail>
             </section>
@@ -43,12 +38,8 @@
     <section class="remove-button">
       <!-- Use <div> or <section> here -->
       <section class="d-flex align-right">
-        <IonButton
-          fill="clear"
-          color="dark"
-          class="ion-no-margin ion-no-padding ion-align-self-start"
-          @click="removeOrder()"
-        >
+        <IonButton fill="clear" color="dark" class="ion-no-margin ion-no-padding ion-align-self-start"
+          @click="removeOrder()">
           <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
         </IonButton>
       </section>
@@ -151,6 +142,7 @@ ion-thumbnail.cart-items {
   height: 45px;
   --border-radius: 2px;
 }
+
 .business-description {
   width: 239px;
 }

@@ -12,22 +12,14 @@
         <IonText class="fw-semibold ion-margin-end">GHS 10.00</IonText>
       </section>
     </section>
-    <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
-      <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
-        <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>Delivery Address
-      </IonText>
-      <section class="d-flex ion-align-items-center">
-        <IonText class="ion-margin-end date-color">Change address</IonText>
-      </section>
+    <section class="d-flex ion-justify-content-between ion-align-items-center">
+    <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+      <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>Delivery Address
+    </IonText>
+    <section class="d-flex ion-align-items-center">
+      <IonText class="ion-margin-end date-color" @click="toggleFilterSheet">Change address</IonText>
     </section>
-    <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
-      <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
-        <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon>Delivery Date - 2.08.2023
-      </IonText>
-      <section class="d-flex ion-align-items-center">
-        <IonText class="ion-margin-end date-color">Change Date</IonText>
-      </section>
-    </section>
+  </section>
     <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
       <IonText class="fw-semibold">Total Cost</IonText>
       <section class="d-flex ion-align-items-center">
@@ -35,16 +27,23 @@
       </section>
     </section>
   </IonCard>
+  <DeliveryAddressSheet   :isOpen="showFilterSheet" @didDismiss="showFilterSheet = false"></DeliveryAddressSheet>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { IonText, IonCard } from "@ionic/vue";
 import { useCartStore } from "@/stores/CartStore";
 import { locationOutline, timeOutline } from "ionicons/icons";
 import { useRoute } from "vue-router";
+import DeliveryAddressSheet from "@/components/modules/carts/DeliveryAddressSheet.vue";
+
 
 const route = useRoute();
+const showFilterSheet = ref(false);
+const toggleFilterSheet = () => {
+  showFilterSheet.value = !showFilterSheet.value;
+};
 
 const cartStore = useCartStore();
 
@@ -63,6 +62,7 @@ const totalCost = computed(() => {
     if (total) {
       return total.toFixed(2);
     }
+    cartStore.persist()
   }
 });
 </script>

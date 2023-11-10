@@ -36,7 +36,7 @@ export class Order {
     public id?: number | string;
     public businesses_id?: number;
     public customer_id?: number;
-    public total_order_amount?: number;
+    public total_order_amount?: number | string;
     public order_status_id?: number;
 
     public created_at: any;
@@ -52,6 +52,7 @@ export class Order {
     public _customer?: Business;
     public _business?: Business;
     public _currency?: Currency;
+
 
     constructor(data: object) {
         Object.assign(this, data);

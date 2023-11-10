@@ -5,10 +5,17 @@
     </section>
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
-      <IonSegment value="personal" mode="ios" v-model="viewing" class="segment-margin">
+      <IonSegment
+        value="personal"
+        mode="ios"
+        v-model="viewing"
+        class="segment-margin"
+      >
         <IonSegmentButton value="cart">
           <div class="segment-button">
-            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
+            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }"
+              >Cart</IonLabel
+            >
             <IonBadge>{{ orderBusiness?.order_items?.length }}</IonBadge>
           </div>
         </IonSegmentButton>
@@ -19,7 +26,10 @@
       <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
 
       <IonList v-else>
-        <IonItem v-for="(item, index) in orderBusiness?.order_items" :key="item.product?.id">
+        <IonItem
+          v-for="(item, index) in orderBusiness?.order_items"
+          :key="item.product?.id"
+        >
           <ion-thumbnail slot="start" class="custom-thumbnail">
             <Image :src="item.product_image"></Image>
           </ion-thumbnail>
@@ -32,21 +42,31 @@
                 {{ item.currency_symbol || "GHS" }}
                 {{ item.quantity * (item.product_price || 0) }}
               </p>
-
             </ion-col>
             <ion-col size="1" class="remove-button">
-              <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
-                <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
+              <ion-button
+                fill="clear"
+                color=""
+                @click.prevent.stop="removeFromCart(index)"
+              >
+                <ion-icon
+                  class="remove-icon"
+                  :icon="closeCircleOutline"
+                ></ion-icon>
               </ion-button>
             </ion-col>
-            <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
-
+            <ProductQuantitySelector
+              @change="updateQuantity(item, $event)"
+            ></ProductQuantitySelector>
           </ion-row>
         </IonItem>
         <CartTotalCard />
       </IonList>
     </ion-content>
-    <IonFooter class="ion-padding ion-no-border" v-if="orderBusiness?.order_items?.length > 0">
+    <IonFooter
+      class="ion-padding ion-no-border"
+      v-if="orderBusiness?.order_items?.length > 0"
+    >
       <KolaYellowButton @click="viewDeliveryDetails">
         Proceed to Checkout
       </KolaYellowButton>
@@ -94,7 +114,6 @@ const cartStore = useCartStore();
 const orderBusiness = ref<any>(null);
 const orders = computed(() => cartStore.orders);
 
-cartStore.loadFromStorage();
 const viewing = ref("cart");
 
 const segmentValue = ref("cart");
@@ -110,8 +129,7 @@ const removeFromCart = (index: number) => {
 const viewDeliveryDetails = () => {
   router.push(`/shopper/cart/business/${route.params.id}/delivery-details`);
 };
-const getOrderBusiness = async () => {
-  await cartStore.persist();
+const getOrderBusiness = () => {
   const business = orders.value.find(
     (order: any) => order?.businesses_id == route.params.id
   );
@@ -119,7 +137,10 @@ const getOrderBusiness = async () => {
   // cartStore.items = orderBusiness.value?.order_items;
 };
 
-onMounted(() => {
+onMounted(async () => {
+  if (cartStore.orders.length == 0) {
+    await cartStore.loadFromStorage();
+  }
   getOrderBusiness();
 });
 </script>

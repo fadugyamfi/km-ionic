@@ -3,17 +3,14 @@
     <section class="ion-padding">
       <OrderSummaryHeader />
     </section>
-
-    <ion-content :fullscreen="true" class="ion-padding-horizontal">
+    <ion-content class="ion-padding-horizontal">
       <section class="ion-padding">
-        <IonText>{{ orderBusiness?._business.name }}</IonText>
+        <IonText> {{ orderBusiness?._business.name ? orderBusiness._business.name : 'No Business' }} </IonText>
         <p>GHS 3000 minimum reached</p>
+
       </section>
       <IonList>
-        <IonItem
-          v-for="(item, index) in orderBusiness?.order_items"
-          :key="item.product?.id"
-        >
+        <IonItem v-for="(item, index) in orderBusiness?._order_items" :key="item.products_id">
           <ion-thumbnail slot="start" class="custom-thumbnail">
             <Image :src="item.product_image"></Image>
           </ion-thumbnail>
@@ -28,27 +25,18 @@
               </p>
             </ion-col>
             <ion-col size="1" class="remove-button">
-              <ion-button
-                fill="clear"
-                color=""
-                @click.prevent.stop="removeFromCart(index)"
-              >
-                <ion-icon
-                  class="remove-icon"
-                  :icon="closeCircleOutline"
-                ></ion-icon>
+              <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
+                <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
               </ion-button>
             </ion-col>
-            <ProductQuantitySelector
-              @change="updateQuantity(item, $event)"
-            ></ProductQuantitySelector>
+            <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
           </ion-row>
         </IonItem>
         <ItemReview />
       </IonList>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton> Continue </KolaYellowButton>
+      <KolaYellowButton @click="createOrder"> Continue </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -70,17 +58,15 @@ import {
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
-import { business, closeCircleOutline } from "ionicons/icons";
+import { closeCircleOutline } from "ionicons/icons";
 import ItemReview from "@/components/cards/ItemReview.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
 import Image from "@/components/Image.vue";
-import { useBusinessStore } from "@/stores/BusinessStore";
 import { useRoute } from "vue-router";
 
-const route = useRoute();
 
-const cartStore = useCartStore();
+const route = useRoute();
 
 const orderBusiness = ref<any>(null);
 const orders = computed(() => cartStore.orders);
@@ -94,18 +80,52 @@ const removeFromCart = (index: number) => {
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
 
-const getOrderBusiness = async () => {
-  await cartStore.persist();
+const getOrderBusiness = () => {
+  console.log("jello");
   const business = orders.value.find(
     (order: any) => order?.businesses_id == route.params.id
   );
   console.log("Found business:", business); // Add this line for debugging
   orderBusiness.value = business;
-  cartStore.items = orderBusiness.value?.order_items;
 };
 
+const cartStore = useCartStore(orderBusiness.value);
+
+const createOrder = () => {
+  const response = cartStore.createOrder({
+    ...orderBusiness.value,
+    total_order_amount: totalCost.value,
+    product_units_id: 1,
+    payment_modes_id: orderBusiness.value.payment_option_id,
+    total_items: orderBusiness.value._order_items.length,
+    order_items: orderBusiness.value._order_items,
+   
+  });
+
+}
+
+cartStore.loadFromStorage();
+const cartOrders = computed(() => cartStore.orders);
+
+const totalCost = computed(() => {
+
+  const total = orderBusiness.value.order_items?.reduce(
+    (total: any, item: any) => total + (item.total_price || 0),
+    0
+  );
+  if (total) {
+    return total.toFixed(2);
+  }
+
+
+});
+
+
+
 onMounted(async () => {
-  await cartStore.loadFromStorage();
+  if (cartStore.orders.length == 0) {
+    await cartStore.loadFromStorage();
+  }
   getOrderBusiness();
 });
 </script>
