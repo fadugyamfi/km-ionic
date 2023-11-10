@@ -1,9 +1,10 @@
 import { useUserStore } from "@/stores/UserStore";
+import TabsPage from "@/views/Profile/TabsPage.vue";
 
 export const ProfileRoutes = [
   {
     path: "/profile/company",
-    component: () => import("@/views/Vendor/Company.vue"),
+    component: TabsPage,
     beforeEnter: async function () {
       // to, from
       const userStore = useUserStore();
