@@ -1,7 +1,7 @@
 <template>
   <ion-page>
 
-    <ShopperHeader></ShopperHeader>
+    <!-- <ShopperHeader></ShopperHeader> -->
 
     <ProfileManager></ProfileManager>
   </ion-page>

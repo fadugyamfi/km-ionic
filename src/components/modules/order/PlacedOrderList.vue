@@ -13,19 +13,19 @@
                 <IonList lines="full" class="ion-no-padding">
                     <ion-item :button="true" lines="full" aria-label="sync">
                         <ion-icon slot="start" :icon="sync" aria-hidden="true"></ion-icon>
-                        Re-order
+                        {{ $t('general.reorder') }}
                     </ion-item>
                     <ion-item :button="true" lines="full">
                         <ion-icon slot="start" :icon="chatbubbleOutline"></ion-icon>
-                        Message Supplier
+                        {{ $t('vendor.orders.messageSupplier') }}
                     </ion-item>
                     <ion-item :button="true" lines="full">
                         <ion-icon slot="start" :icon="createOutline"></ion-icon>
-                        Edit Order
+                        {{ $t('general.edit') }}
                     </ion-item>
                     <ion-item :button="true" lines="full">
                         <ion-icon slot="start" :icon="trashOutline"></ion-icon>
-                        Delete
+                        {{ $t('general.delete') }}
                     </ion-item>
                 </IonList>
             </IonContent>

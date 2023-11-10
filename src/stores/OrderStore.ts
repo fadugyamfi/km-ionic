@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 import AppStorage from "./AppStorage";
-import { Order } from "@/models/Order";
+import { Order, OrderStatus } from "@/models/Order";
 import { useToastStore } from "./ToastStore";
 import axios from "axios";
 import { handleAxiosRequestError } from "../utilities";
 import { useUserStore } from "./UserStore";
+import { ChangeStatusRequest } from "../models/types";
 
 
 const toastStore = useToastStore();
@@ -30,6 +31,8 @@ export const useOrderStore = defineStore('order', {
           }
         })
       ] as Order[],
+      approving: false,
+      cancelling: false,
     }
   },
 
@@ -169,5 +172,72 @@ export const useOrderStore = defineStore('order', {
         toastStore.showError('Failed to reorder order.');
       }
     },
+
+    async approveOrder(order: Order) {
+      const userStore = useUserStore();
+      this.approving = true;
+
+      try {
+        const response = await this.changeOrderStatus(order?.id as number, {
+          businesses_id: order?.businesses_id as number,
+          cms_users_id: userStore.user?.id as number,
+          order_id: order?.id as number,
+          order_status_id: OrderStatus.APPROVED,
+          comment: ''
+        });
+
+        return response;
+      } catch(error) {
+        handleAxiosRequestError(error);
+      } finally {
+        this.approving = false;
+      }
+
+    },
+
+    async cancelOrder(order: Order) {
+      const userStore = useUserStore();
+      this.cancelling = true;
+
+      try {
+        const response = await this.changeOrderStatus(order?.id as number, {
+          businesses_id: order?.businesses_id as number,
+          cms_users_id: userStore.user?.id as number,
+          order_id: order?.id as number,
+          order_status_id: OrderStatus.CANCELLED,
+          comment: ''
+        });
+
+        return response;
+      } catch(error) {
+        handleAxiosRequestError(error);
+      } finally {
+        this.cancelling = false;
+      }
+    },
+
+    async changeOrderStatus(orderId: number, payload: ChangeStatusRequest) {
+      try {
+        const response = await axios.put(`/v2/orders/${orderId}/status`, payload)
+
+        if( response?.status == 200 ) {
+          const order = this.orders.find(o => o.id == orderId);
+
+          if( order ) {
+            order.update({
+              order_status: response.data.data.order_status,
+              ...response.data.data.order
+            })
+          }
+          return response;
+        } else {
+
+        }
+      } catch(error) {
+        handleAxiosRequestError(error);
+
+        throw error;
+      }
+    }
   },
 });

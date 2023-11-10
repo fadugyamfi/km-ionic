@@ -18,7 +18,7 @@
               {{ item.product?.product_name }}
               <section>
                 <IonText color="medium" class="font-medium">
-                  {{ item.quantity }} {{ getItemUnit(item)}}
+                  {{ item.quantity }} {{ getItemUnit(item) }}
                 </IonText>
               </section>
             </IonLabel>
@@ -45,16 +45,16 @@
             <IonLabel color="medium" class="font-medium">
               {{ order?.delivery_location || 'Unknown' }}
             </IonLabel>
-            <IonLabel color="primary" slot="end" class="font-medium">
+            <IonLabel v-if="showChangeAddress"  color="primary" slot="end" class="font-medium">
               Change Address
             </IonLabel>
           </IonItem>
 
           <IonItem lines="full" class="ion-padding-bottom">
             <IonLabel color="medium" class="font-medium">
-              {{ order?.delivery_date || 'TBD' }}
+              {{ order?.delivery_date ? Filters.date(order?.delivery_date as string, 'short') : 'TBD' }}
             </IonLabel>
-            <IonLabel color="primary" slot="end" class="font-medium">
+            <IonLabel v-if="showChangeDate" color="primary" slot="end" class="font-medium">
               Change Date
             </IonLabel>
           </IonItem>
@@ -64,7 +64,7 @@
               {{ 'Total Cost' }}
             </IonLabel>
             <IonLabel color="dark" slot="end" class="font-medium fw-bold">
-              {{ Filters.currency( order?.getTotal(), order?.currency?.symbol ) }}
+              {{ Filters.currency(order?.getTotal() as number, order?.currency?.symbol as string) }}
             </IonLabel>
           </IonItem>
         </IonList>
@@ -100,22 +100,32 @@ export default defineComponent({
     IonList,
     IonText,
     IonButton
-},
+  },
+
   props: {
     order: {
-      type: Object as PropType<Order | null>,
-      required: true,
+      type: Object as PropType<Order | null>
     },
+
+    showChangeDate: {
+      default: true
+    },
+
+    showChangeAddress: {
+      default: true
+    }
   },
+
   data() {
     return {
       Filters,
     };
   },
+
   methods: {
 
     getItemUnit(orderItem: OrderItem) {
-      if( orderItem.product_units_id == 2 ) {
+      if (orderItem.product_units_id == 2) {
         return this.$tc('general.units.piece', orderItem.quantity as number);
       }
 

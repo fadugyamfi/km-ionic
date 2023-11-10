@@ -6,21 +6,21 @@
         <IonPopover :event="event" :isOpen="openPopover == index" @didDismiss="openPopover = -1">
           <IonContent class="ion-no-padding">
             <IonList lines="full" class="ion-no-padding">
-              <ion-item :button="true" lines="full" aria-label="sync">
+              <ion-item :button="true" lines="full" aria-label="sync" v-if="order?.isPendingApproval()" @click="approveOrder(order)">
                 <ion-icon slot="start" :icon="checkmark" aria-hidden="true"></ion-icon>
-                Accept Order
+                {{ $t('general.accept') }}
               </ion-item>
-              <ion-item :button="true" lines="full">
+              <ion-item :button="true" lines="full" v-if="order?.isPendingApproval()" @click="cancelOrder(order)">
                 <ion-icon slot="start" :icon="closeCircleOutline"></ion-icon>
-                Cancel Order
+                {{ $t('general.cancel') }}
               </ion-item>
               <ion-item :button="true" lines="full">
                 <ion-icon slot="start" :icon="chatbubbleOutline"></ion-icon>
-                Message Customer
+                {{ $t('vendor.orders.messageCustomer') }}
               </ion-item>
               <ion-item :button="true" lines="full">
                 <ion-icon slot="start" :icon="trashOutline"></ion-icon>
-                Delete
+                {{ $t("general.delete") }}
               </ion-item>
             </IonList>
           </IonContent>
@@ -41,6 +41,8 @@ import { mapStores } from 'pinia';
 import filters from '@/utilities/Filters';
 import Image from '../../Image.vue';
 import OrderListItem from './OrderListItem.vue';
+import { useToastStore } from '../../../stores/ToastStore';
+import { handleAxiosRequestError } from '../../../utilities';
 
 export default defineComponent({
 
@@ -58,10 +60,10 @@ export default defineComponent({
     IonText,
     Image,
     OrderListItem
-},
+  },
 
   computed: {
-    ...mapStores(useOrderStore)
+    ...mapStores(useOrderStore, useToastStore)
   },
 
   data() {
@@ -137,6 +139,28 @@ export default defineComponent({
     viewDetails(order: Order) {
       this.$emit('view-details', order);
       this.$router.push(`/vendor/orders/${order.id}`);
+    },
+
+    async approveOrder(order: Order) {
+      try {
+        const response = await this.orderStore.approveOrder(order);
+
+        this.toastStore.showSuccess(this.$t('vendor.orders.orderHasBeenApproved'), '', 'bottom', 'vendorTabs')
+      } catch (error) {
+        handleAxiosRequestError(error);
+        this.toastStore.showError(this.$t('vendor.orders.anErrorOccured'), '', 'bottom', 'vendorTabs')
+      }
+    },
+
+    async cancelOrder(order: Order) {
+      try {
+        const response = await this.orderStore.cancelOrder(order);
+
+        this.toastStore.showSuccess(this.$t('vendor.orders.orderHasBeenCanceled'), '', 'bottom', 'vendorTabs')
+      } catch (error) {
+        handleAxiosRequestError(error);
+        this.toastStore.showError(this.$t('vendor.orders.anErrorOccured'), '', 'bottom', 'vendorTabs')
+      }
     }
   }
 })

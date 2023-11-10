@@ -4,13 +4,13 @@
       <IonHeader class="inner-header">
         <IonToolbar class="ion-align-items-center">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/shopper/orders"></IonBackButton>
+            <IonBackButton defaultHref="/vendor/orders"></IonBackButton>
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
             {{ $t('shopper.orders.orderDetails')}} - #{{ order?.id }}
           </IonTitle>
           <IonButtons slot="end">
-            <IonButton>
+            <IonButton v-if="false">
               <IonIcon slot="icon-only" :icon="chatbubbleOutline"></IonIcon>
             </IonButton>
           </IonButtons>
@@ -24,25 +24,29 @@
 
       <section v-else>
         <OrderImages :order="(order as Order)" />
-        <OrderDetailItems :order="(order as Order)" />
+        <OrderDetailItems :showChangeAddress="false" :showChangeDate="false" :order="(order as Order)" />
 
         <section class="ion-padding-horizontal update-button-section">
-          <KolaYellowButton>
-            {{ 'Accept Order' }}
+          <KolaYellowButton v-if="order?.isPendingApproval()" @click="approveOrder()">
+            <IonSpinner v-if="orderStore.approving" name="crescent"></IonSpinner>
+            <IonText>{{ 'Accept Order' }}</IonText>
           </KolaYellowButton>
 
-          <KolaYellowButton>
-            {{ 'Cancel Order' }}
-          </KolaYellowButton>
+          <KolaWhiteButton class="ion-margin-top" v-if="order?.isPendingApproval()" @click="cancelOrder()">
+            <IonSpinner v-if="orderStore.cancelling" name="crescent"></IonSpinner>
+            <IonText>{{ 'Cancel Order' }}</IonText>
+          </KolaWhiteButton>
         </section>
+
+        <OrderStatusHistoryView :order="(order as Order)" />
       </section>
     </ion-content>
   </IonPage>
 </template>
 
 <script lang="ts">
-import { Order } from '@/models/Order';
-import { IonIcon, IonContent, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonButton, IonSpinner } from '@ionic/vue';
+import { Order, OrderStatus } from '@/models/Order';
+import { IonIcon, IonContent, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonButton, IonSpinner, IonText } from '@ionic/vue';
 import { IonSelect, IonSelectOption, IonAvatar, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import OrdersCard from '@/components/modules/order/OrdersCard.vue';
@@ -55,6 +59,9 @@ import OrderImages from '@/components/modules/order/OrderImages.vue';
 import OrderDetailItems from '@/components/modules/order/OrderDetailItems.vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import OrderStatusHistoryView from '@/components/modules/order/OrderStatusHistoryView.vue';
+import KolaWhiteButton from '../../../components/KolaWhiteButton.vue';
+import { useUserStore } from '../../../stores/UserStore';
+import { useToastStore } from '../../../stores/ToastStore';
 
 export default defineComponent({
   components: {
@@ -73,7 +80,9 @@ export default defineComponent({
     IonSpinner,
     OrderDetailItems,
     KolaYellowButton,
-    OrderStatusHistoryView
+    OrderStatusHistoryView,
+    KolaWhiteButton,
+    IonText
 },
 
   name: 'OrderDetails',
@@ -81,6 +90,8 @@ export default defineComponent({
   data() {
     return {
       loading: false,
+      approving: false,
+      cancelling: false,
       chatbubbleOutline,
       order: null as Order | null
     }
@@ -91,7 +102,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores( useOrderStore ),
+    ...mapStores( useOrderStore, useUserStore, useToastStore ),
   },
 
   methods: {
@@ -109,6 +120,28 @@ export default defineComponent({
         handleAxiosRequestError(error);
       } finally {
         this.loading = false;
+      }
+    },
+
+    async approveOrder() {
+      try {
+        const response = await this.orderStore.approveOrder(this.order as Order);
+
+        this.toastStore.showSuccess( this.$t('vendor.orders.orderHasBeenApproved'), '', 'bottom', 'vendorTabs')
+      } catch(error) {
+        handleAxiosRequestError(error);
+        this.toastStore.showError( this.$t('vendor.orders.anErrorOccured'), '', 'bottom', 'vendorTabs')
+      }
+    },
+
+    async cancelOrder() {
+      try {
+        const response = await this.orderStore.cancelOrder(this.order as Order);
+
+        this.toastStore.showSuccess( this.$t('vendor.orders.orderHasBeenCanceled'), '', 'bottom', 'vendorTabs')
+      } catch(error) {
+        handleAxiosRequestError(error);
+        this.toastStore.showError( this.$t('vendor.orders.anErrorOccured'), '', 'bottom', 'vendorTabs')
       }
     }
   }
