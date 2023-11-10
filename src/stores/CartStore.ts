@@ -54,7 +54,7 @@ export const useCartStore = defineStore("cart", {
     async loadFromStorage() {
       let data = await storage.get(KOLA_CART);
 
-      this.orders = (data.map((d: object) => new Order(d)) || []) as Order[];
+      this.orders = (data ? data.map((d: object) => new Order(d)) : []) as Order[];
 
       return this;
     },
@@ -149,6 +149,7 @@ export const useCartStore = defineStore("cart", {
           total_price: quantity * (product.product_price || 0),
           currencies_id: 1, // GHS
           product_units_id: 1, // GHS
+          cms_users_id: userStore.user?.id
         });
 
         order.order_items.push(orderItem);
@@ -158,6 +159,7 @@ export const useCartStore = defineStore("cart", {
         orderItem.quantity = quantity;
         toastStore.showInfo("Increased quantity in cart");
       }
+      console.log(this.orders);
       this.persist();
       return this;
     },

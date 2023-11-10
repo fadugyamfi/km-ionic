@@ -153,7 +153,7 @@ const getLocation = async () => {
     const coordinates = await getCurrentLocation();
 
     if (coordinates) {
-      form.fields.business_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
+      form.fields.delivery_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
     }
   } catch (error) {
     toastStore.showError("Cannot retrieve location info");

@@ -3,13 +3,20 @@
     <section class="ion-padding">
       <OrderSummaryHeader />
     </section>
-    <ion-content class="ion-padding-horizontal">
+    <ion-content>
       <section class="ion-padding">
-        <IonText> {{ orderBusiness?._business.name ? orderBusiness._business.name : 'No Business' }} </IonText>
-        <p>GHS 3000 minimum reached</p>
+        <IonText> {{ order?.business?.name || 'No Business' }} </IonText>
+        <BusinessMinimumOrderReached :business="order?.business" :totalCost="totalCost"></BusinessMinimumOrderReached>
+        <!-- <p v-if="minOrderAmountReached">
+          {{ Filters.currency(order?.business?.min_order_amount as number, order?.currency?.symbol as string) }} minimum reached
+        </p>
+        <p v-else="minOrderAmountReached">
+          <IonIcon :icon="alertCircleOutline" color="danger"></IonIcon>
+          {{ Filters.currency(order?.business?.min_order_amount as number, order?.currency?.symbol as string) }} minimum not reached
+        </p> -->
 
       </section>
-      <IonList>
+      <IonList lines="none">
         <IonItem v-for="(item, index) in orderBusiness?._order_items" :key="item.products_id">
           <ion-thumbnail slot="start" class="custom-thumbnail">
             <Image :src="item.product_image"></Image>
@@ -32,11 +39,13 @@
             <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
           </ion-row>
         </IonItem>
-        <ItemReview />
       </IonList>
+
+      <ItemReview />
     </ion-content>
+
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="createOrder"> Continue </KolaYellowButton>
+      <KolaYellowButton @click="createOrder" :disabled="!minOrderAmountReached"> Continue </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -58,18 +67,28 @@ import {
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
-import { closeCircleOutline } from "ionicons/icons";
+import { alertCircleOutline, closeCircleOutline, warningOutline } from "ionicons/icons";
 import ItemReview from "@/components/cards/ItemReview.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
 import Image from "@/components/Image.vue";
 import { useRoute } from "vue-router";
+import { Order } from "../../../models/Order";
+import Filters from '@/utilities/Filters';
+import BusinessMinimumOrderReached from "../../../components/modules/business/BusinessMinimumOrderReached.vue";
 
 
 const route = useRoute();
 
 const orderBusiness = ref<any>(null);
 const orders = computed(() => cartStore.orders);
+const order = computed<Order>(() => {
+  return cartStore.orders.find((order: Order) => order?.businesses_id == +route.params.id) as Order
+})
+
+const minOrderAmountReached = computed(() => {
+  return order.value?.business?.min_order_amount == null || order.value?.business?.min_order_amount as number <= totalCost.value;
+})
 
 const updateQuantity = (item: CartItem, newQuantity: number) => {
   item.quantity = newQuantity;
@@ -99,7 +118,7 @@ const createOrder = () => {
     payment_modes_id: orderBusiness.value.payment_option_id,
     total_items: orderBusiness.value._order_items.length,
     order_items: orderBusiness.value._order_items,
-   
+
   });
 
 }
@@ -108,16 +127,12 @@ cartStore.loadFromStorage();
 const cartOrders = computed(() => cartStore.orders);
 
 const totalCost = computed(() => {
-
-  const total = orderBusiness.value.order_items?.reduce(
+  const total = order.value?.order_items?.reduce(
     (total: any, item: any) => total + (item.total_price || 0),
     0
   );
-  if (total) {
-    return total.toFixed(2);
-  }
 
-
+  return total;
 });
 
 
@@ -131,6 +146,21 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+ion-icon {
+  &.danger {
+    background-color: rgba(255, 0, 0, 0.174);
+  }
+
+  &.success {
+    background-color: rgba(0, 255, 85, 0.174);
+  }
+
+  font-size: 20px !important; /* Increase the icon size */
+  padding: 3px;
+  border-radius: 50%;
+  margin-right: 10px; /* Increase the spacing between icon and text */
+}
+
 .item-row {
   align-items: center;
 }
