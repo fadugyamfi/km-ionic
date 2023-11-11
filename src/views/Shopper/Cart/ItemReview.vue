@@ -36,7 +36,7 @@
                 <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
               </ion-button>
             </ion-col>
-            <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
+            <ProductQuantitySelector :initialQuantity="item.quantity" @change="updateQuantity(item, $event)"></ProductQuantitySelector>
           </ion-row>
         </IonItem>
       </IonList>

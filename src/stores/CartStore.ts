@@ -75,39 +75,31 @@ export const useCartStore = defineStore("cart", {
     },
 
     hasProduct(product: Product): boolean {
-      if (!product || !this.orders) {
+      // if (!product || !this.orders) {
+      //   return false;
+      // }
+
+      // let exists = false;
+      const order = this.orders.find(o => o.businesses_id == product.businesses_id);
+
+      if( !order ) {
         return false;
       }
 
-      let exists = false;
+      return order?.order_items.findIndex(oi => oi.products_id == product.id) as number > -1;
 
-      this.orders.forEach((order: Order) => {
-        const index = order.order_items.findIndex(
-          (el) => (el.products_id = product.id)
-        );
-        if (index > -1) {
-          exists = true;
-          return false;
-        }
-      });
+      // this.orders.forEach((order: Order) => {
+      //   const index = order.order_items.findIndex(
+      //     (el) => (el.products_id = product.id)
+      //   );
+      //   if (index > -1) {
+      //     exists = true;
+      //     return false;
+      //   }
+      // });
 
-      return exists;
+      // return exists;
     },
-
-    // addProduct(product: Product, quantity = 1) {
-    //     const toastStore = useToastStore();
-
-    //     if (this.hasProduct(product)) {
-    //         this.updateQuantity(product);
-    //         toastStore.showInfo('Increased quantity in cart');
-    //     } else {
-    //         this.items.push({ product, quantity })
-    //         toastStore.showSuccess('Added To Cart');
-    //     }
-
-    //     this.persist();
-    //     return this;
-    // },
 
     getTotalCost() {
       return this.orders.reduce((acc, value) => acc + value.getTotal(), 0);
@@ -192,6 +184,17 @@ export const useCartStore = defineStore("cart", {
       toastStore.showSuccess("Removed From Cart");
       this.persist();
       return this;
+    },
+
+    updateQuantity(product: Product, quantity = 1) {
+      const order = this.orders.find(o => o.businesses_id == product.businesses_id);
+      const orderItem = order?.order_items.find(oi => oi.products_id == product.id);
+
+      if( !orderItem ) {
+        return;
+      }
+
+      orderItem.quantity = quantity;
     },
 
     async persist() {

@@ -24,7 +24,7 @@
 
       <section v-else>
         <OrderImages :order="(order as Order)" />
-        <OrderDetailItems :showChangeAddress="false" :showChangeDate="false" :order="(order as Order)" />
+        <ReceivedOrderItems :order="(order as Order)" />
 
         <section class="ion-padding-horizontal update-button-section">
           <KolaYellowButton v-if="order?.isPendingApproval()" @click="approveOrder()">
@@ -56,12 +56,12 @@ import { useOrderStore } from '@/stores/OrderStore';
 import { handleAxiosRequestError } from '@/utilities';
 import { chatbubbleOutline } from 'ionicons/icons';
 import OrderImages from '@/components/modules/order/OrderImages.vue';
-import OrderDetailItems from '@/components/modules/order/OrderDetailItems.vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import OrderStatusHistoryView from '@/components/modules/order/OrderStatusHistoryView.vue';
 import KolaWhiteButton from '../../../components/KolaWhiteButton.vue';
 import { useUserStore } from '../../../stores/UserStore';
 import { useToastStore } from '../../../stores/ToastStore';
+import ReceivedOrderItems from '../../../components/modules/order/ReceivedOrderItems.vue';
 
 export default defineComponent({
   components: {
@@ -78,11 +78,11 @@ export default defineComponent({
     IonButton,
     OrderImages,
     IonSpinner,
-    OrderDetailItems,
     KolaYellowButton,
     OrderStatusHistoryView,
     KolaWhiteButton,
-    IonText
+    IonText,
+    ReceivedOrderItems
 },
 
   name: 'OrderDetails',

@@ -55,6 +55,7 @@
               </ion-button>
             </ion-col>
             <ProductQuantitySelector
+              :initial-quantity="item.quantity"
               @change="updateQuantity(item, $event)"
             ></ProductQuantitySelector>
           </ion-row>

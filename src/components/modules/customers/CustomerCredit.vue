@@ -19,9 +19,10 @@
       :key="credit.id"
       class="ion-align-items-start ion-margin-bottom"
     >
-      <IonAvatar slot="start">
+      <ProfileAvatar slot="start" :src="credit.business?.logo" :username="credit?.business?.name"></ProfileAvatar>
+      <!-- <IonAvatar slot="start">
         <Image :src="credit.business?.logo"></Image>
-      </IonAvatar>
+      </IonAvatar> -->
       <IonLabel>
         <p class="ion-no-margin">
           {{ credit.business?.name }}
@@ -57,6 +58,7 @@ import { useRouter } from "vue-router";
 import Image from "@/components/Image.vue";
 import Customer from "@/models/Customer";
 import { useCustomerStore } from "@/stores/CustomerStore";
+import ProfileAvatar from '@/components/ProfileAvatar.vue';
 
 const props = defineProps({
   credits: {

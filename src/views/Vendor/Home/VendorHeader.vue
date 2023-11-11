@@ -6,9 +6,15 @@
         />
 
         <aside>
-            <IonAvatar size="">
+            <ProfileAvatar
+                :image="userStore.activeBusiness?.logo"
+                :username="userStore.activeBusiness?.name"
+                custom-size="90px"
+                font-size="48px"
+            ></ProfileAvatar>
+            <!-- <IonAvatar size="">
                 <span class="initials">RV</span>
-            </IonAvatar>
+            </IonAvatar> -->
         </aside>
     </section>
 </template>
@@ -19,6 +25,7 @@ import { defineComponent } from 'vue';
 import { mapStores } from 'pinia';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import { useUserStore } from '@/stores/UserStore';
+import ProfileAvatar from '../../../components/ProfileAvatar.vue';
 
 export default defineComponent({
 
@@ -28,7 +35,7 @@ export default defineComponent({
         }
     },
 
-    components: { IonAvatar },
+    components: { IonAvatar, ProfileAvatar },
 
     computed: {
         ...mapStores( useBusinessStore, useUserStore )

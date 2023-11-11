@@ -1,9 +1,11 @@
 <template>
     <section>
         <IonItem lines="none" class="profile-item ion-margin-top">
-            <IonAvatar slot="start">
+            <ProfileAvatar slot="start" :src="userStore.user?.image" :username="userStore.user?.name" customSize="32px"></ProfileAvatar>
+            <!-- <IonAvatar slot="start">
                 <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
-            </IonAvatar>
+            </IonAvatar> -->
+
             <IonLabel>{{ userStore.user?.name }}</IonLabel>
             <IonIcon slot="end" :icon="createOutline"></IonIcon>
         </IonItem>
@@ -64,11 +66,12 @@ import { useRouter } from 'vue-router';
 import { useToastStore } from '../../stores/ToastStore';
 import { handleAxiosRequestError } from '../../utilities';
 import { AxiosError } from 'axios';
+import ProfileAvatar from '@/components/ProfileAvatar.vue';
 
 
 export default defineComponent({
 
-    components: { IonList, IonAvatar, IonItem, IonLabel, IonIcon },
+    components: { IonList, IonAvatar, IonItem, IonLabel, IonIcon, ProfileAvatar },
 
     computed: {
         ...mapStores( useUserStore )

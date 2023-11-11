@@ -39,9 +39,9 @@
 
                 <section class="section business-section ">
                     <section class="d-flex ion-align-items-center">
-                        <IonAvatar>
-                            <img src="/images/no-image.png" />
-                        </IonAvatar>
+                        <ProfileAvatar :image="product?.business?.logo" class="ion-no-margin"
+                           :username="product?.business?.name" customSize="30px"></ProfileAvatar>
+
                         <IonLabel>{{ product?.business?.name }}</IonLabel>
                     </section>
                     <BusinessRatingAndReviews :business="product?.business"></BusinessRatingAndReviews>
@@ -115,6 +115,7 @@ import FavoriteButton from '@/components/modules/products/FavoriteButton.vue';
 import CartStatusButton from '../../components/modules/products/CartStatusButton.vue';
 import { useCartStore } from '../../stores/CartStore';
 import { handleAxiosRequestError } from '../../utilities';
+import ProfileAvatar from '../../components/ProfileAvatar.vue';
 
 
 export default defineComponent({
@@ -144,7 +145,8 @@ export default defineComponent({
         ProductTags,
         ProductQuantitySelector,
         FavoriteButton,
-        CartStatusButton
+        CartStatusButton,
+        ProfileAvatar
     },
 
     data() {

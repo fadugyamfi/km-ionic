@@ -3,15 +3,14 @@
     <IonCard>
       <IonCardHeader class="ion-no-padding">
         <IonItem lines="none">
-          <IonThumbnail slot="start">
-            <Image :src="order?.customer?.logo"></Image>
-          </IonThumbnail>
+          <ProfileAvatar slot="start" :image="order?.business?.logo"
+                       :username="order?.business?.name" customSize="32px"></ProfileAvatar>
 
-          <IonLabel class="font-medium">{{ order?.customer?.name }}</IonLabel>
+          <IonLabel class="font-medium">{{ order?.business?.name }}</IonLabel>
         </IonItem>
       </IonCardHeader>
 
-      <IonCardContent class="ion-no-padding">
+      <IonCardContent class="product-list ion-no-padding">
         <IonList lines="none">
           <IonItem v-for="item in order?.order_items" :key="item.id">
             <IonLabel class="ion-text-wrap font-medium">
@@ -31,45 +30,13 @@
 
     </IonCard>
 
-    <IonCard>
-      <IonCardContent class="ion-no-padding">
-        <IonList lines="none">
-          <IonItem>
-            <IonLabel class="font-medium">{{ $t('shopper.orders.delivery') }}</IonLabel>
-            <IonLabel slot="end" class="font-medium">
-              GHS 0.00
-            </IonLabel>
-          </IonItem>
-
-          <IonItem>
-            <IonLabel color="medium" class="font-medium">
-              {{ order?.delivery_location || 'Unknown' }}
-            </IonLabel>
-            <IonLabel v-if="showChangeAddress"  color="primary" slot="end" class="font-medium">
-              Change Address
-            </IonLabel>
-          </IonItem>
-
-          <IonItem lines="full" class="ion-padding-bottom">
-            <IonLabel color="medium" class="font-medium">
-              {{ order?.delivery_date ? Filters.date(order?.delivery_date as string, 'short') : 'TBD' }}
-            </IonLabel>
-            <IonLabel v-if="showChangeDate" color="primary" slot="end" class="font-medium">
-              Change Date
-            </IonLabel>
-          </IonItem>
-
-          <IonItem>
-            <IonLabel color="dark" class="font-medium">
-              {{ 'Total Cost' }}
-            </IonLabel>
-            <IonLabel color="dark" slot="end" class="font-medium fw-bold">
-              {{ Filters.currency(order?.getTotal() as number, order?.currency?.symbol as string) }}
-            </IonLabel>
-          </IonItem>
-        </IonList>
-      </IonCardContent>
-    </IonCard>
+    <section>
+      <OrderDeliverySummary
+        :show-change-address="showChangeAddress"
+        :show-change-date="showChangeDate"
+        :order="(order as Order)"
+      ></OrderDeliverySummary>
+    </section>
   </section>
 </template>
 
@@ -82,6 +49,8 @@ import { PropType, defineComponent } from 'vue';
 import Image from "@/components/Image.vue";
 import Filters from "@/utilities/Filters";
 import { OrderItem } from "../../../models/OrderItem";
+import OrderDeliverySummary from "./OrderDeliverySummary.vue";
+import ProfileAvatar from "../../ProfileAvatar.vue";
 
 export default defineComponent({
   components: {
@@ -99,27 +68,31 @@ export default defineComponent({
     IonCardContent,
     IonList,
     IonText,
-    IonButton
-  },
+    IonButton,
+    OrderDeliverySummary,
+    ProfileAvatar
+},
 
   props: {
     order: {
       type: Object as PropType<Order | null>
     },
-
-    showChangeDate: {
-      default: true
-    },
-
-    showChangeAddress: {
-      default: true
-    }
   },
 
   data() {
     return {
       Filters,
     };
+  },
+
+  computed: {
+    showChangeDate() {
+      return true;
+    },
+
+    showChangeAddress() {
+      return true;
+    }
   },
 
   methods: {
@@ -140,11 +113,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-ion-thumbnail {
-  --size: 32px;
-}
-
-ion-item {
+.product-list ion-item {
   --min-height: 16px;
   margin-bottom: 0.5em;
 
