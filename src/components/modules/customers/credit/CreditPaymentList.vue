@@ -1,8 +1,5 @@
 <template>
-  <IonList
-    lines="full"
-    class="customers-select-list simple"
-  >
+  <IonList lines="full" class="customers-select-list simple">
     <CreditListItem
       v-for="(credit, index) in creditPayments"
       :key="credit?.id"
@@ -34,7 +31,11 @@
                 <ion-icon slot="start" :icon="createOutline"></ion-icon>
                 Edit Order
               </ion-item> -->
-              <ion-item :button="true" lines="full">
+              <ion-item
+                :button="true"
+                lines="full"
+                @click="deleteCredit(credit)"
+              >
                 <ion-icon slot="start" :icon="trashOutline"></ion-icon>
                 Delete
               </ion-item>
@@ -43,6 +44,12 @@
         </IonPopover>
       </template>
     </CreditListItem>
+    <DeleteCreditModal
+      :isOpen="showConfirmDeleteModal"
+      :creditPayment="selectedCredit"
+      @dismiss="showConfirmDeleteModal = false"
+      @confirm="onConfirmDelete()"
+    ></DeleteCreditModal>
   </IonList>
 </template>
 
@@ -78,6 +85,8 @@ import { mapStores } from "pinia";
 import filters from "@/utilities/Filters";
 import Image from "@/components/Image.vue";
 import CreditListItem from "./CreditListItem.vue";
+import DeleteCreditModal from "@/components/modules/customers/DeleteCreditModal.vue";
+import { useCustomerStore } from "@/stores/CustomerStore";
 
 export default defineComponent({
   props: {
@@ -102,10 +111,11 @@ export default defineComponent({
     IonText,
     Image,
     CreditListItem,
+    DeleteCreditModal,
   },
 
   computed: {
-    ...mapStores(useOrderStore),
+    ...mapStores(useCustomerStore),
   },
 
   data() {
@@ -120,7 +130,7 @@ export default defineComponent({
       trashOutline,
       event: null as any,
       openPopover: -1,
-      selectedOrder: null as Order | null,
+      selectedCredit: null as Order | null,
       showConfirmDeleteModal: false,
       filters,
     };
@@ -137,15 +147,17 @@ export default defineComponent({
       this.event = null;
     },
 
-    deleteSale(order: Order) {
-      this.selectedOrder = order;
+    deleteCredit(credit: any) {
+      this.selectedCredit = credit;
       this.showConfirmDeleteModal = true;
       this.closeMenu();
     },
 
     async onConfirmDelete() {
       this.showConfirmDeleteModal = false;
-      await this.orderStore.deleteOrder(this.selectedOrder?.id as number);
+      await this.customerStore.deleteCreditPayment(
+        this.selectedCredit?.id as number
+      );
     },
 
     viewDetails(order: Order) {

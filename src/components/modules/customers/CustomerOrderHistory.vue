@@ -1,5 +1,5 @@
 <template>
-  <section v-for="order in orders" :key="order.id" class="ion-margin-bottom">
+  <section class="ion-margin-bottom">
     <section class="profile-home-section ion-padding-top">
       <header class="ion-padding-horizontal">
         <h6>Order history</h6>
@@ -12,6 +12,8 @@
       </header>
     </section>
     <IonList
+      v-for="order in orders"
+      :key="order.id"
       lines="none"
       class="ion-padding-horizontal customers-select-list simple"
     >

@@ -1,7 +1,7 @@
 <template>
   <section class="ion-no-border">
     <Swiper :slides-per-view="3.5">
-      <SwiperSlide v-for="category of categories" :key="category.id">
+      <SwiperSlide v-for="category in categories" :key="category.id">
         <StockChip
           :category="category"
           @click="viewCategory(category)"
@@ -18,7 +18,7 @@ import { useProductCategoryStore } from "@/stores/ProductCategoryStore";
 import StockChip from "./StockChip.vue";
 import ProductCategory from "@/models/ProductCategory";
 
-const categories = ref<ProductCategory[]>([]);
+const categories = ref<ProductCategory[]>();
 
 const fetchCategories = async () => {
   const productCategoryStore = useProductCategoryStore();

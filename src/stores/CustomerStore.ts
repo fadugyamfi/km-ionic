@@ -15,7 +15,7 @@ export const useCustomerStore = defineStore("customer", {
     customers: [] as Customer[],
     nextLink: null as string | null,
     orders: [] as Order[],
-    creditPayments: [],
+    creditPayments: [] as any,
     meta: {},
   }),
   actions: {
@@ -169,6 +169,19 @@ export const useCustomerStore = defineStore("customer", {
       } catch (error) {
         handleAxiosRequestError(error);
       }
+    },
+    async deleteCreditPayment(credit_id: any) {
+      try {
+        const response = await axios.delete(`/v2/sale-paymnents/${credit_id}`);
+        if (response.status === 200) {
+          const index = this.creditPayments.findIndex(
+            (c: any) => c.id == credit_id
+          );
+          if (index > -1) {
+            this.creditPayments.splice(index, 1);
+          }
+        }
+      } catch (error) {}
     },
     async fetchOrder(orderId: number): Promise<Order | null> {
       try {
