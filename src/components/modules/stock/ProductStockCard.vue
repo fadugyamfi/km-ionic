@@ -94,6 +94,12 @@ export default defineComponent({
     IonLabel,
     IonText,
   },
+
+  methods: {
+    addToCart() {
+
+    }
+  }
 });
 </script>
 
