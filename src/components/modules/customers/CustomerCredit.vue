@@ -20,9 +20,7 @@
       class="ion-align-items-start ion-margin-bottom"
     >
       <ProfileAvatar slot="start" :src="credit.business?.logo" :username="credit?.business?.name"></ProfileAvatar>
-      <!-- <IonAvatar slot="start">
-        <Image :src="credit.business?.logo"></Image>
-      </IonAvatar> -->
+
       <IonLabel>
         <p class="ion-no-margin">
           {{ credit.business?.name }}

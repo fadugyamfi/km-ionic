@@ -1,11 +1,9 @@
 <template>
   <section class="banner">
-    <img :src="customer?.logo || defaultBanner" @error="onLoadError($event)" />
+    <img :src="defaultBanner" @error="onLoadError($event)" />
 
     <aside>
-      <IonAvatar size="">
-        <span class="initials">RV</span>
-      </IonAvatar>
+      <ProfileAvatar font-size="40px" custom-size="90px" :image="customer?.logo" :username="customer?.name"></ProfileAvatar>
     </aside>
   </section>
 </template>
@@ -13,10 +11,7 @@
 <script lang="ts">
 import { IonAvatar } from "@ionic/vue";
 import { defineComponent } from "vue";
-import { mapStores } from "pinia";
-import { useBusinessStore } from "@/stores/BusinessStore";
-import { useUserStore } from "@/stores/UserStore";
-import Customer from "@/models/Customer";
+import ProfileAvatar from "../../ProfileAvatar.vue";
 
 export default defineComponent({
   props: {
@@ -32,21 +27,13 @@ export default defineComponent({
     };
   },
 
-  components: { IonAvatar },
-
-  // computed: {
-  //     ...mapStores( useBusinessStore, useUserStore )
-  // },
+  components: { IonAvatar, ProfileAvatar },
 
   methods: {
     onLoadError(event: Event) {
       (event.target as HTMLImageElement).src = this.defaultBanner;
     },
   },
-
-  // mounted() {
-  //     this.businessStore.loadCachedBusinesses();
-  // }
 });
 </script>
 

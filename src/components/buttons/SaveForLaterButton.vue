@@ -1,16 +1,17 @@
 <template>
   <ion-button size="small" slot="end" color="light">
-    <IonTitle size="small" > Save for later </IonTitle>
+    <IonTitle size="small"> Save for later </IonTitle>
   </ion-button>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
-import { IonButton } from "@ionic/vue";
+import { IonButton, IonTitle } from "@ionic/vue";
 
 export default defineComponent({
   components: {
     IonButton,
+    IonTitle
   },
 });
 </script>
@@ -18,10 +19,11 @@ export default defineComponent({
 <style scoped="scss">
 ion-title {
   color: #8D9093;
-font-family: Poppins;
-font-size: 1px;
-font-style: normal;
-font-weight: 400;
-line-height: 100%; /* 12px */
+  font-family: Poppins;
+  font-size: 1px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  /* 12px */
 }
 </style>

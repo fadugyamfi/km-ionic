@@ -1,6 +1,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
+type ColorSet = { [key: string]: any };
+
 export default defineComponent({
     name: "ProfileAvatar",
     props: {
@@ -56,7 +58,8 @@ export default defineComponent({
                 0: "#9900B3",
                 else: "#6666FF",
                 ñ: "#6666FF",
-            },
+            } as ColorSet,
+
             pastelBackgroundColors: {
                 a: "#FCFFA6",
                 b: "#C1FFD7",
@@ -96,7 +99,8 @@ export default defineComponent({
                 9: "#FFCBCB",
                 0: "#B5DEFF",
                 else: "#CAB8FF",
-            },
+            } as ColorSet,
+
             brownieBackgroundColors: {
                 a: "#ffc7a4",
                 b: "#d69e7c",
@@ -136,7 +140,8 @@ export default defineComponent({
                 9: "#c6a186",
                 0: "#9b6a5b",
                 else: "#573333",
-            },
+            } as ColorSet,
+
             imageError: false,
         };
     },
@@ -208,9 +213,9 @@ export default defineComponent({
             let G = parseInt(color.substring(3, 5), 16);
             let B = parseInt(color.substring(5, 7), 16);
 
-            R = parseInt((R * (100 + percent)) / 100);
-            G = parseInt((G * (100 + percent)) / 100);
-            B = parseInt((B * (100 + percent)) / 100);
+            R = (R * (100 + percent)) / 100;
+            G = (G * (100 + percent)) / 100;
+            B = (B * (100 + percent)) / 100;
 
             R = R < 255 ? R : 255;
             G = G < 255 ? G : 255;

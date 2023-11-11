@@ -25,14 +25,6 @@
                            :username="business?.name"
                            customSize="90px"
                            font-size="40px" textColor="#111" ></ProfileAvatar>
-          <!-- <IonAvatar size="medium">
-            <template v-if="business?.logo">
-              <img :src="business?.logo" alt="Business Logo" />
-            </template>
-            <template v-else>
-              <span class="initials">{{ business?.getInitials(2) }}</span>
-            </template>
-          </IonAvatar> -->
         </aside>
       </section>
       <main>

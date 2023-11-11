@@ -45,9 +45,6 @@
         <IonItem v-for="customer in customers" :key="customer.id" @click="selectCustomer(customer)">
           <ProfileAvatar slot="start" :image="customer?.logo"
                            :username="customer?.name" customSize="40px"></ProfileAvatar>
-          <!-- <IonAvatar slot="start">
-            <Image :src="customer.logo"></Image>
-          </IonAvatar> -->
           <IonLabel>
             <p class="ion-no-margin">{{ customer.name }}</p>
             <IonText color="medium" class="font-medium">

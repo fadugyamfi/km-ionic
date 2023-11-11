@@ -14,9 +14,11 @@
     </IonCard>
   </section>
 </template>
-<script setup>
+
+<script setup lang="ts">
 import { IonCard, IonCardHeader, IonCardContent } from "@ionic/vue";
 </script>
+
 <style lang="scss" scoped>
 ion-card {
   width: 100%;

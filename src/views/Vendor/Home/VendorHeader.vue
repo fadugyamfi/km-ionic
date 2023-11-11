@@ -12,9 +12,6 @@
                 custom-size="90px"
                 font-size="48px"
             ></ProfileAvatar>
-            <!-- <IonAvatar size="">
-                <span class="initials">RV</span>
-            </IonAvatar> -->
         </aside>
     </section>
 </template>

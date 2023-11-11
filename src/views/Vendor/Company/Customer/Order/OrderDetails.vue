@@ -27,7 +27,7 @@
 
       <section v-else>
         <OrderImages :order="(order as Order)" />
-        <OrderDetailItems :order="(order as Order)" />
+        <PlacedOrderItems :order="(order as Order)"></PlacedOrderItems>
 
         <section class="ion-padding-horizontal update-button-section">
           <KolaYellowButton>
@@ -36,9 +36,6 @@
         </section>
 
         <OrderStatusHistoryView :order="(order as Order)" />
-        <!-- <OrdersCard />
-        <UpdateButon />
-        <OrderStatus /> -->
       </section>
     </ion-content>
   </IonPage>
@@ -57,8 +54,6 @@ import {
   IonTitle,
   IonButton,
   IonSpinner,
-} from "@ionic/vue";
-import {
   IonSelect,
   IonSelectOption,
   IonAvatar,
@@ -71,14 +66,13 @@ import { defineComponent } from "vue";
 import OrdersCard from "@/components/modules/order/OrdersCard.vue";
 import UpdateButon from "@/components/modules/order/UpdateButon.vue";
 import { mapStores } from "pinia";
-import { useOrderStore } from "@/stores/OrderStore";
 import { handleAxiosRequestError } from "@/utilities";
 import { chatbubbleOutline } from "ionicons/icons";
 import OrderImages from "@/components/modules/order/OrderImages.vue";
-import OrderDetailItems from "@/components/modules/order/OrderDetailItems.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderStatusHistoryView from "@/components/modules/order/OrderStatusHistoryView.vue";
 import { useCustomerStore } from "@/stores/CustomerStore";
+import PlacedOrderItems from "@/components/modules/order/PlacedOrderItems.vue";
 
 export default defineComponent({
   components: {
@@ -102,10 +96,10 @@ export default defineComponent({
     IonButton,
     OrderImages,
     IonSpinner,
-    OrderDetailItems,
     KolaYellowButton,
     OrderStatusHistoryView,
-  },
+    PlacedOrderItems
+},
 
   name: "OrderDetails",
 
