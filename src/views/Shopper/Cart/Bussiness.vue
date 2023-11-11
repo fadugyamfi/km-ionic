@@ -32,32 +32,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import {
   IonSegmentButton,
   IonLabel,
-  IonThumbnail,
-  IonImg,
   IonBadge,
-  IonItem,
   IonList,
   IonSegment,
-  IonCol,
   IonPage,
   IonContent,
-  IonRow,
-  IonText,
-  IonButton,
-  IonIcon,
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
-import ShopperHeader from "@/components/layout/ShopperHeader.vue";
 import CartBusinessHeader from "@/components/header/CartBusinessHeader.vue";
 import EmptyCart from "@/components/cards/EmptyCart.vue";
 import OrderView from "@/components/modules/carts/OrderView.vue";
 
 const cartStore = useCartStore();
-cartStore.loadFromStorage();
 const viewing = ref("cart");
 
 const segmentValue = ref("cart");
@@ -69,6 +59,12 @@ const updateQuantity = (item: CartItem, newQuantity: number) => {
 const removeFromCart = (item: CartItem, index: number) => {
   cartStore.removeAtIndex(index);
 };
+
+onMounted(() => {
+  if ((cartStore.orders.length == 0)) {
+    cartStore.loadFromStorage();
+  }
+});
 </script>
 
 <style scoped lang="scss">

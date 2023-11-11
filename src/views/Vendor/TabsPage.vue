@@ -2,7 +2,7 @@
   <ion-page>
     <ion-tabs>
       <ion-router-outlet></ion-router-outlet>
-      <ion-tab-bar slot="bottom">
+      <ion-tab-bar slot="bottom" id="vendorTabs">
         <ion-tab-button tab="tab1" href="/vendor/home">
           <img src="/images/navigation/home.svg" />
           <img src="/images/navigation/home_active.svg" class="active" />

@@ -1,65 +1,50 @@
 <template>
-    <IonList class="ion-text-center">
-        <section>
-            <img src="/images/vendor/shopping-cart.png" width="70" height="70" />
-        </section>
-        <section>
-            <h1>Your cart is empty</h1>
-            <p>Looks like you haven’t added anything to your cart yet. Add items to get started.</p>
-        </section>
-        <section class="ion-text-center">
-            <ion-button>Start Shopping</ion-button>
-        </section>
-    </IonList>
+  <div class="ion-text-center ion-padding-horizontal">
+    <div class="ion-text-center ion-margin-bottom" style="margin-top: 90px">
+      <img
+        src="/images/vendor/shopping-cart.png"
+        style="width: 120x; height: 150px"
+      />
+    </div>
+    <section class="ion-text-center" style="margin-bottom: 24px">
+      <h5><b>Your cart is empty</b></h5>
+      <p class="ion-margin-top" style="font-size: 0.88em; color: #74787c">
+        Looks like you haven’t added anything to your cart yet. Add items to get
+        started.
+      </p>
+    </section>
+    <IonFooter class="ion-no-border">
+      <KolaYellowButton @click="startShopping()"
+        >Start Shopping</KolaYellowButton
+      >
+    </IonFooter>
+  </div>
 </template>
-  
+
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { IonButton, IonList } from '@ionic/vue';
-import { Order } from '@/models/Order';
+import { defineComponent } from "vue";
+import { IonButton, IonList, IonFooter } from "@ionic/vue";
+import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import { Order } from "@/models/Order";
 
 export default defineComponent({
-    data() {
-        return {
-            orders: [] as Order[]
-        };
+  data() {
+    return {
+      orders: [] as Order[],
+    };
+  },
+  components: {
+    IonButton,
+    IonList,
+    KolaYellowButton,
+    IonFooter,
+  },
+  methods: {
+    startShopping() {
+      this.$router.push("/shopper/home");
     },
-    components: {
-        IonButton,
-        IonList
-    },
+  },
 });
 </script>
-  
-<style lang="scss" scoped>
-ion-list {
-    margin-top: 91px;
-    display: block;
-}
 
-ion-button {
-    display: flex;
-    justify-content: center;
-    --background: #F5AA29;
-    color: #101828;
-    margin-bottom: 100px;
-}
-
-.ion-text-center {
-    text-align: center !important;
-    margin-bottom: 100px;
-}
-
-p {
-    font-size: 0.75em;
-    font-weight: normal;
-    color: #74787C;
-    margin-top: 0px;
-}
-
-img {
-    width: 122.37px;
-    height: 120px;
-
-}
-</style>
+<style lang="scss" scoped></style>

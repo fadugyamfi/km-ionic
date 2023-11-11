@@ -7,6 +7,7 @@ import { useBusinessStore } from "@/stores/BusinessStore";
 import AppStorage from "./AppStorage";
 import { useUserStore } from "./UserStore";
 import { OrderItem } from "../models/OrderItem";
+import { handleAxiosRequestError } from "@/utilities";
 
 const storage = new AppStorage();
 const KOLA_CART = "kola.cart";
@@ -21,6 +22,7 @@ export type CartItem = {
   product_price: number;
   currency_symbol: string;
   total_price: number;
+  total_order_amount: number;
 };
 
 export const useCartStore = defineStore("cart", {
@@ -32,10 +34,27 @@ export const useCartStore = defineStore("cart", {
   },
 
   actions: {
+    async createOrder(postData: Object): Promise<Order | null> {
+     // const userStore = useUserStore();
+      return axios
+        .post(
+          `/v2/orders`,
+          postData
+        )
+        .then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            const data = response.data.data;
+            return data;
+          }
+        })
+        .catch((error) => handleAxiosRequestError(error));
+    },
+
+
     async loadFromStorage() {
       let data = await storage.get(KOLA_CART);
 
-      this.orders = (data.map((d: object) => new Order(d)) || []) as Order[];
+      this.orders = (data ? data.map((d: object) => new Order(d)) : []) as Order[];
 
       return this;
     },
@@ -56,39 +75,31 @@ export const useCartStore = defineStore("cart", {
     },
 
     hasProduct(product: Product): boolean {
-      if (!product || !this.orders) {
+      // if (!product || !this.orders) {
+      //   return false;
+      // }
+
+      // let exists = false;
+      const order = this.orders.find(o => o.businesses_id == product.businesses_id);
+
+      if( !order ) {
         return false;
       }
 
-      let exists = false;
+      return order?.order_items.findIndex(oi => oi.products_id == product.id) as number > -1;
 
-      this.orders.forEach((order: Order) => {
-        const index = order.order_items.findIndex(
-          (el) => (el.products_id = product.id)
-        );
-        if (index > -1) {
-          exists = true;
-          return false;
-        }
-      });
+      // this.orders.forEach((order: Order) => {
+      //   const index = order.order_items.findIndex(
+      //     (el) => (el.products_id = product.id)
+      //   );
+      //   if (index > -1) {
+      //     exists = true;
+      //     return false;
+      //   }
+      // });
 
-      return exists;
+      // return exists;
     },
-
-    // addProduct(product: Product, quantity = 1) {
-    //     const toastStore = useToastStore();
-
-    //     if (this.hasProduct(product)) {
-    //         this.updateQuantity(product);
-    //         toastStore.showInfo('Increased quantity in cart');
-    //     } else {
-    //         this.items.push({ product, quantity })
-    //         toastStore.showSuccess('Added To Cart');
-    //     }
-
-    //     this.persist();
-    //     return this;
-    // },
 
     getTotalCost() {
       return this.orders.reduce((acc, value) => acc + value.getTotal(), 0);
@@ -130,6 +141,7 @@ export const useCartStore = defineStore("cart", {
           total_price: quantity * (product.product_price || 0),
           currencies_id: 1, // GHS
           product_units_id: 1, // GHS
+          cms_users_id: userStore.user?.id
         });
 
         order.order_items.push(orderItem);
@@ -139,9 +151,11 @@ export const useCartStore = defineStore("cart", {
         orderItem.quantity = quantity;
         toastStore.showInfo("Increased quantity in cart");
       }
+      console.log(this.orders);
       this.persist();
       return this;
     },
+
     removeOrderAtIndex(order: any) {
       const index = this.orders.findIndex(
         (item) => item.businesses_id == order.businesses_id
@@ -172,26 +186,15 @@ export const useCartStore = defineStore("cart", {
       return this;
     },
 
-    removeProduct(product: Product) {
-      const index = this.orders.findIndex((el) => el.product.id == product.id);
+    updateQuantity(product: Product, quantity = 1) {
+      const order = this.orders.find(o => o.businesses_id == product.businesses_id);
+      const orderItem = order?.order_items.find(oi => oi.products_id == product.id);
 
-      if (index > -1) {
-        return this.removeAtIndex(index);
+      if( !orderItem ) {
+        return;
       }
 
-      return this;
-    },
-
-    updateQuantity(product: Product, quantity: number = 0) {
-      // if (!this.hasProduct(product)) {
-      //     return;
-      // }
-      // const item = this.getProductItem(product);
-      // if (item) {
-      //     item.quantity = quantity ? quantity : item.quantity++;
-      //     this.persist();
-      // }
-      // return this;
+      orderItem.quantity = quantity;
     },
 
     async persist() {

@@ -1,9 +1,9 @@
 <template>
     <IonList lines="full">
         <IonItem v-for="(sale, index) in sales" :key="sale.id" @click="viewDetails(sale)">
-            <IonAvatar slot="start" class="ion-align-self-start">
-                <Image :src="sale.customer?.logo"></Image>
-            </IonAvatar>
+            <ProfileAvatar slot="start" class="ion-align-self-start" :image="sale.customer?.logo"
+                           :username="sale.customer?.name" customSize="45px"></ProfileAvatar>
+
             <IonLabel>
                 <p>
                     <IonText color="dark">{{ sale.customer?.name }}</IonText>
@@ -42,12 +42,8 @@
             </IonPopover>
         </IonItem>
 
-        <DeleteSaleModal
-            :isOpen="showConfirmDeleteModal"
-            :sale="selectedSale"
-            @dismiss="showConfirmDeleteModal = false"
-            @confirm="onConfirmDelete()"
-        ></DeleteSaleModal>
+        <DeleteSaleModal :isOpen="showConfirmDeleteModal" :sale="selectedSale" @dismiss="showConfirmDeleteModal = false"
+                         @confirm="onConfirmDelete()"></DeleteSaleModal>
     </IonList>
 </template>
 
@@ -65,6 +61,7 @@ import Image from '@/components/Image.vue';
 import DeleteSaleModal from './DeleteSaleModal.vue';
 import { mapStores } from 'pinia';
 import { useSaleStore } from '../../../stores/SaleStore';
+import ProfileAvatar from '../../ProfileAvatar.vue';
 
 
 export default defineComponent({
@@ -89,7 +86,8 @@ export default defineComponent({
         Image,
         IonPopover,
         IonModal,
-        DeleteSaleModal
+        DeleteSaleModal,
+        ProfileAvatar
     },
 
     data() {
@@ -104,7 +102,7 @@ export default defineComponent({
     },
 
     computed: {
-        ...mapStores( useSaleStore )
+        ...mapStores(useSaleStore)
     },
 
     methods: {

@@ -1,11 +1,11 @@
 <template>
-    <IonItem>
-        <IonAvatar slot="start" class="ion-align-self-start">
-            <Image :src="order.customer?.logo"></Image>
-        </IonAvatar>
+    <IonItem :button="true">
+        <ProfileAvatar slot="start" class="ion-align-self-start ion-margin-top" :image="order.business?.logo"
+                       :username="order.business?.name"></ProfileAvatar>
+
         <IonLabel>
             <p>
-                <IonText color="dark">{{ order.customer?.name }}</IonText>
+                <IonText color="dark">{{ order.business?.name }}</IonText>
             </p>
             <p class="font-medium">
                 <IonText color="medium">
@@ -38,6 +38,7 @@ import Image from '../../Image.vue';
 import { Order } from '../../../models/Order';
 import { ellipsisHorizontal } from 'ionicons/icons';
 import filters from '@/utilities/Filters';
+import ProfileAvatar from '../../ProfileAvatar.vue';
 
 
 export default defineComponent({
@@ -54,7 +55,7 @@ export default defineComponent({
             filters,
         };
     },
-    components: { IonItem, IonAvatar, Image, IonLabel, IonText, IonChip, IonButton, IonIcon },
+    components: { IonItem, IonAvatar, Image, IonLabel, IonText, IonChip, IonButton, IonIcon, ProfileAvatar },
 
     emits: ['openMenu'],
 
@@ -67,18 +68,18 @@ export default defineComponent({
             switch (orderStatusId) {
                 case 1:
                     return {
-                        color: 'primary',
+                        color: 'info',
                         label: 'Processing',
                     };
                 case 2:
-                case 3:
                 case 4:
                 case 5:
                 case 6:
                     return {
-                        color: 'warning',
+                        color: 'primary',
                         label: 'Pending',
                     };
+                case 3:
                 case 7:
                     return {
                         color: 'success',

@@ -26,6 +26,9 @@
         "thisWeek": "This Week",
         "pastMonth": "Past Month",
         "delete": "Delete",
+        "accept": "Accept",
+        "edit": "Edit",
+        "reorder": "Reorder",
         "units": {
             "box": "Box | Boxes",
             "piece": "Piece | Pieces"
@@ -197,12 +200,64 @@
             "saleDetails": "Sale Detais",
             "noSaleItemsAvailable": "No Sale Items Available",
             "addItemsToSaleToSeeThemHere": "Add items to sale to see them here"
+        },
+        "orders": {
+            "orderHasBeenApproved": "Order has been approved",
+            "orderHasBeenCanceled": "Order has been canceled",
+            "messageCustomer": "Message Customer",
+            "messageSupplier": "Message Supplier",
+            "deleteOrderFromList": "Delete Order From List",
+            "youCantUndoThisAction": "You can't undo this action"
         }
     },
     "modules": {
         "business": {
             "noDescriptAvailable": "No Description Available",
             "unknownLocation": "Unknown Location"
+        }
+    },
+    "profile": {
+        "customers": {
+            "customers": "Customers",
+            "youHaveNoCustomer": "You Have No Customers",
+            "youCanStartByAddingNewCustomers": "You can start by adding new customers",
+            "addCustomer": "Add Customer",
+            "inviteCustomers": "Invite customers",
+            "location": {
+                "useCurrentLocation": "Use Current Location"
+            },
+            "fullName": "Full Name",
+            "businessOwnerPhone": "Business Owner Phone Number",
+            "businessName": "Business Name",
+            "businessLocation": "Business Location",
+            "phoneNumber": "Phone Number",
+            "assignToSalesAgentOrManager": "Assign to a sales agent or manager",
+            "selectSaleAgent": "Select a sales agent",
+            "howDoTheyUsuallyPay": "How do they usually pay",
+            "selectPaymentMethod": "Select payment method",
+            "save": "Save",
+            "locationUnknown":" Location Unknown",
+            "updateCustomer": "Update customer",
+            "removeCustomer": "Remove customer",
+            "searchCustomers": "Find Customer By Name",
+            "confirmDeleteCustomer": "Are you sure you want to remove this customer?",
+            "actionIsUnreversible":"This action cannot be undone",
+            "remove": "Remove",
+            "new": "new",
+            "updateCustomerInfo": "Update customer information"
+
+
+        },
+        "stock": {
+            "addStock": "Add Stock",
+            "addProductImage": "Add Product Image",
+            "category": "Category",
+            "productName": "Product name",
+            "variation": "Select size/variation",
+            "itemDescription": "Item description",
+            "quantityAvailable": "Quantity available",
+            "price": "Price",
+            "save": "Save"
         }
     }
 }

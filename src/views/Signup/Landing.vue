@@ -99,7 +99,7 @@ const redirectToSignup = () => {
 }
 
 const loginDisabled = computed(() => {
-    return !!import.meta.env.VITE_LOGIN_DISABLED == true;
+    return import.meta.env.VITE_LOGIN_DISABLED == 'true';
 })
 </script>
 

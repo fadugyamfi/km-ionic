@@ -41,9 +41,9 @@
         </IonListHeader>
 
         <IonItem v-for="agent in filteredAgents" :key="agent.id" @click="selectAgent(agent)">
-          <IonAvatar slot="start">
-            <Image :src="agent.image"></Image>
-          </IonAvatar>
+          <ProfileAvatar slot="start" :image="agent?.image"
+                           :username="agent?.name" customSize="40px"></ProfileAvatar>
+
           <IonLabel>
             <p class="ion-no-margin">{{ agent.name }}</p>
             <IonText color="medium" class="font-medium">
@@ -84,6 +84,7 @@ import { useToastStore } from '@/stores/ToastStore';
 import Image from '@/components/Image.vue';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import Business from '@/models/Business';
+import ProfileAvatar from '../../../../components/ProfileAvatar.vue';
 
 export default defineComponent({
 
@@ -111,7 +112,8 @@ export default defineComponent({
     IonSpinner,
     IonRefresher,
     IonRefresherContent,
-    IonSearchbar
+    IonSearchbar,
+    ProfileAvatar
 },
 
   data() {

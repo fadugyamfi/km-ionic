@@ -56,19 +56,19 @@ export const useToastStore = defineStore('toast', {
             await toast.present();
         },
 
-        async showSuccess(message: string, title?: string, position: any = 'top', anchor?: string) {
+        async showSuccess(message: string, title?: string, position: any = 'bottom', anchor?: string) {
             return this.showToast(message, title, position, 'success', anchor);
         },
 
-        async showError(message: string, title?: string, position: any = 'top', anchor?: string) {
+        async showError(message: string, title?: string, position: any = 'bottom', anchor?: string) {
             return this.showToast(message, title, position, 'error', anchor);
         },
 
-        async showWarning(message: string, title?: string, position: any = 'top', anchor?: string) {
+        async showWarning(message: string, title?: string, position: any = 'bottom', anchor?: string) {
             return this.showToast(message, title, position, 'warning', anchor);
         },
 
-        async showInfo(message: string, title?: string, position: any = 'top', anchor?: string) {
+        async showInfo(message: string, title?: string, position: any = 'bottom', anchor?: string) {
             return this.showToast(message, title, position, 'info', anchor);
         },
     }

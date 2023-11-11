@@ -23,15 +23,15 @@
                 </section>
 
 
-                <section class="pricing d-flex ion-justify-content-between">
-                    <span>
+                <section class="pricing d-flex flex-column">
+                    <section class="fw-semibold">
                         {{ product.currency?.symbol }} {{ product.product_price }}
-                    </span>
-                    <span class="ion-text-end">
+                    </section>
+                    <section class="font-medium">
                         <span v-if="product.weight_value">{{ product.weight_value }}kg</span>
                         <span v-if="product.weight_value && product.group_quantity">/</span>
                         <span v-if="product.group_quantity">{{ product.group_quantity }}pcs</span>
-                    </span>
+                    </section>
                 </section>
 
                 <section v-if="showDescription && product.product_description" class="product-description">

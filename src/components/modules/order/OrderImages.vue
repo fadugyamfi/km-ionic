@@ -3,7 +3,6 @@
     <Swiper ref="swiper" :slides-per-view="1" :pagination="true">
       <SwiperSlide v-for="(orderItem, index) in order?.order_items" :key="index">
         <IonCard>
-
           <Image :src="orderItem.product?.image" />
         </IonCard>
       </SwiperSlide>
@@ -23,8 +22,7 @@ export default defineComponent({
 
   props: {
     order: {
-      type: Object as PropType<Order | null>,
-      required: true,
+      type: Object as PropType<Order | null>
     },
   },
 

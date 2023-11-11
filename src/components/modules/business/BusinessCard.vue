@@ -2,7 +2,7 @@
     <section class="business-card">
         <ion-card @click="viewBusiness" class="ion-no-padding ion-no-margin">
             <Image :alt="business.name" :src="business?.logo" />
-           <IonCardHeader>
+            <IonCardHeader>
                 <IonCardTitle>{{ business.name }}</IonCardTitle>
                 <IonCardSubtitle>
                     <span v-if="business.min_order_amount">
@@ -46,7 +46,7 @@ export default defineComponent({
     },
 
     computed: {
-        ...mapStores( useBusinessStore )
+        ...mapStores(useBusinessStore)
     },
 
     methods: {

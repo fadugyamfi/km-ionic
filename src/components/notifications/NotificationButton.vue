@@ -1,6 +1,6 @@
 <template>
     <IonButton @click="showNotifications()">
-        <IonIcon :icon="notificationsOutline"></IonIcon>
+        <IonIcon :icon="notificationsOutline" color="dark"></IonIcon>
     </IonButton>
 </template>
 

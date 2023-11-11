@@ -3,14 +3,21 @@
     <section class="ion-padding">
       <OrderSummaryHeader />
     </section>
-
-    <ion-content :fullscreen="true" class="ion-padding-horizontal">
+    <ion-content>
       <section class="ion-padding">
-        <IonText>{{  }}</IonText>
-        <p>GHS 3000 minimum reached</p>
+        <IonText> {{ order?.business?.name || 'No Business' }} </IonText>
+        <BusinessMinimumOrderReached :business="order?.business" :totalCost="totalCost"></BusinessMinimumOrderReached>
+        <!-- <p v-if="minOrderAmountReached">
+          {{ Filters.currency(order?.business?.min_order_amount as number, order?.currency?.symbol as string) }} minimum reached
+        </p>
+        <p v-else="minOrderAmountReached">
+          <IonIcon :icon="alertCircleOutline" color="danger"></IonIcon>
+          {{ Filters.currency(order?.business?.min_order_amount as number, order?.currency?.symbol as string) }} minimum not reached
+        </p> -->
+
       </section>
-      <IonList>
-        <IonItem v-for="(item, index) in orderBusiness?.order_items" :key="item.product?.id">
+      <IonList lines="none">
+        <IonItem v-for="(item, index) in orderBusiness?._order_items" :key="item.products_id">
           <ion-thumbnail slot="start" class="custom-thumbnail">
             <Image :src="item.product_image"></Image>
           </ion-thumbnail>
@@ -23,21 +30,22 @@
                 {{ item.currency_symbol || "GHS" }}
                 {{ item.quantity * (item.product_price || 0) }}
               </p>
-              <ProductQuantitySelector @change="updateQuantity(item, $event)"></ProductQuantitySelector>
             </ion-col>
             <ion-col size="1" class="remove-button">
               <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
                 <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
               </ion-button>
             </ion-col>
+            <ProductQuantitySelector :initialQuantity="item.quantity" @change="updateQuantity(item, $event)"></ProductQuantitySelector>
           </ion-row>
         </IonItem>
-        <ItemReview />
       </IonList>
-      <UpdateDeliveryDate></UpdateDeliveryDate>
+
+      <ItemReview />
     </ion-content>
+
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton> Continue </KolaYellowButton>
+      <KolaYellowButton @click="createOrder" :disabled="!minOrderAmountReached"> Continue </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -55,59 +63,104 @@ import {
   IonButton,
   IonIcon,
   IonFooter,
-  IonText
-
+  IonText,
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
-import { business, closeCircleOutline } from "ionicons/icons";
+import { alertCircleOutline, closeCircleOutline, warningOutline } from "ionicons/icons";
 import ItemReview from "@/components/cards/ItemReview.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
 import Image from "@/components/Image.vue";
-import { useBusinessStore } from '@/stores/BusinessStore';
 import { useRoute } from "vue-router";
-import UpdateDeliveryDate from "@/components/modules/carts/UpdateDeliveryDate.vue";
+import { Order } from "../../../models/Order";
+import Filters from '@/utilities/Filters';
+import BusinessMinimumOrderReached from "../../../components/modules/business/BusinessMinimumOrderReached.vue";
 
 
 const route = useRoute();
 
-const cartStore = useCartStore();
-
 const orderBusiness = ref<any>(null);
 const orders = computed(() => cartStore.orders);
+const order = computed<Order>(() => {
+  return cartStore.orders.find((order: Order) => order?.businesses_id == +route.params.id) as Order
+})
 
-cartStore.loadFromStorage();
-const viewing = ref("cart");
+const minOrderAmountReached = computed(() => {
+  return order.value?.business?.min_order_amount == null || order.value?.business?.min_order_amount as number <= totalCost.value;
+})
 
-
-const segmentValue = ref("cart");
 const updateQuantity = (item: CartItem, newQuantity: number) => {
-  console.log("hello");
   item.quantity = newQuantity;
+  item.total_price = item.quantity * item.product_price;
 };
 
 const removeFromCart = (index: number) => {
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
 
-
-
-const getOrderBusiness = async () => {
-  await cartStore.persist();
+const getOrderBusiness = () => {
+  console.log("jello");
   const business = orders.value.find(
     (order: any) => order?.businesses_id == route.params.id
   );
+  console.log("Found business:", business); // Add this line for debugging
   orderBusiness.value = business;
-  // cartStore.items = orderBusiness.value?.order_items;
 };
 
-onMounted(() => {
+const cartStore = useCartStore(orderBusiness.value);
+
+const createOrder = () => {
+  const response = cartStore.createOrder({
+    ...orderBusiness.value,
+    total_order_amount: totalCost.value,
+    product_units_id: 1,
+    payment_modes_id: orderBusiness.value.payment_option_id,
+    total_items: orderBusiness.value._order_items.length,
+    order_items: orderBusiness.value._order_items,
+
+  });
+
+}
+
+cartStore.loadFromStorage();
+const cartOrders = computed(() => cartStore.orders);
+
+const totalCost = computed(() => {
+  const total = order.value?.order_items?.reduce(
+    (total: any, item: any) => total + (item.total_price || 0),
+    0
+  );
+
+  return total;
+});
+
+
+
+onMounted(async () => {
+  if (cartStore.orders.length == 0) {
+    await cartStore.loadFromStorage();
+  }
   getOrderBusiness();
 });
 </script>
 
 <style scoped lang="scss">
+ion-icon {
+  &.danger {
+    background-color: rgba(255, 0, 0, 0.174);
+  }
+
+  &.success {
+    background-color: rgba(0, 255, 85, 0.174);
+  }
+
+  font-size: 20px !important; /* Increase the icon size */
+  padding: 3px;
+  border-radius: 50%;
+  margin-right: 10px; /* Increase the spacing between icon and text */
+}
+
 .item-row {
   align-items: center;
 }
@@ -120,9 +173,11 @@ onMounted(() => {
   margin: 0;
   padding: 0;
 }
+
 .item-row[data-v-f6937d18] {
-    align-items: baseline;
+  align-items: baseline;
 }
+
 p {
   color: #667085;
   font-family: Poppins;

@@ -11,11 +11,11 @@
       <form>
         <IonInput
           class="kola-input delivery-details-input"
-          :class="{ 'ion-invalid ion-touched': form.errors.location }"
+          :class="{ 'ion-invalid ion-touched': form.errors.delivery_location }"
           label="Town/Locality"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.location"
+          v-model="form.fields.delivery_location"
           name="location"
           @ion-input="form.validate($event)"
           required
@@ -34,11 +34,11 @@
 
         <IonInput
           class="kola-input delivery-details-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.landmark }"
+          :class="{ 'ion-invalid ion-touched': form.errors.delivery_nearest_landmark}"
           label="Nearest Landmark"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.landmark"
+          v-model="form.fields.delivery_nearest_landmark"
           name="landmark"
           @ion-input="form.validate($event)"
           required
@@ -54,7 +54,7 @@
           v-model="form.fields.delivery_date"
           name="delivery-date"
           @ion-input="form.validate($event)"
-          required
+          readonly
         ></IonInput>
         <section>
           <section class="d-flex flex-column ion-margin-bottom">
@@ -66,12 +66,15 @@
           <DeliveryMethod
             :location="form.fields.location"
             :delivery-date="form.fields.delivery_date"
+            @onSelectDeliveryMethod="selectDeliveryMethod"
           />
         </section>
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="viewPaymentOptions">Continue</KolaYellowButton>
+      <KolaYellowButton @click="storeDeliveryDetails"
+        >Continue</KolaYellowButton
+      >
     </IonFooter>
   </ion-page>
 </template>
@@ -93,22 +96,55 @@ import { useToastStore } from "@/stores/ToastStore";
 import { useGeolocation } from "@/composables/useGeolocation";
 import DeliveryDetailsHeader from "@/components/header/DeliveryDetailsHeader.vue";
 import DeliveryMethod from "@/components/modules/deliveryDetails/DeliveryMethod.vue";
+import { useCartStore } from "@/stores/CartStore";
 import { useForm } from "@/composables/form";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
+import { onMounted } from "vue";
+import { onMounted as onMountedVue3 } from "@vue/runtime-core";
 
 const router = useRouter();
 const route = useRoute();
 const toastStore = useToastStore();
 const form = useForm({
-  location: "",
-  landmark: "",
+  delivery_location: "",
+  delivery_nearest_landmark: "",
   delivery_date: "",
+  delivery_method: "",
 });
+const selectDeliveryMethod = (method: string) => {
+  form.fields.delivery_method = method;
 
-const viewPaymentOptions = () => {
+  // Define the number of days to add based on the method
+  let daysToAdd = method === "standard" ? 5 : method === "express" ? 2 : 0;
+
+  if (daysToAdd > 0) {
+    const today = new Date();
+    const deliveryDate = new Date(today);
+    deliveryDate.setDate(today.getDate() + daysToAdd);
+
+    // Format the date as DD/MM/YY
+    const dd = deliveryDate.getDate().toString().padStart(2, "0");
+    const mm = (deliveryDate.getMonth() + 1).toString().padStart(2, "0");
+    const yy = deliveryDate.getFullYear().toString().slice(-2);
+
+    form.fields.delivery_date = `${dd}/${mm}/${yy}`;
+  }
+};
+
+const storeDeliveryDetails = () => {
+  const cartStore = useCartStore();
+  const index = cartStore.orders.findIndex(
+    (b) => b.businesses_id == Number(route.params.id)
+  );
+  cartStore.orders[index] = {
+    ...cartStore.orders[index],
+    ...form.fields,
+  };
+  cartStore.persist()
   router.push(`/shopper/cart/business/${route.params.id}/payment-options`);
 };
+
 const getLocation = async () => {
   const toastStore = useToastStore();
   const { getCurrentLocation } = useGeolocation();
@@ -117,13 +153,24 @@ const getLocation = async () => {
     const coordinates = await getCurrentLocation();
 
     if (coordinates) {
-      form.fields.business_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
+      form.fields.delivery_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
     }
   } catch (error) {
     toastStore.showError("Cannot retrieve location info");
     console.log(error);
   }
 };
+
+onMounted(async () => {
+  const cartStore = useCartStore();
+  if (cartStore.orders.length == 0) {
+    await cartStore.loadFromStorage();
+  }
+  // Set the delivery method here based on your requirement
+  // For example, setting it to 'standard' when the component is mounted
+  const initialDeliveryMethod = "standard";
+  selectDeliveryMethod(initialDeliveryMethod);
+});
 </script>
 
 <style scoped lang="scss">

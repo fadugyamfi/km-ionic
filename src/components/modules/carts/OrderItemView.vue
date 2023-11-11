@@ -13,30 +13,28 @@
                     <section class="d-flex flex-column ion-justify-content-start">
                         <IonText class="fw-semibold">{{ orderItem?.product?.product_name || 'N/A' }}</IonText>
                         <IonText color="medium" class="font-medium">
-                            {{ orderItem?.product?.currency?.symbol }} {{ orderItem?.product?.product_price || 0 }}
+                            {{ Filters.currency(orderItem?.product?.product_price || 0, orderItem?.product?.currency?.symbol as string) }}
                         </IonText>
                         <IonText color="medium" class="font-medium">
                             {{ $t('general.quantity') }}: {{ orderItem?.quantity }}
                         </IonText>
                         <IonText color="medium" class="font-medium">
-                            <span v-if="orderItem?.product?.weight_value">{{ orderItem?.product?.weight_value || 0 }}kg</span>
+                            <span v-if="orderItem?.product?.weight_value">{{ orderItem?.product?.weight_value || 0
+                            }}kg</span>
                             <span v-if="orderItem?.product?.weight_value && orderItem?.product?.group_quantity"></span>
-                            <span v-if="orderItem?.product?.group_quantity">{{ orderItem?.product?.group_quantity || 0 }} pieces</span>
+                            <span v-if="orderItem?.product?.group_quantity">{{ orderItem?.product?.group_quantity || 0 }}
+                                pieces</span>
                         </IonText>
                     </section>
 
                     <IonButton slot="end" fill="clear" color="dark"
-                               class="ion-no-margin ion-no-padding ion-align-self-start"
-                               @click="removeItem()">
+                               class="ion-no-margin ion-no-padding ion-align-self-start" @click="removeItem()">
                         <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
                     </IonButton>
                 </section>
 
-
-                <ProductQuantitySelector
-                    :initial-quantity="orderItem?.quantity"
-                    @change="updateItemQuantity($event)"
-                ></ProductQuantitySelector>
+                <ProductQuantitySelector :initial-quantity="orderItem?.quantity" @change="updateItemQuantity($event)">
+                </ProductQuantitySelector>
             </section>
 
         </section>
@@ -53,6 +51,7 @@ import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
 import Product from '@/models/Product';
 import { OrderItem } from '@/models/OrderItem';
+import Filters from '../../../utilities/Filters';
 
 
 export default defineComponent({
@@ -78,12 +77,13 @@ export default defineComponent({
 
     data() {
         return {
-            closeCircleOutline
+            closeCircleOutline,
+            Filters
         }
     },
 
     computed: {
-        ...mapStores( useSaleStore )
+        ...mapStores(useSaleStore)
     },
 
     methods: {

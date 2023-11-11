@@ -7,7 +7,7 @@
     </IonCardHeader>
   </IonCard>
 
-  <IonCard>
+  <IonCard class="list-card">
     <IonList lines="none">
     <ion-item v-for="(status, index) in orderStatuses" :key="index">
       <ion-icon :icon="status.icon" slot="start" class="status-icon" :class="{ active: isActive(status) }"></ion-icon>
@@ -58,7 +58,7 @@ export default defineComponent({
       Filters,
       orderStatuses: [
         { id: 1, name: 'Order Placed', icon: trainOutline },
-        { id: 4, name: 'Order Confirmed', icon: checkmarkCircle },
+        { id: 3, name: 'Order Confirmed', icon: checkmarkCircle },
         { id: 6, name: 'Out For Delivery', icon: trainOutline },
         { id: 7, name: 'Delivered', icon: cubeOutline },
       ]
@@ -67,7 +67,7 @@ export default defineComponent({
 
   methods: {
     isActive(status: any) {
-      return this.order?.order_status_id == status.id;
+      return this.order?.order_status_id as number >= status.id;
     },
 
     getHistoryEntry(status: any) {
@@ -108,6 +108,10 @@ ion-card.header-card {
 }
 ion-card.header-card ion-card-header {
   padding: 8px 16px;
+}
+
+ion-card.list-card {
+  margin-top: 4px;
 }
 
 ion-list-header {

@@ -43,9 +43,8 @@
         </IonListHeader>
 
         <IonItem v-for="customer in customers" :key="customer.id" @click="selectCustomer(customer)">
-          <IonAvatar slot="start">
-            <Image :src="customer.logo"></Image>
-          </IonAvatar>
+          <ProfileAvatar slot="start" :image="customer?.logo"
+                           :username="customer?.name" customSize="40px"></ProfileAvatar>
           <IonLabel>
             <p class="ion-no-margin">{{ customer.name }}</p>
             <IonText color="medium" class="font-medium">
@@ -78,6 +77,7 @@ import { useToastStore } from '@/stores/ToastStore';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import Image from '@/components/Image.vue';
 import Business from '@/models/Business';
+import ProfileAvatar from '../../../../components/ProfileAvatar.vue';
 
 export default defineComponent({
 
@@ -105,7 +105,8 @@ export default defineComponent({
     IonSpinner,
     IonRefresher,
     IonRefresherContent,
-    IonSearchbar
+    IonSearchbar,
+    ProfileAvatar
 },
 
   data() {

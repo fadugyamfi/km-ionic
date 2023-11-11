@@ -21,14 +21,10 @@
       <section class="banner">
         <img :src="defaultBanner" @error="onLoadError" />
         <aside>
-          <IonAvatar size="medium">
-            <template v-if="business?.logo">
-              <img :src="business?.logo" alt="Business Logo" />
-            </template>
-            <template v-else>
-              <span class="initials">{{ business?.getInitials(2) }}</span>
-            </template>
-          </IonAvatar>
+          <ProfileAvatar :image="business?.logo"
+                           :username="business?.name"
+                           customSize="90px"
+                           font-size="40px" textColor="#111" ></ProfileAvatar>
         </aside>
       </section>
       <main>
@@ -79,6 +75,7 @@ import { locationOutline } from 'ionicons/icons';
 import { handleAxiosRequestError } from '@/utilities';
 import FollowButton from '@/components/modules/business/FollowButton.vue';
 import { mapStores } from 'pinia';
+import ProfileAvatar from '../../../components/ProfileAvatar.vue';
 
 export default defineComponent({
   data() {
@@ -112,7 +109,8 @@ export default defineComponent({
     NotificationButton,
     IonIcon,
     IonText,
-  },
+    ProfileAvatar
+},
 
   computed: {
     ...mapStores( useBusinessStore )
