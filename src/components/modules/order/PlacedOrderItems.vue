@@ -22,7 +22,7 @@
               </section>
             </IonLabel>
             <IonLabel slot="end" class="font-medium text-end ion-align-self-start">
-              {{ Filters.currency(item.product?.product_price as number, item.currency?.symbol as string) }}
+              {{ Filters.currency(item.total_price as number, item.currency?.symbol as string) }}
             </IonLabel>
           </IonItem>
         </IonList>
@@ -43,7 +43,7 @@
 
 
 <script lang=ts>
-import { Order } from "@/models/Order";
+import { Order, OrderStatus } from "@/models/Order";
 import { IonAccordion, IonItem, IonLabel, IonThumbnail, IonIcon, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardContent, IonList, IonText, IonButton } from "@ionic/vue";
 import { PropType, defineComponent } from 'vue';
 import Image from "@/components/Image.vue";
@@ -87,11 +87,11 @@ export default defineComponent({
 
   computed: {
     showChangeDate() {
-      return true;
+      return this.order?.order_status_id == OrderStatus.PENDING;
     },
 
     showChangeAddress() {
-      return true;
+      return this.order?.order_status_id == OrderStatus.PENDING;
     }
   },
 
