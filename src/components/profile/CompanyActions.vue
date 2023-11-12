@@ -7,7 +7,7 @@
     </IonItem>
 
     <IonList lines="none">
-      <IonItem :detail="true" class="profile-item">
+      <IonItem :detail="true" class="profile-item" :disabled="true">
         <IonAvatar slot="start">
           <img src="/images/ic_location.svg" class="action-img" />
         </IonAvatar>
@@ -36,28 +36,28 @@
         <IonLabel>Stock</IonLabel>
       </IonItem>
 
-      <IonItem :detail="true" class="profile-item">
+      <IonItem :detail="true" class="profile-item" :disabled="true">
         <IonAvatar slot="start">
           <img src="/images/ic_user.svg" class="action-img" />
         </IonAvatar>
         <IonLabel>Team</IonLabel>
       </IonItem>
 
-      <IonItem :detail="true" class="profile-item">
+      <IonItem :detail="true" class="profile-item" :disabled="true">
         <IonAvatar slot="start">
           <img src="/images/ic_help_support.svg" class="action-img" />
         </IonAvatar>
         <IonLabel>Agents</IonLabel>
       </IonItem>
 
-      <IonItem :detail="true" class="profile-item">
+      <IonItem :detail="true" class="profile-item" @click="onAddSale()">
         <IonAvatar slot="start">
           <img src="/images/ic_help_support.svg" class="action-img" />
         </IonAvatar>
         <IonLabel>Add Sale</IonLabel>
       </IonItem>
 
-      <IonItem :detail="true" class="profile-item">
+      <IonItem :detail="true" class="profile-item" :disabled="true">
         <IonAvatar slot="start">
           <img src="/images/ic_help_support.svg" class="action-img" />
         </IonAvatar>
@@ -88,5 +88,15 @@ export default defineComponent({
       search,
     };
   },
+
+  methods: {
+    onAddSale() {
+      if( this.userStore.appMode == 'shopping' ) {
+        this.userStore.toggleAppMode();
+      }
+
+      this.$router.push('/vendor/sales/add-sale/select-agent')
+    }
+  }
 });
 </script>

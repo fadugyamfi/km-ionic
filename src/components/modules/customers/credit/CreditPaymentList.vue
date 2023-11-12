@@ -34,7 +34,7 @@
               <ion-item
                 :button="true"
                 lines="full"
-                @click="deleteCredit(credit)"
+                @click="deleteCredit(payment)"
               >
                 <ion-icon slot="start" :icon="trashOutline"></ion-icon>
                 Delete
@@ -85,7 +85,7 @@ import { mapStores } from "pinia";
 import filters from "@/utilities/Filters";
 import Image from "@/components/Image.vue";
 import CreditListItem from "./CreditListItem.vue";
-import { SalePayment } from "../../../../models/SalePayment";
+import { SalePayment } from "@/models/SalePayment";
 import DeleteCreditModal from "@/components/modules/customers/DeleteCreditModal.vue";
 import { useCustomerStore } from "@/stores/CustomerStore";
 
@@ -131,7 +131,7 @@ export default defineComponent({
       trashOutline,
       event: null as any,
       openPopover: -1,
-      selectedCredit: null as Order | null,
+      selectedCredit: null as SalePayment | null,
       showConfirmDeleteModal: false,
       filters,
     };

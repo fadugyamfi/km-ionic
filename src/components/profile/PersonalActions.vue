@@ -8,35 +8,35 @@
         </IonItem>
 
         <IonList lines="none">
-            <IonItem :detail="true" class="profile-item">
+            <IonItem :detail="true" class="profile-item" :disabled="true">
                 <IonAvatar slot="start">
                     <img src="/images/ic_location.svg" class="action-img" />
                 </IonAvatar>
                 <IonLabel>Address</IonLabel>
             </IonItem>
 
-            <IonItem :detail="true" class="profile-item">
+            <IonItem :detail="true" class="profile-item" :disabled="true">
                 <IonAvatar slot="start">
                     <img src="/images/ic_password.svg" class="action-img" />
                 </IonAvatar>
                 <IonLabel>Password</IonLabel>
             </IonItem>
 
-            <IonItem :detail="true" class="profile-item">
+            <IonItem :detail="true" class="profile-item" @click="showNotifications()">
                 <IonAvatar slot="start">
                     <img src="/images/ic_notification.svg" class="action-img" />
                 </IonAvatar>
                 <IonLabel>Notifications</IonLabel>
             </IonItem>
 
-            <IonItem :detail="true" class="profile-item">
+            <IonItem :detail="true" class="profile-item" :disabled="true">
                 <IonAvatar slot="start">
                     <img src="/images/ic_user.svg" class="action-img" />
                 </IonAvatar>
                 <IonLabel>Account Activity</IonLabel>
             </IonItem>
 
-            <IonItem :detail="true" class="profile-item">
+            <IonItem :detail="true" class="profile-item" :disabled="true">
                 <IonAvatar slot="start">
                     <img src="/images/ic_help_support.svg" class="action-img" />
                 </IonAvatar>
@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import { IonIcon, IonLabel, IonItem, IonAvatar, IonList } from '@ionic/vue';
+import { IonIcon, IonLabel, IonItem, IonAvatar, IonList, modalController } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
 import { mapStores } from 'pinia';
@@ -64,6 +64,7 @@ import { useToastStore } from '../../stores/ToastStore';
 import { handleAxiosRequestError } from '../../utilities';
 import { AxiosError } from 'axios';
 import ProfileAvatar from '@/components/ProfileAvatar.vue';
+import NotificationsModal from '@/components/notifications/NotificationsModal.vue';
 
 
 export default defineComponent({
@@ -104,6 +105,20 @@ export default defineComponent({
                     }
                 })
                 .finally(() => toastStore.unblockUI());
+        },
+
+        async showNotifications() {
+            const modal = await modalController.create({
+                component: NotificationsModal,
+            });
+
+            modal.present();
+
+            const { data, role } = await modal.onWillDismiss();
+
+            if (role === 'confirm') {
+                // message.value = `Hello, ${data}!`;
+            }
         }
     }
 });
