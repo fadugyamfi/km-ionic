@@ -11,6 +11,8 @@ export const useStockStore = defineStore("stock", {
       stocks: [] as Stock[],
       selectedStock: null as Stock | null,
       recentlyViewedStocks: [] as Stock[],
+      productGroups: [],
+      productVariations: [],
       searchTerm: "",
     };
   },
@@ -83,6 +85,39 @@ export const useStockStore = defineStore("stock", {
         .catch((error) => {
           handleAxiosRequestError(error);
         });
-    }
+    },
+    async fetchProductGroups() {
+      try {
+        const response = await axios.get("v2/product-groups");
+        if (response) {
+          this.productGroups = response.data.data;
+          return this.productGroups;
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+    },
+    async fetchProductVariations() {
+      try {
+        const response = await axios.get("v2/product-variations");
+        if (response) {
+          this.productVariations = response.data.data;
+          return this.productVariations;
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+    },
+    async addStock(stockData: Object) {
+      return axios
+        .post("v2/products", stockData)
+        .then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            const data = response.data.data;
+            return data;
+          }
+        })
+        .catch((error) => handleAxiosRequestError(error));
+    },
   },
 });

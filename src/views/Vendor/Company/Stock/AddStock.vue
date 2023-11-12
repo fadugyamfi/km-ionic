@@ -25,7 +25,7 @@
       <IonText style="font-size: 14px" color="medium" size="small">
         {{ $t("profile.stock.addProductImage") }}
       </IonText>
-      <form v-show="!fetching" @submit.prevent="createMember()">
+      <form v-show="!fetching">
         <IonCard color="light">
           <IonImg
             v-if="photo"
@@ -51,11 +51,11 @@
           class="kola-input ion-margin-bottom"
           :label="$t('profile.stock.category')"
           :class="{
-            'ion-invalid ion-touched': form.errors.category,
+            'ion-invalid ion-touched': form.errors.product_categories_id,
           }"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.category"
+          v-model="form.fields.product_categories_id"
           required
           name="category"
           :toggle-icon="chevronDownOutline"
@@ -83,36 +83,44 @@
           class="kola-input ion-margin-bottom"
           :label="$t('profile.stock.variation')"
           :class="{
-            'ion-invalid ion-touched': form.errors.size,
+            'ion-invalid ion-touched': form.errors.product_variation,
           }"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.size"
+          v-model="form.fields.product_variation"
           required
           name="variation"
           :toggle-icon="chevronDownOutline"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption> </IonSelectOption>
+          <IonSelectOption
+            v-for="variation in productVariations"
+            :key="variation.id"
+            :value="variation.id"
+          >
+            {{ variation.name }}</IonSelectOption
+          >
         </IonSelect>
         <IonTextarea
           class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.description }"
+          :class="{
+            'ion-invalid ion-touched': form.errors.product_description,
+          }"
           :label="$t('profile.stock.itemDescription')"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.description"
+          v-model="form.fields.product_description"
           name="description"
           @ion-input="form.validate($event)"
           required
         ></IonTextarea>
         <IonInput
           class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.quantity_available }"
+          :class="{ 'ion-invalid ion-touched': form.errors.group_quantity }"
           :label="$t('profile.stock.quantityAvailable')"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.quantity_available"
+          v-model="form.fields.group_quantity"
           name="quantity_available"
           @ion-input="form.validate($event)"
           required
@@ -122,13 +130,13 @@
           <h6>Quantity Type</h6>
           <ion-radio-group
             :class="{
-              'ion-invalid ion-touched': form.errors.quantity_available,
+              'ion-invalid ion-touched': form.errors.product_groups_id,
             }"
-            v-model="form.fields.quantity_type"
+            v-model="form.fields.product_groups_id"
           >
-            <div v-for="quantityT in quantityTypes" :key="quantityT.id">
-              <ion-radio :value="quantityT.name" label-placement="end"
-                >{{ quantityT.name }}
+            <div v-for="group in productGroups" :key="group.id">
+              <ion-radio :value="group.id" label-placement="end"
+                >{{ group.name }}
               </ion-radio>
             </div>
           </ion-radio-group>
@@ -136,11 +144,11 @@
 
         <IonInput
           class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.price }"
+          :class="{ 'ion-invalid ion-touched': form.errors.product_price }"
           :label="$t('profile.stock.price')"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.price"
+          v-model="form.fields.product_price"
           name="price"
           @ion-input="form.validate($event)"
           required
@@ -157,7 +165,7 @@
         <IonFooter class="ion-padding-top ion-no-border">
           <KolaYellowButton
             :disabled="!formValid"
-            @click.prevent="createMember"
+            @click.prevent="createStock"
             >{{ $t("profile.stock.save") }}</KolaYellowButton
           >
           <KolaWhiteButton style="margin-top: 8px" @click="cancel()">{{
@@ -208,76 +216,66 @@ import { useRoute, useRouter } from "vue-router";
 import { computed, onMounted, ref } from "vue";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { useProductCategoryStore } from "@/stores/ProductCategoryStore";
+import { useStockStore } from "@/stores/StockStore";
 
 const toastStore = useToastStore();
 const customerStore = useCustomerStore();
-const businessStore = useBusinessStore();
+const stockStore = useStockStore();
 
 const route = useRoute();
 const router = useRouter();
 
 const fetching = ref(false);
-const salesAgents = ref<User[]>([]);
+const productGroups = ref<any>([]);
+const productVariations = ref<any>([]);
+
 const photo = ref();
 
 const form = useForm({
   product_image: "",
-  category: "",
+  product_categories_id: "",
   product_name: "",
-  size: "",
-  description: "",
-  quantity_available: "",
-  quantity_type: "",
-  price: "",
+  product_variation: "",
+  product_description: "",
+  group_quantity: "",
+  product_groups_id: "",
+  product_price: "",
   date: "",
 });
 
 const categories = computed(() => useProductCategoryStore().categories);
-const quantityTypes = ref([
-  {
-    id: 1,
-    name: "Pieces",
-  },
-  {
-    id: 2,
-    name: "Boxes",
-  },
-  {
-    id: 3,
-    name: "Cases",
-  },
-  {
-    id: 4,
-    name: "Cartons",
-  },
-]);
 
 const formValid = computed(() => {
   const fields = form.fields;
   return (
     fields.product_name.length > 0 &&
-    fields.description.length > 0 &&
+    fields.product_description.length > 0 &&
     fields.date.length > 0 &&
-    isNaN(Number(fields.size)) == false &&
-    isNaN(Number(fields.price)) == false &&
-    fields.category &&
-    fields.quantity_available &&
-    fields.quantity_type
+    isNaN(Number(fields.product_variation)) == false &&
+    isNaN(Number(fields.product_price)) == false &&
+    fields.product_categories_id &&
+    fields.product_groups_id &&
+    fields.group_quantity
   );
 });
 
-const createMember = async () => {
+const createStock = async () => {
+  console.log(form.fields);
   try {
-    toastStore.blockUI("Hold On As We Add Your Customer");
-    const customer = await customerStore.createBusinessCustomer(form.fields);
-    if (customer) {
+    const userStore = useUserStore();
+    toastStore.blockUI("Hold On As We Add Your Stock");
+    const stock = await stockStore.addStock({
+      ...form.fields,
+      businesses_id: userStore.activeBusiness?.id,
+    });
+    if (stock) {
       toastStore.unblockUI();
       router.push("profile/company/customers");
-      toastStore.showSuccess("Customer has been added successfully");
+      toastStore.showSuccess("Stock has been added successfully");
     } else {
       toastStore.unblockUI();
       toastStore.showError(
-        "Failed to add Customer. Please try again",
+        "Failed to add Stock. Please try again",
         "",
         "bottom",
         "footer"
@@ -300,16 +298,16 @@ const getProductCategories = async () => {
   } catch (error) {}
 };
 
-// const fetchBusinessSalesAgent = async () => {
-//   fetching.value = true;
-//   const userStore = useUserStore();
-//   const businessStore = useBusinessStore();
-//   salesAgents.value = await businessStore.getBusinessSaleAgents(
-//     userStore.activeBusiness as Business,
-//     50
-//   );
-//   fetching.value = false;
-// };
+const fetchProductGroups = async () => {
+  fetching.value = true;
+  productGroups.value = await stockStore.fetchProductGroups();
+  fetching.value = false;
+};
+const fetchProductVariations = async () => {
+  fetching.value = true;
+  productVariations.value = await stockStore.fetchProductVariations();
+  fetching.value = false;
+};
 
 const pickImages = async () => {
   const { takePhoto, photos, pickImages } = usePhotoGallery();
@@ -327,7 +325,8 @@ const pickImages = async () => {
 
 onMounted(() => {
   getProductCategories();
-  // fetchBusinessSalesAgent();
+  fetchProductGroups();
+  fetchProductVariations();
 });
 
 const cancel = () => {
