@@ -1,6 +1,6 @@
 <template>
     <IonModal ref="modal" :initial-breakpoint="0.50" :breakpoints="[0, 0.50]">
-        <IonContent >
+        <IonContent>
             <header class="fw-semibold ion-padding ion-text-center">
                 Filter Sales History
             </header>
@@ -17,10 +17,23 @@
                         </IonCol>
                     </IonRow>
                 </IonGrid>
+
+                <IonGrid>
+                    <IonRow>
+                        <IonCol size="12">
+                            <IonLabel>Sale Type</IonLabel>
+                            <IonSelect class="kola-input" fill="solid" label-placement="stacked"
+                                       v-model="form.sale_types_id" :label="$t('vendor.sales.selectSaleType')">
+                                <IonSelectOption value="1">{{ 'Cash Sale' }}</IonSelectOption>
+                                <IonSelectOption value="5">{{ 'Credit Sale' }}</IonSelectOption>
+                            </IonSelect>
+                        </IonCol>
+                    </IonRow>
+                </IonGrid>
             </main>
             <footer class="ion-padding">
                 <KolaYellowButton @click="update()">
-                    Update
+                    {{ $t('general.update') }}
                 </KolaYellowButton>
             </footer>
         </IonContent>
@@ -28,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { IonCol, IonContent, IonFooter, IonGrid, IonInput, IonLabel, IonModal, IonRow } from '@ionic/vue';
+import { IonCol, IonContent, IonFooter, IonGrid, IonInput, IonLabel, IonModal, IonRow, IonSelect, IonSelectOption } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import KolaYellowButton from '../../KolaYellowButton.vue';
 
@@ -44,14 +57,17 @@ export default defineComponent({
         IonRow,
         IonCol,
         IonLabel,
-        IonInput
+        IonInput,
+        IonSelect,
+        IonSelectOption
     },
 
     data() {
         return {
             form: {
                 start_dt: '',
-                end_dt: ''
+                end_dt: '',
+                sale_types_id: ''
             }
         }
     },

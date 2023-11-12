@@ -38,16 +38,21 @@
       </IonSegment>
     </IonHeader>
     <ion-content class="ion-padding-horizontal">
-      <!-- <EmptyStock></EmptyStock> -->
-      <Summary/>
-      <IonSearchbar
-        class="search-input"
-        placeholder="Search..."
-        @keyup.enter="onSearch($event)"
-        @ion-change="onSearch($event)"
-      ></IonSearchbar>
-      <StockChips />
-      <AvailableStock />
+      <div class="ion-padding ion-text-center" v-show="fetching">
+        <IonSpinner name="crescent"></IonSpinner>
+      </div>
+      <section v-if="!fetching">
+        <EmptyStock v-if="stocks?.length == 0"></EmptyStock>
+        <Summary />
+        <IonSearchbar
+          class="search-input"
+          placeholder="Search..."
+          @keyup.enter="onSearch($event)"
+          @ion-change="onSearch($event)"
+        ></IonSearchbar>
+        <StockChips />
+        <AvailableStock :stocks="stocks" />
+      </section>
     </ion-content>
     <FilterStockSheet
       :isOpen="showFilterSheet"
@@ -95,18 +100,22 @@ import { formatMySQLDateTime } from "@/utilities";
 import { useRouter } from "vue-router";
 import { useCustomerStore } from "@/stores/CustomerStore";
 import AvailableStock from "./AvailableStock.vue";
+import { useStockStore } from "@/stores/StockStore";
+import { handleAxiosRequestError } from "@/utilities";
+import Stock from "@/models/Stock";
 
 const fetching = ref(false);
 const refreshing = ref(false);
 const showFilterSheet = ref(false);
 const router = useRouter();
+const stockStore = useStockStore();
+
+const stocks = ref<Stock[]>();
 
 const searchFilters = ref({
   start_dt: "",
   end_dt: "",
 });
-
-const onSearch = (event: Event) => {}
 
 // const handleRefresh = async (event: RefresherCustomEvent) => {
 //   refreshing.value = true;
@@ -138,32 +147,40 @@ const onSegmentChanged = (event: CustomEvent) => {
   searchFilters.value.start_dt = formatMySQLDateTime(start_dt.toISOString());
   searchFilters.value.end_dt = formatMySQLDateTime(end_dt.toISOString());
 
-  // this.fetchSales();
+  fetchStocks();
 };
 const onFilterUpdate = (event: { start_dt: string; end_dt: string }) => {
   searchFilters.value.start_dt = event.start_dt;
   searchFilters.value.end_dt =
     event.end_dt || formatMySQLDateTime(new Date().toISOString());
-  // this.fetchSales();
+  fetchStocks();
 };
-// const fetchSales = () => {
-//             try {
-//                 this.fetching = true;
-//                 await this.saleStore.fetchSales(this.searchFilters);
-//             } catch(error) {
-//                 console.log(error);
-//             } finally {
-//                 this.fetching = false;
-//             }
-//         },
-// const onSearch = async (event: Event) => {
-//   refreshing.value = true;
-//   fetching.value = true;
-//   await fetchCustomers({
-//     name_like: (event.target as HTMLIonSearchbarElement).value,
-//   });
-//   refreshing.value = false;
-// };
+const fetchStocks = async () => {
+  try {
+    fetching.value = true;
+    stocks.value = await stockStore.fetchStocks(searchFilters.value);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    fetching.value = false;
+  }
+};
+const fetchSearchedStocks = async () => {
+  fetching.value = true;
+  try {
+    stocks.value = await stockStore.fetchSearchedStocks();
+  } catch (error) {
+    handleAxiosRequestError(error);
+  } finally {
+    fetching.value = false;
+  }
+};
+
+const onSearch = (event: any) => {
+  stockStore.searchTerm = event.target?.value;
+  stocks.value = [];
+  fetchSearchedStocks();
+};
 
 onMounted(() => {
   onSegmentChanged(new CustomEvent("load", { detail: { value: "pastmonth" } }));

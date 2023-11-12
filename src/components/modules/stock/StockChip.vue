@@ -11,13 +11,12 @@ import ProductCategory from "@/models/ProductCategory";
 
 const props = defineProps({
   category: {
-    type: ProductCategory,
-    default: true,
+    required: true,
+    type: Object,
   },
 });
 </script>
 <style scoped>
-
 .chip {
   border-radius: 16px;
   background: var(--gray-100, #f2f4f7);

@@ -1,51 +1,66 @@
-import {
-    NullableNumber,
-    NullableString,
-    NullableStringOrNumber,
-  } from "@/utilities/Types";
-  import Currency from "./Currency";
-  import Tag from "./Tag";
-  
-  export default class Stock {
-    public id?: number | string;
-    public name?: string;
-    public location: NullableString = null;
-    public phone_number: NullableString = null;
-    public description: NullableString = null;
-    public created_at?: string;
-    public min_order_amount: NullableStringOrNumber = null;
-    public currency_id: NullableNumber = null;
-    public region_id: NullableNumber = null;
-    public country_id: NullableNumber = null;
-    public state_id: NullableNumber = null;
-    public _currency?: Currency;
-    public logo?: string;
-    public reviews_count?: number = 0;
-    public rating?: number = 1;
-    public distance?: number = 0;
-    public deliveryTime?: string;
-    public business_types_id?: number | string;
-    public tags?: Tag[];
-  
-    constructor(data: object | null) {
-      Object.assign(this, data);
-    }
-  
-    get currency(): Currency | undefined {
-      return this._currency;
-    }
-  
-    set currency(value: any) {
-      this._currency = new Currency(value);
-    }
-  
-    getInitials(length: number = 3) {
-      return this.name
-        ?.split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .substring(0, length);
-    }
+import Business from "./Business";
+import Currency from "./Currency";
+import Tag from "./Tag";
+import { FavoritedProduct } from "./types";
+
+export default class Stock {
+  public id?: number;
+  public businesses_id?: number;
+  public product_name?: string;
+  public product_description?: string;
+  public product_price?: number = 0;
+  public wholesale_price?: number;
+  public retail_price?: number;
+  public single_unit_price?: number;
+  public product_banner_image?: string;
+  public product_groups_id?: number;
+  public product_categories_id?: number;
+  public product_units_id?: number;
+  public image?: string;
+  public weight_value?: string | number;
+  public volume_value?: string | number;
+  public group_quantity?: number;
+  private _currency?: Currency | null;
+  public _business?: Business | null;
+  public _tags?: Tag[] | null;
+  public favorited?: FavoritedProduct | null;
+  public stock_quantity?: number = 0;
+
+  constructor(data: object) {
+    Object.assign(this, data);
   }
-  
+
+  get currency(): Currency | null | undefined {
+    return this._currency;
+  }
+
+  set currency(value: object) {
+    this._currency = value ? new Currency(value) : null;
+  }
+
+  get business(): Business | null | undefined {
+    return this._business;
+  }
+
+  set business(value: object) {
+    this._business = value ? new Business(value) : null;
+  }
+
+  get tags(): Tag[] | null | undefined {
+    return this._tags;
+  }
+
+  set tags(value: Array<any>) {
+    this._tags = value ? value.map((el) => new Tag(el)) : [];
+  }
+
+  addToFavorites(favorited?: FavoritedProduct) {
+    this.favorited = favorited || {
+      products_id: this.id as number,
+    };
+  }
+
+  unfavorite() {
+    this.favorited = null;
+  }
+}

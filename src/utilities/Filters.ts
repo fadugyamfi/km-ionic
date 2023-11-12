@@ -17,7 +17,7 @@ export default {
         return formatCurrency(value, symbol, display);
     },
 
-    number(value: number, decimals = 0, type:string) {
+    number(value: number, decimals = 0, type?: string) {
         if (type == 'compact') {
             return formatCompactNumber(value, decimals);
         }

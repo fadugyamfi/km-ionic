@@ -9,43 +9,32 @@
     </header>
 
     <ProductStockList
-      v-if="categories.length > 0"
-      :categories="categories"
+      v-if="stocks.length > 0"
+      :stocks="stocks"
     ></ProductStockList>
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import ProductStockList from "@/components/modules/stock/ProductStockList.vue";
 import ProductCategory from "@/models/ProductCategory";
 import axios from "axios";
 import { IonText } from "@ionic/vue";
 import { mapStores } from "pinia";
 import { useProductCategoryStore } from "@/stores/ProductCategoryStore";
+import Stock from "@/models/Stock";
 
 export default defineComponent({
-  data() {
-    return {
-      categories: [] as Array<ProductCategory>,
-    };
-  },
-
-  computed: {
-    ...mapStores(useProductCategoryStore),
-  },
-
-  components: { ProductStockList, IonText },
-
-  methods: {
-    async fetchTopCategories() {
-      const categories = await this.productCategoryStore.getCategories();
-      this.categories = categories.slice(0, 4);
+  props: {
+    stocks: {
+      type: Array as PropType<Stock[]>,
+      default: () => [],
     },
   },
-
-  mounted() {
-    this.fetchTopCategories();
+  components: {
+    ProductStockList,
+    IonText,
   },
 });
 </script>

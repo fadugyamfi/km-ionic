@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonCard, IonCardHeader, IonCardContent } from "@ionic/vue";
+import { IonCard, IonCardHeader, IonCardContent,IonCardSubtitle, IonCardTitle } from "@ionic/vue";
 </script>
 
 <style lang="scss" scoped>
