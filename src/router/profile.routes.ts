@@ -1,23 +1,10 @@
 import { useUserStore } from "@/stores/UserStore";
-import TabsPage from "@/views/Profile/TabsPage.vue";
-import ShopperTabsPage from "@/views/Shopper/TabsPage.vue";
-import VendorTabsPage from "@/views/Vendor/TabsPage.vue";
+import TabsPage from "@/views/TabsPage.vue";
 
 export const ProfileRoutes = [
   {
     path: "/profile/company",
-    component: async () => {
-      const userStore = useUserStore();
-      await userStore.loadStoredData();
-
-      if( userStore.appMode == 'shopping' ) {
-        console.log("returning ShopperTabsPage", userStore.appMode)
-        return ShopperTabsPage;
-      }
-
-      console.log("returning VendorTabsPage", userStore.appMode)
-      return VendorTabsPage;
-    },
+    component: TabsPage,
     beforeEnter: async function () {
       // to, from
       const userStore = useUserStore();

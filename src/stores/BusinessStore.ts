@@ -59,7 +59,8 @@ export const useBusinessStore = defineStore("business", {
       }
     },
     searchQuery:"",
-    SearchResults:[] as Business[]
+    SearchResults:[] as Business[],
+    businessSummary: null as any | null
   }),
 
 
@@ -355,6 +356,15 @@ export const useBusinessStore = defineStore("business", {
 
     getSelectedForViewing() {
       return this.selectedToView;
+    },
+
+    async getBusinessSummary(business: Business) {
+      return axios.get(`/v2/businesses/${business.id}/summary`)
+        .then(response => {
+          this.businessSummary = response.data.data;
+          return this.businessSummary;
+        })
+        .catch(error => handleAxiosRequestError(error))
     }
   }
 });

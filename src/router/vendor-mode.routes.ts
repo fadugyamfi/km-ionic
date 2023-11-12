@@ -1,5 +1,5 @@
 import { useUserStore } from "@/stores/UserStore";
-import TabsPage from "@/views/Vendor/TabsPage.vue";
+import TabsPage from "@/views/TabsPage.vue";
 import HomePage from "@/views/Shopper/HomePage.vue";
 
 export const VendorModeRoutes = [
