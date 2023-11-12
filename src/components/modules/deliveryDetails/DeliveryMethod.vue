@@ -6,11 +6,13 @@
           class="d-flex ion-justify-content-between ion-align-items-center"
           style="margin-bottom: 8px"
         >
-          <IonText class="fw-semibold" style="margin-right: 70px"
+          <IonText class="fw-semibold" style="margin-right: 50px"
             >Standard Delivery</IonText
           >
           <section class="d-flex ion-align-items-center">
-            <IonText class="fw-semibold ion-margin-end">GHS 10.00</IonText>
+            <IonText class="fw-semibold ion-margin-end">
+              {{ Filters.currency(0, 'GHS') }}
+            </IonText>
           </section>
         </section>
         <section class="d-flex flex-column">
@@ -39,11 +41,13 @@
           class="d-flex ion-justify-content-between ion-align-items-center"
           style="margin-bottom: 8px"
         >
-          <IonText class="fw-semibold" style="margin-right: 85px"
+          <IonText class="fw-semibold" style="margin-right: 5px"
             >Express Delivery</IonText
           >
           <section class="d-flex ion-align-items-center">
-            <IonText class="fw-semibold">GHS 10.00</IonText>
+            <IonText class="fw-semibold">
+              {{ Filters.currency(0, 'GHS') }}
+            </IonText>
           </section>
         </section>
         <section>
@@ -61,6 +65,7 @@
 import { locationOutline, timeOutline } from "ionicons/icons";
 import { IonIcon, IonText, IonRadio, IonRadioGroup } from "@ionic/vue";
 import { ref, watch } from "vue";
+import Filters from '@/utilities/Filters';
 
 const emit = defineEmits();
 const selectedDelivery = ref("standard");

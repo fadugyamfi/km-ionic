@@ -1,8 +1,7 @@
 <template>
   <IonItem class="ion-align-items-start ion-margin-bottom">
-    <IonAvatar slot="start">
-      <Image :src="credit.business?.logo"></Image>
-    </IonAvatar>
+    <ProfileAvatar slot="start" :image="credit.business?.logo" :username="credit.business?.name" custom-size="40px"></ProfileAvatar>
+
     <IonLabel>
       <p class="ion-no-margin">
         {{ credit.business?.name }}
@@ -49,6 +48,7 @@ import { useRouter } from "vue-router";
 import Image from "@/components/Image.vue";
 import Customer from "@/models/Customer";
 import { useCustomerStore } from "@/stores/CustomerStore";
+import ProfileAvatar from "../../../ProfileAvatar.vue";
 
 const props = defineProps({
   credit: {

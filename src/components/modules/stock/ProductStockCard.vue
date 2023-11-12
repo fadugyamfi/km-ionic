@@ -137,6 +137,12 @@ export default defineComponent({
       }
     },
   },
+
+  methods: {
+    addToCart() {
+
+    }
+  }
 });
 </script>
 

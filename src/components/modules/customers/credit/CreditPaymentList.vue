@@ -1,10 +1,10 @@
 <template>
   <IonList lines="full" class="customers-select-list simple">
     <CreditListItem
-      v-for="(credit, index) in creditPayments"
-      :key="credit?.id"
-      :credit="credit"
-      @click="viewDetails(credit)"
+      v-for="(payment, index) in creditPayments"
+      :key="payment?.id"
+      :credit="payment"
+      @click="viewDetails(payment)"
       @openMenu="openMenu($event, index)"
     >
       <template v-slot:popover>
@@ -85,13 +85,14 @@ import { mapStores } from "pinia";
 import filters from "@/utilities/Filters";
 import Image from "@/components/Image.vue";
 import CreditListItem from "./CreditListItem.vue";
+import { SalePayment } from "../../../../models/SalePayment";
 import DeleteCreditModal from "@/components/modules/customers/DeleteCreditModal.vue";
 import { useCustomerStore } from "@/stores/CustomerStore";
 
 export default defineComponent({
   props: {
     creditPayments: {
-      type: Array,
+      type: Array as PropType<SalePayment[]>,
       required: true,
     },
   },
@@ -160,9 +161,9 @@ export default defineComponent({
       );
     },
 
-    viewDetails(order: Order) {
-      this.$emit("view-details", order);
-      this.$router.push(`/shopper/orders/${order.id}`);
+    viewDetails(payment: SalePayment) {
+      this.$emit("view-details", payment);
+      this.$router.push(`/shopper/orders/${payment.id}`);
     },
   },
 });

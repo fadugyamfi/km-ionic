@@ -3,33 +3,25 @@
     <section class="profile-home-section ion-padding-top">
       <header class="ion-padding-horizontal">
         <h6>Order history</h6>
-        <IonText
-          color="primary"
-          :router-link="`/profile/company/customers/${route.params.id}/orders`"
-        >
+        <IonText color="primary" :router-link="`/profile/company/customers/${route.params.id}/orders`">
           View all
         </IonText>
       </header>
     </section>
-    <IonList
-      v-for="order in orders"
-      :key="order.id"
-      lines="none"
-      class="ion-padding-horizontal customers-select-list simple"
-    >
-      <IonItem class="ion-align-items-start">
-        <IonAvatar slot="start">
-          <Image :src="order.customer?.logo"></Image>
-        </IonAvatar>
+    <IonList lines="none" class="ion-padding-horizontal customers-select-list simple">
+      <IonItem v-for="order in orders" :key="order.id" class="ion-align-items-start">
+        <ProfileAvatar slot="start" :image="order.customer?.logo" :username="order.customer?.name" custom-size="40px">
+        </ProfileAvatar>
+
         <IonLabel>
           <p class="ion-no-margin">
-            <span style="color: #787486; font-weight: 400"
-              >#{{ order.id }}</span
-            >
+            <span style="color: #787486; font-weight: 400">
+              #{{ order.id }}
+            </span>
           </p>
-          <IonText
-            ><IonChip>{{ order.order_status?.name }}</IonChip></IonText
-          >
+          <IonText>
+            <IonChip>{{ order.order_status?.name }}</IonChip>
+          </IonText>
         </IonLabel>
         <IonText> {{ filters.date(order.created_at, "short") }}</IonText>
       </IonItem>
@@ -39,18 +31,16 @@
 <script lang="ts" setup>
 import {
   IonList,
-  IonAvatar,
   IonText,
   IonItem,
   IonChip,
-  IonIcon,
   IonLabel,
 } from "@ionic/vue";
 import { PropType } from "vue";
 import { useRoute } from "vue-router";
-import Image from "@/components/Image.vue";
 import { Order } from "@/models/Order";
 import filters from "@/utilities/Filters";
+import ProfileAvatar from "../../ProfileAvatar.vue";
 
 const props = defineProps({
   orders: {
@@ -85,6 +75,7 @@ const route = useRoute();
     }
   }
 }
+
 .customers-select-list {
   ion-list-header {
     padding-left: 0px;

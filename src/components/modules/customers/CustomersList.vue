@@ -4,9 +4,7 @@
     class="ion-padding-horizontal customers-select-list simple"
   >
     <IonItem v-for="customer in customers" :key="customer.id">
-      <IonAvatar slot="start">
-        <Image :src="customer.logo"></Image>
-      </IonAvatar>
+      <ProfileAvatar :image="customer?.logo" :username="customer?.name" customSize="40px"></ProfileAvatar>
       <IonLabel
         @click="
           $router.push(`/profile/company/customers/${customer.id}/profile`)
@@ -32,7 +30,7 @@
         :trigger="`popover-button-${customer.id}`"
         :dismiss-on-select="true"
       >
-        <IonContent scroll-y="false">
+        <IonContent :scroll-y="false">
           <IonList>
             <IonItem
               @click="updateCustomer(customer)"
@@ -90,6 +88,7 @@ import Customer from "@/models/Customer";
 import { useCustomerStore } from "@/stores/CustomerStore";
 import { getDateFromNow } from "@/utilities";
 import { useToastStore } from "@/stores/ToastStore";
+import ProfileAvatar from "../../ProfileAvatar.vue";
 
 const toastStore = useToastStore();
 

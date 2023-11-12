@@ -1,6 +1,6 @@
 <template>
   <IonList lines="full">
-    <OrderListItem v-for="(order, index) in orders" :key="order.id" :order="order" @click="viewDetails(order)"
+    <ReceivedOrderListItem v-for="(order, index) in orders" :key="order.id" :order="order" @click="viewDetails(order)"
                    @openMenu="openMenu($event, index)">
       <template v-slot:popover>
         <IonPopover :event="event" :isOpen="openPopover == index" @didDismiss="openPopover = -1">
@@ -27,7 +27,7 @@
           </IonContent>
         </IonPopover>
       </template>
-    </OrderListItem>
+    </ReceivedOrderListItem>
 
     <DeleteModal
       :title="$t('vendor.orders.deleteOrderFromList')"
@@ -48,7 +48,7 @@ import { Order } from '@/models/Order';
 import { mapStores } from 'pinia';
 import filters from '@/utilities/Filters';
 import Image from '@/components/Image.vue';
-import OrderListItem from './OrderListItem.vue';
+import ReceivedOrderListItem from './ReceivedOrderListItem.vue';
 import { useToastStore } from '@/stores/ToastStore';
 import { handleAxiosRequestError } from '@/utilities';
 import DeleteModal from '@/components/modals/DeleteModal.vue';
@@ -68,7 +68,7 @@ export default defineComponent({
     IonChip,
     IonText,
     Image,
-    OrderListItem,
+    ReceivedOrderListItem,
     DeleteModal
   },
 

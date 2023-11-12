@@ -1,32 +1,162 @@
 <template>
   <ion-page>
-    <ShopperHeader></ShopperHeader>
+    <IonHeader class="ion-padding ion-no-border">
+      <ion-header class="inner-header">
+        <IonToolbar class="ion-align-items-center">
+          <IonButtons slot="start">
+            <IonBackButton :icon="close" defaultHref="/vendor/home"></IonBackButton>
+          </IonButtons>
 
-    <ion-content :fullscreen="true">
-      <IonGrid>
-        <IonRow>
-          <IonCol>
-            <IonButton fill="clear" color="primarys" @click="onViewSales()">
-              View Sales
+          <IonTitle size="small" class="fw-bold">Sales Report</IonTitle>
+          <IonButtons slot="end">
+            <IonButton @click="showFilterSheet = true" color="dark">
+              <IonIcon :icon="optionsOutline"></IonIcon>
             </IonButton>
-          </IonCol>
-          <IonCol class="ion-justify-content-end ion-text-end">
-            <IonButton fill="clear" color="primarys" @click="onAddSale()">
-              Add Sale
+
+            <NotificationButton />
+          </IonButtons>
+        </IonToolbar>
+      </ion-header>
+    </IonHeader>
+
+    <ion-content>
+      <IonFab slot="fixed" vertical="bottom" horizontal="end">
+        <IonFabButton size="small" @click="onAddSale()">
+          <IonIcon :icon="add"></IonIcon>
+        </IonFabButton>
+      </IonFab>
+
+      <section v-if="fetchingSummary" class="d-flex ion-justify-content-center">
+        <IonSpinner name="crescent"></IonSpinner>
+      </section>
+
+      <section v-if="!fetchingSummary">
+        <IonGrid>
+          <IonRow>
+            <IonCol size="6">
+              <IonCard class="ion-no-margin">
+                <IonCardContent class="d-flex flex-column">
+                  <IonText color="medium">Total Sales Made</IonText>
+                  <IonText color="dark" class="fw-semibold">
+                    {{ Filters.currency(businessStore.businessSummary?.total_sales_value) }}
+                  </IonText>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+            <IonCol size="6">
+              <IonCard class="ion-no-margin">
+                <IonCardContent class="d-flex flex-column">
+                  <IonText color="medium">Avg. Sales Value</IonText>
+                  <IonText color="dark" class="fw-semibold">
+                    {{ Filters.currency(businessStore.businessSummary?.average_sales_value) }}
+                  </IonText>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol>
+              <IonCard class="ion-no-margin">
+                <IonCardContent class="ion-no-padding">
+                  <IonItem lines="none">
+                    <ProfileAvatar slot="start" :image="userStore.activeBusiness?.logo"
+                                   :username="userStore.activeBusiness?.name"></ProfileAvatar>
+                    <IonLabel>
+                      <h6>
+                        <IonText color="medium">Performance</IonText>
+                      </h6>
+                      <p>
+                        <IonText color="dark" class="fw-semibold">You have met {{ percentageComplete }}% of your target
+                        </IonText>
+                      </p>
+                    </IonLabel>
+                  </IonItem>
+                  <section class="ion-margin-horizontal ion-margin-bottom">
+                    <IonProgressBar :value="(percentageComplete as number) / 100" color="warning"></IonProgressBar>
+                  </section>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol size="6">
+              <IonCard class="ion-no-margin best-selling-card">
+                <IonCardContent class="d-flex flex-column">
+                  <IonText color="medium">Best Selling Item</IonText>
+                  <IonText color="dark" class="fw-semibold">
+                    N/A
+                  </IonText>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+            <IonCol size="6">
+              <IonCard class="ion-no-margin customers-card">
+                <IonCardContent class="d-flex flex-column">
+                  <IonText color="medium">No. of Customers</IonText>
+                  <IonText color="dark" class="fw-semibold">
+                    {{ Filters.number(businessStore.businessSummary?.customer_count) }}
+                  </IonText>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+
+        <section class="ion-margin-top">
+          <IonLabel class="font-medium ion-margin-horizontal">Conversion Rate From Orders To Sales</IonLabel>
+          <IonCard>
+            <IonCardContent class="d-flex ion-justify-content-between ion-align-items-center">
+              <section class="d-flex flex-column">
+                <IonText>Number of Sales / Orders</IonText>
+                <IonText color="dark" class="fw-bold font-large">
+                  {{ businessStore.businessSummary?.orders?.converted_to_sales_count }} Sales /
+                  {{ businessStore.businessSummary?.orders?.total_count }} Orders
+                </IonText>
+              </section>
+
+              <section>
+                <IonChip color="success">
+                  <IonIcon :icon="arrowUpOutline"></IonIcon>
+                  <IonLabel>{{ percentageOfConversion }}%</IonLabel>
+                </IonChip>
+              </section>
+            </IonCardContent>
+          </IonCard>
+        </section>
+      </section>
+
+
+      <section>
+        <IonList style="margin-bottom: 0px; padding-bottom: 0px;">
+          <IonListHeader>
+            <IonLabel color="dark" class="fw-semibold">Sales History</IonLabel>
+            <IonButton fill="clear" size="small" class="fw-semibold" color="primary" @click="onViewSales()">
+              View All
             </IonButton>
-          </IonCol>
-        </IonRow>
-      </IonGrid>
+          </IonListHeader>
+        </IonList>
+
+        <SalesList :sales="saleStore.sales" style="padding-top: 0px;"></SalesList>
+      </section>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonGrid, IonRow, IonCol, IonButton } from '@ionic/vue';
+import { IonPage, IonContent, IonGrid, IonRow, IonCol, IonButton, IonCard, IonCardHeader, IonText, IonList, IonListHeader, IonLabel, IonFab, IonFabButton, IonIcon, IonCardContent, IonSpinner, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonChip, IonItem, IonProgressBar } from '@ionic/vue';
 import ShopperHeader from '@/components/layout/ShopperHeader.vue';
-import { defineComponent } from 'vue';
-import { useSaleStore } from '../../../stores/SaleStore';
+import { PropType, defineComponent } from 'vue';
+import { useSaleStore } from '@/stores/SaleStore';
 import { mapStores } from 'pinia';
+import SalesList from '@/components/modules/sales/SalesList.vue';
+import { Sale } from '@/models/Sale';
+import { add, arrowUpOutline, optionsOutline, close } from 'ionicons/icons';
+import Filters from '@/utilities/Filters';
+import { useBusinessStore } from '../../../stores/BusinessStore';
+import { useUserStore } from '../../../stores/UserStore';
+import Business from '../../../models/Business';
+import ProfileAvatar from '../../../components/ProfileAvatar.vue';
+import NotificationButton from '../../../components/notifications/NotificationButton.vue';
 
 export default defineComponent({
 
@@ -37,17 +167,52 @@ export default defineComponent({
     IonRow,
     IonCol,
     IonButton,
-    ShopperHeader
+    ShopperHeader,
+    IonCard,
+    IonCardHeader,
+    IonText,
+    IonList,
+    IonListHeader,
+    IonLabel,
+    SalesList,
+    IonFab,
+    IonFabButton,
+    IonIcon,
+    IonCardContent,
+    IonSpinner,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonBackButton,
+    IonTitle,
+    IonChip,
+    IonItem,
+    ProfileAvatar,
+    IonProgressBar,
+    NotificationButton
   },
 
   data() {
     return {
-
+      add, optionsOutline, arrowUpOutline, close,
+      showFilterSheet: false,
+      Filters,
+      recentSales: [] as Sale[],
+      fetchingSummary: false,
     }
   },
 
   computed: {
-    ...mapStores( useSaleStore )
+    ...mapStores(useSaleStore, useBusinessStore, useUserStore),
+
+    percentageOfConversion() {
+      const orders = this.businessStore.businessSummary?.orders;
+      return (orders?.converted_to_sales_count / orders?.total_count) * 100;
+    },
+
+    percentageComplete() {
+      return this.businessStore.businessSummary?.targets?.percentage_complete;
+    }
   },
 
   methods: {
@@ -58,7 +223,32 @@ export default defineComponent({
 
     onViewSales() {
       this.$router.push('/vendor/sales/history');
+    },
+
+    fetchRecentSales() {
+      this.saleStore.fetchSales({ limit: 5, sort: 'latest' })
+    },
+
+    async fetchBusinessSummary() {
+      this.fetchingSummary = true;
+      await this.businessStore.getBusinessSummary(this.userStore.activeBusiness as Business);
+      this.fetchingSummary = false;
     }
+  },
+
+  mounted() {
+    this.fetchRecentSales();
+    this.fetchBusinessSummary();
   }
 })
 </script>
+
+<style scoped>
+.customers-card {
+  --background: #F2F7F7;
+}
+
+.best-selling-card {
+  --background: #FFF2EBCC;
+}
+</style>

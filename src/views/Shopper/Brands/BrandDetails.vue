@@ -19,16 +19,10 @@
             <section class="banner">
                 <img :src="defaultBanner" @error="onLoadError" />
                 <aside>
-                    <IonAvatar size="medium">
-                        <template v-if="brand?.logo">
-                            <img :src="brand?.logo" alt="Brand Logo" />
-                        </template>
-                        <template v-else>
-                            <span class="initials">
-                                {{ brand?.getInitials(2) }}
-                            </span>
-                        </template>
-                    </IonAvatar>
+                    <ProfileAvatar :image="brand?.logo"
+                           :username="brand?.name"
+                           customSize="90px"
+                           font-size="40px" textColor="#111" ></ProfileAvatar>
                 </aside>
             </section>
             <main>
@@ -61,6 +55,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import { IonText } from '@ionic/vue';
 import ProductCard from '@/components/cards/ProductCard.vue';
 import { handleAxiosRequestError } from '@/utilities';
+import ProfileAvatar from '../../../components/ProfileAvatar.vue';
 
 export default defineComponent({
     data() {
@@ -72,25 +67,25 @@ export default defineComponent({
     },
 
     components: {
-        IonAvatar,
-        IonPage,
-        IonContent,
-        IonHeader,
-        IonToolbar,
-        IonButtons,
-        IonBackButton,
-        IonTitle,
-        Brand,
-        BrandRatingAndReviews,
-        BrandNewArrival,
-        Swiper,
-        SwiperSlide,
-        IonText,
-        ProductCard,
-        NotificationButton,
-        FollowButton,
-
-    },
+    IonAvatar,
+    IonPage,
+    IonContent,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonBackButton,
+    IonTitle,
+    Brand,
+    BrandRatingAndReviews,
+    BrandNewArrival,
+    Swiper,
+    SwiperSlide,
+    IonText,
+    ProductCard,
+    NotificationButton,
+    FollowButton,
+    ProfileAvatar
+},
 
     methods: {
         async fetchBrandDetails() {

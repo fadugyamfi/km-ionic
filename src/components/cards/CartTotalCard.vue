@@ -2,10 +2,13 @@
   <ion-card class="custom-card">
     <ion-row class="row">
       <ion-col size="auto">
-        <ion-text class="item-text">Item total</ion-text>
+        <ion-text class="item-text">
+          Item total
+        </ion-text>
       </ion-col>
       <ion-col class="ion-text-end">
-        <ion-text class="item-price">{{ 'GHS ' + (totalCost || 0) }}
+        <ion-text class="item-price">
+          {{ Filters.currency((totalCost || 0)) }}
         </ion-text>
       </ion-col>
     </ion-row>
@@ -28,27 +31,26 @@ import { computed } from "vue";
 import { IonCol, IonText, IonRow, IonCard } from "@ionic/vue";
 import { useCartStore } from "@/stores/CartStore";
 import { useRoute } from "vue-router";
+import Filters from '@/utilities/Filters';
+import { Order } from "../../models/Order";
 
 const route = useRoute();
 
 const cartStore = useCartStore();
 
-cartStore.loadFromStorage();
-const cartOrders = computed(() => cartStore.orders);
-
 const totalCost = computed(() => {
-  const business = cartOrders.value.find(
-    (business: any) => business?.businesses_id == route.params.id
-  );
-  if (business) {
-    const total = business.order_items.reduce(
-      (total, item) => total + (item.total_price || 0),
+  let total = 0;
+
+  const order = cartStore.orders.find((o: Order) => o?.businesses_id == +route.params.id);
+
+  if (order) {
+    total = order.order_items?.reduce(
+      (acc, item) => acc + (item.total_price || 0),
       0
     );
-    if (total) {
-      return total.toFixed(2);
-    }
   }
+
+  return total;
 });
 </script>
 

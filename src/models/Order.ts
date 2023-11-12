@@ -36,7 +36,7 @@ export class Order {
     public id?: number | string;
     public businesses_id?: number;
     public customer_id?: number;
-    public total_order_amount?: number;
+    public total_order_amount?: number | string;
     public order_status_id?: number;
 
     public created_at: any;
@@ -45,6 +45,7 @@ export class Order {
     public product_units_id?: number;
     public delivery_location?: string;
     public delivery_date?: string;
+    public payment_option_id?: number;
     public order_items_count = 0;
 
     public _order_status_histories: OrderStatusHistory[] = [];
@@ -52,6 +53,7 @@ export class Order {
     public _customer?: Business;
     public _business?: Business;
     public _currency?: Currency;
+
 
     constructor(data: object) {
         Object.assign(this, data);

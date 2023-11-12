@@ -4,9 +4,8 @@
             <IonGrid>
                 <IonRow>
                     <IonCol size="auto">
-                        <IonAvatar>
-                            <Image :src="customer?.logo"></Image>
-                        </IonAvatar>
+                        <ProfileAvatar class="ion-align-self-start" :image="customer?.logo"
+                           :username="customer?.name" customSize="45px"></ProfileAvatar>
                     </IonCol>
                     <IonCol class="d-flex ion-align-items-start ion-justify-content-center flex-column">
                         <IonLabel class="fw-semibold">{{ customer?.name }}</IonLabel>
@@ -32,6 +31,7 @@ import { useUserStore } from '@/stores/UserStore';
 import { handleAxiosRequestError } from '@/utilities';
 import Image from '@/components/Image.vue';
 import { location, locationOutline } from 'ionicons/icons';
+import ProfileAvatar from '../../ProfileAvatar.vue';
 
 
 export default defineComponent({
@@ -54,16 +54,17 @@ export default defineComponent({
     },
 
     components: {
-        IonCard,
-        IonAvatar,
-        IonCardContent,
-        IonLabel,
-        Image,
-        IonGrid,
-        IonRow,
-        IonCol,
-        IonIcon
-    },
+    IonCard,
+    IonAvatar,
+    IonCardContent,
+    IonLabel,
+    Image,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonIcon,
+    ProfileAvatar
+},
 
 })
 </script>

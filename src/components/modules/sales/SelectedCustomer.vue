@@ -4,13 +4,15 @@
             <IonGrid>
                 <IonRow>
                     <IonCol size="auto">
-                        <IonAvatar>
+                        <ProfileAvatar :image="customer?.logo"
+                           :username="customer?.name" customSize="40px"></ProfileAvatar>
+                        <!-- <IonAvatar>
                             <Image :src="customer?.logo"></Image>
-                        </IonAvatar>
+                        </IonAvatar> -->
                     </IonCol>
                     <IonCol class="d-flex ion-align-items-start ion-justify-content-center flex-column">
                         <IonLabel class="fw-semibold">{{ customer?.name }}</IonLabel>
-                        <IonLabel class="d-flex ion-align-items-center">
+                        <IonLabel class="d-flex ion-align-items-center font-medium">
                             <IonIcon :icon="locationOutline"></IonIcon>
                             {{ customer?.location }}
                         </IonLabel>
@@ -32,6 +34,7 @@ import { useUserStore } from '@/stores/UserStore';
 import { handleAxiosRequestError } from '@/utilities';
 import Image from '@/components/Image.vue';
 import { location, locationOutline } from 'ionicons/icons';
+import ProfileAvatar from '../../ProfileAvatar.vue';
 
 
 export default defineComponent({
@@ -56,7 +59,8 @@ export default defineComponent({
         IonGrid,
         IonRow,
         IonCol,
-        IonIcon
+        IonIcon,
+        ProfileAvatar
     },
 
     methods: {

@@ -1,12 +1,7 @@
 <template>
   <section>
     <IonItem lines="none" class="profile-item ion-margin-top">
-      <IonAvatar slot="start">
-        <img
-          alt="Silhouette of a person's head"
-          src="https://ionicframework.com/docs/img/demos/avatar.svg"
-        />
-      </IonAvatar>
+      <ProfileAvatar slot="start" :image="userStore.activeBusiness?.logo" :username="userStore.activeBusiness?.name" customSize="32px"></ProfileAvatar>
       <IonLabel>{{ userStore.activeBusiness?.name }}</IonLabel>
       <IonIcon slot="end" :icon="createOutline"></IonIcon>
     </IonItem>
@@ -78,9 +73,10 @@ import { computed, defineComponent } from "vue";
 import { useUserStore } from "@/stores/UserStore";
 import { mapStores } from "pinia";
 import { search, createOutline } from "ionicons/icons";
+import ProfileAvatar from "../ProfileAvatar.vue";
 
 export default defineComponent({
-  components: { IonList, IonAvatar, IonItem, IonLabel, IonIcon },
+  components: { IonList, IonAvatar, IonItem, IonLabel, IonIcon, ProfileAvatar },
 
   computed: {
     ...mapStores(useUserStore),

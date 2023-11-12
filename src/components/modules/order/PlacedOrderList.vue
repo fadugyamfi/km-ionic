@@ -1,6 +1,6 @@
 <template>
   <IonList lines="full">
-    <OrderListItem
+    <PlacedOrderListItem
       v-for="(order, index) in orders"
       :key="order.id"
       :order="order"
@@ -31,7 +31,7 @@
             </IonContent>
         </IonPopover>
       </template>
-    </OrderListItem>
+    </PlacedOrderListItem>
 
     <DeleteModal
       :title="$t('vendor.orders.deleteOrderFromList')"
@@ -56,7 +56,7 @@ import { Order } from '@/models/Order';
 import { mapStores } from 'pinia';
 import filters from '@/utilities/Filters';
 import Image from '../../Image.vue';
-import OrderListItem from './OrderListItem.vue';
+import PlacedOrderListItem from './PlacedOrderListItem.vue';
 import DeleteModal from '../../modals/DeleteModal.vue';
 
 export default defineComponent({
@@ -74,7 +74,7 @@ export default defineComponent({
     IonChip,
     IonText,
     Image,
-    OrderListItem,
+    PlacedOrderListItem,
     DeleteModal
 },
 

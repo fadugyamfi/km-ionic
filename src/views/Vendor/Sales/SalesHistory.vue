@@ -4,7 +4,7 @@
             <IonHeader class="inner-header ion-margin-bottom">
                 <IonToolbar>
                     <IonButtons slot="start">
-                        <IonBackButton defaultHref="/vendor/home" :icon="arrowBack" mode="md"></IonBackButton>
+                        <IonBackButton defaultHref="/vendor/sales" :icon="arrowBack" mode="md"></IonBackButton>
                     </IonButtons>
                     <IonTitle size="small"><b>{{ $t("vendor.sales.salesHistory") }}</b></IonTitle>
                     <IonButtons slot="end">
@@ -115,7 +115,8 @@ export default defineComponent({
             showFilterSheet: false,
             searchFilters: {
                 start_dt: '',
-                end_dt: ''
+                end_dt: '',
+                sale_types_id: null as string | null
             }
         }
     },
@@ -166,9 +167,10 @@ export default defineComponent({
             this.fetchSales();
         },
 
-        onFilterUpdate(event: { start_dt: string, end_dt: string }) {
+        onFilterUpdate(event: { start_dt: string, end_dt: string, sale_types_id?: string }) {
             this.searchFilters.start_dt = event.start_dt;
             this.searchFilters.end_dt = event.end_dt || formatMySQLDateTime(new Date().toISOString());
+            this.searchFilters.sale_types_id = event.sale_types_id ? event.sale_types_id : null
             this.fetchSales();
         }
     },

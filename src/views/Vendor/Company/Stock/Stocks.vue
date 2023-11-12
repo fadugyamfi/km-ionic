@@ -117,6 +117,8 @@ const searchFilters = ref({
   end_dt: "",
 });
 
+const onSearch = (event: Event) => {}
+
 // const handleRefresh = async (event: RefresherCustomEvent) => {
 //   refreshing.value = true;
 //   fetching.value = true;

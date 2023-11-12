@@ -1,5 +1,5 @@
 import { useUserStore } from "@/stores/UserStore";
-import TabsPage from "@/views/Profile/TabsPage.vue";
+import TabsPage from "@/views/TabsPage.vue";
 
 export const ProfileRoutes = [
   {

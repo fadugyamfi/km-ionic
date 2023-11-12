@@ -24,7 +24,7 @@
 
       <section v-else>
         <OrderImages :order="(order as Order)" />
-        <OrderDetailItems :showChangeDate="false" :showChangeAddress="false" :order="(order as Order)" />
+        <PlacedOrderItems :order="(order as Order)" />
 
         <section class="ion-padding-horizontal update-button-section" v-if="canUpdate">
           <KolaYellowButton>
@@ -56,7 +56,7 @@ import { useOrderStore } from '@/stores/OrderStore';
 import { handleAxiosRequestError } from '@/utilities';
 import { chatbubbleOutline } from 'ionicons/icons';
 import OrderImages from '@/components/modules/order/OrderImages.vue';
-import OrderDetailItems from '@/components/modules/order/OrderDetailItems.vue';
+import PlacedOrderItems from '@/components/modules/order/PlacedOrderItems.vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import OrderStatusHistoryView from '@/components/modules/order/OrderStatusHistoryView.vue';
 
@@ -75,7 +75,7 @@ export default defineComponent({
     IonButton,
     OrderImages,
     IonSpinner,
-    OrderDetailItems,
+    PlacedOrderItems,
     KolaYellowButton,
     OrderStatusHistoryView
   },

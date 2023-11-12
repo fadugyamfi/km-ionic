@@ -1,6 +1,7 @@
 <template>
   <section>
     <ion-card>
+      <ion-card-content>
       <ion-radio value="1">
         <section
           class="d-flex ion-justify-content-between ion-align-items-center"
@@ -31,9 +32,11 @@
           </IonText>
         </section>
       </ion-radio>
+    </ion-card-content>
     </ion-card>
 
     <ion-card>
+      <ion-card-content>
       <ion-radio value="2">
         <section
           class="d-flex ion-justify-content-between ion-align-items-center"
@@ -48,30 +51,22 @@
           >
         </section>
       </ion-radio>
+    </ion-card-content>
     </ion-card>
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { locationOutline, timeOutline } from "ionicons/icons";
-import { IonText, IonRadioGroup } from "@ionic/vue";
+import { IonText, IonRadioGroup, IonIcon, IonRadio, IonCard, IonCardContent } from "@ionic/vue";
 import { ref, watch } from "vue";
 
-const emit = defineEmits();
-
-const seletedPaymentOption = ref("1");
-
-watch(seletedPaymentOption, (newValue) => {
-  if (newValue) {
-    emit("onSelectPaymentOption", seletedPaymentOption);
-  }
-});
 </script>
 
 <style lang="scss" scoped>
 ion-card {
-  margin: 10px 0px;
-  padding: 9px;
+  // margin: 10px 0px;
+  // padding: 9px;
 }
 ion-radio {
   width: 100%;
