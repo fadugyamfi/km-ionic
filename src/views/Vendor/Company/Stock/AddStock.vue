@@ -205,13 +205,8 @@ import { arrowBackOutline, chevronDownOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
-import { useCustomerStore } from "@/stores/CustomerStore";
 import { useUserStore } from "@/stores/UserStore";
-import { useBusinessStore } from "@/stores/BusinessStore";
 import { useForm } from "@/composables/form";
-import Business from "@/models/Business";
-import User from "@/models/User";
-import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { computed, onMounted, ref } from "vue";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
@@ -219,7 +214,6 @@ import { useProductCategoryStore } from "@/stores/ProductCategoryStore";
 import { useStockStore } from "@/stores/StockStore";
 
 const toastStore = useToastStore();
-const customerStore = useCustomerStore();
 const stockStore = useStockStore();
 
 const route = useRoute();
