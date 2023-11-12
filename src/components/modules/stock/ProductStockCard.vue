@@ -1,40 +1,49 @@
 <template>
-  <section class="product-category-card" :class="{ tall: tall === true }">
-    <ion-card>
-      <Image :alt="category.name" :src="category.image" />
-
-      <IonCardHeader>
+  <section>
+    <section class="product-category-card" :class="{ tall: tall === true }">
+      <ion-card>
+        <Image :alt="stock.product_name" :src="stock.image" />
         <IonCardHeader>
-          <section>
-            <IonText class="d-flex ion-align-items-center">
-              <IonIcon
-                class="warning"
-                :icon="alertCircleOutline"
-              ></IonIcon
-              >out of stock</IonText
-            >
-          </section>
-          <section class="pricing d-flex ion-align-items-center ion-justify-content-between">
-            <span> GHS 3000.00 </span>
-            <span class="weight ion-text-end"> 25kg/24pcs kg </span>
-          </section>
           <section
             class="d-flex ion-align-items-center ion-justify-content-between"
           >
-            <p class="product-title fw-semibold line-clamp">Frytol oil</p>
+            <p class="product-title fw-semibold line-clamp">
+              {{ stock.product_name }}
+            </p>
 
             <IonButton
               fill="clear"
               color="medium"
-              @click.prevent.stop="addToCart()"
+              @click.prevent.stop="removeFromStock(stock)"
               class="ion-no-padding ion-no-margin"
             >
               <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
             </IonButton>
           </section>
+          <section
+            class="pricing d-flex ion-align-items-center ion-justify-content-between"
+          >
+            <span> {{ stock.currency?.symbol }} {{ stock.product_price }}</span>
+            <span class="weight ion-text-end">
+              {{ stock.weight_value }}kg
+            </span>
+          </section>
+
+          <section v-if="stock.stock_quantity == 0">
+            <IonText class="d-flex ion-align-items-center">
+              <IonIcon class="warning" :icon="alertCircleOutline"></IonIcon>out
+              of stock</IonText
+            >
+          </section>
         </IonCardHeader>
-      </IonCardHeader>
-    </ion-card>
+      </ion-card>
+    </section>
+    <DeleteStockModal
+      :isOpen="showConfirmDeleteModal"
+      :stock="selectedStock"
+      @dismiss="showConfirmDeleteModal = false"
+      @confirm="onConfirmDelete()"
+    />
   </section>
 </template>
 
@@ -57,14 +66,18 @@ import {
   closeCircleOutline,
   alertCircleOutline,
 } from "ionicons/icons";
-import ProductCategory from "@/models/ProductCategory";
 import Image from "@/components/Image.vue";
+import Stock from "@/models/Stock";
+import { mapStores } from "pinia";
+import { useStockStore } from "@/stores/StockStore";
+import { useToastStore } from "@/stores/ToastStore";
+import DeleteStockModal from "./DeleteStockModal.vue";
 
 export default defineComponent({
   props: {
-    category: {
+    stock: {
       required: true,
-      type: ProductCategory,
+      type: Stock,
     },
 
     tall: {
@@ -78,6 +91,8 @@ export default defineComponent({
       locationOutline,
       closeCircleOutline,
       alertCircleOutline,
+      selectedStock: null as Stock | null,
+      showConfirmDeleteModal: false,
     };
   },
 
@@ -93,6 +108,34 @@ export default defineComponent({
     IonButton,
     IonLabel,
     IonText,
+    DeleteStockModal,
+  },
+  computed: {
+    ...mapStores(useStockStore, useToastStore),
+  },
+  methods: {
+    removeFromStock(stock: Stock) {
+      this.selectedStock = stock;
+      this.showConfirmDeleteModal = true;
+    },
+    async onConfirmDelete() {
+      try {
+        this.showConfirmDeleteModal = false;
+        await this.stockStore.deleteStock(this.selectedStock as Stock);
+        this.toastStore.showSuccess(
+          "Stock has been removed successfully",
+          "",
+          "bottom"
+        );
+      } catch (error) {
+        this.toastStore.showError(
+          "Failed to remove Stock. Please try again",
+          "",
+          "bottom",
+          "footer"
+        );
+      }
+    },
   },
 
   methods: {
@@ -127,12 +170,12 @@ export default defineComponent({
 
     ion-card-header {
       text-align: left;
-      padding: 5px;
+      padding: 0px 5px 5px 5px;
       .product-title {
         font-size: 0.95em;
         font-weight: 600;
         margin-top: 0px;
-        margin-bottom: 5px;
+        margin-bottom: 0px;
         text-overflow: ellipsis;
         overflow: hidden;
         color: #111;
@@ -142,6 +185,7 @@ export default defineComponent({
         font-size: 0.93em;
         font-weight: normal;
         color: #212121;
+        margin-bottom: 5px;
         span {
           font-size: 11px;
           &.weight {
