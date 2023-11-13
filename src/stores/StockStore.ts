@@ -136,5 +136,17 @@ export const useStockStore = defineStore("stock", {
         })
         .catch((error) => handleAxiosRequestError(error));
     },
+    async fetchProduct(product_id: number | string): Promise<Stock | null> {
+      try {
+        const response = await axios.get(`/v2/products/${product_id}`);
+        const product = new Stock(response.data.data);
+
+        return product;
+      } catch (error) {
+        handleAxiosRequestError(error);
+
+        return null;
+      }
+    },
   },
 });

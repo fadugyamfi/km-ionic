@@ -10,7 +10,7 @@
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
             <!-- {{ $t("shopper.orders.orderDetails") }} - #{{ order?.id }} -->
-            Product Details
+            Product Detail
           </IonTitle>
           <IonButtons slot="end">
             <IonButton>
@@ -21,69 +21,23 @@
         </IonToolbar>
       </IonHeader>
     </section>
-
-    <Image src="/images/vendor/product-image"></Image>
     <ion-content :fullscreen="true" class="ion-padding">
-      <p class="stock-availabilty">Product is currently out of stock</p>
-      <section
-        class="ion-padding-horizontal d-flex ion-align-items-start ion-justify-content-between"
-      >
-        <div>
-          <h6>Frytol oil - GHS <span> 300.00</span></h6>
-          <p>25kg/24pcs</p>
-          <div>
-            <!-- <Image src="/images/vendor/"></Image> -->
-            <p>GHS 3000.00 minimum</p>
-          </div>
-        </div>
-        <div>
-          <IonButton
-            fill="clear"
-            color="dark"
-            class="ion-no-margin ion-no-padding ion-align-self-start"
-          >
-            <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
-          </IonButton>
-        </div>
-      </section>
-      <!-- <section class="ion-padding categories">
-        <IonChip class="chip">
-          <IonLabel class="label"> All </IonLabel>
-        </IonChip>
-        <IonChip class="chip">
-          <IonLabel class="label"> Dental </IonLabel>
-        </IonChip>
-        <IonChip class="chip">
-          <IonLabel class="label"> Food </IonLabel>
-        </IonChip>
-        <IonChip class="chip">
-          <IonLabel class="label"> Fashion </IonLabel>
-        </IonChip>
-        <IonChip class="chip">
-          <IonLabel class="label"> Household </IonLabel>
-        </IonChip>
-      </section> -->
-
-      <StockDetailChips />
-
       <section
         v-if="loading"
         class="d-flex ion-justify-content-center ion-padding"
       >
         <IonSpinner name="crescent"></IonSpinner>
       </section>
-
-      <section v-else>
-        <!-- <OrderImages :order="(order as Order)" />
-          <OrderDetailItems :order="(order as Order)" /> -->
-
-        <section class="ion-padding-horizontal update-button-section">
+      <section v-if="!loading">
+        <Image :src="product?.image"></Image>
+        <StockInfo :product="product" />
+        <section class="ion-padding-vertical">
+          {{ product?.image }}
           <KolaYellowButton @click="showFilterSheet = true">
             {{ "Update Stock" }}
           </KolaYellowButton>
         </section>
       </section>
-
       <StockUpdateSheet
         :isOpen="showFilterSheet"
         @didDismiss="showFilterSheet = false"
@@ -114,12 +68,12 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
+  IonText,
 } from "@ionic/vue";
 
 import { defineComponent } from "vue";
 // import OrdersCard from "@/components/modules/order/OrdersCard.vue";
 import UpdateButon from "@/components/modules/order/UpdateButon.vue";
-import { closeCircleOutline } from "ionicons/icons";
 
 import { mapStores } from "pinia";
 import { useOrderStore } from "@/stores/OrderStore";
@@ -131,8 +85,9 @@ import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderStatusHistoryView from "@/components/modules/order/OrderStatusHistoryView.vue";
 import Image from "@/components/Image.vue";
 import StockUpdateSheet from "@/components/modules/stock/StockUpdateSheets.vue";
-import StockDetailChips from "@/components/modules/stock/StockDetailChips.vue";
-
+import StockInfo from "@/components/modules/stock/StockInfo.vue";
+import { useStockStore } from "@/stores/StockStore";
+import Stock from "@/models/Stock";
 
 export default defineComponent({
   components: {
@@ -151,16 +106,16 @@ export default defineComponent({
     IonCardTitle,
     IonIcon,
     IonContent,
-    // OrdersCard,
+    IonText,
     UpdateButon,
     IonButton,
     OrderImages,
     IonSpinner,
-    // OrderDetailItems,
     KolaYellowButton,
     OrderStatusHistoryView,
     Image,
-    StockUpdateSheet,StockDetailChips
+    StockUpdateSheet,
+    StockInfo,
   },
 
   name: "OrderDetails",
@@ -169,14 +124,15 @@ export default defineComponent({
     return {
       loading: false,
       chatbubbleOutline,
-      closeCircleOutline,
       order: null as Order | null,
       showFilterSheet: false,
       fetching: false,
+      product: null as Stock | null,
     };
   },
 
-  async mounted() {
+  mounted() {
+    this.getProduct();
   },
 
   computed: {
@@ -184,14 +140,30 @@ export default defineComponent({
   },
 
   methods: {
-    onFilterUpdate(present){
-
-    }
+    onFilterUpdate(present) {},
+    async getProduct() {
+      const stockStore = useStockStore();
+      const route = this.$route.params.id;
+      this.fetching = true;
+      this.product = await stockStore.fetchProduct(Number(route));
+    },
   },
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+ion-icon {
+  font-size: 20px;
+  &.warning {
+    --background: #fdf0ed;
+    --border-color: #ef3e3233;
+    padding: 2px;
+    border-radius: 50%;
+    background-color: #fa2b3928;
+    color: #d92d20;
+    margin-right: 10px;
+  }
+}
 .order-card {
   height: 85px;
   padding: 12px 16px;
@@ -200,16 +172,8 @@ export default defineComponent({
   border-radius: 8px;
 }
 
-.update-button-section {
-  margin-top: 2em;
-  margin-bottom: 3em;
-}
-
 h6 {
-  color: #000;
-  font-family: Poppins;
   font-size: 16px;
-  font-weight: 600;
 }
 
 .stock-availabilty {
@@ -218,7 +182,7 @@ h6 {
   border: 0.5px solid rgba(239, 62, 50, 0.2);
   background: #fdf0ed;
   box-shadow: 0px 2px 16px 0px rgba(101, 93, 93, 0.1);
-  padding: 8px;
+  padding: 8px 40px;
   color: var(--text-primary, #000);
   font-size: 12px;
 }
@@ -231,5 +195,8 @@ h6 {
   border-radius: 16px;
   background: var(--gray-100, #f2f4f7);
   color: #003366;
+}
+ion-text {
+  font-size: 12px;
 }
 </style>

@@ -14,7 +14,10 @@
           </ion-buttons>
           <IonTitle size="small" class="fw-bold">Stock</IonTitle>
           <IonButtons slot="end">
-            <IonButton color="dark" @click="router.push(`/profile/company/stocks/add-stock`)">
+            <IonButton
+              color="dark"
+              @click="router.push(`/profile/company/stocks/add-stock`)"
+            >
               <IonIcon :icon="bagAddOutline"></IonIcon>
             </IonButton>
             <IonButton @click="showFilterSheet = true" color="dark">
@@ -39,9 +42,9 @@
       </div>
 
       <section v-if="!fetching" class="ion-margin-top">
-        <EmptyStock v-if="stocks?.length == 0"></EmptyStock>
         <Summary :total-items="meta.total" />
         <AvailableStock :stocks="stocks" />
+        <EmptyStock v-if="stocks?.length == 0"></EmptyStock>
       </section>
     </ion-content>
     <FilterStockSheet
@@ -102,7 +105,7 @@ const stocks = ref<Stock[]>();
 const searchFilters = ref({
   start_dt: "",
   end_dt: "",
-  category_id: null as number | null,
+  product_categories_id: null as number | null,
 });
 
 const meta = computed(() => stockStore.meta);
@@ -122,7 +125,7 @@ const onFilterUpdate = (event: { start_dt: string; end_dt: string }) => {
   fetchStocks();
 };
 const onFilterCategory = (event: number) => {
-  searchFilters.value.category_id = event;
+  searchFilters.value.product_categories_id = event;
   fetchStocks();
 };
 const fetchStocks = async () => {

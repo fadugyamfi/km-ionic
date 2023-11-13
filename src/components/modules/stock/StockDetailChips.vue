@@ -1,39 +1,28 @@
 <template>
-    <section class="ion-no-border">
-      <Swiper :slides-per-view="3.5">
-        <SwiperSlide v-for="category in categories" :key="category.id">
-          <StockChip
-            :category="category"
-            @click="viewCategory(category)"
-          ></StockChip>
-        </SwiperSlide>
-      </Swiper>
-    </section>
-  </template>
-  <script setup lang="ts">
-  import { onMounted, ref } from "vue";
-  import { IonChip, IonLabel } from "@ionic/vue";
-  import { Swiper, SwiperSlide } from "swiper/vue";
-  import { useProductCategoryStore } from "@/stores/ProductCategoryStore";
-  import StockChip from "./StockChip.vue";
-  import ProductCategory from "@/models/ProductCategory";
-  
-  const categories = ref<ProductCategory[]>();
-  
-  const fetchCategories = async () => {
-    const productCategoryStore = useProductCategoryStore();
-    const response = await productCategoryStore.getCategories();
-    categories.value = response.map((cat) => {
-      return {
-        ...cat,
-        name: cat.name?.split(" ")[0],
-      };
-    });
-  };
-  const viewCategory = (category: any) => {};
-  
-  onMounted(() => {
-    fetchCategories();
-  });
-  </script>
-  
+  <section class="ion-no-border">
+    <IonText v-for="tag in tags" :key="tag.id" class="tag">{{
+      tag.name
+    }}</IonText>
+  </section>
+</template>
+<script setup lang="ts">
+import { PropType, ref } from "vue";
+import { IonText } from "@ionic/vue";
+
+const props = defineProps({
+  tags: {
+    type: Array as PropType<any>,
+    default: () => [],
+  },
+});
+</script>
+<style lang="scss" scoped>
+.tag {
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: #f0f9ff;
+  font-size: 10px;
+  color: #036;
+  margin-right: 6px;
+}
+</style>

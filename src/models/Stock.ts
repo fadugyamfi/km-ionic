@@ -19,6 +19,7 @@ export default class Stock {
   public image?: string;
   public weight_value?: string | number;
   public volume_value?: string | number;
+  public min_order_amount?: string | number;
   public group_quantity?: number;
   private _currency?: Currency | null;
   public _business?: Business | null;
