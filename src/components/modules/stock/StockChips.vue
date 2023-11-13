@@ -4,7 +4,8 @@
       <SwiperSlide v-for="category in categories" :key="category.id">
         <StockChip
           :category="category"
-          @click="viewCategory(category)"
+          :selectedCategory="selectedCategory"
+          @click="filterCategory(category)"
         ></StockChip>
       </SwiperSlide>
     </Swiper>
@@ -18,7 +19,10 @@ import { useProductCategoryStore } from "@/stores/ProductCategoryStore";
 import StockChip from "./StockChip.vue";
 import ProductCategory from "@/models/ProductCategory";
 
+const emit = defineEmits(["filter"]);
+
 const categories = ref<ProductCategory[]>();
+const selectedCategory = ref<any>();
 
 const fetchCategories = async () => {
   const productCategoryStore = useProductCategoryStore();
@@ -30,7 +34,10 @@ const fetchCategories = async () => {
     };
   });
 };
-const viewCategory = (category: any) => {};
+const filterCategory = (category: any) => {
+  selectedCategory.value = category;
+  emit("filter", category.id);
+};
 
 onMounted(() => {
   fetchCategories();

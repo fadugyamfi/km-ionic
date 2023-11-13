@@ -72,7 +72,6 @@ export default defineComponent({
   },
 
   mounted() {
-    console.log(this.stocks);
     setTimeout(() => {
       this.fillColumns();
     }, 200);

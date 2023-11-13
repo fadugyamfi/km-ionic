@@ -1,7 +1,7 @@
 <template>
   <ion-page>
     <IonHeader class="ion-padding ion-no-border">
-      <ion-header class="inner-header ion-margin-bottom">
+      <ion-header class="inner-header">
         <ion-toolbar class="ion-align-items-center">
           <ion-buttons slot="start">
             <ion-back-button
@@ -20,22 +20,17 @@
           </IonButtons>
         </ion-toolbar>
       </ion-header>
-      <IonSegment
-        value="pastmonth"
-        mode="ios"
-        @ionChange="onSegmentChanged($event)"
-        ><IonSegmentButton value="pastmonth">
-          <IonLabel>{{ $t("general.pastMonth") }}</IonLabel>
-        </IonSegmentButton>
-        <IonSegmentButton value="thisweek">
-          <IonLabel>{{ $t("general.thisWeek") }}</IonLabel>
-        </IonSegmentButton>
-        <IonSegmentButton value="today">
-          <IonLabel>
-            {{ $t("general.today") }}
-          </IonLabel>
-        </IonSegmentButton>
-      </IonSegment>
+      <IonToolbar>
+        <IonSearchbar
+          class="search-input"
+          placeholder="Search..."
+          @keyup.enter="onSearch($event)"
+          @ion-change="onSearch($event)"
+        ></IonSearchbar>
+      </IonToolbar>
+      <IonToolbar>
+        <StockChips @filter="onFilterCategory($event)" />
+      </IonToolbar>
     </IonHeader>
     <ion-content class="ion-padding-horizontal">
       <div class="ion-padding ion-text-center" v-show="fetching">
@@ -43,14 +38,7 @@
       </div>
       <section v-if="!fetching">
         <EmptyStock v-if="stocks?.length == 0"></EmptyStock>
-        <Summary />
-        <IonSearchbar
-          class="search-input"
-          placeholder="Search..."
-          @keyup.enter="onSearch($event)"
-          @ion-change="onSearch($event)"
-        ></IonSearchbar>
-        <StockChips />
+        <Summary :total-items="meta.total" />
         <AvailableStock :stocks="stocks" />
       </section>
     </ion-content>
@@ -115,7 +103,10 @@ const stocks = ref<Stock[]>();
 const searchFilters = ref({
   start_dt: "",
   end_dt: "",
+  category_id: null as number | null,
 });
+
+const meta = computed(() => stockStore.meta);
 
 // const handleRefresh = async (event: RefresherCustomEvent) => {
 //   refreshing.value = true;
@@ -125,34 +116,14 @@ const searchFilters = ref({
 //   event.target.complete();
 // };
 
-const onSegmentChanged = (event: CustomEvent) => {
-  let start_dt = new Date();
-  let end_dt = new Date();
-  const option = event.detail.value;
-
-  switch (option) {
-    case "pastmonth":
-      start_dt.setMonth(start_dt.getMonth() - 1);
-      break;
-
-    case "today":
-      start_dt.setDate(start_dt.getDate() - 1);
-      break;
-
-    case "thisweek":
-      start_dt.setDate(start_dt.getDate() - 7);
-      break;
-  }
-
-  searchFilters.value.start_dt = formatMySQLDateTime(start_dt.toISOString());
-  searchFilters.value.end_dt = formatMySQLDateTime(end_dt.toISOString());
-
-  fetchStocks();
-};
 const onFilterUpdate = (event: { start_dt: string; end_dt: string }) => {
   searchFilters.value.start_dt = event.start_dt;
   searchFilters.value.end_dt =
     event.end_dt || formatMySQLDateTime(new Date().toISOString());
+  fetchStocks();
+};
+const onFilterCategory = (event: number) => {
+  searchFilters.value.category_id = event;
   fetchStocks();
 };
 const fetchStocks = async () => {
@@ -183,7 +154,8 @@ const onSearch = (event: any) => {
 };
 
 onMounted(() => {
-  onSegmentChanged(new CustomEvent("load", { detail: { value: "pastmonth" } }));
+  // onSegmentChanged(new CustomEvent("load", { detail: { value: "pastmonth" } }));
+  fetchStocks();
 });
 </script>
 

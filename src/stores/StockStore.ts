@@ -4,11 +4,13 @@ import { useToastStore } from "./ToastStore";
 import { handleAxiosRequestError } from "../utilities";
 import { FavoritedProduct } from "../models/types";
 import Stock from "@/models/Stock";
+import { useUserStore } from "./UserStore";
 
 export const useStockStore = defineStore("stock", {
   state: () => {
     return {
       stocks: [] as Stock[],
+      meta: { total: null as number | null },
       selectedStock: null as Stock | null,
       recentlyViewedStocks: [] as Stock[],
       productGroups: [],
@@ -33,13 +35,16 @@ export const useStockStore = defineStore("stock", {
     },
 
     async fetchStocks(options = {}): Promise<Stock[]> {
+      const business_id = useUserStore().activeBusiness?.id;
       const params = {
         ...options,
+        businesses_id: business_id,
       };
 
       try {
         const response = await axios.get("/v2/products", { params });
         this.stocks = this.mapResponseToStocks(response);
+        this.meta = response.data.meta;
 
         return this.stocks;
       } catch (error) {
