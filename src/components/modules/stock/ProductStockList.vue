@@ -66,13 +66,13 @@ export default defineComponent({
     },
 
     onCategorySelected(category: ProductCategory) {
-        console.log('helolo')
-      this.$router.push(`/shopper/home/categories/${category.id}`);
+      console.log("helolo");
+      this.$router.push(`/profile/company/stocks/${category.id}/stock-details`);
     },
   },
 
   mounted() {
-    console.log(this.stocks);
+    // console.log(this.stocks);
     setTimeout(() => {
       this.fillColumns();
     }, 200);
