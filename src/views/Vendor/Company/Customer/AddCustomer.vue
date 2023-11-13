@@ -218,12 +218,12 @@ const createCustomer = async () => {
     const customer = await customerStore.createBusinessCustomer(form.fields);
     if (customer) {
       toastStore.unblockUI();
-      router.push("profile/company/customers");
-      toastStore.showSuccess(
+      await toastStore.showSuccess(
         "Customer has been added successfully",
         "",
         "bottom"
       );
+      router.push("/profile/company/customers");
     } else {
       toastStore.unblockUI();
       toastStore.showError(

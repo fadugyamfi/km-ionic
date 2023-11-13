@@ -18,10 +18,10 @@
         </ion-toolbar>
       </ion-header>
     </IonHeader>
-    <ion-content class="ion-padding">
-      <div class="ion-padding ion-text-center" v-show="fetching">
-        <IonSpinner name="crescent"></IonSpinner>
-      </div>
+    <div class="ion-padding ion-text-center" v-show="fetching">
+      <IonSpinner name="crescent"></IonSpinner>
+    </div>
+    <ion-content class="ion-padding" v-if="!fetching">
       <IonText style="font-size: 14px" color="medium" size="small">
         {{ $t("profile.stock.addProductImage") }}
       </IonText>
@@ -81,6 +81,28 @@
         ></IonInput>
         <IonSelect
           class="kola-input ion-margin-bottom"
+          label="Brand"
+          :class="{
+            'ion-invalid ion-touched': form.errors.brands_id,
+          }"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.brands_id"
+          required
+          name="brands_id"
+          :toggle-icon="chevronDownOutline"
+          @ion-change="form.validateSelectInput($event)"
+        >
+          <IonSelectOption
+            v-for="brand in brands"
+            :key="brand.id"
+            :value="brand.id"
+          >
+            {{ brand.name }}</IonSelectOption
+          >
+        </IonSelect>
+        <IonSelect
+          class="kola-input ion-margin-bottom"
           :label="$t('profile.stock.variation')"
           :class="{
             'ion-invalid ion-touched': form.errors.product_variation,
@@ -125,7 +147,28 @@
           @ion-input="form.validate($event)"
           required
         ></IonInput>
-
+        <IonSelect
+          class="kola-input ion-margin-bottom"
+          label="Product unit"
+          :class="{
+            'ion-invalid ion-touched': form.errors.product_units_id,
+          }"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.product_units_id"
+          required
+          name="product_units_id"
+          :toggle-icon="chevronDownOutline"
+          @ion-change="form.validateSelectInput($event)"
+        >
+          <IonSelectOption
+            v-for="unit in productUnits"
+            :key="unit.id"
+            :value="unit.id"
+          >
+            {{ unit.name }}</IonSelectOption
+          >
+        </IonSelect>
         <section class="radio-wrapper ion-margin-bottom">
           <h6>Quantity Type</h6>
           <ion-radio-group
@@ -141,7 +184,17 @@
             </div>
           </ion-radio-group>
         </section>
-
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.product_sku }"
+          label="Product sku"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.product_sku"
+          name="product_sku"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.product_price }"
@@ -212,6 +265,8 @@ import { computed, onMounted, ref } from "vue";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { useProductCategoryStore } from "@/stores/ProductCategoryStore";
 import { useStockStore } from "@/stores/StockStore";
+import { useBrandStore } from "@/stores/BrandStore";
+import Brand from "@/models/Brand";
 
 const toastStore = useToastStore();
 const stockStore = useStockStore();
@@ -222,6 +277,8 @@ const router = useRouter();
 const fetching = ref(false);
 const productGroups = ref<any>([]);
 const productVariations = ref<any>([]);
+const brands = ref<Brand[]>([]);
+const productUnits = ref<any>([]);
 
 const photo = ref();
 
@@ -234,6 +291,10 @@ const form = useForm({
   group_quantity: "",
   product_groups_id: "",
   product_price: "",
+  product_units_id: "",
+  brands_id: "",
+  product_sku: "",
+  currencies_id: 1,
   date: "",
 });
 
@@ -245,10 +306,13 @@ const formValid = computed(() => {
     fields.product_name.length > 0 &&
     fields.product_description.length > 0 &&
     fields.date.length > 0 &&
+    fields.product_sku.length > 0 &&
     isNaN(Number(fields.product_variation)) == false &&
     isNaN(Number(fields.product_price)) == false &&
     fields.product_categories_id &&
     fields.product_groups_id &&
+    fields.brands_id &&
+    fields.product_units_id &&
     fields.group_quantity
   );
 });
@@ -264,8 +328,8 @@ const createStock = async () => {
     });
     if (stock) {
       toastStore.unblockUI();
-      router.push("profile/company/customers");
-      toastStore.showSuccess("Stock has been added successfully");
+      await toastStore.showSuccess("Stock has been added successfully");
+      router.push("/profile/company/stocks");
     } else {
       toastStore.unblockUI();
       toastStore.showError(
@@ -302,6 +366,18 @@ const fetchProductVariations = async () => {
   productVariations.value = await stockStore.fetchProductVariations();
   fetching.value = false;
 };
+const fetchBrands = async () => {
+  const brandStore = useBrandStore();
+  fetching.value = true;
+  const response = await brandStore.fetchBrands();
+  fetching.value = false;
+  brands.value = brandStore.brands;
+};
+const fetchProductUnits = async () => {
+  fetching.value = true;
+  productUnits.value = await stockStore.fetchProductUnits();
+  fetching.value = false;
+};
 
 const pickImages = async () => {
   const { takePhoto, photos, pickImages } = usePhotoGallery();
@@ -321,6 +397,9 @@ onMounted(() => {
   getProductCategories();
   fetchProductGroups();
   fetchProductVariations();
+  fetchBrands();
+  fetchProductUnits();
+  console.log('hello')
 });
 
 const cancel = () => {

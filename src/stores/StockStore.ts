@@ -15,6 +15,7 @@ export const useStockStore = defineStore("stock", {
       recentlyViewedStocks: [] as Stock[],
       productGroups: [],
       productVariations: [],
+      productUnits: [],
       searchTerm: "",
     };
   },
@@ -108,6 +109,17 @@ export const useStockStore = defineStore("stock", {
         if (response) {
           this.productVariations = response.data.data;
           return this.productVariations;
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+    },
+    async fetchProductUnits() {
+      try {
+        const response = await axios.get("v2/product-units");
+        if (response) {
+          this.productUnits = response.data.data;
+          return this.productUnits;
         }
       } catch (error) {
         handleAxiosRequestError(error);

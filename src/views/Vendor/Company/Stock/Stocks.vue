@@ -14,6 +14,9 @@
           </ion-buttons>
           <IonTitle size="small" class="fw-bold">Stock</IonTitle>
           <IonButtons slot="end">
+            <IonButton color="dark" @click="router.push(`/profile/company/stocks/add-stock`)">
+              <IonIcon :icon="bagAddOutline"></IonIcon>
+            </IonButton>
             <IonButton @click="showFilterSheet = true" color="dark">
               <IonIcon :icon="optionsOutline"></IonIcon>
             </IonButton>
@@ -28,15 +31,14 @@
           @ion-change="onSearch($event)"
         ></IonSearchbar>
       </IonToolbar>
-      <IonToolbar>
-        <StockChips @filter="onFilterCategory($event)" />
-      </IonToolbar>
     </IonHeader>
     <ion-content class="ion-padding-horizontal">
+      <StockChips @filter="onFilterCategory($event)" />
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-      <section v-if="!fetching">
+
+      <section v-if="!fetching" class="ion-margin-top">
         <EmptyStock v-if="stocks?.length == 0"></EmptyStock>
         <Summary :total-items="meta.total" />
         <AvailableStock :stocks="stocks" />
@@ -76,17 +78,14 @@ import {
   personAddOutline,
   search,
   optionsOutline,
+  bagAddOutline,
 } from "ionicons/icons";
-import { useUserStore } from "@/stores/UserStore";
-import { useBusinessStore } from "@/stores/BusinessStore";
-import Business from "@/models/Business";
 import EmptyStock from "@/components/modules/stock/EmptyStock.vue";
 import StockChips from "@/components/modules/stock/StockChips.vue";
 import FilterStockSheet from "@/components/modules/stock/FilterStockSheet.vue";
 import Summary from "@/components/modules/stock/Summary.vue";
 import { formatMySQLDateTime } from "@/utilities";
 import { useRouter } from "vue-router";
-import { useCustomerStore } from "@/stores/CustomerStore";
 import AvailableStock from "./AvailableStock.vue";
 import { useStockStore } from "@/stores/StockStore";
 import { handleAxiosRequestError } from "@/utilities";
