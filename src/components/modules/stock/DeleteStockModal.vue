@@ -8,7 +8,7 @@
             </IonAvatar>
           </p>
           <h6 class="fw-semibold">
-            {{ $t("profile.customers.confirmDeleteCustomer") }}
+           Are you sure you want to remove this stock?
           </h6>
           <p>
             <IonText color="muted">
