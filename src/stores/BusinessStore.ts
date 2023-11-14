@@ -52,6 +52,7 @@ export const useBusinessStore = defineStore("business", {
         brand_is_in_large_retail_chain: "No",
         how_you_heard_about_kola: '',
         goals_and_expectation_of_kolamarket: "",
+        applied_to: 'sell'
       },
       user: {
         pin: '',
