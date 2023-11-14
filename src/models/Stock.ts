@@ -20,6 +20,8 @@ export default class Stock {
   public weight_value?: string | number;
   public volume_value?: string | number;
   public min_order_amount?: string | number;
+  public brands_id?: string | number;
+  public product_sku?: string | number;
   public group_quantity?: number;
   private _currency?: Currency | null;
   public _business?: Business | null;

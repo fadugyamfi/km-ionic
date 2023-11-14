@@ -13,9 +13,8 @@
             Product Detail
           </IonTitle>
           <IonButtons slot="end">
-            <IonButton>
-              <IonIcon slot="icon-only" :icon="chatbubbleOutline"></IonIcon>
-              <!-- <Image src="/images/vendor/share"></Image> -->
+            <IonButton slot="icon-only">
+              <IonIcon :icon="shareOutline"></IonIcon>
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -23,25 +22,26 @@
     </section>
     <ion-content :fullscreen="true" class="ion-padding">
       <section
-        v-if="loading"
+        v-if="fetching"
         class="d-flex ion-justify-content-center ion-padding"
       >
         <IonSpinner name="crescent"></IonSpinner>
       </section>
-      <section v-if="!loading">
+      <section v-if="!fetching">
         <Image :src="product?.image"></Image>
         <StockInfo :product="product" />
         <section class="ion-padding-vertical">
-          {{ product?.image }}
           <KolaYellowButton @click="showFilterSheet = true">
             {{ "Update Stock" }}
           </KolaYellowButton>
         </section>
       </section>
       <StockUpdateSheet
+        :product="product"
+        :productVariations="productVariations"
         :isOpen="showFilterSheet"
         @didDismiss="showFilterSheet = false"
-        @update="onFilterUpdate($event)"
+        @update="onSaveUpdate($event)"
       >
       </StockUpdateSheet>
     </ion-content>
@@ -76,9 +76,9 @@ import { defineComponent } from "vue";
 import UpdateButon from "@/components/modules/order/UpdateButon.vue";
 
 import { mapStores } from "pinia";
-import { useOrderStore } from "@/stores/OrderStore";
+import { useUserStore } from "@/stores/UserStore";
 import { handleAxiosRequestError } from "@/utilities";
-import { chatbubbleOutline } from "ionicons/icons";
+import { chatbubbleOutline, shareOutline } from "ionicons/icons";
 import OrderImages from "@/components/modules/order/OrderImages.vue";
 // import OrderDetailItems from "@/components/modules/order/OrderDetailItems.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
@@ -88,6 +88,7 @@ import StockUpdateSheet from "@/components/modules/stock/StockUpdateSheets.vue";
 import StockInfo from "@/components/modules/stock/StockInfo.vue";
 import { useStockStore } from "@/stores/StockStore";
 import Stock from "@/models/Stock";
+import { useToastStore } from "@/stores/ToastStore";
 
 export default defineComponent({
   components: {
@@ -122,30 +123,83 @@ export default defineComponent({
 
   data() {
     return {
-      loading: false,
       chatbubbleOutline,
+      shareOutline,
       order: null as Order | null,
       showFilterSheet: false,
       fetching: false,
       product: null as Stock | null,
+      productVariations: [] as any,
     };
   },
 
   mounted() {
     this.getProduct();
+    this.fetchProductVariations();
   },
 
   computed: {
-    ...mapStores(useOrderStore),
+    ...mapStores(useUserStore, useToastStore),
   },
 
   methods: {
-    onFilterUpdate(present) {},
+    onSaveUpdate(form: Object) {
+      this.updateStock(form);
+    },
     async getProduct() {
       const stockStore = useStockStore();
-      const route = this.$route.params.id;
+      const product_id = this.$route.params.id;
       this.fetching = true;
-      this.product = await stockStore.fetchProduct(Number(route));
+      this.product = await stockStore.fetchProduct(Number(product_id));
+      this.fetching = false;
+    },
+    async fetchProductVariations() {
+      const stockStore = useStockStore();
+      this.fetching = true;
+      this.productVariations = await stockStore.fetchProductVariations();
+      this.fetching = false;
+    },
+    async updateStock(form: any) {
+      try {
+        this.toastStore.blockUI("Hold On As We Restock Your Product");
+        const stockStore = useStockStore();
+        const product_id = this.$route.params.id;
+        const newForm = {
+          product_categories_id: this.product?.product_categories_id,
+          product_name: this.product?.product_name,
+          product_groups_id: this.product?.product_groups_id,
+          product_price: this.product?.product_price,
+          product_units_id: this.product?.product_units_id,
+          brands_id: this.product?.brands_id,
+          product_sku: this.product?.product_sku,
+          currencies_id: 1,
+          businesses_id: this.userStore.activeBusiness?.id,
+          group_quantity: form.group_quantity || this.product?.group_quantity,
+          product_variation: form.product_variation,
+          product_color: form.product_color,
+        };
+        this.fetching = true;
+        const product = await stockStore.updateStock(
+          Number(product_id),
+          newForm
+        );
+        if (product) {
+          this.toastStore.unblockUI();
+          await this.toastStore.showSuccess("Product has been restocked");
+        } else {
+          this.toastStore.unblockUI();
+          this.toastStore.showError(
+            "Failed to restock Product. Please try again",
+            "",
+            "bottom",
+            "footer"
+          );
+        }
+        this.fetching = false;
+      } catch (error) {
+      } finally {
+        this.toastStore.unblockUI();
+      }
     },
   },
 });

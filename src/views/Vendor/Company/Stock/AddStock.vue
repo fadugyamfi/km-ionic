@@ -318,7 +318,6 @@ const formValid = computed(() => {
 });
 
 const createStock = async () => {
-  console.log(form.fields);
   try {
     const userStore = useUserStore();
     toastStore.blockUI("Hold On As We Add Your Stock");

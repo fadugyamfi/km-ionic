@@ -148,5 +148,21 @@ export const useStockStore = defineStore("stock", {
         return null;
       }
     },
+    async updateStock(
+      product_id: number | string,
+      formData: Object
+    ): Promise<Stock | null> {
+      try {
+        const response = await axios.put(
+          `/v2/products/${product_id}`,
+          formData
+        );
+        const product = new Stock(response.data.data);
+        return product;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return null;
+      }
+    },
   },
 });

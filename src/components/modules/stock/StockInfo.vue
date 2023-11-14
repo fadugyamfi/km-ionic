@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="ion-margin-top">
     <IonCard>
       <IonCardHeader class="ion-no-padding">
         <section v-if="product?.stock_quantity == 0">
@@ -12,9 +12,9 @@
 
       <IonCardContent class="ion-no-padding">
         <section
-          class="details ion-padding-horizontal ion-margin-vertical d-flex ion-align-items-start ion-justify-content-between"
+          class="details ion-margin-vertical d-flex ion-align-items-start ion-justify-content-between"
         >
-          <div>
+          <section class="product-info">
             <h6 class="fw-bold">
               {{ product?.product_name }} - {{ product?.currency?.symbol }}
               {{ product?.product_price }}
@@ -28,18 +28,25 @@
               <IonIcon class="warning" :icon="alertCircleOutline"></IonIcon>GHS
               {{ product?.min_order_amount }} minimum</IonText
             >
-          </div>
+          </section>
           <IonButton
             fill="clear"
-            color="dark"
+            @click="removeFromStock(product)"
+            color="medium"
             class="ion-no-margin ion-no-padding ion-align-self-start"
           >
             <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
           </IonButton>
         </section>
-        <StockDetailChips :tags="product?.tags" />
+        <StockTags :tags="product?.tags" />
       </IonCardContent>
     </IonCard>
+    <DeleteStockModal
+      :isOpen="showConfirmDeleteModal"
+      :stock="selectedStock"
+      @dismiss="showConfirmDeleteModal = false"
+      @confirm="onConfirmDelete()"
+    />
   </section>
 </template>
 
@@ -61,9 +68,13 @@ import {
   IonText,
   IonButton,
 } from "@ionic/vue";
+import { mapStores } from "pinia";
 import { PropType, defineComponent } from "vue";
 import { closeCircleOutline, alertCircleOutline } from "ionicons/icons";
-import StockDetailChips from "./StockDetailChips.vue";
+import StockTags from "./StockDetailTags.vue";
+import DeleteStockModal from "./DeleteStockModal.vue";
+import { useStockStore } from "@/stores/StockStore";
+import { useToastStore } from "@/stores/ToastStore";
 
 export default defineComponent({
   components: {
@@ -82,7 +93,8 @@ export default defineComponent({
     IonList,
     IonText,
     IonButton,
-    StockDetailChips,
+    StockTags,
+    DeleteStockModal,
   },
 
   props: {
@@ -95,7 +107,37 @@ export default defineComponent({
     return {
       alertCircleOutline,
       closeCircleOutline,
+      selectedStock: null as Stock | null,
+      showConfirmDeleteModal: false,
     };
+  },
+  computed: {
+    ...mapStores(useStockStore, useToastStore),
+  },
+  methods: {
+    removeFromStock(stock: Stock) {
+      this.selectedStock = stock;
+      this.showConfirmDeleteModal = true;
+    },
+    async onConfirmDelete() {
+      try {
+        this.showConfirmDeleteModal = false;
+        await this.stockStore.deleteStock(this.selectedStock as Stock);
+        await this.toastStore.showSuccess(
+          "Stock has been removed successfully",
+          "",
+          "bottom"
+        );
+        this.$router.push("/profile/company/stocks/");
+      } catch (error) {
+        this.toastStore.showError(
+          "Failed to remove Stock. Please try again",
+          "",
+          "bottom",
+          "footer"
+        );
+      }
+    },
   },
 });
 </script>
@@ -117,18 +159,6 @@ ion-icon {
     margin-right: 10px;
   }
 }
-.order-card {
-  height: 85px;
-  padding: 12px 16px;
-  background: var(--card-background);
-  box-shadow: var(--card-box-shadow);
-  border-radius: 8px;
-}
-
-.update-button-section {
-  margin-top: 2em;
-  margin-bottom: 3em;
-}
 
 h6 {
   color: #000;
@@ -144,21 +174,13 @@ h6 {
   background: #fdf0ed;
   box-shadow: 0px 2px 16px 0px rgba(101, 93, 93, 0.1);
   padding: 8px 40px;
-  color: var(--text-primary, #000);
   font-size: 12px;
-}
-.categories {
-  gap: 22px;
-  display: flex;
-  align-items: center;
-}
-.chip {
-  border-radius: 16px;
-  background: var(--gray-100, #f2f4f7);
-  color: #003366;
 }
 .details ion-text {
   font-size: 12px;
   margin-top: 10px;
+}
+.product-info {
+  width: 300px;
 }
 </style>

@@ -8,9 +8,24 @@
         <section>
           <IonItem @click="toggleQuantitySelector" lines="none">
             <IonLabel>Select quantity</IonLabel>
-            <IonIcon slot="end" size="small" :icon="chevronDownOutline"></IonIcon>
+            <IonIcon
+              v-if="showQuantitySelector"
+              slot="end"
+              size="small"
+              :icon="chevronUpOutline"
+            ></IonIcon>
+            <IonIcon
+              v-if="!showQuantitySelector"
+              slot="end"
+              size="small"
+              :icon="chevronDownOutline"
+            ></IonIcon>
           </IonItem>
-          <ProductQuantitySelector v-if="showQuantitySelector" />
+          <ProductQuantitySelector
+            :initial-quantity="product?.group_quantity"
+            @change="updateProductQuantity($event)"
+            v-if="showQuantitySelector"
+          />
         </section>
         <IonSelect
           class="stock-input ion-margin-top"
@@ -25,7 +40,12 @@
           :toggle-icon="chevronDownOutline"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption></IonSelectOption>
+          <IonSelectOption
+            v-for="variation in productVariations"
+            :key="variation.id"
+            :value="variation.id"
+            >{{ variation.name }}</IonSelectOption
+          >
         </IonSelect>
         <IonSelect
           class="stock-input ion-margin-top"
@@ -40,7 +60,12 @@
           :toggle-icon="chevronDownOutline"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption></IonSelectOption>
+          <IonSelectOption
+            v-for="variation in productVariations"
+            :key="variation.id"
+            :value="variation.id"
+            >{{ variation.name }}</IonSelectOption
+          >
         </IonSelect>
       </main>
       <footer>
@@ -66,13 +91,24 @@ import {
   IonIcon,
   IonSelectOption,
 } from "@ionic/vue";
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import KolaYellowButton from "../../KolaYellowButton.vue";
-import { chevronDownOutline } from "ionicons/icons";
+import { chevronDownOutline, chevronUpOutline } from "ionicons/icons";
 import { useForm } from "@/composables/form";
 import ProductQuantitySelector from "../products/ProductQuantitySelector.vue";
+import Stock from "@/models/Stock";
 
 export default defineComponent({
+  props: {
+    product: {
+      type: Object as PropType<Stock | null>,
+      default: true,
+    },
+    productVariations: {
+      type: Array as PropType<any>,
+      default: true,
+    },
+  },
   components: {
     IonModal,
     IonContent,
@@ -94,7 +130,8 @@ export default defineComponent({
   data() {
     return {
       chevronDownOutline,
-      showQuantitySelector: false,
+      chevronUpOutline,
+      showQuantitySelector: true,
       form: useForm({
         group_quantity: "",
         product_variation: "",
@@ -108,12 +145,17 @@ export default defineComponent({
   methods: {
     update() {
       this.$el.dismiss();
-      this.$emit("update", this.form);
+      console.log(this.form.fields);
+      this.$emit("update", this.form.fields);
     },
+
     toggleQuantitySelector() {
       this.showQuantitySelector = !this.showQuantitySelector;
     },
-  }
+    updateProductQuantity(quantity: number) {
+      this.form.fields.group_quantity = quantity;
+    },
+  },
 });
 </script>
 
@@ -133,41 +175,8 @@ ion-input {
 .stock-input {
   --border-radius: 8px;
   --border-color: #d0d5dd;
-  &.select-fill-clear,
-  .input-wrapper,
-  .textarea-wrapper {
-    border-radius: 1px solid #000;
-    .label-text-wrapper {
-      color: #74787c;
-    }
-    .native-wrapper {
-      color: #000;
-    }
-  }
-  &::part(label) {
+  &.select-fill-outline {
     color: #74787c;
-  }
-
-  .input-highlight,
-  .select-highlight,
-  .textarea-highlight {
-    display: none !important;
-  }
-
-  .input-wrapper,
-  .select-wrapper,
-  .textarea-wrapper {
-    border: solid 1px var(--border-color);
-    border-radius: 8px !important;
-    overflow: hidden;
-  }
-
-  &.select-label-placement-stacked {
-    border: solid 1px var(--border-color);
-    border-radius: 8px !important;
-    overflow: hidden;
-    --padding-start: 10px;
-    --padding-end: 10px;
   }
 }
 ion-item {

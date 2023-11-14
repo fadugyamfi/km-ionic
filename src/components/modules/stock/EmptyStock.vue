@@ -1,5 +1,5 @@
 <template>
-  <div class="ion-text-center ion-padding-horizontal" style="margin-top: 100px">
+  <div class="ion-text-center ion-padding-horizontal" style="margin-top: 80px">
     <div class="ion-text-center ion-margin-bottom" style="margin-top: 2em">
       <img src="/images/disappointed.svg" style="width: 150px; height: 150px" />
     </div>
