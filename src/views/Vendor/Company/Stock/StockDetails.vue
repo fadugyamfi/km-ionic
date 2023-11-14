@@ -174,7 +174,8 @@ export default defineComponent({
           product_sku: this.product?.product_sku,
           currencies_id: 1,
           businesses_id: this.userStore.activeBusiness?.id,
-          group_quantity: form.group_quantity || this.product?.group_quantity,
+          group_quantity: this.product?.group_quantity,
+          stock_quantity: form.stock_quantity || this.product?.stock_quantity,
           product_variation: form.product_variation,
           product_color: form.product_color,
         };

@@ -16,12 +16,12 @@ import ProductCategory from "@/models/ProductCategory";
 
 const props = defineProps({
   category: {
-    required: true,
     type: Object,
+    default: () => ({}),
   },
   selectedCategory: {
     required: false,
-    type: Object,
+    type: ProductCategory,
   },
 });
 </script>

@@ -35,7 +35,7 @@
             color="medium"
             class="ion-no-margin ion-no-padding ion-align-self-start"
           >
-            <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
+            <IonIcon slot="icon-only" color="danger" :icon="trashOutline"></IonIcon>
           </IonButton>
         </section>
         <StockTags :tags="product?.tags" />
@@ -70,7 +70,7 @@ import {
 } from "@ionic/vue";
 import { mapStores } from "pinia";
 import { PropType, defineComponent } from "vue";
-import { closeCircleOutline, alertCircleOutline } from "ionicons/icons";
+import { closeCircleOutline, alertCircleOutline, trashOutline } from "ionicons/icons";
 import StockTags from "./StockDetailTags.vue";
 import DeleteStockModal from "./DeleteStockModal.vue";
 import { useStockStore } from "@/stores/StockStore";
@@ -107,6 +107,7 @@ export default defineComponent({
     return {
       alertCircleOutline,
       closeCircleOutline,
+      trashOutline,
       selectedStock: null as Stock | null,
       showConfirmDeleteModal: false,
     };

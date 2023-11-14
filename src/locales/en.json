@@ -256,8 +256,10 @@
             "productName": "Product name",
             "variation": "Select size/variation",
             "itemDescription": "Item description",
-            "quantityAvailable": "Quantity available",
+            "groupQuantity": "Group quantity",
+            "stockQuantity": "Stock quantity",
             "price": "Price",
+            "selectExpiryDate": "Select expiry date",
             "save": "Save"
         }
     }

@@ -136,17 +136,7 @@
           @ion-input="form.validate($event)"
           required
         ></IonTextarea>
-        <IonInput
-          class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.group_quantity }"
-          :label="$t('profile.stock.quantityAvailable')"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.group_quantity"
-          name="quantity_available"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
+
         <IonSelect
           class="kola-input ion-margin-bottom"
           label="Product unit"
@@ -186,6 +176,28 @@
         </section>
         <IonInput
           class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.group_quantity }"
+          :label="$t('profile.stock.groupQuantity')"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.group_quantity"
+          name="quantity_available"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.stock_quantity }"
+          :label="$t('profile.stock.stockQuantity')"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.stock_quantity"
+          name="stock_quantity"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+        <IonInput
+          class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.product_sku }"
           label="Product sku"
           labelPlacement="stacked"
@@ -208,7 +220,7 @@
         ></IonInput>
 
         <ion-input
-          label="Select a date"
+          :label="$t('profile.stock.selectExpiryDate')"
           label-placement="stacked"
           class="kola-input"
           type="date"
@@ -295,6 +307,7 @@ const form = useForm({
   brands_id: "",
   product_sku: "",
   currencies_id: 1,
+  stock_quantity: "",
   date: "",
 });
 
@@ -313,7 +326,8 @@ const formValid = computed(() => {
     fields.product_groups_id &&
     fields.brands_id &&
     fields.product_units_id &&
-    fields.group_quantity
+    fields.group_quantity &&
+    fields.stock_quantity
   );
 });
 
@@ -398,7 +412,7 @@ onMounted(() => {
   fetchProductVariations();
   fetchBrands();
   fetchProductUnits();
-  console.log('hello')
+  console.log("hello");
 });
 
 const cancel = () => {

@@ -32,6 +32,7 @@ const fetchCategories = async () => {
   const productCategoryStore = useProductCategoryStore();
   const response = await productCategoryStore.getCategories();
   response.unshift({ name: "All" });
+  
   categories.value = response.map((cat) => {
     return {
       ...cat,

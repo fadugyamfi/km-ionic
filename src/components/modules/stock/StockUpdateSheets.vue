@@ -22,7 +22,7 @@
             ></IonIcon>
           </IonItem>
           <ProductQuantitySelector
-            :initial-quantity="product?.group_quantity"
+            :initial-quantity="product?.stock_quantity"
             @change="updateProductQuantity($event)"
             v-if="showQuantitySelector"
           />
@@ -133,7 +133,7 @@ export default defineComponent({
       chevronUpOutline,
       showQuantitySelector: true,
       form: useForm({
-        group_quantity: "",
+        stock_quantity: "",
         product_variation: "",
         product_color: "",
       }),
@@ -153,7 +153,7 @@ export default defineComponent({
       this.showQuantitySelector = !this.showQuantitySelector;
     },
     updateProductQuantity(quantity: number) {
-      this.form.fields.group_quantity = quantity;
+      this.form.fields.stock_quantity = quantity;
     },
   },
 });
