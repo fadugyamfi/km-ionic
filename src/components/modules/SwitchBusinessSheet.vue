@@ -1,22 +1,19 @@
 <template>
-  <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5]">
+  <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 1]">
     <IonContent class="ion-padding">
       <header class="fw-semibold ion-padding ion-text-center">
         Switch Business
       </header>
       <main class="ion-padding-vertical">
         <ion-list>
-          <ion-item>
-            <ion-toggle mode="ios" >Ecotel Distribution</ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-toggle  mode="ios" >NKB Enterprise</ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-toggle  mode="ios" >Naa Trading Enterprise</ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-toggle  mode="ios" >Sterling Ventures</ion-toggle>
+          <ion-item v-for="business in userBusinesses" :key="business.id">
+            <ion-toggle
+              @ion-change="onToggle($event, business)"
+              :checked="activeBusiness?.id == business.id"
+              :disabled="!business.name || (activeBusiness?.id != business.id && checked)"
+              mode="ios"
+              >{{ business.name || "No business" }}</ion-toggle
+            >
           </ion-item>
         </ion-list>
       </main>
@@ -39,7 +36,11 @@ import {
 import { defineComponent, PropType } from "vue";
 import { chevronDownOutline, chevronUpOutline } from "ionicons/icons";
 import { useForm } from "@/composables/form";
+import { useUserStore } from "@/stores/UserStore";
+import { mapStores } from "pinia";
 import Stock from "@/models/Stock";
+import Business from "@/models/Business";
+import { useToastStore } from "@/stores/ToastStore";
 
 export default defineComponent({
   props: {
@@ -69,6 +70,7 @@ export default defineComponent({
       chevronDownOutline,
       chevronUpOutline,
       showQuantitySelector: true,
+      checked: true,
       form: useForm({
         stock_quantity: "",
         product_variation: "",
@@ -78,6 +80,15 @@ export default defineComponent({
   },
 
   emits: ["update"],
+  computed: {
+    ...mapStores(useUserStore, useToastStore),
+    userBusinesses() {
+      return this.userStore.userBusinesses;
+    },
+    activeBusiness() {
+      return this.userStore.activeBusiness;
+    },
+  },
 
   methods: {
     update() {
@@ -91,6 +102,27 @@ export default defineComponent({
     },
     updateProductQuantity(quantity: number) {
       this.form.fields.stock_quantity = quantity;
+    },
+    async onToggle(e: any, business: Business) {
+      try {
+        this.checked = e.detail.checked;
+        const response = await this.userStore.setActiveBusiness(business);
+        if (this.checked) {
+          this.$el.dismiss();
+          this.toastStore.showSuccess(
+            "Company account switched successfully",
+            "",
+            "bottom"
+          );
+        }
+      } catch (error) {
+        this.toastStore.showError(
+          "Failed to switch Company account. Please try again",
+          "",
+          "bottom",
+          "footer"
+        );
+      }
     },
   },
 });
@@ -109,13 +141,6 @@ ion-input {
   --padding-start: 0.4em;
   --padding-end: 0.4em;
 }
-.stock-input {
-  --border-radius: 8px;
-  --border-color: #d0d5dd;
-  &.select-fill-outline {
-    color: #74787c;
-  }
-}
 ion-item {
   --color: #74787c;
   margin-bottom: 5px;
@@ -124,6 +149,5 @@ ion-item {
 ion-toggle {
   --track-background-checked: #f5aa29;
   --handle-background-checked: #fff;
-  
 }
 </style>
