@@ -148,7 +148,7 @@ export const ShopperModeRoutes = [
             component: () => import("@/views/Shopper/Cart/ItemReview.vue"),
           },
           {
-            path: "business/:id/order_confirmation",
+            path: "business/:id/order-confirmation",
             component: () => import("@/views/Shopper/Cart/OrderConfirmation.vue"),
           },
         ],
