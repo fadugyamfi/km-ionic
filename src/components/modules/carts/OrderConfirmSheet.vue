@@ -1,7 +1,12 @@
 <template>
-  <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5]">
+  <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 1]">
     <IonContent>
-    
+
+    <section>
+      <OrderConfirmedDetail></OrderConfirmedDetail>
+    </section>
+     
+
     </IonContent>
   </IonModal>
 </template>
@@ -22,9 +27,11 @@ import { defineComponent, ref, toRefs } from "vue";
 import KolaYellowButton from "../../KolaYellowButton.vue";
 import { useCartStore } from "@/stores/CartStore";
 import { useForm } from "@/composables/form";
-import Or from "@/components/modules/products/ProductQuantitySelector.vue";
+import OrderSupplierDetail from "@/components/modules/carts/OrderSupplierDetail.vue";
+import OrderConfirmedDetail from "@/components/modules/carts/OrderConfirmedDetail.vue";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
+
 
 interface FormData {
   fields: {
@@ -44,7 +51,8 @@ export default defineComponent({
     IonCol,
     IonLabel,
     IonInput,
-    IonCard
+    IonCard,
+    OrderConfirmedDetail
   },
   setup() {
     const form = ref<FormData>({
