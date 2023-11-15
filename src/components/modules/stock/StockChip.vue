@@ -1,7 +1,12 @@
 <template>
   <section class="chips">
-    <IonChip class="chip">
-      <IonLabel class="label"> {{ category.name }} </IonLabel>
+    <IonChip
+      class="chip"
+      :class="{ active: selectedCategory?.id == category.id }"
+    >
+      <IonLabel class="label">
+        {{ category.name }}
+      </IonLabel>
     </IonChip>
   </section>
 </template>
@@ -11,12 +16,16 @@ import ProductCategory from "@/models/ProductCategory";
 
 const props = defineProps({
   category: {
-    required: true,
     type: Object,
+    default: () => ({}),
+  },
+  selectedCategory: {
+    required: false,
+    type: ProductCategory,
   },
 });
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .chip {
   border-radius: 16px;
   background: var(--gray-100, #f2f4f7);
@@ -26,5 +35,11 @@ const props = defineProps({
   text-align: center;
   font-weight: 500;
   line-height: 20px;
+}
+.active {
+  background: #eff8ff;
+  .label {
+    color: #003366;
+  }
 }
 </style>

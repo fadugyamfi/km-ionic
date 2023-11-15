@@ -88,9 +88,9 @@ import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { formatAmountWithCommas } from "@/utilities";
 import Image from "@/components/Image.vue";
+import Filters from '@/utilities/Filters';
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
-import Filters from '@/utilities/Filters';
 
 const router = useRouter();
 const route = useRoute();
