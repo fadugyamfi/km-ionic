@@ -116,7 +116,7 @@ export default defineComponent({
     async inviteCustomer() {
       const response = await Share.share({
         title: `${this.userStore.activeBusiness?.name} on Kola Market`,
-        text: "Hi, I'm using the Kola Market app. Follow this link to connect with me",
+        text: `Hi, this is ${this.userStore.activeBusiness?.name} on Kola Market. Follow this link to place your orders with us and enjoy express delivery.`,
         url: this.downloadUrl,
       });
     },
