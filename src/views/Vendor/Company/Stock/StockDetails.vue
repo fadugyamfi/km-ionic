@@ -9,8 +9,7 @@
             ></IonBackButton>
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
-            <!-- {{ $t("shopper.orders.orderDetails") }} - #{{ order?.id }} -->
-            Product Detail
+            {{ $t("profile.stock.productDetail") }}
           </IonTitle>
           <IonButtons slot="end">
             <IonButton slot="icon-only">
@@ -32,7 +31,7 @@
         <StockInfo :product="product" />
         <section class="ion-padding-vertical">
           <KolaYellowButton @click="showFilterSheet = true">
-            {{ "Update Stock" }}
+            {{ $t('profile.stock.updateStock') }}
           </KolaYellowButton>
         </section>
       </section>

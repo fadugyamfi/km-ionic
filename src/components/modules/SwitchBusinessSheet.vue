@@ -2,7 +2,7 @@
   <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 1]">
     <IonContent class="ion-padding">
       <header class="fw-semibold ion-padding ion-text-center">
-        Switch Business
+       {{$t('profile.switchBusiness')}}
       </header>
       <main class="ion-padding-vertical">
         <ion-list>

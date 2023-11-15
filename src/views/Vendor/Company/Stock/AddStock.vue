@@ -231,7 +231,7 @@
           <KolaYellowButton
             :disabled="!formValid"
             @click.prevent="createStock"
-            >{{ $t("profile.stock.save") }}</KolaYellowButton
+            >{{ $t("general.save") }}</KolaYellowButton
           >
           <KolaWhiteButton style="margin-top: 8px" @click="cancel()">{{
             $t("general.cancel")

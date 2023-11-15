@@ -3,13 +3,17 @@
     <IonCard>
       <ion-card-header>
         <ion-card-title>GHS 3789.00</ion-card-title>
-        <ion-card-subtitle>Total value of stock</ion-card-subtitle>
+        <ion-card-subtitle>{{
+          $t("profile.stock.totalValueStock")
+        }}</ion-card-subtitle>
       </ion-card-header>
     </IonCard>
     <IonCard>
       <ion-card-header>
         <ion-card-title>{{ totalItems }}</ion-card-title>
-        <ion-card-subtitle>Number of Items</ion-card-subtitle>
+        <ion-card-subtitle>{{
+          $t("profile.stock.numberOfItems")
+        }}</ion-card-subtitle>
       </ion-card-header>
     </IonCard>
   </section>

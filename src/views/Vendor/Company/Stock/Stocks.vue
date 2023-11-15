@@ -12,7 +12,7 @@
               defaultHref="/vendor/profile"
             ></ion-back-button>
           </ion-buttons>
-          <IonTitle size="small" class="fw-bold">Stock</IonTitle>
+          <IonTitle size="small" class="fw-bold">{{ $t('profile.stock.stock') }}</IonTitle>
           <IonButtons slot="end">
             <IonButton
               color="dark"

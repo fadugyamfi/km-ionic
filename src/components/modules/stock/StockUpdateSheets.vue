@@ -2,7 +2,7 @@
   <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5]">
     <IonContent class="ion-padding">
       <header class="fw-semibold ion-padding ion-text-center">
-        Update Stock
+        {{ $t("profile.stock.updateStock") }}
       </header>
       <main class="ion-padding-vertical">
         <section>
@@ -69,7 +69,9 @@
         </IonSelect>
       </main>
       <footer>
-        <KolaYellowButton @click="update()"> Save changes </KolaYellowButton>
+        <KolaYellowButton @click="update()">{{
+          $t("profile.stock.saveChanges")
+        }}</KolaYellowButton>
       </footer>
     </IonContent>
   </IonModal>
