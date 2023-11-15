@@ -2,7 +2,7 @@
   <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 1]">
     <IonContent class="ion-padding">
       <header class="fw-semibold ion-padding ion-text-center">
-       {{$t('profile.switchBusiness')}}
+        {{ $t("profile.switchBusiness") }}
       </header>
       <main class="ion-padding-vertical">
         <ion-list>
@@ -10,7 +10,7 @@
             <ion-toggle
               @ion-change="onToggle($event, business)"
               :checked="activeBusiness?.id == business.id"
-              :disabled="!business.name || (activeBusiness?.id != business.id && checked)"
+              :disabled="!business.name"
               mode="ios"
               >{{ business.name || "No business" }}</ion-toggle
             >
