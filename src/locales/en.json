@@ -155,6 +155,9 @@
             "orderDetails": "Order Details",
             "orderStatus": "Order Status",
             "delivery": "Delivery"
+        },
+        "cart": {
+            "proceedToCheckout": "Proceed To Checkout"
         }
     },
     "vendor": {

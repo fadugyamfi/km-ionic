@@ -11,14 +11,18 @@
                 <IonText color="medium">
                     {{ filters.date(order.created_at as string, 'short') }}
                 </IonText>
-                <span class="ion-margin-horizontal">|</span>
+                <!-- <span class="item-divider">|</span>
                 <IonText color="medium">
                     {{ $tc('general.products', order.order_items_count as number, { count: order.order_items_count }) }}
+                </IonText> -->
+                <span class="item-divider">|</span>
+                <IonText color="medium">
+                    {{ filters.currency(order.total_order_amount as number, order.currency?.symbol as string) }}
                 </IonText>
             </p>
             <p>
                 <IonChip :color="getStatusInfo(order.order_status_id)?.color" class="font-medium">
-                    {{ order.order_status?.name }}
+                    {{ getStatusInfo(order.order_status_id)?.label }}
                 </IonChip>
             </p>
         </IonLabel>
@@ -68,8 +72,8 @@ export default defineComponent({
             switch (orderStatusId) {
                 case 1:
                     return {
-                        color: 'info',
-                        label: 'Processing',
+                        color: 'secondary',
+                        label: 'New',
                     };
                 case 2:
                 case 4:
@@ -77,7 +81,7 @@ export default defineComponent({
                 case 6:
                     return {
                         color: 'primary',
-                        label: 'Pending',
+                        label: 'Processing',
                     };
                 case 3:
                 case 7:
@@ -102,3 +106,9 @@ export default defineComponent({
     }
 })
 </script>
+
+<style scoped>
+.item-divider {
+    margin: 0px 8px;
+}
+</style>

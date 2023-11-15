@@ -12,9 +12,6 @@
         </ion-text>
       </ion-col>
     </ion-row>
-    <ion-row class="divider-row">
-      <ion-col class="divider-col"></ion-col>
-    </ion-row>
     <ion-row class="row">
       <ion-col size="auto">
         <ion-text class="item-text">Delivery</ion-text>
@@ -56,7 +53,6 @@ const totalCost = computed(() => {
 
 <style scoped lang="scss">
 .custom-card {
-  height: 85px;
   padding: 12px 16px;
   background: var(--card-background);
   box-shadow: var(--card-box-shadow);
