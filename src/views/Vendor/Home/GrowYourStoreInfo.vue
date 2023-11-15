@@ -78,7 +78,9 @@ import {
 } from "@ionic/vue";
 import { Share } from "@capacitor/share";
 import { defineComponent } from "vue";
-
+import { useUserStore } from "@/stores/UserStore";
+import { mapStores } from "pinia";
+import { isPlatform } from "@ionic/vue";
 export default defineComponent({
   data() {
     return {};
@@ -95,15 +97,27 @@ export default defineComponent({
     IonButton,
   },
 
+  computed: {
+    ...mapStores(useUserStore),
+    downloadUrl() {
+      if (isPlatform("ios")) {
+        return "https://m.kola.market/";
+      } else if (isPlatform("android")) {
+        return "https://play.google.com/store/apps/details?id=com.kola.market.androidApp&pli=1";
+      } else {
+        return "https://m.kola.market/";
+      }
+    },
+  },
   methods: {
     openWhatsAppChat() {
       window.open("https://wa.me/233270404501", "_system", "location=yes");
     },
     async inviteCustomer() {
       const response = await Share.share({
-        title: "Racy Ventures from Kola Market",
-        text: "Hi, I'm Racy Ventures on Kola Market. Click this link to download the app",
-        url: "http://ionicframework.com/",
+        title: `${this.userStore.activeBusiness?.name} on Kola Market`,
+        text: "Hi, I'm using the Kola Market app. Follow this link to connect with me",
+        url: this.downloadUrl,
       });
     },
   },
