@@ -19,11 +19,13 @@
                             {{ $t('general.quantity') }}: {{ orderItem?.quantity }}
                         </IonText>
                         <IonText color="medium" class="font-medium">
-                            <span v-if="orderItem?.product?.weight_value">{{ orderItem?.product?.weight_value || 0
-                            }}kg</span>
+                            <span v-if="orderItem?.product?.weight_value">
+                                {{ orderItem?.product?.weight_value || 0 }}kg
+                            </span>
                             <span v-if="orderItem?.product?.weight_value && orderItem?.product?.group_quantity"></span>
-                            <span v-if="orderItem?.product?.group_quantity">{{ orderItem?.product?.group_quantity || 0 }}
-                                pieces</span>
+                            <span v-if="orderItem?.product?.group_quantity">
+                                {{ orderItem?.product?.group_quantity || 0 }} pieces
+                            </span>
                         </IonText>
                     </section>
 

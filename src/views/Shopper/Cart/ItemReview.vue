@@ -25,10 +25,9 @@
           <ion-row class="item-row">
             <ion-col size="10 ">
               <p class="text-product">{{ item.product_name }}</p>
-              <p>Quantity: {{ item.quantity }}</p>
+              <p>{{ $t('general.quantity') }}: {{ item.quantity }}</p>
               <p class="price">
-                {{ item.currency_symbol || "GHS" }}
-                {{ item.quantity * (item.product_price || 0) }}
+                {{ Filters.currency( item.quantity * (item.product_price || 0), item.currency_symbol ) }}
               </p>
             </ion-col>
             <ion-col size="1" class="remove-button">
@@ -146,6 +145,10 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+ion-footer {
+  background-color: #fefefe;
+}
+
 ion-icon {
   &.danger {
     background-color: rgba(255, 0, 0, 0.174);
