@@ -36,8 +36,9 @@ export default defineComponent({
       type: Object as PropType<Business | null>
     },
     totalCost: {
-      type: Number,
-      required: true
+      type: Number as PropType<number>,
+      required: true,
+      default: 0
     }
   },
   data() {

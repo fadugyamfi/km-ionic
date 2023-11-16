@@ -61,9 +61,9 @@
         <section>
           <section class="d-flex flex-column ion-margin-bottom">
             <IonText class="fw-semibold">Delivery</IonText>
-            <IonText color="medium" class="font-medium"
-              >Select delivery method</IonText
-            >
+            <IonText color="medium" class="font-medium">
+              Select delivery method
+            </IonText>
           </section>
           <DeliveryMethod
             :location="form.fields.location"
@@ -74,9 +74,9 @@
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="storeDeliveryDetails"
-        >Continue</KolaYellowButton
-      >
+      <KolaYellowButton @click="storeDeliveryDetails">
+        {{ $t("general.continue") }}
+      </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -91,7 +91,6 @@ import {
   IonText,
   IonInput,
 } from "@ionic/vue";
-import { defineComponent } from "vue";
 import { navigateOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
@@ -103,7 +102,6 @@ import { useForm } from "@/composables/form";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { onMounted } from "vue";
-import { onMounted as onMountedVue3 } from "@vue/runtime-core";
 
 const router = useRouter();
 const route = useRoute();
@@ -158,9 +156,9 @@ const storeDeliveryDetails = () => {
 
 const getLocation = async () => {
   const toastStore = useToastStore();
-  const { getCurrentLocation } = useGeolocation();
 
   try {
+    const { getCurrentLocation } = useGeolocation();
     const coordinates = await getCurrentLocation();
 
     if (coordinates) {
@@ -194,5 +192,9 @@ onMounted(async () => {
 .use-location {
   --color: #666eed;
   --padding-start: 0px;
+}
+
+ion-footer {
+  background-color: #fefefe;
 }
 </style>

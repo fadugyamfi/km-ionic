@@ -15,7 +15,7 @@
             <IonText color="medium" class="font-medium">
               Item total:
               {{
-                order && order.getTotal
+                order && order.getTotal()
                 ? order.getTotal().toLocaleString("en-GB", {
                   style: "currency",
                   currency: "GHS",
@@ -97,7 +97,7 @@ export default defineComponent({
     ...mapStores(useSaleStore, useCartStore),
 
     topFiveItems() {
-      return this.order?.order_items.filter((oi, index) => index < 4);
+      return this.order?.order_items?.filter((oi, index) => index < 4) || [];
     }
   },
 
