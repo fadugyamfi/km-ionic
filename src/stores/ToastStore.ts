@@ -1,6 +1,7 @@
 import { createAnimation, toastController } from "@ionic/vue";
 import { alertCircleOutline, checkmarkCircleOutline, informationCircleOutline, warningOutline } from "ionicons/icons";
 import { defineStore } from "pinia";
+import { useUserStore } from "./UserStore";
 
 
 export const useToastStore = defineStore('toast', {
@@ -41,6 +42,14 @@ export const useToastStore = defineStore('toast', {
             type: 'success' | 'error' | 'warning' | 'info' = 'info',
             anchor?: string
         ) {
+
+            const userStore = useUserStore();
+
+            if( !anchor ) {
+                if( position == 'bottom' ) {
+                    anchor = userStore.appMode == 'shopping' ? 'shopperTabs' : 'vendorTabs';
+                }
+            }
 
             const toast = await toastController.create({
                 header: title,

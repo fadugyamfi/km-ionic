@@ -68,7 +68,7 @@ export default defineComponent({
             switch (orderStatusId) {
                 case 1:
                     return {
-                        color: 'info',
+                        color: 'secondary',
                         label: 'Processing',
                     };
                 case 2:

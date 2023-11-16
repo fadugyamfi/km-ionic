@@ -116,6 +116,13 @@ export const VendorModeRoutes = [
             path: ":id",
             component: () => import("@/views/Vendor/Sales/SaleDetails.vue"),
           },
+          {
+            path: "products/:id",
+            component: () => import("@/views/Shopper/ProductDetails.vue"),
+            meta: {
+              showCartButtons: false
+            }
+          },
         ],
       },
       {

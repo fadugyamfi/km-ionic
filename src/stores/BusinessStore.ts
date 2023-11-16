@@ -366,6 +366,19 @@ export const useBusinessStore = defineStore("business", {
           return this.businessSummary;
         })
         .catch(error => handleAxiosRequestError(error))
+    },
+
+    async getTopSellingProducts(business: Business, options = {}) {
+      const params = {
+        businesses_id: business.id,
+        limit: 30,
+        filter: 'by-value',
+        ...options
+      }
+
+      return axios.get('/v2/metrics/top-products', { params })
+        .then(response => response.data.data)
+        .catch(error => handleAxiosRequestError(error));
     }
   }
 });

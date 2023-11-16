@@ -21,7 +21,7 @@
 
     <ion-content>
       <IonFab slot="fixed" vertical="bottom" horizontal="end">
-        <IonFabButton size="small" @click="onAddSale()">
+        <IonFabButton @click="onAddSale()">
           <IonIcon :icon="add"></IonIcon>
         </IonFabButton>
       </IonFab>
@@ -80,17 +80,17 @@
           </IonRow>
           <IonRow>
             <IonCol size="6">
-              <IonCard class="ion-no-margin best-selling-card">
+              <IonCard class="ion-no-margin best-selling-card" @click="viewTopSellingProduct()">
                 <IonCardContent class="d-flex flex-column">
                   <IonText color="medium">Best Selling Item</IonText>
-                  <IonText color="dark" class="fw-semibold">
-                    N/A
+                  <IonText color="dark" class="fw-semibold line-clamp">
+                    {{ topSellingProduct?.product_name }}
                   </IonText>
                 </IonCardContent>
               </IonCard>
             </IonCol>
             <IonCol size="6">
-              <IonCard class="ion-no-margin customers-card">
+              <IonCard class="ion-no-margin customers-card" router-link="/profile/company/customers">
                 <IonCardContent class="d-flex flex-column">
                   <IonText color="medium">No. of Customers</IonText>
                   <IonText color="dark" class="fw-semibold">
@@ -117,7 +117,7 @@
               <section>
                 <IonChip color="success">
                   <IonIcon :icon="arrowUpOutline"></IonIcon>
-                  <IonLabel>{{ percentageOfConversion }}%</IonLabel>
+                  <IonLabel>{{ Filters.number(percentageOfConversion, 2) }}%</IonLabel>
                 </IonChip>
               </section>
             </IonCardContent>
@@ -145,18 +145,18 @@
 <script lang="ts">
 import { IonPage, IonContent, IonGrid, IonRow, IonCol, IonButton, IonCard, IonCardHeader, IonText, IonList, IonListHeader, IonLabel, IonFab, IonFabButton, IonIcon, IonCardContent, IonSpinner, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonChip, IonItem, IonProgressBar } from '@ionic/vue';
 import ShopperHeader from '@/components/layout/ShopperHeader.vue';
-import { PropType, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 import { useSaleStore } from '@/stores/SaleStore';
 import { mapStores } from 'pinia';
 import SalesList from '@/components/modules/sales/SalesList.vue';
 import { Sale } from '@/models/Sale';
 import { add, arrowUpOutline, optionsOutline, close } from 'ionicons/icons';
 import Filters from '@/utilities/Filters';
-import { useBusinessStore } from '../../../stores/BusinessStore';
-import { useUserStore } from '../../../stores/UserStore';
-import Business from '../../../models/Business';
-import ProfileAvatar from '../../../components/ProfileAvatar.vue';
-import NotificationButton from '../../../components/notifications/NotificationButton.vue';
+import { useBusinessStore } from '@/stores/BusinessStore';
+import { useUserStore } from '@/stores/UserStore';
+import Business from '@/models/Business';
+import ProfileAvatar from '@/components/ProfileAvatar.vue';
+import NotificationButton from '@/components/notifications/NotificationButton.vue';
 
 export default defineComponent({
 
@@ -199,6 +199,7 @@ export default defineComponent({
       Filters,
       recentSales: [] as Sale[],
       fetchingSummary: false,
+      topProducts: []
     }
   },
 
@@ -212,6 +213,10 @@ export default defineComponent({
 
     percentageComplete() {
       return this.businessStore.businessSummary?.targets?.percentage_complete;
+    },
+
+    topSellingProduct(): any | null {
+      return this.topProducts ? this.topProducts[0] : null;
     }
   },
 
@@ -232,7 +237,14 @@ export default defineComponent({
     async fetchBusinessSummary() {
       this.fetchingSummary = true;
       await this.businessStore.getBusinessSummary(this.userStore.activeBusiness as Business);
+      this.topProducts = await this.businessStore.getTopSellingProducts(this.userStore.activeBusiness as Business, { limit: 2 });
       this.fetchingSummary = false;
+    },
+
+    viewTopSellingProduct() {
+      if( !this.topSellingProduct ) return;
+
+      this.$router.push(`/vendor/sales/products/${this.topSellingProduct.products_id}`);
     }
   },
 
@@ -250,5 +262,12 @@ export default defineComponent({
 
 .best-selling-card {
   --background: #FFF2EBCC;
+}
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>
