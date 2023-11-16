@@ -3,10 +3,8 @@
     <IonContent>
 
     <section>
-      <OrderConfirmedDetail></OrderConfirmedDetail>
+      <OrderConfirmedDetail :order="order"></OrderConfirmedDetail>
     </section>
-     
-
     </IonContent>
   </IonModal>
 </template>
@@ -41,6 +39,12 @@ interface FormData {
 }
 
 export default defineComponent({
+  props:{
+    order: {
+      type: Object,
+      required: true
+    }
+  },
   components: {
     IonModal,
     IonContent,
@@ -55,6 +59,7 @@ export default defineComponent({
     OrderConfirmedDetail
   },
   setup() {
+
     const form = ref<FormData>({
       fields: {
         delivery_location: "",

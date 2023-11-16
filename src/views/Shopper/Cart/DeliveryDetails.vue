@@ -34,7 +34,9 @@
 
         <IonInput
           class="kola-input delivery-details-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.delivery_nearest_landmark}"
+          :class="{
+            'ion-invalid ion-touched': form.errors.delivery_nearest_landmark,
+          }"
           label="Nearest Landmark"
           labelPlacement="stacked"
           fill="solid"
@@ -53,7 +55,7 @@
           fill="solid"
           v-model="form.fields.delivery_date"
           name="delivery-date"
-          @ion-input="form.validate($event)"
+          @ion-input="form.validate && form.validate($event)"
           readonly
         ></IonInput>
         <section>
@@ -133,16 +135,25 @@ const selectDeliveryMethod = (method: string) => {
 };
 
 const storeDeliveryDetails = () => {
-  const cartStore = useCartStore();
-  const index = cartStore.orders.findIndex(
-    (b) => b.businesses_id == Number(route.params.id)
-  );
-  cartStore.orders[index] = {
-    ...cartStore.orders[index],
-    ...form.fields,
-  };
-  cartStore.persist()
-  router.push(`/shopper/cart/business/${route.params.id}/payment-options`);
+  try {
+    const cartStore = useCartStore();
+    const index = cartStore.orders.findIndex(
+      (b) => b.businesses_id == Number(route.params.id)
+    );
+
+    if (index !== -1) {
+      cartStore.orders[index] = {
+        ...cartStore.orders[index],
+        ...form.fields,
+      };
+      cartStore.persist();
+      router.push(`/shopper/cart/business/${route.params.id}/payment-options`);
+    } else {
+      console.error("Business ID not found in cartStore.orders");
+    }
+  } catch (error) {
+    console.error("An error occurred in storeDeliveryDetails:", error);
+  }
 };
 
 const getLocation = async () => {
