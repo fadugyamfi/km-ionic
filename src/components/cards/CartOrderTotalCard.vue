@@ -6,7 +6,6 @@
           <IonItem>
             <IonText> {{ order?.business?.name || "No Business" }} </IonText>
           </IonItem>
-{{ order }}
           <IonItem v-for="(item, index) in order._order_items" :key="index">
             <IonLabel class="font">{{ item.product_name }}</IonLabel>
             <IonLabel slot="end" class="font-medium">
