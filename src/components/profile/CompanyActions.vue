@@ -48,7 +48,11 @@
         <IonLabel>Team</IonLabel>
       </IonItem>
 
-      <IonItem :detail="true" class="profile-item" :disabled="true">
+      <IonItem
+        :detail="true"
+        class="profile-item"
+        router-link="/profile/company/sale-agents"
+      >
         <IonAvatar slot="start">
           <img src="/images/ic_help_support.svg" class="action-img" />
         </IonAvatar>
