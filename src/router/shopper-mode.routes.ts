@@ -151,6 +151,10 @@ export const ShopperModeRoutes = [
             path: "business/:id/order-confirmation",
             component: () => import("@/views/Shopper/Cart/OrderConfirmation.vue"),
           },
+          {
+            path: "business/payment-method",
+            component: () => import("@/views/Shopper/Cart/PaymentMethod.vue"),
+          },
         ],
       },
 
