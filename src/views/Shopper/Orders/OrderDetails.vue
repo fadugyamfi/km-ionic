@@ -49,7 +49,6 @@ import { Order } from '@/models/Order';
 import { IonIcon, IonContent, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonButton, IonSpinner } from '@ionic/vue';
 import { IonSelect, IonSelectOption, IonAvatar, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import OrdersCard from '@/components/modules/order/OrdersCard.vue';
 import UpdateButon from '@/components/modules/order/UpdateButon.vue';
 import { mapStores } from 'pinia';
 import { useOrderStore } from '@/stores/OrderStore';
@@ -70,7 +69,6 @@ export default defineComponent({
     IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle,
     IonIcon,
     IonContent,
-    OrdersCard,
     UpdateButon,
     IonButton,
     OrderImages,

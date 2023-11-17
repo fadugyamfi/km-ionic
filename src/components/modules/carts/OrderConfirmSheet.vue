@@ -3,7 +3,7 @@
     <IonContent>
 
     <section>
-      <OrderConfirmedDetail :order="order"></OrderConfirmedDetail>
+      <OrderConfirmedDetail :order="(order as Order)"></OrderConfirmedDetail>
     </section>
     </IonContent>
   </IonModal>
@@ -24,11 +24,10 @@ import {
 import { defineComponent, ref, toRefs } from "vue";
 import KolaYellowButton from "../../KolaYellowButton.vue";
 import { useCartStore } from "@/stores/CartStore";
-import { useForm } from "@/composables/form";
-import OrderSupplierDetail from "@/components/modules/carts/OrderSupplierDetail.vue";
 import OrderConfirmedDetail from "@/components/modules/carts/OrderConfirmedDetail.vue";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
+import { Order } from "@/models/Order";
 
 
 interface FormData {
@@ -41,7 +40,7 @@ interface FormData {
 export default defineComponent({
   props:{
     order: {
-      type: Object,
+      type: Order,
       required: true
     }
   },

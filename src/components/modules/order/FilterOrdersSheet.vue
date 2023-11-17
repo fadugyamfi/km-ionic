@@ -29,7 +29,9 @@
         </IonGrid>
       </main>
       <footer class="ion-padding">
-        <KolaYellowButton @click="update()"> Update </KolaYellowButton>
+        <KolaYellowButton @click="update()">
+          {{ $t('general.update') }}
+        </KolaYellowButton>
       </footer>
     </IonContent>
   </IonModal>

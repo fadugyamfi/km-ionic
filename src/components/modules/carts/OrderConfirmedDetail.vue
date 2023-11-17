@@ -44,18 +44,18 @@
   </section>
 
   <section>
-    <CartOrderTotalCard :order="order"></CartOrderTotalCard>
+    <CartOrderTotalCard :order="(order as Order)"></CartOrderTotalCard>
   </section>
 </template>
 
 <script lang="ts">
 import { PropType, defineComponent, ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import Filters from "../../../utilities/Filters";
+import Filters from "@/utilities/Filters";
 import { Order } from "@/models/Order";
 import { useCartStore } from "@/stores/CartStore";
-import OrderStatusHistoryView from "../../../components/modules/order/OrderStatusHistoryView.vue";
-import CartOrderTotalCard from "../../../components/cards/CartOrderTotalCard.vue";
+import OrderStatusHistoryView from "@/components/modules/order/OrderStatusHistoryView.vue";
+import CartOrderTotalCard from "@/components/cards/CartOrderTotalCard.vue";
 import Image from "@/components/Image.vue";
 import {
   IonCard,
@@ -69,26 +69,26 @@ import {
 } from "@ionic/vue";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 
-const router = useRouter();
-const route = useRoute();
+// const router = useRouter();
+// const route = useRoute();
 
-const orderBusiness = ref<any>(null);
-const orders = computed(() => cartStore.orders);
-const order = computed<Order>(() => {
-  return cartStore.orders.find(
-    (order: Order) => order?.businesses_id == +route.params.id
-  ) as Order;
-});
+// const orderBusiness = ref<any>(null);
+// const orders = computed(() => cartStore.orders);
+// const order = computed<Order>(() => {
+//   return cartStore.orders.find(
+//     (order: Order) => order?.businesses_id == +route.params.id
+//   ) as Order;
+// });
 
-const cartStore = useCartStore(orderBusiness.value);
+// const cartStore = useCartStore(orderBusiness.value);
 
-cartStore.loadFromStorage();
-const cartOrders = computed(() => cartStore.orders);
+// cartStore.loadFromStorage();
+// const cartOrders = computed(() => cartStore.orders);
 
 export default defineComponent({
   props: {
     order: {
-      type: Object as PropType<Order>,
+      type: Order,
     },
     showChangeAddress: {
       default: true,

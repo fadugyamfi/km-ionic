@@ -73,8 +73,9 @@ import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
 import Image from "@/components/Image.vue";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
-import { Order } from "../../../models/Order";
-import BusinessMinimumOrderReached from "../../../components/modules/business/BusinessMinimumOrderReached.vue";
+import { Order } from "@/models/Order";
+import BusinessMinimumOrderReached from "@/components/modules/business/BusinessMinimumOrderReached.vue";
+import Filters from "@/utilities/Filters";
 
 
 const route = useRoute();
@@ -122,7 +123,7 @@ const createOrder = () => {
     payment_modes_id: orderBusiness.value.payment_option_id,
     total_items: orderBusiness.value._order_items.length,
     order_items: orderBusiness.value._order_items,
- 
+
   });
 
   router.push(`/shopper/cart/business/${route.params.id}/order-confirmation`);
