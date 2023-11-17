@@ -1,7 +1,12 @@
 <template>
   <section>
     <IonItem lines="none" class="profile-item ion-margin-top">
-      <ProfileAvatar slot="start" :image="userStore.activeBusiness?.logo" :username="userStore.activeBusiness?.name" customSize="32px"></ProfileAvatar>
+      <ProfileAvatar
+        slot="start"
+        :image="userStore.activeBusiness?.logo"
+        :username="userStore.activeBusiness?.name"
+        customSize="32px"
+      ></ProfileAvatar>
       <IonLabel>{{ userStore.activeBusiness?.name }}</IonLabel>
       <IonIcon slot="end" :icon="createOutline"></IonIcon>
     </IonItem>
@@ -57,13 +62,23 @@
         <IonLabel>Add Sale</IonLabel>
       </IonItem>
 
-      <IonItem :detail="true" class="profile-item" :disabled="true">
+      <IonItem
+        :detail="true"
+        class="profile-item"
+        :disabled="false"
+        @click="showFilterSheet = true"
+      >
         <IonAvatar slot="start">
           <img src="/images/ic_help_support.svg" class="action-img" />
         </IonAvatar>
         <IonLabel>Switch Business</IonLabel>
       </IonItem>
     </IonList>
+    <SwitchBusinessSheet
+      :isOpen="showFilterSheet"
+      @didDismiss="showFilterSheet = false"
+    >
+    </SwitchBusinessSheet>
   </section>
 </template>
 
@@ -74,9 +89,18 @@ import { useUserStore } from "@/stores/UserStore";
 import { mapStores } from "pinia";
 import { search, createOutline } from "ionicons/icons";
 import ProfileAvatar from "../ProfileAvatar.vue";
+import SwitchBusinessSheet from "@/components/modules/SwitchBusinessSheet.vue";
 
 export default defineComponent({
-  components: { IonList, IonAvatar, IonItem, IonLabel, IonIcon, ProfileAvatar },
+  components: {
+    IonList,
+    IonAvatar,
+    IonItem,
+    IonLabel,
+    IonIcon,
+    ProfileAvatar,
+    SwitchBusinessSheet,
+  },
 
   computed: {
     ...mapStores(useUserStore),
@@ -86,17 +110,19 @@ export default defineComponent({
     return {
       createOutline,
       search,
+      showFilterSheet: false,
+      fetching: false,
     };
   },
 
   methods: {
     onAddSale() {
-      if( this.userStore.appMode == 'shopping' ) {
+      if (this.userStore.appMode == "shopping") {
         this.userStore.toggleAppMode();
       }
 
-      this.$router.push('/vendor/sales/add-sale/select-agent')
-    }
-  }
+      this.$router.push("/vendor/sales/add-sale/select-agent");
+    },
+  },
 });
 </script>

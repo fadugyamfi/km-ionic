@@ -7,6 +7,7 @@
         "no": "No",
         "optional": "optional",
         "cancel": "Cancel",
+    "save": "Save",
         "home": "Home",
         "sales": "Sales",
         "credit": "Credits",
@@ -155,6 +156,9 @@
             "orderDetails": "Order Details",
             "orderStatus": "Order Status",
             "delivery": "Delivery"
+        },
+        "cart": {
+            "proceedToCheckout": "Proceed To Checkout"
         }
     },
     "vendor": {
@@ -246,19 +250,32 @@
             "remove": "Remove",
             "new": "new",
             "updateCustomerInfo": "Update customer information"
-
-
         },
         "stock": {
+      "stock": "Stock",
             "addStock": "Add Stock",
             "addProductImage": "Add Product Image",
             "category": "Category",
             "productName": "Product name",
             "variation": "Select size/variation",
             "itemDescription": "Item description",
-            "quantityAvailable": "Quantity available",
+      "groupQuantity": "Group quantity",
+      "stockQuantity": "Stock quantity",
             "price": "Price",
-            "save": "Save"
+      "selectExpiryDate": "Select expiry date",
+      "saveChanges": "Save Changes",
+      "numberOfItems": "Number of items",
+      "totalValueStock": "Total value of stock",
+      "availableStock": "Available Stock",
+      "addNewStock": "Add New Stock",
+      "stockIsEmpty": "Stock Is Empty",
+      "noStock": "Looks like your stock is currently empty. Start by adding new products to keep your inventory up to date.",
+      "filterStock": "Filter Available Stocks",
+      "productDetail": "Product Detail",
+      "productOutOfStock": "Product is currently out of stock",
+      "confirmDelete": "Are you sure you want to remove this stock?",
+      "updateStock": "Update Stock"
+    },
+    "switchBusiness": "Switch Business"
         }
     }
-}

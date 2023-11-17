@@ -157,7 +157,10 @@ const onContinue = async () => {
             phone_number: userStore.user?.phone_number,
             business_types_id: 1,
             business_owner_name: form.fields.name,
-            business_owner_phone: userStore.user?.phone_number
+            business_owner_phone: userStore.user?.phone_number,
+            attributes: {
+                applied_to: 'shop'
+            }
         })
 
         if( business ) {

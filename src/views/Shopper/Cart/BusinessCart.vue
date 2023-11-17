@@ -5,17 +5,11 @@
     </section>
 
     <ion-content class="ion-padding-horizontal">
-      <IonSegment
-        value="personal"
-        mode="ios"
-        v-model="viewing"
-        class="segment-margin"
-      >
+
+      <IonSegment value="personal" mode="ios" v-model="viewing" class="segment-margin">
         <IonSegmentButton value="cart">
           <div class="segment-button">
-            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }"
-              >Cart</IonLabel
-            >
+            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
             <IonBadge>{{ orderBusiness?.order_items?.length }}</IonBadge>
           </div>
         </IonSegmentButton>
@@ -23,52 +17,43 @@
           <ion-label>Saved</ion-label>
         </IonSegmentButton>
       </IonSegment>
+
       <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
 
-      <IonList v-else>
-        <IonItem
-          v-for="(item, index) in orderBusiness?.order_items"
-          :key="item.product?.id"
-        >
-          <ion-thumbnail slot="start" class="custom-thumbnail">
-            <Image :src="item.product_image"></Image>
-          </ion-thumbnail>
+      <section v-else>
+        <IonList >
+          <IonItem v-for="(item, index) in orderBusiness?.order_items" :key="item.product?.id">
+            <ion-thumbnail slot="start" class="custom-thumbnail">
+              <Image :src="item.product_image"></Image>
+            </ion-thumbnail>
 
-          <ion-row class="item-row">
-            <ion-col size="10 ">
-              <p class="text-product">{{ item.product_name }}</p>
-              <p>Quantity: {{ item.quantity }}</p>
-              <p class="price">
-                {{ Filters.currency(item.quantity * (item.product_price || 0), item.currency_symbol) }}
-              </p>
-            </ion-col>
-            <ion-col size="1" class="remove-button">
-              <ion-button
-                fill="clear"
-                color=""
-                @click.prevent.stop="removeFromCart(index)"
-              >
-                <ion-icon
-                  class="remove-icon"
-                  :icon="closeCircleOutline"
-                ></ion-icon>
-              </ion-button>
-            </ion-col>
-            <ProductQuantitySelector
-              :initial-quantity="item.quantity"
-              @change="updateQuantity(item, $event)"
-            ></ProductQuantitySelector>
-          </ion-row>
-        </IonItem>
+            <ion-row class="item-row">
+              <ion-col size="10">
+                <p class="text-product ion-margin-top">{{ item.product_name }}</p>
+                <p class="">{{ $t('general.quantity') }}: {{ item.quantity }}</p>
+                <p class="price">
+                  {{ Filters.currency(item.quantity * (item.product_price || 0), item.currency_symbol) }}
+                </p>
+              </ion-col>
+              <ion-col size="2" class="d-flex ion-align-items-start">
+                <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
+                  <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
+                </ion-button>
+              </ion-col>
+              <ProductQuantitySelector :initial-quantity="item.quantity" @change="updateQuantity(item, $event)">
+              </ProductQuantitySelector>
+            </ion-row>
+          </IonItem>
+        </IonList>
+
         <CartTotalCard />
-      </IonList>
+      </section>
+
     </ion-content>
-    <IonFooter
-      class="ion-padding ion-no-border"
-      v-if="orderBusiness?.order_items?.length > 0"
-    >
-      <KolaYellowButton @click="viewDeliveryDetails">
-        Proceed to Checkout
+
+    <IonFooter class="ion-padding ion-no-border">
+      <KolaYellowButton @click="viewDeliveryDetails()">
+        {{ $t('shopper.cart.proceedToCheckout') }}
       </KolaYellowButton>
     </IonFooter>
   </ion-page>
@@ -103,9 +88,9 @@ import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { formatAmountWithCommas } from "@/utilities";
 import Image from "@/components/Image.vue";
+import Filters from '@/utilities/Filters';
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
-import Filters from '@/utilities/Filters';
 
 const router = useRouter();
 const route = useRoute();
@@ -147,115 +132,51 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
-.item-row[data-v-d51a0216] {
-  align-items: baseline;
+ion-item {
+  --padding-start: 0px;
+  --inner-padding-end: 0px;
+}
+
+ion-footer {
+  background-color: #fefefe;
 }
 
 .remove-button {
   text-align: end;
-}
-
-.item-row ion-col {
-  margin: 0;
-  padding: 0;
-}
-
-.text-product,
-p {
-  margin: 0;
-  padding: 0;
-  color: #667085;
-}
-
-.custom-thumbnail {
-  align-self: flex-start;
-  margin-right: 16px;
-}
-
-.segment-button {
-  display: flex;
-  align-items: center;
-}
-
-ion-badge {
-  --background: rgba(245, 170, 41, 0.38);
-  --color: #344054;
-  margin-left: 8px;
-}
-
-.custom-thumbnail {
-  width: 94px;
-  height: 120px;
-}
-
-.custom-label {
-  color: black;
-
-  p {
-    font-size: 14px;
-    font-family: "Poppins";
-    font-weight: 400;
-    text-transform: capitalize;
-    line-height: 22px;
-    word-wrap: break-word;
-  }
-
-  .price {
-    font-size: 14px;
-    font-weight: 400;
-    text-transform: capitalize;
-    line-height: 18px;
-    word-wrap: break-word;
-  }
-}
-
-.item-row[data-v-c11d03b0] {
-  align-items: baseline;
-}
-
-ion-icon.remove-icon {
-  color: #000;
-  vertical-align: text-top;
 }
 
 .item-row {
-  align-items: center;
-}
+  align-items: start;
 
-.remove-button {
-  text-align: end;
-}
+  ion-col {
+    margin: 0;
+    padding: 0;
+  }
 
-.item-row ion-col {
-  margin: 0;
-  padding: 0;
-}
+  .text-product {
+    color: #111;
+    margin-top: 1em;
+  }
 
-.item-row[data-v-f6937d18] {
-  align-items: baseline;
-}
+  p {
+    margin: 0px;
+    color: #667085;
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+  }
 
-p {
-  color: #667085;
-  font-family: Poppins;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 140%;
-}
 
-.text-product,
-p {
-  margin: 0;
-  padding: 0;
-  color: #667085;
 }
 
 .custom-thumbnail {
-  align-self: flex-start;
-  margin-right: 16px;
-}
-
+    align-self: flex-start;
+    margin-right: 16px;
+    width: 94px;
+    height: 120px;
+  }
 .segment-button {
   display: flex;
   align-items: center;
@@ -267,10 +188,6 @@ ion-badge {
   margin-left: 8px;
 }
 
-.custom-thumbnail {
-  width: 94px;
-  height: 120px;
-}
 
 .custom-label {
   color: black;
@@ -293,14 +210,21 @@ ion-badge {
   }
 }
 
-.item-row[data-v-c11d03b0] {
-  align-items: baseline;
-}
-
 ion-icon.remove-icon {
   color: #000;
   vertical-align: text-top;
 }
+
+
+
+.remove-button {
+  text-align: end;
+}
+
+
+
+
+
 
 .text-product {
   color: black;
