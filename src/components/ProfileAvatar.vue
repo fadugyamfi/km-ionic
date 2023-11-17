@@ -209,6 +209,8 @@ export default defineComponent({
             return this.shadeColor(color, percent);
         },
         shadeColor(color: string, percent: number) {
+            if( !color ) color = '#000000';
+
             let R = parseInt(color.substring(1, 3), 16);
             let G = parseInt(color.substring(3, 5), 16);
             let B = parseInt(color.substring(5, 7), 16);

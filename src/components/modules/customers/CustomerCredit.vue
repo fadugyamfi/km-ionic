@@ -37,7 +37,7 @@
           <Image class="momo" src="/images/momo.svg"></Image> </IonText
       ></IonLabel>
 
-      <IonText>GHS {{ credit.amount }}</IonText>
+      <IonText>{{ Filters.currency(credit.amount) }}</IonText>
     </IonItem>
   </IonList>
 </template>
@@ -57,6 +57,7 @@ import Image from "@/components/Image.vue";
 import Customer from "@/models/Customer";
 import { useCustomerStore } from "@/stores/CustomerStore";
 import ProfileAvatar from '@/components/ProfileAvatar.vue';
+import Filters from "@/utilities/Filters";
 
 const props = defineProps({
   credits: {

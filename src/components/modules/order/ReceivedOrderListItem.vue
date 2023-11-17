@@ -18,7 +18,7 @@
             </p>
             <p>
                 <IonChip :color="getStatusInfo(order.order_status_id)?.color" class="font-medium">
-                    {{ order.order_status?.name }}
+                    {{ order.order_status?.name || 'Pending' }}
                 </IonChip>
             </p>
         </IonLabel>
