@@ -184,6 +184,7 @@
             "cash": "Cash",
             "mobileMoney": "Mobile Money",
             "cheque": "Cheque",
+            "bankTransfer": "Bank Transfer",
             "saleConfirmation": "Sale Confirmation",
             "saleHasBeenRecorded": "Sale has been recorded",
             "selectAgentToContinue": "Select Sale Agent To Continue",
@@ -204,7 +205,14 @@
             "actionIsUnreversible": "This action is unreversible",
             "saleDetails": "Sale Detais",
             "noSaleItemsAvailable": "No Sale Items Available",
-            "addItemsToSaleToSeeThemHere": "Add items to sale to see them here"
+            "addItemsToSaleToSeeThemHere": "Add items to sale to see them here",
+            "addPayment": "Add Payment",
+            "amountPaid": "Amount Paid",
+            "enterAmountPaid": "Enter amount paid here",
+            "addDate": "Add Date",
+            "selectPaymentMethodForCreditSale": "Select payment method for credit sale",
+            "paymentRecordedSuccessfully": "Payment recorded successfully",
+            "paymentRecordingFailed": "Payment recording failed"
         },
         "orders": {
             "orderHasBeenApproved": "Order has been approved",

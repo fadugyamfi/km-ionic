@@ -359,8 +359,10 @@ export const useBusinessStore = defineStore("business", {
       return this.selectedToView;
     },
 
-    async getBusinessSummary(business: Business) {
-      return axios.get(`/v2/businesses/${business.id}/summary`)
+    async getBusinessSummary(business: Business, options = {}) {
+      const params = { ...options };
+
+      return axios.get(`/v2/businesses/${business.id}/summary`, { params })
         .then(response => {
           this.businessSummary = response.data.data;
           return this.businessSummary;

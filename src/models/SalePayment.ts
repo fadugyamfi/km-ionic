@@ -19,6 +19,10 @@ export class SalePayment {
         Object.assign(this, data);
     }
 
+    update(data: object) {
+        Object.assign(this, data);
+    }
+
     get business(): Business | null | undefined {
         return this._business;
     }

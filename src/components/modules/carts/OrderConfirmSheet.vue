@@ -1,5 +1,5 @@
 <template>
-  <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 1]">
+  <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5, 1]">
     <IonContent>
 
     <section>

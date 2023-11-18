@@ -21,8 +21,10 @@ export class Sale {
     public total_discount?: number = 0;
     public created_at?: string;
 
-    public sale_items?: SaleItem[] = [];
+    public _sale_items?: SaleItem[] = [];
     public sale_items_count?: number = 0;
+    public _sale_payments?: SalePayment[] = [];
+    public sale_payments_sum_amount?: number = 0;
 
     public _product?: Product | null;
     public _business?: Business | null;
@@ -43,6 +45,10 @@ export class Sale {
 
     isCashSale() {
         return this.sale_types_id == SaleTypes.CASH_SALE;;
+    }
+
+    amountOwed() {
+        return this.isCreditSale() && this.sale_payments_sum_amount < this.total_sales_price;
     }
 
     get product(): Product | null | undefined {
@@ -75,5 +81,30 @@ export class Sale {
 
     set sale_type(value: object) {
         this._saleType = value ? new SaleType(value) : null;
+    }
+
+    get sale_items(): SaleItem[] | undefined {
+        return this._sale_items;
+    }
+
+    set sale_items(value: Array) {
+        this._sale_items = value ? value.map(el => new SaleItem(el)) : [];
+    }
+
+    get sale_payments(): SalePayment[] | undefined {
+        return this._sale_payments;
+    }
+
+    set sale_payments(value: Array) {
+        if( !value || value.length == 0 ) {
+            this._sale_payments = [];
+        } else {
+            this._sale_payments = value.map(el => {
+                if( !el.business && this.business ) {
+                    el.business = this.business;
+                }
+                return new SalePayment(el)
+            });
+        }
     }
 }

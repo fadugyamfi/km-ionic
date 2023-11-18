@@ -8,17 +8,21 @@
                 <p>
                     <IonText color="dark">{{ sale.customer?.name }}</IonText>
                 </p>
-                <p class="font-medium">
+                <p>
                     <IonText color="medium">
                         {{ filters.date(sale.created_at as string, 'short') }}
                     </IonText>
-                    <span class="ion-margin-horizontal">|</span>
+                    <!-- <span class="ion-margin-horizontal">|</span>
                     <IonText color="medium">
                         {{ $tc('general.products', sale.sale_items_count as number, { count: sale.sale_items_count }) }}
+                    </IonText> -->
+                    <span class="ion-margin-horizontal">|</span>
+                    <IonText color="medium">
+                        {{ filters.currency(sale.total_sales_price as number) }}
                     </IonText>
                 </p>
-                <p>
-                    <IonChip v-if="sale.isCreditSale()" color="primary" class="font-medium">
+                <p v-if="sale.isCreditSale()">
+                    <IonChip color="primary" class="font-medium">
                         {{ sale.sale_type?.name }}
                     </IonChip>
                 </p>
@@ -31,7 +35,7 @@
             <IonPopover :event="event" :isOpen="openPopover == index" @didDismiss="openPopover = -1">
                 <IonContent class="ion-no-padding">
                     <IonList lines="full" class="ion-no-padding">
-                        <IonItem :button="true" @click="recordRepayment(sale)">
+                        <IonItem v-if="sale.isCreditSale()" :button="true" @click="recordRepayment(sale)">
                             <IonLabel>{{ $t('vendor.sales.recordRepayment') }}</IonLabel>
                         </IonItem>
                         <IonItem :button="true" @click="deleteSale(sale)">
@@ -60,8 +64,8 @@ import filters from '@/utilities/Filters';
 import Image from '@/components/Image.vue';
 import DeleteSaleModal from './DeleteSaleModal.vue';
 import { mapStores } from 'pinia';
-import { useSaleStore } from '../../../stores/SaleStore';
-import ProfileAvatar from '../../ProfileAvatar.vue';
+import { useSaleStore } from '@/stores/SaleStore';
+import ProfileAvatar from '@/components/ProfileAvatar.vue';
 
 
 export default defineComponent({
@@ -118,7 +122,7 @@ export default defineComponent({
 
         recordRepayment(sale: Sale) {
             this.closeMenu()
-            this.$router.push('/vendor/sales/record-repayment');
+            this.$router.push(`/vendor/sales/${sale.id}/record-repayment`);
         },
 
         deleteSale(sale: Sale) {

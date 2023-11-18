@@ -21,7 +21,7 @@
 
     <ion-content>
       <IonFab slot="fixed" vertical="bottom" horizontal="end">
-        <IonFabButton @click="onAddSale()">
+        <IonFabButton size="small" @click="onAddSale()">
           <IonIcon :icon="add"></IonIcon>
         </IonFabButton>
       </IonFab>
@@ -136,8 +136,14 @@
           </IonListHeader>
         </IonList>
 
-        <SalesList :sales="saleStore.sales" style="padding-top: 0px;"></SalesList>
+        <section v-if="fetchingHistory" class="d-flex ion-justify-content-center">
+          <IonSpinner name="crescent"></IonSpinner>
+        </section>
+
+        <SalesList v-else :sales="recentSales" style="padding-top: 0px;"></SalesList>
       </section>
+
+      <FilterSalesSheet :is-open="showFilterSheet" title="Filter Report" :filter-by-sale-type="false" @update="updateFilterOptions($event)"></FilterSalesSheet>
     </ion-content>
   </ion-page>
 </template>
@@ -157,6 +163,7 @@ import { useUserStore } from '@/stores/UserStore';
 import Business from '@/models/Business';
 import ProfileAvatar from '@/components/ProfileAvatar.vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
+import FilterSalesSheet from '@/components/modules/sales/FilterSalesSheet.vue';
 
 export default defineComponent({
 
@@ -189,8 +196,9 @@ export default defineComponent({
     IonItem,
     ProfileAvatar,
     IonProgressBar,
-    NotificationButton
-  },
+    NotificationButton,
+    FilterSalesSheet
+},
 
   data() {
     return {
@@ -199,7 +207,9 @@ export default defineComponent({
       Filters,
       recentSales: [] as Sale[],
       fetchingSummary: false,
-      topProducts: []
+      fetchingHistory: false,
+      topProducts: [],
+      queryFilters: {}
     }
   },
 
@@ -230,14 +240,16 @@ export default defineComponent({
       this.$router.push('/vendor/sales/history');
     },
 
-    fetchRecentSales() {
-      this.saleStore.fetchSales({ limit: 5, sort: 'latest' })
+    async fetchRecentSales() {
+      this.fetchingHistory = true;
+      this.recentSales = await this.saleStore.fetchSales({ limit: 5, sort: 'latest', ...this.queryFilters });
+      this.fetchingHistory = false;
     },
 
     async fetchBusinessSummary() {
       this.fetchingSummary = true;
-      await this.businessStore.getBusinessSummary(this.userStore.activeBusiness as Business);
-      this.topProducts = await this.businessStore.getTopSellingProducts(this.userStore.activeBusiness as Business, { limit: 2 });
+      await this.businessStore.getBusinessSummary(this.userStore.activeBusiness as Business, { ...this.queryFilters });
+      this.topProducts = await this.businessStore.getTopSellingProducts(this.userStore.activeBusiness as Business, { limit: 2, ...this.queryFilters });
       this.fetchingSummary = false;
     },
 
@@ -245,6 +257,13 @@ export default defineComponent({
       if( !this.topSellingProduct ) return;
 
       this.$router.push(`/vendor/sales/products/${this.topSellingProduct.products_id}`);
+    },
+
+    updateFilterOptions(filters: object) {
+      this.queryFilters = { ...filters };
+      this.fetchBusinessSummary();
+      this.fetchRecentSales();
+      this.showFilterSheet = false;
     }
   },
 

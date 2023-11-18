@@ -1,7 +1,5 @@
 <template>
     <IonItem>
-
-
         <section class="d-flex ion-align-items-stretch">
             <IonThumbnail :class="{ 'non-editable': !editable }">
                 <Image :src="saleItem?.product?.image"></Image>
@@ -11,17 +9,19 @@
                 <section class="d-flex ion-justify-content-between">
 
                     <section class="d-flex flex-column ion-justify-content-start">
-                        <IonText class="fw-semibold">{{ saleItem?.product?.product_name || 'N/A' }}</IonText>
-                        <IonText color="medium" class="font-medium">
-                            {{ saleItem?.product?.currency?.symbol || 'GHS' }} {{ saleItem?.total_price || 0 }}
-                        </IonText>
-                        <IonText color="medium" class="font-medium">
-                            {{ $t('general.quantity') }}: {{ saleItem?.quantity }}
-                        </IonText>
+                        <IonText class="fw-semibold font-medium">{{ saleItem?.product?.product_name || 'N/A' }}</IonText>
                         <IonText color="medium" class="font-medium">
                             <span v-if="saleItem?.product?.weight_value">{{ saleItem?.product?.weight_value || 0 }}kg</span>
                             <span v-if="saleItem?.product?.weight_value && saleItem?.product?.group_quantity"></span>
                             <span v-if="saleItem?.product?.group_quantity">{{ saleItem?.product?.group_quantity || 0 }} pieces</span>
+                        </IonText>
+
+                        <IonText color="medium" class="font-medium">
+                            {{ $t('general.quantity') }}: {{ saleItem?.quantity }}
+                        </IonText>
+
+                        <IonText color="dark" class="font-medium fw-semibold">
+                            {{ Filters.currency(saleItem?.total_price || 0, saleItem?.product?.currency?.symbol as string) }}
                         </IonText>
                     </section>
 
@@ -61,6 +61,7 @@ import { SaleItem } from '@/models/SaleItem';
 import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
 import Product from '@/models/Product';
+import Filters from '@/utilities/Filters';
 
 
 export default defineComponent({
@@ -87,7 +88,8 @@ export default defineComponent({
 
     data() {
         return {
-            closeCircleOutline
+            closeCircleOutline,
+            Filters,
         }
     },
 
@@ -116,6 +118,7 @@ ion-item {
     --inner-padding-end: 0px;
     --padding-start: 0px;
     margin-bottom: 10px;
+    --inner-padding-bottom: 10px;
 }
 
 ion-thumbnail {
