@@ -76,7 +76,7 @@ import PaymentOptionsHeader from "@/components/header/PaymentOptionsHeader.vue";
 import { useCartStore } from "@/stores/CartStore";
 import PaymentMethodHeader from "@/components/header/PaymentMethodHeader.vue";
 import SelectPaymentMethod from "@/components/modules/PaymentMethod/SelectPaymentMethod.vue";
-type DropdownName = "pay2Weeks" | "pay4Weeks";
+
 
 export default defineComponent({
   components: {
@@ -116,10 +116,10 @@ export default defineComponent({
     IonRadioGroup,
     PaymentMethodHeader,
   },
+
+  
   data() {
     return {
-   
-  
       showPayDropdown: false,
       form: {
         fields: {
@@ -141,7 +141,7 @@ export default defineComponent({
 
       cartStore.persist();
       this.$router.push(
-        `/shopper/cart/business/${this.$route.params.id}/item-review`
+        `/shopper/cart/business/${this.$route.params.id}/delivery-details`
       );
     },
 
