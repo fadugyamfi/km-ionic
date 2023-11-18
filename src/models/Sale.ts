@@ -1,6 +1,7 @@
 import Business from './Business';
 import Product from './Product';
 import { SaleItem } from './SaleItem';
+import { SalePayment } from './SalePayment';
 import { SaleType, SaleTypes } from './SaleType';
 export class Sale {
 
@@ -48,7 +49,15 @@ export class Sale {
     }
 
     amountOwed() {
-        return this.isCreditSale() && this.sale_payments_sum_amount < this.total_sales_price;
+        if( !this.isCreditSale() ) {
+            return false;
+        }
+
+        if( !this.sale_payments_sum_amount && this.total_sales_price ) {
+            return true;
+        }
+
+        return (this.sale_payments_sum_amount as number) < (this.total_sales_price as number);
     }
 
     get product(): Product | null | undefined {
@@ -87,7 +96,7 @@ export class Sale {
         return this._sale_items;
     }
 
-    set sale_items(value: Array) {
+    set sale_items(value: Array<object>) {
         this._sale_items = value ? value.map(el => new SaleItem(el)) : [];
     }
 
@@ -95,7 +104,7 @@ export class Sale {
         return this._sale_payments;
     }
 
-    set sale_payments(value: Array) {
+    set sale_payments(value: Array<any>) {
         if( !value || value.length == 0 ) {
             this._sale_payments = [];
         } else {
