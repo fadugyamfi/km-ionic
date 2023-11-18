@@ -12,6 +12,28 @@
                     }}
                 </IonText>
             </section>
+            <section v-if="sale?.isCreditSale()" class="d-flex ion-justify-content-between fw-bold">
+                <IonText>{{ $t("general.totalRepaid") }}</IonText>
+                <IonText color="success">
+                    {{
+                        sale?.sale_payments_sum_amount?.toLocaleString('en-GB', {
+                            style: 'currency',
+                            currency: saleCurrency || 'GHS'
+                        })
+                    }}
+                </IonText>
+            </section>
+            <section v-if="sale?.isCreditSale()" class="d-flex ion-justify-content-between fw-bold">
+                <IonText>{{ $t("general.amountOwed") }}</IonText>
+                <IonText color="danger">
+                    {{
+                        (sale?.totalOwed())?.toLocaleString('en-GB', {
+                            style: 'currency',
+                            currency: saleCurrency || 'GHS'
+                        })
+                    }}
+                </IonText>
+            </section>
         </IonCardContent>
     </IonCard>
 </template>

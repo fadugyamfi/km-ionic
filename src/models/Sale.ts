@@ -60,6 +60,12 @@ export class Sale {
         return (this.sale_payments_sum_amount as number) < (this.total_sales_price as number);
     }
 
+    totalOwed() {
+        const amount = (this.total_sales_price as number) - (this.sale_payments_sum_amount as number);
+
+        return amount >= 0 ? amount : 0;
+    }
+
     get product(): Product | null | undefined {
         return this._product;
     }

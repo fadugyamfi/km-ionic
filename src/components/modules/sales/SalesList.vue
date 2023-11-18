@@ -25,6 +25,14 @@
                     <IonChip color="primary" class="font-medium">
                         {{ sale.sale_type?.name }}
                     </IonChip>
+
+                    <IonChip v-if="!sale.amountOwed()" color="success" class="font-medium">
+                        {{ 'Paid' }}
+                    </IonChip>
+
+                    <IonChip v-else color="danger" class="font-medium">
+                        {{ 'Owing' }}
+                    </IonChip>
                 </p>
             </IonLabel>
             <IonButton slot="end" fill="clear" color="dark" class="ion-align-self-start ion-margin-top"
@@ -35,7 +43,7 @@
             <IonPopover :event="event" :isOpen="openPopover == index" @didDismiss="openPopover = -1">
                 <IonContent class="ion-no-padding">
                     <IonList lines="full" class="ion-no-padding">
-                        <IonItem v-if="sale.isCreditSale()" :button="true" @click="recordRepayment(sale)">
+                        <IonItem v-if="sale.amountOwed()" :button="true" @click="recordRepayment(sale)">
                             <IonLabel>{{ $t('vendor.sales.recordRepayment') }}</IonLabel>
                         </IonItem>
                         <IonItem :button="true" @click="deleteSale(sale)">

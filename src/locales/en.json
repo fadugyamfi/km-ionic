@@ -31,6 +31,8 @@
         "update": "Update",
         "edit": "Edit",
         "reorder": "Reorder",
+        "totalRepaid": "Total Repaid",
+        "amountOwed": "Amount Owed",
         "units": {
             "box": "Box | Boxes",
             "piece": "Piece | Pieces"

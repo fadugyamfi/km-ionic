@@ -19,10 +19,10 @@
         </section>
 
         <IonContent>
-            <SaleTotalCostView :sale="sale"></SaleTotalCostView>
 
             <IonLabel class="ion-margin-horizontal fw-semibold font-medium">Sold To</IonLabel>
             <SaleCustomerView :customer="sale?.customer"></SaleCustomerView>
+            <SaleTotalCostView :sale="sale"></SaleTotalCostView>
 
             <IonLabel class="ion-margin-horizontal fw-semibold font-medium">Items</IonLabel>
             <IonCard>
@@ -47,12 +47,14 @@
 
             <section class="ion-padding" v-if="sale?.isCreditSale()">
                 <CreditPaymentList :creditPayments="(sale.sale_payments as SalePayment[])"></CreditPaymentList>
-
-                <KolaYellowButton v-if="sale.amountOwed()" @click="recordRepayment(sale)">
-                    {{ $t('vendor.sales.recordRepayment') }}
-                </KolaYellowButton>
             </section>
         </IonContent>
+
+        <IonFooter v-if="sale?.amountOwed()" class="ion-padding ion-no-border">
+            <KolaYellowButton  @click="recordRepayment(sale)">
+                {{ $t('vendor.sales.recordRepayment') }}
+            </KolaYellowButton>
+        </IonFooter>
     </IonPage>
 </template>
 
@@ -60,7 +62,7 @@
 import { PropType, defineComponent } from 'vue';
 import { Sale } from '@/models/Sale';
 import { arrowBack, search } from 'ionicons/icons';
-import { IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonLabel, IonList, IonPage, IonSpinner, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonContent, IonFooter, IonHeader, IonIcon, IonLabel, IonList, IonPage, IonSpinner, IonTitle, IonToolbar } from '@ionic/vue';
 import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
 import { handleAxiosRequestError } from '@/utilities';
@@ -97,7 +99,8 @@ export default defineComponent({
         IonLabel,
         IonSpinner,
         KolaYellowButton,
-        CreditPaymentList
+        CreditPaymentList,
+        IonFooter
     },
 
     computed: {
