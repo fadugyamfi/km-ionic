@@ -4,6 +4,7 @@ import { useUserStore } from "./UserStore";
 import { handleAxiosRequestError } from "@/utilities";
 import Business from "@/models/Business";
 import User from "@/models/User";
+import TopPerformingAgent from "@/models/TopPerformingAgent";
 import AppStorage from "./AppStorage";
 
 const storage = new AppStorage();
@@ -49,6 +50,32 @@ export const useAgentsStore = defineStore("agents", {
         handleAxiosRequestError(error);
       }
 
+      return [];
+    },
+    async fetchTopPerformingAgents(
+      business: Business,
+      limit: number = 50,
+      options = {},
+      filter: string = "by-volume",
+      refresh = false
+    ): Promise<TopPerformingAgent[]> {
+      try {
+        const params = {
+          businesses_id: business.id,
+          limit,
+          filter,
+          ...options,
+        };
+        const response = await axios.get(`/v2/metrics/top-agents`, { params });
+
+        if (response) {
+          const { data } = response.data;
+          const topPerformingAgents = data;
+          return topPerformingAgents;
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
       return [];
     },
     // async createBusinessCustomer(postData: Object): Promise<Customer | null> {

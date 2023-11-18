@@ -72,7 +72,8 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <section v-show="!fetching">
-        <AgentsList :agents="agents" />
+        <AgentsList v-if="segment == 'all'" :agents="agents" />
+        <LeaderBoard v-if="segment == 'leaderboard'"/>
       </section>
     </ion-content>
   </ion-page>
@@ -107,6 +108,7 @@ import { useBusinessStore } from "@/stores/BusinessStore";
 import Business from "@/models/Business";
 import User from "@/models/User";
 import AgentsList from "@/components/modules/agents/AgentsList.vue";
+import LeaderBoard from "@/components/modules/agents/LeaderBoard.vue"
 import { useRouter } from "vue-router";
 import { useAgentsStore } from "@/stores/AgentsStore";
 
@@ -115,6 +117,7 @@ const refreshing = ref(false);
 const router = useRouter();
 const searchEnabled = ref(false);
 const agents = ref<User[]>([]);
+const segment = ref("all");
 
 const handleRefresh = async (event: RefresherCustomEvent) => {
   refreshing.value = true;
@@ -133,6 +136,7 @@ const onSearch = async (event: Event) => {
   refreshing.value = false;
 };
 const onSegmentChanged = (event: CustomEvent) => {
+  segment.value = event.detail.value;
   let start_dt = new Date();
   let end_dt = new Date();
   const option = event.detail.value;
