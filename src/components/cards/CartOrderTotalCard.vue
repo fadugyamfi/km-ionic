@@ -58,6 +58,11 @@
   </section>
 </template>
 
+If( paynow ) then 
+   button.text = "Proceed To Checkout"
+else 
+  button.text = "Place Order"
+
 <script setup lang="ts">
 import { computed } from "vue";
 import {
