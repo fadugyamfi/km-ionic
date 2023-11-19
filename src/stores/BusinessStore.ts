@@ -146,6 +146,21 @@ export const useBusinessStore = defineStore("business", {
         return null;
       }
     },
+    async updateBusiness(businessId: number): Promise<Business | null> {
+      try {
+        const response = await axios.put(`/v2/businesses/${businessId}`);
+
+        if (response) {
+          const { data } = response.data;
+          return new Business(data);
+        }
+
+        return null;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return null;
+      }
+    },
     async getBusinessProducts(business: Business, limit: number = 50): Promise<Product[]> {
       try {
         const params = {

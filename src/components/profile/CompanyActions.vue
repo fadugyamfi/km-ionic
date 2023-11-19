@@ -12,7 +12,7 @@
     </IonItem>
 
     <IonList lines="none">
-      <IonItem :detail="true" class="profile-item" :disabled="true">
+      <IonItem :detail="true" class="profile-item" router-link="/profile/company/edit-profile">
         <IonAvatar slot="start">
           <img src="/images/ic_location.svg" class="action-img" />
         </IonAvatar>

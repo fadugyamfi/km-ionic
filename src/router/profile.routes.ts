@@ -78,6 +78,16 @@ export const ProfileRoutes = [
           },
         ],
       },
+      {
+        path: "edit-profile",
+        component: () =>
+          import("@/views/Profile/CompanyProfile/EditProfile.vue"),
+      },
+      {
+        path: "change-photo",
+        component: () =>
+          import("@/views/Profile/CompanyProfile/ChangePhoto.vue"),
+      },
     ],
   },
 ];
