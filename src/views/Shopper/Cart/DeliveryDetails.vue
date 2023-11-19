@@ -34,7 +34,9 @@
 
         <IonInput
           class="kola-input delivery-details-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.delivery_nearest_landmark}"
+          :class="{
+            'ion-invalid ion-touched': form.errors.delivery_nearest_landmark,
+          }"
           label="Nearest Landmark"
           labelPlacement="stacked"
           fill="solid"
@@ -53,15 +55,15 @@
           fill="solid"
           v-model="form.fields.delivery_date"
           name="delivery-date"
-          @ion-input="form.validate($event)"
+          @ion-input="form.validate && form.validate($event)"
           readonly
         ></IonInput>
         <section>
           <section class="d-flex flex-column ion-margin-bottom">
             <IonText class="fw-semibold">Delivery</IonText>
-            <IonText color="medium" class="font-medium"
-              >Select delivery method</IonText
-            >
+            <IonText color="medium" class="font-medium">
+              Select delivery method
+            </IonText>
           </section>
           <DeliveryMethod
             :location="form.fields.location"
@@ -72,9 +74,9 @@
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="storeDeliveryDetails"
-        >Continue</KolaYellowButton
-      >
+      <KolaYellowButton @click="storeDeliveryDetails">
+        {{ $t("general.continue") }}
+      </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -89,7 +91,6 @@ import {
   IonText,
   IonInput,
 } from "@ionic/vue";
-import { defineComponent } from "vue";
 import { navigateOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
@@ -101,7 +102,6 @@ import { useForm } from "@/composables/form";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { onMounted } from "vue";
-import { onMounted as onMountedVue3 } from "@vue/runtime-core";
 
 const router = useRouter();
 const route = useRoute();
@@ -133,23 +133,32 @@ const selectDeliveryMethod = (method: string) => {
 };
 
 const storeDeliveryDetails = () => {
-  const cartStore = useCartStore();
-  const index = cartStore.orders.findIndex(
-    (b) => b.businesses_id == Number(route.params.id)
-  );
-  cartStore.orders[index] = {
-    ...cartStore.orders[index],
-    ...form.fields,
-  };
-  cartStore.persist()
-  router.push(`/shopper/cart/business/${route.params.id}/payment-options`);
+  try {
+    const cartStore = useCartStore();
+    const index = cartStore.orders.findIndex(
+      (b) => b.businesses_id == Number(route.params.id)
+    );
+
+    if (index !== -1) {
+      cartStore.orders[index] = {
+        ...cartStore.orders[index],
+        ...form.fields,
+      };
+      cartStore.persist();
+      router.push(`/shopper/cart/business/${route.params.id}/payment-options`);
+    } else {
+      console.error("Business ID not found in cartStore.orders");
+    }
+  } catch (error) {
+    console.error("An error occurred in storeDeliveryDetails:", error);
+  }
 };
 
 const getLocation = async () => {
   const toastStore = useToastStore();
-  const { getCurrentLocation } = useGeolocation();
 
   try {
+    const { getCurrentLocation } = useGeolocation();
     const coordinates = await getCurrentLocation();
 
     if (coordinates) {
@@ -183,5 +192,9 @@ onMounted(async () => {
 .use-location {
   --color: #666eed;
   --padding-start: 0px;
+}
+
+ion-footer {
+  background-color: #fefefe;
 }
 </style>

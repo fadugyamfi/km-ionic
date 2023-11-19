@@ -261,6 +261,9 @@ ion-card {
   color: #000000;
 }
 
+ion-footer {
+  background-color: #fefefe;
+}
 .radio-section {
   display: flex;
   justify-content: space-between;

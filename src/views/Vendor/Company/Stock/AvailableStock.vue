@@ -1,10 +1,10 @@
 <template>
   <section class="top-categories shopper-home-section ion-padding-top">
     <header class="">
-      <h6 class="fw-bold">Available Stock</h6>
+      <h6 class="fw-bold">{{ $t("profile.stock.availableStock") }}</h6>
 
       <IonText color="primary" router-link="/profile/company/stocks/add-stock">
-        Add New Stock
+        {{ $t("profile.stock.addNewStock") }}
       </IonText>
     </header>
 

@@ -18,7 +18,7 @@
     </section>
 
 
-    <ion-content :fullscreen="true">
+    <ion-content>
       <IonSpinner v-if="!brands" name="crescent"></IonSpinner>
 
       <IonGrid v-if="brands">

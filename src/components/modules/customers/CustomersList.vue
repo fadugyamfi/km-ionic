@@ -3,7 +3,7 @@
     lines="none"
     class="ion-padding-horizontal customers-select-list simple"
   >
-    <IonItem v-for="customer in customers" :key="customer.id">
+    <IonItem v-for="customer in customers" :key="customer.id" :button="true">
       <ProfileAvatar :image="customer?.logo" :username="customer?.name" customSize="40px"></ProfileAvatar>
       <IonLabel
         @click="

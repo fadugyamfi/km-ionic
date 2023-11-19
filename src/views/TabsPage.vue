@@ -1,13 +1,20 @@
 <template>
   <ion-page>
     <ion-tabs>
-      <ion-router-outlet></ion-router-outlet>
-      <NavTabs></NavTabs>
+      <IonRouterOutlet></IonRouterOutlet>
+
+      <ShopperTabBar v-if="userStore.appMode == 'shopping'"></ShopperTabBar>
+      <VendorTabBar v-else></VendorTabBar>
     </ion-tabs>
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import { IonTabs, IonPage, IonRouterOutlet } from '@ionic/vue';
-import NavTabs from '@/components/layout/NavTabs.vue';
+import { useUserStore } from '../stores/UserStore';
+import ShopperTabBar from '../components/layout/ShopperTabBar.vue';
+import VendorTabBar from '../components/layout/VendorTabBar.vue';
+
+const userStore = useUserStore();
+
 </script>

@@ -19,10 +19,10 @@
         </section>
 
         <IonContent>
-            <SaleTotalCostView :sale="sale"></SaleTotalCostView>
 
             <IonLabel class="ion-margin-horizontal fw-semibold font-medium">Sold To</IonLabel>
             <SaleCustomerView :customer="sale?.customer"></SaleCustomerView>
+            <SaleTotalCostView :sale="sale"></SaleTotalCostView>
 
             <IonLabel class="ion-margin-horizontal fw-semibold font-medium">Items</IonLabel>
             <IonCard>
@@ -44,7 +44,17 @@
 
                 </IonCardContent>
             </IonCard>
+
+            <section class="ion-padding" v-if="sale?.isCreditSale()">
+                <CreditPaymentList :creditPayments="(sale.sale_payments as SalePayment[])"></CreditPaymentList>
+            </section>
         </IonContent>
+
+        <IonFooter v-if="sale?.amountOwed()" class="ion-padding ion-no-border">
+            <KolaYellowButton  @click="recordRepayment(sale)">
+                {{ $t('vendor.sales.recordRepayment') }}
+            </KolaYellowButton>
+        </IonFooter>
     </IonPage>
 </template>
 
@@ -52,14 +62,17 @@
 import { PropType, defineComponent } from 'vue';
 import { Sale } from '@/models/Sale';
 import { arrowBack, search } from 'ionicons/icons';
-import { IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonLabel, IonList, IonPage, IonSpinner, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonContent, IonFooter, IonHeader, IonIcon, IonLabel, IonList, IonPage, IonSpinner, IonTitle, IonToolbar } from '@ionic/vue';
 import { mapStores } from 'pinia';
-import { useSaleStore } from '../../../stores/SaleStore';
-import { handleAxiosRequestError } from '../../../utilities';
-import SaleCustomerView from '../../../components/modules/sales/SaleCustomerView.vue';
-import SaleTotalCostView from '../../../components/modules/sales/SaleTotalCostView.vue';
-import SaleItemView from '../../../components/modules/sales/SaleItemView.vue';
-import NoResults from '../../../components/layout/NoResults.vue';
+import { useSaleStore } from '@/stores/SaleStore';
+import { handleAxiosRequestError } from '@/utilities';
+import SaleCustomerView from '@/components/modules/sales/SaleCustomerView.vue';
+import SaleTotalCostView from '@/components/modules/sales/SaleTotalCostView.vue';
+import SaleItemView from '@/components/modules/sales/SaleItemView.vue';
+import NoResults from '@/components/layout/NoResults.vue';
+import KolaYellowButton from '@/components/KolaYellowButton.vue';
+import CreditPaymentList from '@/components/modules/customers/credit/CreditPaymentList.vue';
+import { SalePayment } from '@/models/SalePayment';
 
 
 export default defineComponent({
@@ -84,7 +97,10 @@ export default defineComponent({
         SaleItemView,
         NoResults,
         IonLabel,
-        IonSpinner
+        IonSpinner,
+        KolaYellowButton,
+        CreditPaymentList,
+        IonFooter
     },
 
     computed: {
@@ -108,7 +124,12 @@ export default defineComponent({
             } finally {
                 this.loading = false;
             }
-        }
+        },
+
+        recordRepayment(sale: Sale) {
+            this.$router.push(`/vendor/sales/${sale.id}/record-repayment`);
+        },
+
     }
 })
 </script>

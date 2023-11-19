@@ -19,8 +19,8 @@
               #{{ order.id }}
             </span>
           </p>
-          <IonText>
-            <IonChip>{{ order.order_status?.name }}</IonChip>
+          <IonText class="font-medium">
+            <IonChip>{{ order.order_status?.name || 'Pending' }}</IonChip>
           </IonText>
         </IonLabel>
         <IonText> {{ filters.date(order.created_at, "short") }}</IonText>

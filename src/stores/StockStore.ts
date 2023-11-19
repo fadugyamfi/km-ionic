@@ -4,15 +4,18 @@ import { useToastStore } from "./ToastStore";
 import { handleAxiosRequestError } from "../utilities";
 import { FavoritedProduct } from "../models/types";
 import Stock from "@/models/Stock";
+import { useUserStore } from "./UserStore";
 
 export const useStockStore = defineStore("stock", {
   state: () => {
     return {
       stocks: [] as Stock[],
+      meta: { total: null as number | null },
       selectedStock: null as Stock | null,
       recentlyViewedStocks: [] as Stock[],
       productGroups: [],
       productVariations: [],
+      productUnits: [],
       searchTerm: "",
     };
   },
@@ -33,13 +36,16 @@ export const useStockStore = defineStore("stock", {
     },
 
     async fetchStocks(options = {}): Promise<Stock[]> {
+      const business_id = useUserStore().activeBusiness?.id;
       const params = {
         ...options,
+        businesses_id: business_id,
       };
 
       try {
         const response = await axios.get("/v2/products", { params });
         this.stocks = this.mapResponseToStocks(response);
+        this.meta = response.data.meta;
 
         return this.stocks;
       } catch (error) {
@@ -108,6 +114,17 @@ export const useStockStore = defineStore("stock", {
         handleAxiosRequestError(error);
       }
     },
+    async fetchProductUnits() {
+      try {
+        const response = await axios.get("v2/product-units");
+        if (response) {
+          this.productUnits = response.data.data;
+          return this.productUnits;
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+    },
     async addStock(stockData: Object) {
       return axios
         .post("v2/products", stockData)
@@ -118,6 +135,34 @@ export const useStockStore = defineStore("stock", {
           }
         })
         .catch((error) => handleAxiosRequestError(error));
+    },
+    async fetchProduct(product_id: number | string): Promise<Stock | null> {
+      try {
+        const response = await axios.get(`/v2/products/${product_id}`);
+        const product = new Stock(response.data.data);
+
+        return product;
+      } catch (error) {
+        handleAxiosRequestError(error);
+
+        return null;
+      }
+    },
+    async updateStock(
+      product_id: number | string,
+      formData: Object
+    ): Promise<Stock | null> {
+      try {
+        const response = await axios.put(
+          `/v2/products/${product_id}`,
+          formData
+        );
+        const product = new Stock(response.data.data);
+        return product;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return null;
+      }
     },
   },
 });
