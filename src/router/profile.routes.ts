@@ -76,6 +76,11 @@ export const ProfileRoutes = [
             path: "",
             component: () => import("@/views/Profile/SaleAgents/Agents.vue"),
           },
+          {
+            path: ":id/sale-report",
+            component: () =>
+              import("@/views/Profile/SaleAgents/AgentSalesReport.vue"),
+          },
         ],
       },
       {

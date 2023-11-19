@@ -10,7 +10,9 @@
         customSize="40px"
       ></ProfileAvatar>
       <IonLabel
-        @click="$router.push(`/profile/company/agents/${agent.id}/profile`)"
+        @click="
+          $router.push(`/profile/company/sale-agents/${agent.id}/sale-report`)
+        "
       >
         <p class="ion-no-margin">{{ agent.name }}</p>
         <IonText color="medium" class="font-medium">
@@ -112,11 +114,7 @@ const onConfirmDelete = async () => {
   try {
     showConfirmDeleteModal.value = false;
     await agentsStore.deleteAgent(selectedAgent.value as User);
-    toastStore.showSuccess(
-      "Agent has been removed successfully",
-      "",
-      "bottom"
-    );
+    toastStore.showSuccess("Agent has been removed successfully", "", "bottom");
   } catch (error) {
     toastStore.showError(
       "Failed to remove Agent. Please try again",
