@@ -10,7 +10,7 @@
         :username="company?.name"
       ></ProfileAvatar>
       <IonButton fill="clear" size="small" @click="changePhoto" style="text-transform: none"
-        >Change cover & profile photo
+        >Change profile photo
       </IonButton>
     </aside>
   </section>

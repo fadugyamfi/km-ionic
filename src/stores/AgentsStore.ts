@@ -112,14 +112,19 @@ export const useAgentsStore = defineStore("agents", {
     //     .catch((error) => handleAxiosRequestError(error));
     // },
 
-    // async getCustomer(business: Business, customer_id: any): Promise<Customer> {
-    //   const cacheKey = `kola.business.${business.id}.customers`;
-    //   await storage.has(cacheKey);
-    //   const data = await storage.get(cacheKey);
-    //   const agents = data.map((el: object) => new Business(el));
-    //   const customer = agents.find((c: Customer) => c.id == customer_id);
-    //   return new Customer(customer);
-    // },
+    async getAgent(business: Business, agent_id: any): Promise<User | null> {
+      try {
+        const response = await axios.get(`/v2/sale-agents/${agent_id}`);
+        if (response) {
+          const agent = response.data.data;
+          return new User(agent);
+        }
+        return null;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return null;
+      }
+    },
     async deleteAgent(agent: User) {
       return axios
         .delete(`/v2/sale-agents/${agent.id}`)

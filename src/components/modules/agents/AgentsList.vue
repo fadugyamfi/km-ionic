@@ -29,7 +29,7 @@
       >
         <IonContent :scroll-y="false">
           <IonList>
-            <IonItem
+            <!-- <IonItem
               @click="updateAgent(agent)"
               lines="full"
               :button="true"
@@ -37,8 +37,8 @@
             >
               <IonIcon :icon="createOutline"></IonIcon>
               Udpate Agent
-              <!-- {{ $t("profile.agents.updateCustomer") }} -->
-            </IonItem>
+             
+            </IonItem> -->
             <IonItem
               lines="none"
               :button="true"

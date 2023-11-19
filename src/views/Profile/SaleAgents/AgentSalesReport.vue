@@ -23,26 +23,34 @@
       </ion-header>
       <IonToolbar>
         <IonSegment
-          value="all"
+          value="thisweek"
           mode="ios"
           @ionChange="onSegmentChanged($event)"
         >
-          <IonSegmentButton value="all">
-            <IonLabel> Today </IonLabel>
+          <IonSegmentButton value="today">
+            <IonLabel>
+              {{ $t("general.today") }}
+            </IonLabel>
           </IonSegmentButton>
-          <IonSegmentButton value="request">
-            <IonLabel>This week</IonLabel>
+          <IonSegmentButton value="thisweek">
+            <IonLabel>{{ $t("general.thisWeek") }}</IonLabel>
           </IonSegmentButton>
-          <IonSegmentButton value="leaderboard">
-            <IonLabel>This month</IonLabel>
+          <IonSegmentButton value="pastmonth">
+            <IonLabel>{{ $t("general.pastMonth") }}</IonLabel>
           </IonSegmentButton>
         </IonSegment>
       </IonToolbar>
     </IonHeader>
     <ion-content>
-      <SalesStatistics></SalesStatistics>
-      <Performance></Performance>
-      <BestSellingItems></BestSellingItems>
+      <SalesStatistics
+        :total-sales="agent?.total_sales"
+        :avg-sales="agent?.avg_sales"
+      ></SalesStatistics>
+      <Performance :agent="agent"></Performance>
+      <BestSellingItems
+        :top-selling-product="agent?.top_selling_product"
+        :total-customers="agent?.total_customers"
+      ></BestSellingItems>
     </ion-content>
   </ion-page>
 </template>
@@ -73,79 +81,64 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
+import { formatMySQLDateTime } from "@/utilities";
 import Business from "@/models/Business";
 import User from "@/models/User";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useAgentsStore } from "@/stores/AgentsStore";
 import SalesStatistics from "../../../components/modules/agents/SalesStatistics.vue";
 import Performance from "../../../components/modules/agents/Performance.vue";
 import BestSellingItems from "../../../components/modules/agents/BestSellingItems.vue";
 
 const fetching = ref(false);
-const refreshing = ref(false);
-const router = useRouter();
-const searchEnabled = ref(false);
-const agents = ref<User[]>([]);
+const route = useRoute();
 
-const handleRefresh = async (event: RefresherCustomEvent) => {
-  refreshing.value = true;
-  fetching.value = true;
-  await fetchAgents();
-  refreshing.value = false;
-  event.target.complete();
-};
+const agent = ref<any>();
+const searchFilters = ref({
+  start_dt: "",
+  end_dt: "",
+});
 
-const onSearch = async (event: Event) => {
-  refreshing.value = true;
-  fetching.value = true;
-  await fetchAgents({
-    name_like: (event.target as HTMLIonSearchbarElement).value,
-  });
-  refreshing.value = false;
-};
 const onSegmentChanged = (event: CustomEvent) => {
   let start_dt = new Date();
   let end_dt = new Date();
   const option = event.detail.value;
 
   switch (option) {
-    case "all":
+    case "pastmonth":
       start_dt.setMonth(start_dt.getMonth() - 1);
       break;
 
-    case "request":
+    case "today":
       start_dt.setDate(start_dt.getDate() - 1);
       break;
 
-    case "leaderboard":
+    case "thisweek":
       start_dt.setDate(start_dt.getDate() - 7);
       break;
   }
 
-  //   this.searchFilters.start_dt = formatMySQLDateTime(start_dt.toISOString());
-  //   this.searchFilters.end_dt = formatMySQLDateTime(end_dt.toISOString());
+  searchFilters.value.start_dt = formatMySQLDateTime(start_dt.toISOString());
+  searchFilters.value.end_dt = formatMySQLDateTime(end_dt.toISOString());
 
-  //   this.fetchOrders();
+  // fetchAgent();
 };
-const fetchAgents = async (options = {}) => {
-  if (agents.value?.length == 0) {
-    fetching.value = true;
-  }
+const fetchAgent = async (options = {}) => {
+  fetching.value = true;
   const userStore = useUserStore();
   const agentsStore = useAgentsStore();
+  const agentId = route.params.id;
 
-  agents.value = await agentsStore.getBusinessSaleAgents(
+  agent.value = await agentsStore.getAgent(
     userStore.activeBusiness as Business,
-    100,
-    options,
-    refreshing.value
+    agentId
   );
   fetching.value = false;
 };
 
 onMounted(() => {
-  fetchAgents();
-  //   this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'thisweek' } }));
+  fetchAgent();
+  onSegmentChanged(new CustomEvent("load", { detail: { value: "thisweek" } }));
 });
 </script>
 

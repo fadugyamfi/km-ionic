@@ -5,12 +5,7 @@
         <IonCardContent class="d-flex flex-column">
           <IonText color="medium">Total Sales Made</IonText>
           <IonText color="dark" class="fw-semibold">
-            <!-- {{
-                    Filters.currency(
-                      businessStore.businessSummary?.total_sales_value
-                    )
-                  }} -->
-            123
+            {{ Filters.currency(totalSales) }}
           </IonText>
         </IonCardContent>
       </IonCard>
@@ -20,12 +15,7 @@
         <IonCardContent class="d-flex flex-column">
           <IonText color="medium">Avg. Sales Value</IonText>
           <IonText color="dark" class="fw-semibold">
-            <!-- {{
-                    Filters.currency(
-                      businessStore.businessSummary?.average_sales_value
-                    )
-                  }} -->
-            43534
+            {{ Filters.currency(avgSales) }}
           </IonText>
         </IonCardContent>
       </IonCard>
@@ -34,99 +24,33 @@
 </template>
 
 <script lang="ts">
-import {
-  IonPage,
-  IonContent,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonCard,
-  IonCardHeader,
-  IonIcon,
-  IonCardContent,
-  IonButtons,
-  IonBackButton,
-  IonTitle,
-  IonItem,
-  IonText
-} from "@ionic/vue";
-import { defineComponent } from "vue";
-import { mapStores } from "pinia";
-import { add, arrowUpOutline, optionsOutline, close } from "ionicons/icons";
-import { useBusinessStore } from "../../../stores/BusinessStore";
-import { useUserStore } from "../../../stores/UserStore";
-import Business from "../../../models/Business";
+import { IonRow, IonCol, IonCard, IonCardContent, IonText } from "@ionic/vue";
+import Filters from "@/utilities/Filters";
+import { defineComponent, PropType } from "vue";
 
 export default defineComponent({
   components: {
-    IonPage,
-    IonContent,
-    IonGrid,
     IonRow,
     IonCol,
     IonCard,
-    IonCardHeader,
-    IonIcon,
     IonCardContent,
-    IonButtons,
-    IonBackButton,
-    IonTitle,
-    IonItem,
-    IonText
+    IonText,
   },
-
+  props: {
+    totalSales: {
+      type: Number,
+      default: true,
+    },
+    avgSales: {
+      type: Number ,
+      default: true,
+    },
+  },
   data() {
     return {
-      add,
-      optionsOutline,
-      arrowUpOutline,
-      close,
-      showFilterSheet: false,
-      //   recentSales: [] as Sale[],
-      fetchingSummary: false,
+      Filters,
     };
   },
-
-  //   computed: {
-  //     ...mapStores(useSaleStore, useBusinessStore, useUserStore),
-
-  //     percentageOfConversion() {
-  //       const orders = this.businessStore.businessSummary?.orders;
-  //       return (orders?.converted_to_sales_count / orders?.total_count) * 100;
-  //     },
-
-  //     percentageComplete() {
-  //       return this.businessStore.businessSummary?.targets?.percentage_complete;
-  //     },
-  //   },
-
-  //   methods: {
-  //     onAddSale() {
-  //       this.saleStore.resetForNewSale();
-  //       this.$router.push("/vendor/sales/add-sale/select-agent");
-  //     },
-
-  //     onViewSales() {
-  //       this.$router.push("/vendor/sales/history");
-  //     },
-
-  //     fetchRecentSales() {
-  //       this.saleStore.fetchSales({ limit: 5, sort: "latest" });
-  //     },
-
-  //     async fetchBusinessSummary() {
-  //       this.fetchingSummary = true;
-  //       await this.businessStore.getBusinessSummary(
-  //         this.userStore.activeBusiness as Business
-  //       );
-  //       this.fetchingSummary = false;
-  //     },
-  //   },
-
-  //   mounted() {
-  //     this.fetchRecentSales();
-  //     this.fetchBusinessSummary();
-  //   },
 });
 </script>
 

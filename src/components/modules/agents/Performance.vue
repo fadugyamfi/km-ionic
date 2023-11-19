@@ -2,7 +2,11 @@
   <IonCard class="ion-no-margin">
     <IonCardContent class="ion-no-padding">
       <IonItem lines="none">
-        <ProfileAvatar slot="start"></ProfileAvatar>
+        <ProfileAvatar
+          slot="start"
+          :image="agent?.photo"
+          :username="agent?.name"
+        ></ProfileAvatar>
         <IonLabel>
           <h6>
             <IonText color="medium">Performance</IonText>
@@ -24,101 +28,28 @@
 </template>
 
 <script lang="ts">
-import {
-  IonPage,
-  IonContent,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonCard,
-  IonCardHeader,
-  IonIcon,
-  IonCardContent,
-  IonButtons,
-  IonBackButton,
-  IonTitle,
-  IonItem,
-  IonProgressBar,
-} from "@ionic/vue";
-import { defineComponent } from "vue";
-import { mapStores } from "pinia";
-import { add, arrowUpOutline, optionsOutline, close } from "ionicons/icons";
-import { useBusinessStore } from "../../../stores/BusinessStore";
-import { useUserStore } from "../../../stores/UserStore";
-import Business from "../../../models/Business";
+import { IonCard, IonCardContent, IonItem, IonProgressBar } from "@ionic/vue";
+import { defineComponent, PropType } from "vue";
 import ProfileAvatar from "../../../components/ProfileAvatar.vue";
+import User from "@/models/User";
 
 export default defineComponent({
   components: {
-    IonPage,
-    IonContent,
-    IonGrid,
-    IonRow,
-    IonCol,
     IonCard,
-    IonCardHeader,
-    IonIcon,
     IonCardContent,
-    IonButtons,
-    IonBackButton,
-    IonTitle,
     IonItem,
     IonProgressBar,
-    ProfileAvatar
+    ProfileAvatar,
   },
-
+  props: {
+    agent: {
+      type: Object as PropType<User>,
+      default: true,
+    },
+  },
   data() {
-    return {
-      add,
-      optionsOutline,
-      arrowUpOutline,
-      close,
-      showFilterSheet: false,
-      //   recentSales: [] as Sale[],
-      fetchingSummary: false,
-    };
+    return {};
   },
-
-  //   computed: {
-  //     ...mapStores(useSaleStore, useBusinessStore, useUserStore),
-
-  //     percentageOfConversion() {
-  //       const orders = this.businessStore.businessSummary?.orders;
-  //       return (orders?.converted_to_sales_count / orders?.total_count) * 100;
-  //     },
-
-  //     percentageComplete() {
-  //       return this.businessStore.businessSummary?.targets?.percentage_complete;
-  //     },
-  //   },
-
-  //   methods: {
-  //     onAddSale() {
-  //       this.saleStore.resetForNewSale();
-  //       this.$router.push("/vendor/sales/add-sale/select-agent");
-  //     },
-
-  //     onViewSales() {
-  //       this.$router.push("/vendor/sales/history");
-  //     },
-
-  //     fetchRecentSales() {
-  //       this.saleStore.fetchSales({ limit: 5, sort: "latest" });
-  //     },
-
-  //     async fetchBusinessSummary() {
-  //       this.fetchingSummary = true;
-  //       await this.businessStore.getBusinessSummary(
-  //         this.userStore.activeBusiness as Business
-  //       );
-  //       this.fetchingSummary = false;
-  //     },
-  //   },
-
-  //   mounted() {
-  //     this.fetchRecentSales();
-  //     this.fetchBusinessSummary();
-  //   },
 });
 </script>
 

@@ -54,7 +54,14 @@
         <IonLabel>{{ $t("general.thisWeek") }}</IonLabel>
       </IonSegmentButton>
       <IonSegmentButton value="pastmonth">
-        <IonLabel>{{ $t("general.thisMonth") }}</IonLabel>
+        <section class="d-flex">
+          <IonLabel>{{ $t("general.thisMonth") }}</IonLabel>
+          <Image
+            v-if="thisMonth"
+            src="/images/Star-8.svg"
+            style="width: 20px; margin-left: 5px"
+          ></Image>
+        </section>
       </IonSegmentButton>
       <IonSegmentButton value="alltime">
         <IonLabel>
@@ -109,6 +116,7 @@ export default defineComponent({
         start_dt: "",
         end_dt: "",
       },
+      thisMonth: true,
       fetching: false,
       topPerformingAgents: [] as TopPerformingAgent[],
       topThree: [] as TopPerformingAgent[],
@@ -127,14 +135,17 @@ export default defineComponent({
       switch (option) {
         case "pastmonth":
           start_dt.setMonth(start_dt.getMonth() - 1);
+          this.thisMonth = true;
           break;
 
         case "alltime":
           start_dt.setFullYear(start_dt.getFullYear() - 1);
+          this.thisMonth = false;
           break;
 
         case "thisweek":
           start_dt.setDate(start_dt.getDate() - 7);
+          this.thisMonth = false;
           break;
       }
 
