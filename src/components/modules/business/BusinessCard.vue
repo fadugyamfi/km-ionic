@@ -1,7 +1,7 @@
 <template>
     <section class="business-card">
         <ion-card @click="viewBusiness" class="ion-no-padding ion-no-margin">
-            <Image :alt="business.name" :src="business?.logo" />
+            <Image :alt="business.name" :src="business?.logo" :no-img-src="getRandomSupplierImage()" />
             <IonCardHeader>
                 <IonCardTitle>{{ business.name }}</IonCardTitle>
                 <IonCardSubtitle>
@@ -54,6 +54,12 @@ export default defineComponent({
             this.businessStore.viewBusiness(this.business);
             this.$router.push(`/shopper/home/businesses/${this.business.id}`);
         },
+
+        getRandomSupplierImage() {
+            let random = Math.floor(Math.random() * 4);
+            if (random == 0) random = 1;
+            return `/images/shopper/supplier-${random}.png`;
+        }
     },
 
     components: {
@@ -77,11 +83,14 @@ export default defineComponent({
         height: 250px;
         min-height: 150px;
 
-        image {
-            img {
-                min-height: 100px;
-                min-width: 100%;
-            }
+
+        ion-img {
+            min-height: 145px;
+            min-width: 100%;
+        }
+
+        ::part(image) {
+            min-height: 145px;
         }
 
         ion-card-header {

@@ -70,9 +70,9 @@ import SaleCustomerView from '@/components/modules/sales/SaleCustomerView.vue';
 import SaleTotalCostView from '@/components/modules/sales/SaleTotalCostView.vue';
 import SaleItemView from '@/components/modules/sales/SaleItemView.vue';
 import NoResults from '@/components/layout/NoResults.vue';
-import KolaYellowButton from '../../../components/KolaYellowButton.vue';
-import CreditPaymentList from '../../../components/modules/customers/credit/CreditPaymentList.vue';
-import { SalePayment } from '../../../models/SalePayment';
+import KolaYellowButton from '@/components/KolaYellowButton.vue';
+import CreditPaymentList from '@/components/modules/customers/credit/CreditPaymentList.vue';
+import { SalePayment } from '@/models/SalePayment';
 
 
 export default defineComponent({
