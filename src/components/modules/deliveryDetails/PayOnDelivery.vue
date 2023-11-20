@@ -64,10 +64,10 @@ import { ref, watch } from "vue";
 </script>
 
 <style lang="scss" scoped>
-ion-card {
-  // margin: 10px 0px;
-  // padding: 9px;
-}
+// ion-card {
+//    margin: 10px 0px;
+//    padding: 9px;
+// }
 ion-radio {
   width: 100%;
 }

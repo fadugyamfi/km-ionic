@@ -5,11 +5,17 @@
     </section>
 
     <ion-content class="ion-padding-horizontal">
-
-      <IonSegment value="personal" mode="ios" v-model="viewing" class="segment-margin">
+      <IonSegment
+        value="personal"
+        mode="ios"
+        v-model="viewing"
+        class="segment-margin"
+      >
         <IonSegmentButton value="cart">
           <div class="segment-button">
-            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
+            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }"
+              >Cart</IonLabel
+            >
             <IonBadge>{{ orderBusiness?.order_items?.length }}</IonBadge>
           </div>
         </IonSegmentButton>
@@ -21,26 +27,48 @@
       <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
 
       <section v-else>
-        <IonList >
-          <IonItem v-for="(item, index) in orderBusiness?.order_items" :key="item.product?.id">
+        <IonList>
+          <IonItem
+            v-for="(item, index) in orderBusiness?.order_items"
+            :key="item.product?.id"
+          >
             <ion-thumbnail slot="start" class="custom-thumbnail">
               <Image :src="item.product_image"></Image>
             </ion-thumbnail>
 
             <ion-row class="item-row">
               <ion-col size="10">
-                <p class="text-product ion-margin-top">{{ item.product_name }}</p>
-                <p class="">{{ $t('general.quantity') }}: {{ item.quantity }}</p>
+                <p class="text-product ion-margin-top">
+                  {{ item.product_name }}
+                </p>
+                <p class="">
+                  {{ $t("general.quantity") }}: {{ item.quantity }}
+                </p>
                 <p class="price">
-                  {{ Filters.currency(item.quantity * (item.product_price || 0), item.currency_symbol) }}
+                  {{
+                    Filters.currency(
+                      item.quantity * (item.product_price || 0),
+                      item.currency_symbol
+                    )
+                  }}
                 </p>
               </ion-col>
               <ion-col size="2" class="d-flex ion-align-items-start">
-                <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
-                  <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
+                <ion-button
+                  fill="clear"
+                  color=""
+                  @click.prevent.stop="removeFromCart(index)"
+                >
+                  <ion-icon
+                    class="remove-icon"
+                    :icon="closeCircleOutline"
+                  ></ion-icon>
                 </ion-button>
               </ion-col>
-              <ProductQuantitySelector :initial-quantity="item.quantity" @change="updateQuantity(item, $event)">
+              <ProductQuantitySelector
+                :initial-quantity="item.quantity"
+                @change="updateQuantity(item, $event)"
+              >
               </ProductQuantitySelector>
             </ion-row>
           </IonItem>
@@ -48,14 +76,14 @@
 
         <CartTotalCard />
       </section>
-
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="viewDeliveryDetails()">
-        {{ $t('shopper.cart.proceedToCheckout') }}
-      </KolaYellowButton>
-    </IonFooter>
+  <KolaYellowButton v-if="orderBusiness?.order_items?.length > 0" @click="viewDeliveryDetails()">
+    {{ $t("shopper.cart.proceedToCheckout") }}
+  </KolaYellowButton>
+</IonFooter>
+
   </ion-page>
 </template>
 
@@ -88,7 +116,7 @@ import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { formatAmountWithCommas } from "@/utilities";
 import Image from "@/components/Image.vue";
-import Filters from '@/utilities/Filters';
+import Filters from "@/utilities/Filters";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 
@@ -115,6 +143,11 @@ const removeFromCart = (index: number) => {
 const viewDeliveryDetails = () => {
   router.push(`/shopper/cart/business/${route.params.id}/delivery-details`);
 };
+
+const viewPaymentMethod = () => {
+  router.push(`/shopper/cart/business/${route.params.id}/payment-method`);
+};
+
 const getOrderBusiness = () => {
   const business = orders.value.find(
     (order: any) => order?.businesses_id == route.params.id
@@ -167,16 +200,14 @@ ion-footer {
     font-weight: 400;
     line-height: 140%;
   }
-
-
 }
 
 .custom-thumbnail {
-    align-self: flex-start;
-    margin-right: 16px;
-    width: 94px;
-    height: 120px;
-  }
+  align-self: flex-start;
+  margin-right: 16px;
+  width: 94px;
+  height: 120px;
+}
 .segment-button {
   display: flex;
   align-items: center;
@@ -187,7 +218,6 @@ ion-badge {
   --color: #344054;
   margin-left: 8px;
 }
-
 
 .custom-label {
   color: black;
@@ -215,16 +245,9 @@ ion-icon.remove-icon {
   vertical-align: text-top;
 }
 
-
-
 .remove-button {
   text-align: end;
 }
-
-
-
-
-
 
 .text-product {
   color: black;

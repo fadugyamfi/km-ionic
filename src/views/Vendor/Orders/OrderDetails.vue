@@ -7,7 +7,7 @@
             <IonBackButton defaultHref="/vendor/orders"></IonBackButton>
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
-            {{ $t('shopper.orders.orderDetails')}} -
+            {{ $t('shopper.orders.orderDetails') }} -
           </IonTitle>
           <IonButtons slot="end">
             <IonButton v-if="false">
@@ -88,8 +88,7 @@ export default defineComponent({
     OrderStatusHistoryView,
     KolaWhiteButton,
     IonText,
-    ReceivedOrderItems,
-    ConfirmModal
+    ReceivedOrderItems
 },
 
   name: 'OrderDetails',
@@ -112,7 +111,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores( useOrderStore, useUserStore, useToastStore ),
+    ...mapStores(useOrderStore, useUserStore, useToastStore),
   },
 
   methods: {
@@ -126,7 +125,7 @@ export default defineComponent({
       // fetch full order info from backend to overwrite the basic data
       try {
         this.order = await this.orderStore.fetchOrder(order_id);
-      } catch(error) {
+      } catch (error) {
         handleAxiosRequestError(error);
       } finally {
         this.loading = false;
@@ -160,10 +159,10 @@ export default defineComponent({
       try {
         const response = await this.orderStore.approveOrder(this.order as Order);
 
-        this.toastStore.showSuccess( this.$t('vendor.orders.orderHasBeenApproved'), '', 'bottom', 'vendorTabs')
-      } catch(error) {
+        this.toastStore.showSuccess(this.$t('vendor.orders.orderHasBeenApproved'), '', 'bottom', 'vendorTabs')
+      } catch (error) {
         handleAxiosRequestError(error);
-        this.toastStore.showError( this.$t('vendor.orders.anErrorOccured'), '', 'bottom', 'vendorTabs')
+        this.toastStore.showError(this.$t('vendor.orders.anErrorOccured'), '', 'bottom', 'vendorTabs')
       }
     },
 
@@ -171,11 +170,10 @@ export default defineComponent({
       try {
         const response = await this.orderStore.cancelOrder(this.order as Order);
 
-        this.toastStore.showSuccess( this.$t('vendor.orders.orderHasBeenCanceled'), '', 'bottom', 'vendorTabs');
-        this.$router.back();
+        this.toastStore.showSuccess( this.$t('vendor.orders.orderHasBeenCanceled'), '', 'bottom', 'vendorTabs')
       } catch(error) {
         handleAxiosRequestError(error);
-        this.toastStore.showError( this.$t('vendor.orders.anErrorOccured'), '', 'bottom', 'vendorTabs')
+        this.toastStore.showError(this.$t('vendor.orders.anErrorOccured'), '', 'bottom', 'vendorTabs')
       }
     }
   }
