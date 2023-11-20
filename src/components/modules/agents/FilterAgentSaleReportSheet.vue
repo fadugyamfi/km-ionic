@@ -2,7 +2,7 @@
     <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5]">
       <IonContent>
         <header class="fw-semibold ion-padding ion-text-center">
-          {{ $t("profile.stock.filterStock") }}
+          {{ $t("profile.agent.filterAgent") }}
         </header>
         <main class="ion-padding-vertical">
           <IonGrid>

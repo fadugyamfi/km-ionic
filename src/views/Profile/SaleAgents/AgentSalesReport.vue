@@ -16,7 +16,7 @@
             <section
               class="d-flex ion-align-items-center ion-justify-content-center"
             >
-              <IonLabel>{{ $t("Agent sales report") }}</IonLabel>
+              <IonLabel>{{ $t("profile.agent.agentSaleReport") }}</IonLabel>
             </section></IonTitle
           >
           <ion-buttons slot="end">
@@ -100,11 +100,10 @@ import {
   optionsOutline,
 } from "ionicons/icons";
 import { useUserStore } from "@/stores/UserStore";
-import { useBusinessStore } from "@/stores/BusinessStore";
 import { formatMySQLDateTime } from "@/utilities";
 import Business from "@/models/Business";
-import User from "@/models/User";
-import { useRouter, useRoute } from "vue-router";
+import Agent from "@/models/Agent";
+import { useRoute } from "vue-router";
 import { useAgentsStore } from "@/stores/AgentsStore";
 import SalesStatistics from "../../../components/modules/SalesStatistics.vue";
 import Performance from "../../../components/modules/Performance.vue";
@@ -115,7 +114,7 @@ const fetching = ref(false);
 const route = useRoute();
 
 const showFilterSheet = ref(false);
-const agent = ref<any>();
+const agent = ref<Agent | null>();
 const searchFilters = ref({
   start_dt: "",
   end_dt: "",
@@ -167,7 +166,6 @@ const fetchAgent = async (options = {}) => {
 };
 
 onMounted(() => {
-  fetchAgent();
   onSegmentChanged(new CustomEvent("load", { detail: { value: "thisweek" } }));
 });
 </script>

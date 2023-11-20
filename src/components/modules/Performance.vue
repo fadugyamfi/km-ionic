@@ -9,7 +9,7 @@
         ></ProfileAvatar>
         <IonLabel>
           <h6>
-            <IonText color="medium">Performance</IonText>
+            <IonText color="medium">{{ $t('general.performance') }}</IonText>
           </h6>
           <p>
             <IonText color="dark" class="fw-semibold"
@@ -41,7 +41,7 @@ import {
 } from "@ionic/vue";
 import { defineComponent, PropType } from "vue";
 import ProfileAvatar from "../ProfileAvatar.vue";
-import User from "@/models/User";
+import Agent from "@/models/Agent";
 
 export default defineComponent({
   components: {
@@ -55,7 +55,7 @@ export default defineComponent({
   },
   props: {
     agent: {
-      type: Object as PropType<User>,
+      type: Object as PropType<Agent | null>,
       default: true,
     },
   },

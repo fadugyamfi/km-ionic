@@ -3,9 +3,9 @@
     <IonCol size="6">
       <IonCard class="ion-no-margin best-selling-card">
         <IonCardContent class="d-flex flex-column">
-          <IonText color="medium">Best Selling Item</IonText>
+          <IonText color="medium">{{ $t("general.bestSellingItem") }}</IonText>
           <IonText color="dark" class="fw-semibold"
-            >{{ topSellingProduct?.product?.product_name || 'N/A' }}
+            >{{ topSellingProduct?.product?.product_name || "N/A" }}
           </IonText>
         </IonCardContent>
       </IonCard>
@@ -13,7 +13,7 @@
     <IonCol size="6">
       <IonCard class="ion-no-margin customers-card">
         <IonCardContent class="d-flex flex-column">
-          <IonText color="medium">No. of Customers</IonText>
+          <IonText color="medium">{{ $t("general.noOfCustomers") }}</IonText>
           <IonText color="dark" class="fw-semibold">
             {{ Filters.number(totalCustomers) }}
           </IonText>

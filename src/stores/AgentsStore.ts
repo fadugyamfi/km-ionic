@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import { useUserStore } from "./UserStore";
 import { handleAxiosRequestError } from "@/utilities";
 import Business from "@/models/Business";
-import User from "@/models/User";
+import Agent from "@/models/Agent";
 import TopPerformingAgent from "@/models/TopPerformingAgent";
 import AppStorage from "./AppStorage";
 
@@ -11,7 +11,7 @@ const storage = new AppStorage();
 
 export const useAgentsStore = defineStore("agents", {
   state: () => ({
-    agents: [] as User[],
+    agents: [] as Agent[],
     meta: {},
   }),
   actions: {
@@ -20,12 +20,12 @@ export const useAgentsStore = defineStore("agents", {
       limit: number = 50,
       options = {},
       refresh = false
-    ): Promise<User[]> {
+    ): Promise<Agent[]> {
       const cacheKey = `kola.business.${business.id}.sale-agents`;
 
       if ((await storage.has(cacheKey)) && !refresh) {
         const data = await storage.get(cacheKey);
-        return data.map((el: object) => new User(el));
+        return data.map((el: object) => new Agent(el));
       }
 
       try {
@@ -40,7 +40,7 @@ export const useAgentsStore = defineStore("agents", {
 
         if (response) {
           const { data } = response.data;
-          const agents: User[] = data.map((el: any) => new User(el));
+          const agents: Agent[] = data.map((el: any) => new Agent(el));
 
           await storage.set(cacheKey, agents, 7, "days");
 
@@ -116,7 +116,7 @@ export const useAgentsStore = defineStore("agents", {
       business: Business,
       agent_id: any,
       options: Object
-    ): Promise<User | null> {
+    ): Promise<Agent | null> {
       try {
         const params = {
           businesses_id: business.id,
@@ -127,7 +127,7 @@ export const useAgentsStore = defineStore("agents", {
         });
         if (response) {
           const agent = response.data.data;
-          return new User(agent);
+          return new Agent(agent);
         }
         return null;
       } catch (error) {
@@ -135,7 +135,7 @@ export const useAgentsStore = defineStore("agents", {
         return null;
       }
     },
-    async deleteAgent(agent: User) {
+    async deleteAgent(agent: Agent) {
       return axios
         .delete(`/v2/sale-agents/${agent.id}`)
         .then(() => {

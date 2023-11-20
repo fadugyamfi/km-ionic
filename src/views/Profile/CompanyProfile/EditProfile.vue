@@ -16,7 +16,7 @@
             <section
               class="d-flex ion-align-items-center ion-justify-content-center"
             >
-              <IonLabel>Edit Profile</IonLabel>
+              <IonLabel>{{ $t('profile.editProfile') }}</IonLabel>
             </section></IonTitle
           >
         </ion-toolbar>

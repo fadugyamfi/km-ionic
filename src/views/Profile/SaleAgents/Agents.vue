@@ -16,14 +16,11 @@
             <section
               class="d-flex ion-align-items-center ion-justify-content-center"
             >
-              <IonLabel>{{ $t("Agents") }}</IonLabel>
+              <IonLabel>{{ $t("profile.agent.agents") }}</IonLabel>
               <ion-badge class="badge">{{ agents?.length }}</ion-badge>
             </section></IonTitle
           >
           <ion-buttons slot="end">
-            <!-- <IonButton color="dark" @click="addCustomer()">
-              <IonIcon :icon="personAddOutline" color="dark"></IonIcon>
-            </IonButton> -->
             <ion-button
               v-if="agents?.length > 0"
               @click="searchEnabled = !searchEnabled"
@@ -41,13 +38,13 @@
           @ionChange="onSegmentChanged($event)"
         >
           <IonSegmentButton value="all">
-            <IonLabel> All agents </IonLabel>
+            <IonLabel>{{ $t("profile.agent.allAgents") }}</IonLabel>
           </IonSegmentButton>
-          <IonSegmentButton value="request">
-            <IonLabel>Requests</IonLabel>
+          <IonSegmentButton disabled value="request">
+            <IonLabel>{{ $t("profile.agent.requests") }}</IonLabel>
           </IonSegmentButton>
           <IonSegmentButton value="leaderboard">
-            <IonLabel>Leaderboard</IonLabel>
+            <IonLabel>{{ $t("profile.agent.leaderboard") }}</IonLabel>
           </IonSegmentButton>
         </IonSegment>
       </IonToolbar>
@@ -73,7 +70,7 @@
       </div>
       <section v-show="!fetching">
         <AgentsList v-if="segment == 'all'" :agents="agents" />
-        <LeaderBoard v-if="segment == 'leaderboard'"/>
+        <LeaderBoard v-if="segment == 'leaderboard'" />
       </section>
     </ion-content>
   </ion-page>
@@ -106,9 +103,9 @@ import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import Business from "@/models/Business";
-import User from "@/models/User";
+import Agent from "@/models/Agent";
 import AgentsList from "@/components/modules/agents/AgentsList.vue";
-import LeaderBoard from "@/components/modules/agents/LeaderBoard.vue"
+import LeaderBoard from "@/components/modules/agents/LeaderBoard.vue";
 import { useRouter } from "vue-router";
 import { useAgentsStore } from "@/stores/AgentsStore";
 
@@ -116,7 +113,7 @@ const fetching = ref(false);
 const refreshing = ref(false);
 const router = useRouter();
 const searchEnabled = ref(false);
-const agents = ref<User[]>([]);
+const agents = ref<Agent[]>([]);
 const segment = ref("all");
 
 const handleRefresh = async (event: RefresherCustomEvent) => {
@@ -137,28 +134,6 @@ const onSearch = async (event: Event) => {
 };
 const onSegmentChanged = (event: CustomEvent) => {
   segment.value = event.detail.value;
-  let start_dt = new Date();
-  let end_dt = new Date();
-  const option = event.detail.value;
-
-  switch (option) {
-    case "all":
-      start_dt.setMonth(start_dt.getMonth() - 1);
-      break;
-
-    case "request":
-      start_dt.setDate(start_dt.getDate() - 1);
-      break;
-
-    case "leaderboard":
-      start_dt.setDate(start_dt.getDate() - 7);
-      break;
-  }
-
-  //   this.searchFilters.start_dt = formatMySQLDateTime(start_dt.toISOString());
-  //   this.searchFilters.end_dt = formatMySQLDateTime(end_dt.toISOString());
-
-  //   this.fetchOrders();
 };
 const fetchAgents = async (options = {}) => {
   if (agents.value?.length == 0) {
@@ -178,7 +153,6 @@ const fetchAgents = async (options = {}) => {
 
 onMounted(() => {
   fetchAgents();
-  //   this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'thisweek' } }));
 });
 </script>
 

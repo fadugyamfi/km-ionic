@@ -38,7 +38,12 @@
       "piece": "Piece | Pieces"
     },
     "thisMonth": "This Month",
-    "allTime": "All Time"
+    "allTime": "All Time",
+    "totalSalesMade": "Total Sales Made",
+    "avgSalesValue": "Avg. Sales Value",
+    "performance": "Performance",
+    "noOfCustomers": "No. of Customers",
+    "bestSellingItem": "Best Selling Item"
   },
   "onboarding": {
     "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -288,6 +293,15 @@
       "confirmDelete": "Are you sure you want to remove this stock?",
       "updateStock": "Update Stock"
     },
-    "switchBusiness": "Switch Business"
+    "switchBusiness": "Switch Business",
+    "agent": {
+      "agents": "Agents",
+      "allAgents": "All agents",
+      "requests": "Requests",
+      "leaderboard": "Leaderboard",
+      "agentSaleReport": "Agent sales report",
+      "filterAgent": "Filter agents sales report"
+    },
+    "editProfile": "Edit Profile"
   }
 }
