@@ -169,7 +169,6 @@ export default defineComponent({
     this.onSegmentChanged(
       new CustomEvent("load", { detail: { value: "pastmonth" } })
     );
-    this.fetchTopPerformingAgents();
   },
 });
 </script>
