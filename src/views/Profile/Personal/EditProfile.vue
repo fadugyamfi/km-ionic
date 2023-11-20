@@ -27,7 +27,7 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <section v-if="!fetching">
-        <CompanyProfileHeader :company="company" />
+        <PersonalProfileHeader :user="user" />
         <form class="ion-padding" v-show="!fetching">
           <IonInput
             class="kola-input ion-margin-bottom"
@@ -62,37 +62,17 @@
             @ion-input="form.validate($event)"
             required
           ></IonInput>
-          <IonInput
-            class="kola-input"
-            :class="{ 'ion-invalid ion-touched': form.errors.location }"
-            :label="$t('profile.customers.businessLocation')"
-            labelPlacement="stacked"
-            fill="solid"
-            v-model="form.fields.location"
-            name="business_location"
-            @ion-input="form.validate($event)"
-            required
-          ></IonInput>
-          <IonButton
-            fill="clear"
-            size="small"
-            style="text-transform: none"
-            class="ion-margin-bottom use-location ion-text-start"
-            @click="getLocation()"
-          >
-            <IonIcon
-              :icon="navigateOutline"
-              style="margin-right: 5px"
-            ></IonIcon>
-            {{ $t("profile.customers.location.useCurrentLocation") }}
-          </IonButton>
-
           <IonFooter class="ion-padding-top ion-no-border">
             <KolaYellowButton
+              v-if="!isChangeNumber"
               :disabled="!formValid"
               @click.prevent="updateProfile"
               >{{ $t("profile.customers.save") }}</KolaYellowButton
             >
+            <KolaYellowButton v-if="isChangeNumber" @click="onContinue()">
+              <IonSpinner v-if="validating" name="crescent"></IonSpinner>
+              <IonText v-else>{{ $t("general.continue") }}</IonText>
+            </KolaYellowButton>
           </IonFooter>
         </form>
       </section>
@@ -121,7 +101,7 @@ import {
   arrowBackOutline,
   navigateOutline,
 } from "ionicons/icons";
-import CompanyProfileHeader from "@/components/modules/company/CompanyProfileHeader.vue";
+import PersonalProfileHeader from "@/components/modules/personal/PersonalProfileHeader.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { ref, onMounted, computed } from "vue";
 import { handleAxiosRequestError } from "@/utilities";
@@ -129,86 +109,67 @@ import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useToastStore } from "@/stores/ToastStore";
 import { useGeolocation } from "@/composables/useGeolocation";
-import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 import Business from "@/models/Business";
 import { useForm } from "@/composables/form";
 
 const toastStore = useToastStore();
-const route = useRoute();
+const userStore = useUserStore();
+const router = useRouter();
 
 const fetching = ref(false);
+const validating = ref(false);
 
-const company = ref<Business | null>();
+const user = computed(() => userStore.user);
 const form = useForm({
   name: "",
-  location: "",
   email: "",
   phone_number: "",
-  business_types_id: 1,
 });
 
 const formValid = computed(() => {
   const fields = form.fields;
 
-  return (
-    fields.name.length > 0 &&
-    fields.location.length > 0 &&
-    fields.phone_number.length > 0
-  );
+  return fields.name.length > 0 && fields.phone_number.length > 0;
 });
 
-const fetchCompany = async () => {
-  fetching.value = true;
-  const userStore = useUserStore();
-  const businessStore = useBusinessStore();
-  company.value = await businessStore.getBusiness(
-    Number(userStore.activeBusiness?.id)
-  );
-  Object.assign(form.fields, {
-    name: company.value?.name,
-    location: company.value?.location,
-    phone_number: company.value?.phone_number,
-    email: company.value?.email,
-    business_types_id: 1,
-  });
-  fetching.value = false;
-};
-const getLocation = async () => {
-  const toastStore = useToastStore();
-  const { getCurrentLocation } = useGeolocation();
+const isChangeNumber = computed(
+  () => form.fields.phone_number !== user.value?.phone_number
+);
 
-  try {
-    const coordinates = await getCurrentLocation();
+const onContinue = async () => {
+  validating.value = true;
+  userStore.registering = false;
+  userStore.resettingPIN = false;
+  userStore.updatingProfile = true;
 
-    if (coordinates) {
-      form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
-    }
-  } catch (error) {
-    toastStore.showError("Cannot retrieve location info");
-  }
+  userStore.userForm = form.fields;
+  userStore
+    .verifyPhoneNumber({
+      phone_number: form.fields.phone_number as string,
+    })
+    .then((response) => {
+      router.push("/profile/personal/validate-otp");
+    })
+    .catch((error) => {
+      handleAxiosRequestError(error);
+    })
+    .finally(() => (validating.value = false));
 };
+
 const updateProfile = async () => {
   try {
-    toastStore.blockUI("Hold On As We Update Company Profile");
-    const userStore = useUserStore();
-    const businessStore = useBusinessStore();
-    company.value = await businessStore.updateBusiness(
-      Number(userStore.activeBusiness?.id),
-      form.fields
-    );
-    if (company.value) {
+    userStore.userForm = form.fields;
+    toastStore.blockUI("Hold On As We Update Your Profile");
+    const user = await userStore.updateUserInfo();
+    if (user) {
       toastStore.unblockUI();
-      toastStore.showSuccess("Company profile has been updated successfully");
-      Object.assign(form.fields, {
-        name: company.value?.name,
-        location: company.value?.location,
-        phone_number: company.value?.phone_number,
-        email: company.value?.email,
-      });
+      toastStore.showSuccess("Profile has been updated successfully");
+      router.push("/profile/personal/edit-profile");
     } else {
       toastStore.unblockUI();
       toastStore.showError(
-        "Failed to update Company profile. Please try again",
+        "Failed to update Profile. Please try again",
         "",
         "bottom",
         "footer"
@@ -219,8 +180,13 @@ const updateProfile = async () => {
     toastStore.unblockUI();
   }
 };
+
 onMounted(() => {
-  fetchCompany();
+  form.fields = {
+    name: user.value?.name,
+    email: user.value?.email,
+    phone_number: user.value?.phone_number,
+  };
 });
 </script>
 <style lang="scss" scoped>
