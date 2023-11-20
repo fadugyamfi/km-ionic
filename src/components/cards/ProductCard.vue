@@ -25,7 +25,7 @@
 
                 <section class="pricing d-flex flex-column">
                     <section class="fw-semibold">
-                        {{ product.currency?.symbol }} {{ product.product_price }}
+                        {{ Filters.currency(Number(product.product_price), String(product.currency?.symbol)) }}
                     </section>
                     <section class="font-medium">
                         <span v-if="product.weight_value">{{ product.weight_value }}kg</span>
@@ -52,6 +52,7 @@ import Image from '@/components/Image.vue';
 import { useCartStore } from '@/stores/CartStore';
 import FavoriteButton from '../modules/products/FavoriteButton.vue';
 import Business from '../../models/Business';
+import Filters from '../../utilities/Filters';
 
 export type ProductSelection = {
     selected: Boolean,
@@ -112,7 +113,8 @@ export default defineComponent({
             addCircleOutline,
             imgLoaded: false,
             selected: false,
-            noImage: '/images/product-placeholder.png'
+            noImage: '/images/product-placeholder.png',
+            Filters
         };
     },
 

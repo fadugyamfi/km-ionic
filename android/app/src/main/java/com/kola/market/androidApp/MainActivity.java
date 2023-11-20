@@ -1,4 +1,4 @@
-package com.kola.market;
+package com.kola.market.androidApp;
 
 import com.getcapacitor.BridgeActivity;
 

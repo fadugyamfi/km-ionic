@@ -44,7 +44,7 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="createOrder" :disabled="!minOrderAmountReached"> Continue </KolaYellowButton>
+      <KolaYellowButton @click="createOrder" :disabled="!minOrderAmountReached"  > Continue </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -72,12 +72,16 @@ import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
 import Image from "@/components/Image.vue";
 import { useRoute } from "vue-router";
-import { Order } from "../../../models/Order";
-import Filters from '@/utilities/Filters';
-import BusinessMinimumOrderReached from "../../../components/modules/business/BusinessMinimumOrderReached.vue";
+import { useRouter } from "vue-router";
+import { Order } from "@/models/Order";
+import BusinessMinimumOrderReached from "@/components/modules/business/BusinessMinimumOrderReached.vue";
+import Filters from "@/utilities/Filters";
 
 
 const route = useRoute();
+
+
+const router = useRouter();
 
 const orderBusiness = ref<any>(null);
 const orders = computed(() => cartStore.orders);
@@ -97,6 +101,8 @@ const updateQuantity = (item: CartItem, newQuantity: number) => {
 const removeFromCart = (index: number) => {
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
+
+
 
 const getOrderBusiness = () => {
   console.log("jello");
@@ -120,6 +126,7 @@ const createOrder = () => {
 
   });
 
+  router.push(`/shopper/cart/business/${route.params.id}/order-confirmation`);
 }
 
 cartStore.loadFromStorage();

@@ -7,15 +7,15 @@
           <IonContent class="ion-no-padding">
             <IonList lines="full" class="ion-no-padding">
               <ion-item :button="true" lines="full" aria-label="sync" v-if="order?.isPendingApproval()"
-                        @click="approveOrder(order)">
+                        @click="confirmApproval(order)">
                 <ion-icon slot="start" :icon="checkmark" aria-hidden="true"></ion-icon>
                 {{ $t('general.accept') }}
               </ion-item>
-              <ion-item :button="true" lines="full" v-if="order?.isPendingApproval()" @click="cancelOrder(order)">
+              <ion-item :button="true" lines="full" v-if="order?.isPendingApproval()" @click="confirmCancellation(order)">
                 <ion-icon slot="start" :icon="closeCircleOutline"></ion-icon>
                 {{ $t('general.cancel') }}
               </ion-item>
-              <ion-item :button="true" lines="full">
+              <ion-item :button="true" lines="full" :disabled="true">
                 <ion-icon slot="start" :icon="chatbubbleOutline"></ion-icon>
                 {{ $t('vendor.orders.messageCustomer') }}
               </ion-item>
@@ -28,6 +28,13 @@
         </IonPopover>
       </template>
     </ReceivedOrderListItem>
+
+    <ConfirmModal
+      :isOpen="showConfirm"
+      :description="confirmDescription"
+      @confirm="doConfirm()"
+      @dismiss="showConfirm = false"
+    ></ConfirmModal>
 
     <DeleteModal
       :title="$t('vendor.orders.deleteOrderFromList')"
@@ -52,6 +59,7 @@ import ReceivedOrderListItem from './ReceivedOrderListItem.vue';
 import { useToastStore } from '@/stores/ToastStore';
 import { handleAxiosRequestError } from '@/utilities';
 import DeleteModal from '@/components/modals/DeleteModal.vue';
+import ConfirmModal from '../../modals/ConfirmModal.vue';
 
 export default defineComponent({
 
@@ -69,8 +77,9 @@ export default defineComponent({
     IonText,
     Image,
     ReceivedOrderListItem,
-    DeleteModal
-  },
+    DeleteModal,
+    ConfirmModal
+},
 
   computed: {
     ...mapStores(useOrderStore, useToastStore)
@@ -84,6 +93,10 @@ export default defineComponent({
       openPopover: -1,
       selectedOrder: null as Order | null,
       showConfirmDeleteModal: false,
+      showConfirm: false,
+      confirmDescription: '',
+      confirmAction: '',
+      actionOrder: null as Order | null,
       filters
     }
   },
@@ -144,12 +157,37 @@ export default defineComponent({
     async onConfirmDelete() {
       this.showConfirmDeleteModal = false;
       const response = await this.orderStore.deleteOrder(this.selectedOrder?.id as number);
-      console.log(response);
     },
 
     viewDetails(order: Order) {
+      this.closeMenu();
       this.$emit('view-details', order);
       this.$router.push(`/vendor/orders/${order.id}`);
+    },
+
+    confirmApproval(order: Order) {
+      this.actionOrder = order;
+      this.confirmAction = 'approve';
+      this.confirmDescription = 'Are you sure you want approve this order?'
+      this.showConfirm = true;
+    },
+
+    confirmCancellation(order: Order) {
+      this.actionOrder = order;
+      this.confirmAction = 'cancel',
+      this.confirmDescription = 'Are you sure you want cancel this order?'
+      this.showConfirm = true;
+    },
+
+    doConfirm() {
+      this.showConfirm = false;
+
+      if( this.confirmAction == 'approve' ) {
+        this.approveOrder(this.actionOrder as Order);
+        return;
+      }
+
+      this.cancelOrder(this.actionOrder as Order);
     },
 
     async approveOrder(order: Order) {
@@ -175,52 +213,6 @@ export default defineComponent({
     }
   }
 })
-
-// const orderstore = useOrderStore();
-// const orders = ref([]);
-
-// const props = defineProps({
-
-//   selectedSegment: String,
-// });
-
-// const filteredOrders = computed(() => {
-//   const currentDate = new Date();
-//   const orders = props.orders;
-
-//   if (props.selectedSegment === 'today') {
-//     const today = new Date(currentDate);
-//     today.setHours(0, 0, 0, 0);
-//     const tomorrow = new Date(today);
-//     tomorrow.setDate(today.getDate() + 1);
-
-//     return orders.filter((order) => {
-//       const orderDate = new Date(order.created_at as string);
-//       return orderDate >= today && orderDate < tomorrow;
-//     });
-//   } else if (props.selectedSegment === 'thisweek') {
-//     const dayOfWeek = currentDate.getDay();
-//     const startOfWeek = new Date(currentDate);
-//     startOfWeek.setDate(currentDate.getDate() - dayOfWeek);
-
-//     return orders.filter((order) => {
-//       const orderDate = new Date(order.created_at as string);
-//       return orderDate >= startOfWeek;
-//     });
-//   } else if (props.selectedSegment === 'pastmonth') {
-//     const oneMonthAgo = new Date(currentDate);
-//     oneMonthAgo.setMonth(currentDate.getMonth() - 1);
-
-//     return orders.filter((order) => {
-//       const orderDate = new Date(order.created_at as string);
-//       return orderDate >= oneMonthAgo;
-//     });
-//   }
-
-//   return orders;
-// });
-
-
 </script>
 <style scoped lang="scss">
 .order-list {
@@ -240,5 +232,11 @@ export default defineComponent({
 .badge {
   align-content: center;
   justify-content: center;
+}
+
+ion-popover {
+  ion-item {
+    font-size: 0.9em;
+  }
 }
 </style>

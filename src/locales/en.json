@@ -1,73 +1,73 @@
 {
-  "general": {
-    "phoneNumber": "Phone Number",
-    "pin": "PIN",
-    "continue": "Continue",
-    "yes": "Yes",
-    "no": "No",
-    "optional": "optional",
-    "cancel": "Cancel",
-    "save": "Save",
-    "home": "Home",
-    "sales": "Sales",
-    "credit": "Credits",
-    "orders": "Orders",
-    "profile": "Profile",
-    "cart": "Cart",
-    "businesses": "Businesses",
-    "retailer": "Retailer",
-    "wholesaler": "Wholesaler",
-    "keyDistributor": "Key Distributor",
-    "supplier": "Supplier",
-    "search": "Search",
-    "totalCost": "Total Cost",
-    "quantity": "Quantity",
-    "products": "1 product | {count} products",
-    "today": "Today",
-    "thisWeek": "This Week",
-    "pastMonth": "Past Month",
-    "thisMonth": "This Month",
-    "allTime": "All Time",
-    "delete": "Delete",
-    "accept": "Accept",
-    "update": "Update",
-    "edit": "Edit",
-    "reorder": "Reorder",
-    "units": {
-      "box": "Box | Boxes",
-      "piece": "Piece | Pieces"
-    }
-  },
-  "onboarding": {
-    "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
-    "weHelpYouBuyAndSell": "We help you to buy and sell wholesale, manage your customers and inventory, simply and securely in one app!",
-    "getStarted": "Get Started"
-  },
-  "signup": {
-    "landing": {
-      "theBestWayToGrowYourSales": "The best way to grow your sales",
-      "weHelpYouToSell": "We help you to sell, buy, manage your customers and inventory simply and securely in one app!",
-      "howDoYouIntendToUseKola": "How do you intend to use Kola?",
-      "toBuy": "To Buy",
-      "toSell": "To Sell",
-      "alreadyHaveAnAccount": "Already have an account?",
-      "logIn": "Log In"
+    "general": {
+        "phoneNumber": "Phone Number",
+        "pin": "PIN",
+        "continue": "Continue",
+        "yes": "Yes",
+        "no": "No",
+        "optional": "optional",
+        "cancel": "Cancel",
+        "save": "Save",
+        "home": "Home",
+        "sales": "Sales",
+        "credit": "Credits",
+        "orders": "Orders",
+        "profile": "Profile",
+        "cart": "Cart",
+        "businesses": "Businesses",
+        "retailer": "Retailer",
+        "wholesaler": "Wholesaler",
+        "keyDistributor": "Key Distributor",
+        "supplier": "Supplier",
+        "search": "Search",
+        "totalCost": "Total Cost",
+        "quantity": "Quantity",
+        "products": "1 product | {count} products",
+        "today": "Today",
+        "thisWeek": "This Week",
+        "pastMonth": "Past Month",
+        "delete": "Delete",
+        "accept": "Accept",
+        "update": "Update",
+        "edit": "Edit",
+        "reorder": "Reorder",
+        "totalRepaid": "Total Repaid",
+        "amountOwed": "Amount Owed",
+        "units": {
+            "box": "Box | Boxes",
+            "piece": "Piece | Pieces"
+        }
     },
-    "shopper": {
-      "fullName": "Full Name",
-      "businessName": "Business Name",
-      "businessLocation": "Business Location",
-      "newPinCode": "New PIN Code",
-      "confirmPinCode": "Confirm PIN Code"
+    "onboarding": {
+        "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
+        "weHelpYouBuyAndSell": "We help you to buy and sell wholesale, manage your customers and inventory, simply and securely in one app!",
+        "getStarted": "Get Started"
     },
-    "vendor": {
-      "letsGetYouSellingOnKola": "Let's get you selling on Kola",
-      "letsGetToKnowYourBusiness": "Let's get to know your business",
-      "toSetUpYourShop": "To set up your shop you will upload images, share your story and choose your shop settings",
-      "yourLocation": "Your Location",
-      "helpUsUnderstandYourBusiness": "Help us understand your business better by providing some key details about your company",
-      "uploadYourProfilePhoto": "Upload Your Profile Photo",
-      "uploadInstructions": "Please upload a clear and professional photo of yourself or your brand logo to personalize your profile. Your profile photo will be visible to other users and will represent your identity on Kola Market.",
+    "signup": {
+        "landing": {
+            "theBestWayToGrowYourSales": "The best way to grow your sales",
+            "weHelpYouToSell": "We help you to sell, buy, manage your customers and inventory simply and securely in one app!",
+            "howDoYouIntendToUseKola": "How do you intend to use Kola?",
+            "toBuy": "To Buy",
+            "toSell": "To Sell",
+            "alreadyHaveAnAccount": "Already have an account?",
+            "logIn": "Log In"
+        },
+        "shopper": {
+            "fullName": "Full Name",
+            "businessName": "Business Name",
+            "businessLocation": "Business Location",
+            "newPinCode": "New PIN Code",
+            "confirmPinCode": "Confirm PIN Code"
+        },
+        "vendor": {
+            "letsGetYouSellingOnKola": "Let's get you selling on Kola",
+            "letsGetToKnowYourBusiness": "Let's get to know your business",
+            "toSetUpYourShop": "To set up your shop you will upload images, share your story and choose your shop settings",
+            "yourLocation": "Your Location",
+            "helpUsUnderstandYourBusiness": "Help us understand your business better by providing some key details about your company",
+            "uploadYourProfilePhoto": "Upload Your Profile Photo",
+            "uploadInstructions": "Please upload a clear and professional photo of yourself or your brand logo to personalize your profile. Your profile photo will be visible to other users and will represent your identity on Kola Market.",
 
       "secureYourAccount": "Secure Your Account",
 
@@ -106,154 +106,162 @@
         "useCurrentLocation": "Use Current Location"
       },
 
-      "youAreOnTheWaitlist": "You Are On The Waitlist",
-      "congratulatoryMessage": "Congratulations! Your application to sell on Kola Market has been sent for approval. This usually takes between 24-72hours. In the meantime you can tap the chat button to reach one of our agents if you have inquiries.",
-      "continueToShopping": "Continue To Shopping",
-      "chatWithKola": "Chat With Kola"
-    }
-  },
-  "auth": {
-    "login": {
-      "goodToSeeYouAgain": "Good to see you again",
-      "enterDetailsBelowToLogin": "Enter your details below to login",
-      "forgotYourPin": "Forgot Your PIN?",
-      "dontHaveAnAccount": "Don't have an account?",
-      "signUp": "Sign Up",
-      "login": "Login"
+            "youAreOnTheWaitlist": "You Are On The Waitlist",
+            "congratulatoryMessage": "Congratulations! Your application to sell on Kola Market has been sent for approval. This usually takes between 24-72hours. In the meantime you can tap the chat button to reach one of our agents if you have inquiries.",
+            "continueToShopping": "Continue To Shopping",
+            "chatWithKola": "Chat With Kola"
+        }
     },
-    "verifyNumber": {
-      "pleaseEnterYourPhoneNumberToProceed": "Please Enter Your Phone Number To Proceed"
+    "auth": {
+        "login": {
+            "goodToSeeYouAgain": "Good to see you again",
+            "enterDetailsBelowToLogin": "Enter your details below to login",
+            "forgotYourPin": "Forgot Your PIN?",
+            "dontHaveAnAccount": "Don't have an account?",
+            "signUp": "Sign Up",
+            "login": "Login"
+        },
+        "verifyNumber": {
+            "pleaseEnterYourPhoneNumberToProceed": "Please Enter Your Phone Number To Proceed"
+        },
+        "validateOtp": {
+            "verifyNumber": "Verify Number",
+            "codeSent": "A code was sent to %{number}",
+            "pleaseEnterCode": "Please enter code below to proceed"
+        },
+        "resetPin": {
+            "resettingYourPIN": "Resetting Your PIN",
+            "pleaseEnterAndConfirmYourNewPin": "Please Enter and Confirm Your New PIN To Proceed",
+            "pinSuccessfullyReset": "PIN Successfully Reset",
+            "loadingYourAccountInfo": "Loading Your Account Info",
+            "pinResetFailed": "PIN Reset Failed. Please try again",
+            "phoneNumberRequired": "Phone Number For Reset Required"
+        }
     },
-    "validateOtp": {
-      "verifyNumber": "Verify Number",
-      "codeSent": "A code was sent to %{number}",
-      "pleaseEnterCode": "Please enter code below to proceed"
+    "shopper": {
+        "home": {
+            "viewAll": "View all",
+            "suppliersNearYou": "Suppliers Near You",
+            "showAll": "Show All",
+            "newArrivals": "New Arrivals"
+        },
+        "businesses": {
+            "noResultsAvailable": "No Results Available",
+            "pleaseTryYourSearchAgain": "Please try your search again"
+        },
+        "productDetails": {
+            "productDetails": "Product Details",
+            "buyNow": "Buy Now",
+            "addToCart": "Add To Cart"
+        },
+        "orders": {
+            "orderDetails": "Order Details",
+            "orderStatus": "Order Status",
+            "delivery": "Delivery"
+        },
+        "cart": {
+            "proceedToCheckout": "Proceed To Checkout"
+        }
     },
-    "resetPin": {
-      "resettingYourPIN": "Resetting Your PIN",
-      "pleaseEnterAndConfirmYourNewPin": "Please Enter and Confirm Your New PIN To Proceed",
-      "pinSuccessfullyReset": "PIN Successfully Reset",
-      "loadingYourAccountInfo": "Loading Your Account Info",
-      "pinResetFailed": "PIN Reset Failed. Please try again",
-      "phoneNumberRequired": "Phone Number For Reset Required"
-    }
-  },
-  "shopper": {
-    "home": {
-      "viewAll": "View all",
-      "suppliersNearYou": "Suppliers Near You",
-      "showAll": "Show All",
-      "newArrivals": "New Arrivals"
+    "vendor": {
+        "home": {
+            "yourOrderListIsEmpty": "Your Order List Is Empty",
+            "emptyListInstruction": "Looks like your haven't received any orders yet. Please follow these steps to Get more orders!",
+            "inviteCustomers": "Invite Customers",
+            "chatWithUs": "Chat With Us To Learn More",
+            "youHaveXNewOrders": "You have %{orders} New Order(s)",
+            "pleaseTapOrdersButtonBelowToSeeThem": "Please click \"orders\" button below to see all"
+        },
+        "sales": {
+            "selectSaleAgent": "Select sale agent",
+            "selectSaleType": "Select Sale Type",
+            "selectPaymentMethod": "Select Payment Method",
+            "selectCustomer": "Select Customer",
+            "selectProducts": "Select Products",
+            "itemsSelected": "%{total} Item Selected",
+            "saleAgent": "Sale Agent",
+            "addSale": "Add Sale",
+            "cashSale": "Cash Sale",
+            "creditSale": "Credit Sale",
+            "cash": "Cash",
+            "mobileMoney": "Mobile Money",
+            "cheque": "Cheque",
+            "bankTransfer": "Bank Transfer",
+            "saleConfirmation": "Sale Confirmation",
+            "saleHasBeenRecorded": "Sale has been recorded",
+            "selectAgentToContinue": "Select Sale Agent To Continue",
+            "selectSaleTypeToContinue": "Select Sale Type To Continue",
+            "selectPaymentModeToContinue": "Select Payment Mode To Continue",
+            "selectCustomerToContinue": "Select Customer To Continue",
+            "selectProductsToContinue": "Select Products To Continue",
+            "cannotProceedWithTotalCostOfZero": "Cannot proceed with total cost of zero",
+            "searchProducts": "Search Product Inventory",
+            "searchCustomers": "Find Customer By Name",
+            "filterAgents": "Filter Agents List",
+            "addNewSale": "Add New Sale",
+            "done": "Done",
+            "recordSale": "Record Sale",
+            "salesHistory": "Sales History",
+            "recordRepayment": "Record Repayment",
+            "confirmDeleteSale": "Delete sale?",
+            "actionIsUnreversible": "This action is unreversible",
+            "saleDetails": "Sale Detais",
+            "noSaleItemsAvailable": "No Sale Items Available",
+            "addItemsToSaleToSeeThemHere": "Add items to sale to see them here",
+            "addPayment": "Add Payment",
+            "amountPaid": "Amount Paid",
+            "enterAmountPaid": "Enter amount paid here",
+            "addDate": "Add Date",
+            "selectPaymentMethodForCreditSale": "Select payment method for credit sale",
+            "paymentRecordedSuccessfully": "Payment recorded successfully",
+            "paymentRecordingFailed": "Payment recording failed"
+        },
+        "orders": {
+            "orderHasBeenApproved": "Order has been approved",
+            "orderHasBeenCanceled": "Order has been canceled",
+            "messageCustomer": "Message Customer",
+            "messageSupplier": "Message Supplier",
+            "deleteOrderFromList": "Delete Order From List",
+            "youCantUndoThisAction": "You can't undo this action"
+        }
     },
-    "businesses": {
-      "noResultsAvailable": "No Results Available",
-      "pleaseTryYourSearchAgain": "Please try your search again"
+    "modules": {
+        "business": {
+            "noDescriptAvailable": "No Description Available",
+            "unknownLocation": "Unknown Location"
+        }
     },
-    "productDetails": {
-      "productDetails": "Product Details",
-      "buyNow": "Buy Now",
-      "addToCart": "Add To Cart"
-    },
-    "orders": {
-      "orderDetails": "Order Details",
-      "orderStatus": "Order Status",
-      "delivery": "Delivery"
-    },
-    "cart": {
-      "proceedToCheckout": "Proceed To Checkout"
-    }
-  },
-  "vendor": {
-    "home": {
-      "yourOrderListIsEmpty": "Your Order List Is Empty",
-      "emptyListInstruction": "Looks like your haven't received any orders yet. Please follow these steps to Get more orders!",
-      "inviteCustomers": "Invite Customers",
-      "chatWithUs": "Chat With Us To Learn More",
-      "youHaveXNewOrders": "You have %{orders} New Order(s)",
-      "pleaseTapOrdersButtonBelowToSeeThem": "Please click \"orders\" button below to see all"
-    },
-    "sales": {
-      "selectSaleAgent": "Select sale agent",
-      "selectSaleType": "Select Sale Type",
-      "selectPaymentMethod": "Select Payment Method",
-      "selectCustomer": "Select Customer",
-      "selectProducts": "Select Products",
-      "itemsSelected": "%{total} Item Selected",
-      "saleAgent": "Sale Agent",
-      "addSale": "Add Sale",
-      "cashSale": "Cash Sale",
-      "creditSale": "Credit Sale",
-      "cash": "Cash",
-      "mobileMoney": "Mobile Money",
-      "cheque": "Cheque",
-      "saleConfirmation": "Sale Confirmation",
-      "saleHasBeenRecorded": "Sale has been recorded",
-      "selectAgentToContinue": "Select Sale Agent To Continue",
-      "selectSaleTypeToContinue": "Select Sale Type To Continue",
-      "selectPaymentModeToContinue": "Select Payment Mode To Continue",
-      "selectCustomerToContinue": "Select Customer To Continue",
-      "selectProductsToContinue": "Select Products To Continue",
-      "cannotProceedWithTotalCostOfZero": "Cannot proceed with total cost of zero",
-      "searchProducts": "Search Product Inventory",
-      "searchCustomers": "Find Customer By Name",
-      "filterAgents": "Filter Agents List",
-      "addNewSale": "Add New Sale",
-      "done": "Done",
-      "recordSale": "Record Sale",
-      "salesHistory": "Sales History",
-      "recordRepayment": "Record Repayment",
-      "confirmDeleteSale": "Delete sale?",
-      "actionIsUnreversible": "This action is unreversible",
-      "saleDetails": "Sale Detais",
-      "noSaleItemsAvailable": "No Sale Items Available",
-      "addItemsToSaleToSeeThemHere": "Add items to sale to see them here"
-    },
-    "orders": {
-      "orderHasBeenApproved": "Order has been approved",
-      "orderHasBeenCanceled": "Order has been canceled",
-      "messageCustomer": "Message Customer",
-      "messageSupplier": "Message Supplier",
-      "deleteOrderFromList": "Delete Order From List",
-      "youCantUndoThisAction": "You can't undo this action"
-    }
-  },
-  "modules": {
-    "business": {
-      "noDescriptAvailable": "No Description Available",
-      "unknownLocation": "Unknown Location"
-    }
-  },
-  "profile": {
-    "customers": {
-      "customers": "Customers",
-      "youHaveNoCustomer": "You Have No Customers",
-      "youCanStartByAddingNewCustomers": "You can start by adding new customers",
-      "addCustomer": "Add Customer",
-      "inviteCustomers": "Invite customers",
-      "location": {
-        "useCurrentLocation": "Use Current Location"
-      },
-      "fullName": "Full Name",
-      "businessOwnerPhone": "Business Owner Phone Number",
-      "businessName": "Business Name",
-      "businessLocation": "Business Location",
-      "phoneNumber": "Phone Number",
-      "assignToSalesAgentOrManager": "Assign to a sales agent or manager",
-      "selectSaleAgent": "Select a sales agent",
-      "howDoTheyUsuallyPay": "How do they usually pay",
-      "selectPaymentMethod": "Select payment method",
-      "save": "Save",
-      "locationUnknown": " Location Unknown",
-      "updateCustomer": "Update customer",
-      "removeCustomer": "Remove customer",
-      "searchCustomers": "Find Customer By Name",
-      "confirmDeleteCustomer": "Are you sure you want to remove this customer?",
-      "actionIsUnreversible": "This action cannot be undone",
-      "remove": "Remove",
-      "new": "new",
-      "updateCustomerInfo": "Update customer information"
-    },
-    "stock": {
+    "profile": {
+        "customers": {
+            "customers": "Customers",
+            "youHaveNoCustomer": "You Have No Customers",
+            "youCanStartByAddingNewCustomers": "You can start by adding new customers",
+            "addCustomer": "Add Customer",
+            "inviteCustomers": "Invite customers",
+            "location": {
+                "useCurrentLocation": "Use Current Location"
+            },
+            "fullName": "Full Name",
+            "businessOwnerPhone": "Business Owner Phone Number",
+            "businessName": "Business Name",
+            "businessLocation": "Business Location",
+            "phoneNumber": "Phone Number",
+            "assignToSalesAgentOrManager": "Assign to a sales agent or manager",
+            "selectSaleAgent": "Select a sales agent",
+            "howDoTheyUsuallyPay": "How do they usually pay",
+            "selectPaymentMethod": "Select payment method",
+            "save": "Save",
+            "locationUnknown":" Location Unknown",
+            "updateCustomer": "Update customer",
+            "removeCustomer": "Remove customer",
+            "searchCustomers": "Find Customer By Name",
+            "confirmDeleteCustomer": "Are you sure you want to remove this customer?",
+            "actionIsUnreversible":"This action cannot be undone",
+            "remove": "Remove",
+            "new": "new",
+            "updateCustomerInfo": "Update customer information"
+        },
+        "stock": {
       "stock": "Stock",
       "addStock": "Add Stock",
       "addProductImage": "Add Product Image",

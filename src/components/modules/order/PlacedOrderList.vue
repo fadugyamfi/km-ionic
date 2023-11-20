@@ -15,7 +15,7 @@
                         <ion-icon slot="start" :icon="sync" aria-hidden="true"></ion-icon>
                         {{ $t('general.reorder') }}
                     </ion-item>
-                    <ion-item :button="true" lines="full">
+                    <ion-item :button="true" lines="full" :disabled="true">
                         <ion-icon slot="start" :icon="chatbubbleOutline"></ion-icon>
                         {{ $t('vendor.orders.messageSupplier') }}
                     </ion-item>
@@ -125,50 +125,6 @@ export default defineComponent({
   }
 })
 
-// const orderstore = useOrderStore();
-// const orders = ref([]);
-
-// const props = defineProps({
-
-//   selectedSegment: String,
-// });
-
-// const filteredOrders = computed(() => {
-//   const currentDate = new Date();
-//   const orders = props.orders;
-
-//   if (props.selectedSegment === 'today') {
-//     const today = new Date(currentDate);
-//     today.setHours(0, 0, 0, 0);
-//     const tomorrow = new Date(today);
-//     tomorrow.setDate(today.getDate() + 1);
-
-//     return orders.filter((order) => {
-//       const orderDate = new Date(order.created_at as string);
-//       return orderDate >= today && orderDate < tomorrow;
-//     });
-//   } else if (props.selectedSegment === 'thisweek') {
-//     const dayOfWeek = currentDate.getDay();
-//     const startOfWeek = new Date(currentDate);
-//     startOfWeek.setDate(currentDate.getDate() - dayOfWeek);
-
-//     return orders.filter((order) => {
-//       const orderDate = new Date(order.created_at as string);
-//       return orderDate >= startOfWeek;
-//     });
-//   } else if (props.selectedSegment === 'pastmonth') {
-//     const oneMonthAgo = new Date(currentDate);
-//     oneMonthAgo.setMonth(currentDate.getMonth() - 1);
-
-//     return orders.filter((order) => {
-//       const orderDate = new Date(order.created_at as string);
-//       return orderDate >= oneMonthAgo;
-//     });
-//   }
-
-//   return orders;
-// });
-
 
 </script>
 <style scoped lang="scss">
@@ -189,5 +145,11 @@ export default defineComponent({
 .badge {
   align-content: center;
   justify-content: center;
+}
+
+ion-popover {
+  ion-item {
+    font-size: 0.9em;
+  }
 }
 </style>

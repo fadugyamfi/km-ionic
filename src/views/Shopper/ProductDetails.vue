@@ -55,7 +55,7 @@
                     <BusinessMinimumOrder :business="product?.business"></BusinessMinimumOrder>
                 </section>
 
-                <section class="section product-quantity-selection">
+                <section v-if="!hideCartFunctions" class="section product-quantity-selection">
                     <ProductQuantitySelector @change="updateQuantity($event)"></ProductQuantitySelector>
                 </section>
 
@@ -69,7 +69,7 @@
 
         <IonSkeletonText v-if="!product" style="height: 300px" :animated="true"></IonSkeletonText>
 
-        <IonFooter class="ion-padding ion-no-border">
+        <IonFooter class="ion-padding ion-no-border" v-if="!hideCartFunctions">
             <KolaYellowButton class="ion-margin-bottom">
                 {{ $t("shopper.productDetails.buyNow") }}
             </KolaYellowButton>
@@ -159,11 +159,21 @@ export default defineComponent({
         }
     },
 
+    props: {
+        showCartButtons: {
+            default: true
+        }
+    },
+
     computed: {
         ...mapStores( useProductStore, useCartStore ),
 
         cartHasProduct() {
            return this.cartStore.hasProduct(this.product as Product);
+        },
+
+        hideCartFunctions() {
+            return this.showCartButtons == false || this.$route.meta.showCartButtons == false;
         }
     },
 

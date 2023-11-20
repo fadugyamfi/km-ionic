@@ -8,42 +8,42 @@
         </IonItem>
 
         <IonList lines="none">
-            <IonItem :detail="true" class="profile-item" :disabled="true">
+            <IonItem :detail="true" :button="true" class="profile-item" :disabled="true">
                 <IonAvatar slot="start">
                     <img src="/images/ic_location.svg" class="action-img" />
                 </IonAvatar>
                 <IonLabel>Address</IonLabel>
             </IonItem>
 
-            <IonItem :detail="true" class="profile-item" :disabled="true">
+            <IonItem :detail="true" :button="true" class="profile-item" :disabled="true">
                 <IonAvatar slot="start">
                     <img src="/images/ic_password.svg" class="action-img" />
                 </IonAvatar>
                 <IonLabel>Password</IonLabel>
             </IonItem>
 
-            <IonItem :detail="true" class="profile-item" @click="showNotifications()">
+            <IonItem :detail="true" :button="true" class="profile-item" @click="showNotifications()">
                 <IonAvatar slot="start">
                     <img src="/images/ic_notification.svg" class="action-img" />
                 </IonAvatar>
                 <IonLabel>Notifications</IonLabel>
             </IonItem>
 
-            <IonItem :detail="true" class="profile-item" :disabled="true">
+            <IonItem :detail="true" :button="true" class="profile-item" :disabled="true">
                 <IonAvatar slot="start">
                     <img src="/images/ic_user.svg" class="action-img" />
                 </IonAvatar>
                 <IonLabel>Account Activity</IonLabel>
             </IonItem>
 
-            <IonItem :detail="true" class="profile-item" :disabled="true">
+            <IonItem :detail="true" :button="true" class="profile-item" :disabled="true">
                 <IonAvatar slot="start">
                     <img src="/images/ic_help_support.svg" class="action-img" />
                 </IonAvatar>
                 <IonLabel>Help & Support</IonLabel>
             </IonItem>
 
-            <IonItem :detail="true" class="profile-item" @click="logout()">
+            <IonItem :detail="true" :button="true" class="profile-item" @click="logout()">
                 <IonAvatar slot="start">
                     <IonIcon :icon="powerOutline" style="font-size: 21px;"></IonIcon>
                 </IonAvatar>

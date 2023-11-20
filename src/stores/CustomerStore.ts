@@ -96,24 +96,28 @@ export const useCustomerStore = defineStore("customer", {
         .catch((error) => handleAxiosRequestError(error));
     },
 
-    // async getCustomer(business: Business, customer_id: any): Promise<Customer> {
-    //   const cacheKey = `kola.business.${business.id}.customers`;
-    //   await storage.has(cacheKey);
-    //   const data = await storage.get(cacheKey);
-    //   console.log(data)
-    //   const customers = data?.map((el: object) => new Business(el));
-    //   const customer = customers?.find((c: Customer) => c.id == customer_id);
-    //   return new Customer(customer);
-    // },
-    async getCustomer(business: Business, customer_id: any): Promise<Customer> {
-      return axios
-        .get(`/v2/businesses/${business.id}/customers/${customer_id}`)
-        .then((response) => {
-          if (response.status >= 200 && response.status < 300) {
-            const data = response.data.data;
-            return data;
-          }
-        });
+    async getCustomer(business: Business, customer_id: any): Promise<Customer | null> {
+      const cacheKey = `kola.business.${business.id}.customers`;
+
+      if( await storage.has(cacheKey) ) {
+        console.log(cacheKey);
+        const data = await storage.get(cacheKey);
+
+        if( data ) {
+          const customers = data.map((el: object) => new Business(el));
+          const customer = customers.find((c: Customer) => c.id == customer_id);
+          return new Customer(customer);
+        }
+      }
+
+      const response = await axios.get(`/v2/businesses/${business.id}/customers/${customer_id}`);
+      console.log(response);
+      if (response.status >= 200 && response.status < 300) {
+        const data = response.data.data;
+        return new Customer(data);
+      }
+
+      return null;
     },
 
     async deleteCustomer(customer: Customer) {
@@ -139,15 +143,15 @@ export const useCustomerStore = defineStore("customer", {
       try {
         const params = {
           customer_id: customerId,
+          businesses_id: userStore.activeBusiness?.id,
           limit: 50,
           ...options,
         };
         const response = await axios.get("/v2/orders", { params });
 
-        if (response.status === 200) {
-          const ordersData = response.data.data;
-          this.orders = ordersData?.map((data: any) => new Order(data));
-        }
+        const ordersData = response.data.data;
+        this.orders = ordersData.map((data: any) => new Order(data));
+
       } catch (error) {
         handleAxiosRequestError(error);
       }
@@ -158,15 +162,15 @@ export const useCustomerStore = defineStore("customer", {
       try {
         const params = {
           customer_id: customerId,
+          businesses_id: userStore.activeBusiness?.id,
           limit: 50,
           ...options,
         };
         const response = await axios.get("/v2/sale-payments", { params });
 
-        if (response.status === 200) {
-          const creditData = response.data.data;
-          this.creditPayments = creditData?.map((data: any) => new Order(data));
-        }
+        const creditData = response.data.data;
+        this.creditPayments = creditData.map((data: any) => new Order(data));
+
       } catch (error) {
         handleAxiosRequestError(error);
       }

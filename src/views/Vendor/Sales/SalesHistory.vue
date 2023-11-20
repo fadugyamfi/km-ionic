@@ -71,8 +71,8 @@ import filters from '@/utilities/Filters';
 import Image from '@/components/Image.vue';
 import { formatMySQLDateTime } from '@/utilities';
 import NoResults from '@/components/layout/NoResults.vue';
-import SalesList from '../../../components/modules/sales/SalesList.vue';
-import FilterSalesSheet from '../../../components/modules/sales/FilterSalesSheet.vue';
+import SalesList from '@/components/modules/sales/SalesList.vue';
+import FilterSalesSheet from '@/components/modules/sales/FilterSalesSheet.vue';
 
 export default defineComponent({
 

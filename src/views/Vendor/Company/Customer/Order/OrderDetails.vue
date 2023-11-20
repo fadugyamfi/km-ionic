@@ -63,7 +63,6 @@ import {
   IonCardTitle,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
-import OrdersCard from "@/components/modules/order/OrdersCard.vue";
 import UpdateButon from "@/components/modules/order/UpdateButon.vue";
 import { mapStores } from "pinia";
 import { handleAxiosRequestError } from "@/utilities";
@@ -91,7 +90,6 @@ export default defineComponent({
     IonCardTitle,
     IonIcon,
     IonContent,
-    OrdersCard,
     UpdateButon,
     IonButton,
     OrderImages,

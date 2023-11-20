@@ -88,9 +88,11 @@ const fetchCustomer = async () => {
   customer.value = await customerStore.getCustomer(
     userStore.activeBusiness as Business,
     route.params.id
-  );
+  ) as Customer;
+console.log(customer.value);
   fetching.value = false;
 };
+
 const fetchCustomerOrders = async () => {
   try {
     fetching.value = true;
@@ -103,6 +105,7 @@ const fetchCustomerOrders = async () => {
     fetching.value = false;
   }
 };
+
 const fetchCustomerCredits = async () => {
   try {
     fetching.value = true;
@@ -115,12 +118,14 @@ const fetchCustomerCredits = async () => {
     fetching.value = false;
   }
 };
+
 onMounted(() => {
-  fetchCustomerOrders();
   fetchCustomer();
+  fetchCustomerOrders();
   fetchCustomerCredits();
 });
 </script>
+
 <style lang="scss" scoped>
 ion-badge.badge {
   --background: rgba(245, 170, 41, 0.38);

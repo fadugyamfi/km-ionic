@@ -414,14 +414,28 @@ export const useBusinessStore = defineStore("business", {
       return this.selectedToView;
     },
 
-    async getBusinessSummary(business: Business) {
-      return axios
-        .get(`/v2/businesses/${business.id}/summary`)
-        .then((response) => {
+    async getBusinessSummary(business: Business, options = {}) {
+      const params = { ...options };
+
+      return axios.get(`/v2/businesses/${business.id}/summary`, { params })
+        .then(response => {
           this.businessSummary = response.data.data;
           return this.businessSummary;
         })
-        .catch((error) => handleAxiosRequestError(error));
+        .catch(error => handleAxiosRequestError(error))
     },
-  },
+
+    async getTopSellingProducts(business: Business, options = {}) {
+      const params = {
+        businesses_id: business.id,
+        limit: 30,
+        filter: 'by-value',
+        ...options
+      }
+
+      return axios.get('/v2/metrics/top-products', { params })
+        .then(response => response.data.data)
+        .catch(error => handleAxiosRequestError(error));
+    }
+  }
 });

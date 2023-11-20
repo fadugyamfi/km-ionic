@@ -18,7 +18,7 @@
             </p>
             <p>
                 <IonChip :color="getStatusInfo(order.order_status_id)?.color" class="font-medium">
-                    {{ order.order_status?.name }}
+                    {{ order.order_status?.name || 'Pending' }}
                 </IonChip>
             </p>
         </IonLabel>
@@ -68,7 +68,7 @@ export default defineComponent({
             switch (orderStatusId) {
                 case 1:
                     return {
-                        color: 'info',
+                        color: 'secondary',
                         label: 'Processing',
                     };
                 case 2:
