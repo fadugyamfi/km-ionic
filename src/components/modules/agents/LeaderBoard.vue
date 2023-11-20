@@ -9,7 +9,7 @@
     class="d-flex ion-justify-content-around ion-margin-bottom top-three"
     style="position: relative; margin-top: 50px"
   >
-    <div class="not-winner">
+    <div class="not-winner" v-if="topThree[2]">
       <Image class="star" src="/images/star.svg"></Image>
       <ProfileAvatar
         :image="topThree[2]?.photo"
@@ -22,7 +22,7 @@
         }}</IonText>
       </section>
     </div>
-    <div class="winner">
+    <div class="winner" v-if="topThree[0]">
       <Image class="star" src="/images/star-1.svg"></Image>
       <ProfileAvatar
         :image="topThree[0]?.photo"
@@ -36,7 +36,7 @@
         }}</IonText>
       </section>
     </div>
-    <div class="not-winner">
+    <div class="not-winner" v-if="topThree[1]">
       <Image class="star" src="/images/star-2.svg"></Image>
       <ProfileAvatar
         :image="topThree[1]?.photo"
@@ -71,12 +71,7 @@
       </IonSegmentButton>
     </IonSegment>
   </section>
-  <section>
-    <div class="ion-padding ion-text-center" v-show="fetching">
-      <IonSpinner name="crescent"></IonSpinner>
-    </div>
-  </section>
-  <section v-if="!fetching">
+  <section v-if="!fetching && remaining.length > 0">
     <LeadersList :topPerfomingAgents="remaining" />
   </section>
 </template>
@@ -142,7 +137,7 @@ export default defineComponent({
           break;
 
         case "alltime":
-          start_dt.setFullYear(start_dt.getFullYear() - 1);
+          start_dt.setFullYear(2022, 0, 1);
           this.thisMonth = false;
           break;
 
@@ -224,5 +219,6 @@ ion-segment {
 }
 .top-three {
   margin: 0 30px 24px 30px;
+  height: 140px;
 }
 </style>

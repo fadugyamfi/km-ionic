@@ -31,9 +31,16 @@
 </template>
 
 <script lang="ts">
-import { IonCard, IonCardContent, IonItem, IonProgressBar } from "@ionic/vue";
+import {
+  IonCard,
+  IonCardContent,
+  IonText,
+  IonItem,
+  IonProgressBar,
+  IonLabel,
+} from "@ionic/vue";
 import { defineComponent, PropType } from "vue";
-import ProfileAvatar from "../../../components/ProfileAvatar.vue";
+import ProfileAvatar from "../ProfileAvatar.vue";
 import User from "@/models/User";
 
 export default defineComponent({
@@ -43,6 +50,8 @@ export default defineComponent({
     IonItem,
     IonProgressBar,
     ProfileAvatar,
+    IonText,
+    IonLabel,
   },
   props: {
     agent: {

@@ -19,6 +19,11 @@
               <IonLabel>{{ $t("Agent sales report") }}</IonLabel>
             </section></IonTitle
           >
+          <ion-buttons slot="end">
+            <IonButton @click="showFilterSheet = true" color="dark">
+              <IonIcon :icon="optionsOutline"></IonIcon>
+            </IonButton>
+          </ion-buttons>
         </ion-toolbar>
       </ion-header>
       <IonToolbar>
@@ -57,6 +62,11 @@
         ></BestSellingItems>
       </section>
     </ion-content>
+    <FilterAgentSaleReportSheet
+      :isOpen="showFilterSheet"
+      @didDismiss="showFilterSheet = false"
+      @update="onFilterUpdate($event)"
+    ></FilterAgentSaleReportSheet>
   </ion-page>
 </template>
 
@@ -83,7 +93,12 @@ import {
   IonSegment,
 } from "@ionic/vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
+import {
+  arrowBackOutline,
+  personAddOutline,
+  search,
+  optionsOutline,
+} from "ionicons/icons";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { formatMySQLDateTime } from "@/utilities";
@@ -91,18 +106,27 @@ import Business from "@/models/Business";
 import User from "@/models/User";
 import { useRouter, useRoute } from "vue-router";
 import { useAgentsStore } from "@/stores/AgentsStore";
-import SalesStatistics from "../../../components/modules/agents/SalesStatistics.vue";
-import Performance from "../../../components/modules/agents/Performance.vue";
-import BestSellingItems from "../../../components/modules/agents/BestSellingItems.vue";
+import SalesStatistics from "../../../components/modules/SalesStatistics.vue";
+import Performance from "../../../components/modules/Performance.vue";
+import BestSellingItems from "../../../components/modules/BestSellingItems.vue";
+import FilterAgentSaleReportSheet from "../../../components/modules/agents/FilterAgentSaleReportSheet.vue";
 
 const fetching = ref(false);
 const route = useRoute();
 
+const showFilterSheet = ref(false);
 const agent = ref<any>();
 const searchFilters = ref({
   start_dt: "",
   end_dt: "",
 });
+
+const onFilterUpdate = (event: { start_dt: string; end_dt: string }) => {
+  searchFilters.value.start_dt = event.start_dt;
+  searchFilters.value.end_dt =
+    event.end_dt || formatMySQLDateTime(new Date().toISOString());
+  fetchAgent();
+};
 
 const onSegmentChanged = (event: CustomEvent) => {
   let start_dt = new Date();

@@ -39,11 +39,11 @@ export default defineComponent({
   props: {
     totalSales: {
       type: Number,
-      default: true,
+      default: 0,
     },
     avgSales: {
       type: Number ,
-      default: true,
+      default: 0,
     },
   },
   data() {
