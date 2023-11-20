@@ -3,9 +3,9 @@ import { defineStore } from "pinia";
 import { useUserStore } from "./UserStore";
 import { handleAxiosRequestError } from "@/utilities";
 import Business from "@/models/Business";
-import User from '@/models/User';
+import User from "@/models/User";
 import AppStorage from "./AppStorage";
-import { useToastStore } from './ToastStore';
+import { useToastStore } from "./ToastStore";
 import Product from "@/models/Product";
 import { useRouter } from "vue-router";
 
@@ -25,97 +25,103 @@ export const useBusinessStore = defineStore("business", {
       business_types_id: 1,
       business_owner_name: "",
       business_owner_phone: "",
-      email: '',
-      value : "",
-      gps: '',
+      email: "",
+      value: "",
+      gps: "",
       country_id: 83,
       region_id: 54,
       city: "",
       currency_id: 1,
-      logo_image: '',
-      tax_number: '',
+      logo_image: "",
+      tax_number: "",
       min_order_amount: 0,
       socials: {
-        facebook: '',
-        twitter: '',
-        instagram: '',
-        website: ''
+        facebook: "",
+        twitter: "",
+        instagram: "",
+        website: "",
       },
       attributes: {
-        year_established: '',
-        primary_product_category_id: '',
-        number_of_products: '',
-        number_of_unique_products: '',
-        number_of_small_retailers: '',
-        catalog_update_frequency: '',
-        number_of_stores: '',
+        year_established: "",
+        primary_product_category_id: "",
+        number_of_products: "",
+        number_of_unique_products: "",
+        number_of_small_retailers: "",
+        catalog_update_frequency: "",
+        number_of_stores: "",
         brand_is_in_large_retail_chain: "No",
-        how_you_heard_about_kola: '',
+        how_you_heard_about_kola: "",
         goals_and_expectation_of_kolamarket: "",
-        applied_to: 'sell'
+        applied_to: "sell",
       },
       user: {
-        pin: '',
-        pin_confirmation: ''
-      }
+        pin: "",
+        pin_confirmation: "",
+      },
     },
-    searchQuery:"",
-    SearchResults:[] as Business[],
-    businessSummary: null as any | null
+    searchQuery: "",
+    SearchResults: [] as Business[],
+    businessSummary: null as any | null,
   }),
-
 
   actions: {
     async loadCachedBusinesses() {
       if (!this.businesses) {
-        this.businesses = await storage.get('kola.businesses') || [];
+        this.businesses = (await storage.get("kola.businesses")) || [];
       }
 
       if (!this.selectedBusiness) {
-        this.selectedBusiness = await storage.get('kola.store.business') as Business;
+        this.selectedBusiness = (await storage.get(
+          "kola.store.business"
+        )) as Business;
       }
     },
 
     async getCacheBusinessData() {
-      return await storage.get('businessInfo');
+      return await storage.get("businessInfo");
     },
 
     async cacheBusinessData(data: object) {
-      let formData = this.getCacheBusinessData()
+      let formData = this.getCacheBusinessData();
 
       if (formData !== null) {
-        Object.assign(formData, data)
-        await storage.set('businessInfo', formData);
+        Object.assign(formData, data);
+        await storage.set("businessInfo", formData);
         return;
       }
 
-      await storage.set('businessInfo', data);
+      await storage.set("businessInfo", data);
     },
 
-    async getSuppliers(searchTerm = '', options = {}): Promise<Business[]> {
+    async getSuppliers(searchTerm = "", options = {}): Promise<Business[]> {
       const params = {
         approved_vendor: 1,
-        ...options
+        ...options,
       };
 
       return this.getBusinesses(searchTerm, params);
     },
 
-    async getBusinesses(searchQuery = "", options = {}, append = false): Promise<Business[]> {
-
+    async getBusinesses(
+      searchQuery = "",
+      options = {},
+      append = false
+    ): Promise<Business[]> {
       try {
         const response = await axios.get("/v2/businesses", {
           params: {
             name_like: searchQuery,
-            ...options
+            ...options,
           },
         });
 
         if (response) {
           const { data, links } = response.data;
-          const businesses: Business[] = data.map((el: any) => new Business(el));
+          const businesses: Business[] = data.map(
+            (el: any) => new Business(el)
+          );
 
-          if( append ) {
+          if (append) {
             this.businesses = [...(this.businesses || []), ...businesses];
           } else {
             this.businesses = businesses;
@@ -146,9 +152,15 @@ export const useBusinessStore = defineStore("business", {
         return null;
       }
     },
-    async updateBusiness(businessId: number): Promise<Business | null> {
+    async updateBusiness(
+      businessId: number,
+      businessData: Object
+    ): Promise<Business | null> {
       try {
-        const response = await axios.put(`/v2/businesses/${businessId}`);
+        const response = await axios.put(
+          `/v2/businesses/${businessId}`,
+          businessData
+        );
 
         if (response) {
           const { data } = response.data;
@@ -161,11 +173,14 @@ export const useBusinessStore = defineStore("business", {
         return null;
       }
     },
-    async getBusinessProducts(business: Business, limit: number = 50): Promise<Product[]> {
+    async getBusinessProducts(
+      business: Business,
+      limit: number = 50
+    ): Promise<Product[]> {
       try {
         const params = {
           businesses_id: business.id,
-          limit
+          limit,
         };
 
         const response = await axios.get(`/v2/products`, { params });
@@ -181,9 +196,14 @@ export const useBusinessStore = defineStore("business", {
       }
     },
 
-    async getBusinessCustomers(business: Business, limit: number = 50, options = {}, refresh = false): Promise<Business[]> {
+    async getBusinessCustomers(
+      business: Business,
+      limit: number = 50,
+      options = {},
+      refresh = false
+    ): Promise<Business[]> {
       const cacheKey = `kola.business.${business.id}.customers`;
-      if( await storage.has(cacheKey) && !refresh ) {
+      if ((await storage.has(cacheKey)) && !refresh) {
         const data = await storage.get(cacheKey);
         return data.map((el: object) => new Business(el));
       }
@@ -191,17 +211,20 @@ export const useBusinessStore = defineStore("business", {
       try {
         const params = {
           limit,
-          sort: 'name:asc',
-          ...options
+          sort: "name:asc",
+          ...options,
         };
 
-        const response = await axios.get(`/v2/businesses/${business.id}/customers`, { params });
+        const response = await axios.get(
+          `/v2/businesses/${business.id}/customers`,
+          { params }
+        );
 
         if (response) {
           const { data } = response.data;
           const customers: Business[] = data.map((el: any) => new Business(el));
 
-          await storage.set(cacheKey, customers, 7, 'days')
+          await storage.set(cacheKey, customers, 7, "days");
 
           return customers;
         }
@@ -212,10 +235,14 @@ export const useBusinessStore = defineStore("business", {
       return [];
     },
 
-    async getBusinessSaleAgents(business: Business, limit: number = 50, refresh = false): Promise<User[]> {
+    async getBusinessSaleAgents(
+      business: Business,
+      limit: number = 50,
+      refresh = false
+    ): Promise<User[]> {
       const cacheKey = `kola.business.${business.id}.sale-agents`;
 
-      if( await storage.has(cacheKey) && !refresh ) {
+      if ((await storage.has(cacheKey)) && !refresh) {
         const data = await storage.get(cacheKey);
         return data.map((el: object) => new User(el));
       }
@@ -224,7 +251,7 @@ export const useBusinessStore = defineStore("business", {
         const params = {
           businesses_id: business.id,
           limit,
-          sort: 'name:asc'
+          sort: "name:asc",
         };
 
         const response = await axios.get(`/v2/sale-agents`, { params });
@@ -233,7 +260,7 @@ export const useBusinessStore = defineStore("business", {
           const { data } = response.data;
           const agents: User[] = data.map((el: any) => new User(el));
 
-          await storage.set(cacheKey, agents, 7, 'days')
+          await storage.set(cacheKey, agents, 7, "days");
 
           return agents;
         }
@@ -245,7 +272,7 @@ export const useBusinessStore = defineStore("business", {
     },
 
     async storeBusinesses() {
-      await storage.set('store.businesses', this.businesses);
+      await storage.set("store.businesses", this.businesses);
     },
 
     async setSearchQuery(query: string) {
@@ -267,21 +294,24 @@ export const useBusinessStore = defineStore("business", {
 
     async clearSelectedBusiness() {
       this.selectedBusiness = null;
-      await storage.remove('kola.store.business');
+      await storage.remove("kola.store.business");
     },
 
     async setSelectedBusiness(business: any) {
       this.selectedBusiness = business;
-      await storage.set('kola.store.business', business);
+      await storage.set("kola.store.business", business);
     },
 
     selectDefaultBusiness() {
-      this.setSelectedBusiness(this.businesses != null ? this.businesses[0] : null);
+      this.setSelectedBusiness(
+        this.businesses != null ? this.businesses[0] : null
+      );
     },
 
     async createBusinessAsShopper(postData: object): Promise<Business | null> {
-      return axios.post('/v2/businesses', postData)
-        .then(response => {
+      return axios
+        .post("/v2/businesses", postData)
+        .then((response) => {
           if (response.status >= 200 && response.status < 300) {
             const userStore = useUserStore();
             const data = response.data.data;
@@ -293,12 +323,13 @@ export const useBusinessStore = defineStore("business", {
             return data.business;
           }
         })
-        .catch(error => handleAxiosRequestError(error))
+        .catch((error) => handleAxiosRequestError(error));
     },
 
     async createBusinessAsVendor() {
-      return axios.post('/v2/businesses', this.registration)
-        .then(response => {
+      return axios
+        .post("/v2/businesses", this.registration)
+        .then((response) => {
           if (response.status >= 200 && response.status < 300) {
             const userStore = useUserStore();
             const data = response.data.data;
@@ -310,21 +341,26 @@ export const useBusinessStore = defineStore("business", {
             return data.business;
           }
         })
-        .catch(error => handleAxiosRequestError(error))
+        .catch((error) => handleAxiosRequestError(error));
     },
 
     async loadCachedRegistrationInfo() {
-      if (await storage.has('kola.business-registration')) {
-        this.registration = await storage.get('kola.business-registration');
+      if (await storage.has("kola.business-registration")) {
+        this.registration = await storage.get("kola.business-registration");
       }
     },
 
     async cacheRegistrationInfo() {
-      await storage.set('kola.business-registration', this.registration, 3, 'days');
+      await storage.set(
+        "kola.business-registration",
+        this.registration,
+        3,
+        "days"
+      );
     },
 
     async clearCachedRegistrationInfo() {
-      await storage.remove('kola.business-registration');
+      await storage.remove("kola.business-registration");
     },
 
     async addToFavorites(business: Business) {
@@ -332,15 +368,17 @@ export const useBusinessStore = defineStore("business", {
       business.addToFavorites();
 
       try {
-        const response = await axios.post(`/v2/businesses/${business.id}/favorites`);
+        const response = await axios.post(
+          `/v2/businesses/${business.id}/favorites`
+        );
         const favoriteData = response.data.data;
 
         business.addToFavorites({
           businesses_id: business.id as number,
-          cms_users_id: favoriteData.cms_users_id
+          cms_users_id: favoriteData.cms_users_id,
         });
 
-        toastStore.showSuccess('Added To Favorites');
+        toastStore.showSuccess("Added To Favorites");
         this.persist();
       } catch (error) {
         handleAxiosRequestError(error);
@@ -357,8 +395,10 @@ export const useBusinessStore = defineStore("business", {
       business.unfavorite();
 
       try {
-        const response = await axios.delete(`/v2/businesses/${business.id}/favorites`);
-        toastStore.showError('Removed From Favorites');
+        const response = await axios.delete(
+          `/v2/businesses/${business.id}/favorites`
+        );
+        toastStore.showError("Removed From Favorites");
         this.persist();
       } catch (error) {
         handleAxiosRequestError(error);
@@ -375,12 +415,13 @@ export const useBusinessStore = defineStore("business", {
     },
 
     async getBusinessSummary(business: Business) {
-      return axios.get(`/v2/businesses/${business.id}/summary`)
-        .then(response => {
+      return axios
+        .get(`/v2/businesses/${business.id}/summary`)
+        .then((response) => {
           this.businessSummary = response.data.data;
           return this.businessSummary;
         })
-        .catch(error => handleAxiosRequestError(error))
-    }
-  }
+        .catch((error) => handleAxiosRequestError(error));
+    },
+  },
 });

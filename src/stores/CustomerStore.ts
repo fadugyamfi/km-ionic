@@ -96,24 +96,25 @@ export const useCustomerStore = defineStore("customer", {
         .catch((error) => handleAxiosRequestError(error));
     },
 
-    async getCustomer(business: Business, customer_id: any): Promise<Customer> {
-      const cacheKey = `kola.business.${business.id}.customers`;
-      await storage.has(cacheKey);
-      const data = await storage.get(cacheKey);
-      const customers = data.map((el: object) => new Business(el));
-      const customer = customers.find((c: Customer) => c.id == customer_id);
-      return new Customer(customer);
-    },
     // async getCustomer(business: Business, customer_id: any): Promise<Customer> {
-    //   return axios
-    //     .get(`/v2/businesses/${business.id}/customers/${customer_id}`)
-    //     .then((response) => {
-    //       if (response.status >= 200 && response.status < 300) {
-    //         const data = response.data.data;
-    //         return data;
-    //       }
-    //     });
+    //   const cacheKey = `kola.business.${business.id}.customers`;
+    //   await storage.has(cacheKey);
+    //   const data = await storage.get(cacheKey);
+    //   console.log(data)
+    //   const customers = data?.map((el: object) => new Business(el));
+    //   const customer = customers?.find((c: Customer) => c.id == customer_id);
+    //   return new Customer(customer);
     // },
+    async getCustomer(business: Business, customer_id: any): Promise<Customer> {
+      return axios
+        .get(`/v2/businesses/${business.id}/customers/${customer_id}`)
+        .then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            const data = response.data.data;
+            return data;
+          }
+        });
+    },
 
     async deleteCustomer(customer: Customer) {
       const userStore = useUserStore();
@@ -145,7 +146,7 @@ export const useCustomerStore = defineStore("customer", {
 
         if (response.status === 200) {
           const ordersData = response.data.data;
-          this.orders = ordersData.map((data: any) => new Order(data));
+          this.orders = ordersData?.map((data: any) => new Order(data));
         }
       } catch (error) {
         handleAxiosRequestError(error);
@@ -164,7 +165,7 @@ export const useCustomerStore = defineStore("customer", {
 
         if (response.status === 200) {
           const creditData = response.data.data;
-          this.creditPayments = creditData.map((data: any) => new Order(data));
+          this.creditPayments = creditData?.map((data: any) => new Order(data));
         }
       } catch (error) {
         handleAxiosRequestError(error);

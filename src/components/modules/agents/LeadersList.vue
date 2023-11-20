@@ -15,7 +15,9 @@
       </IonLabel>
 
       <IonLabel slot="end">
-        <p class="ion-no-margin" style="color: #036;">GHS {{ agent.total_sales_value }}</p>
+        <p class="ion-no-margin" style="color: #036">
+          {{ Filters.currency(agent.total_sales_value || 0) }}
+        </p>
       </IonLabel>
     </IonItem>
   </IonList>
@@ -48,6 +50,7 @@ import { getDateFromNow } from "@/utilities";
 import ProfileAvatar from "../../ProfileAvatar.vue";
 import Star from "./Star.vue";
 import TopPerformingAgent from "@/models/TopPerformingAgent";
+import Filters from "@/utilities/Filters";
 
 const props = defineProps({
   topPerfomingAgents: {

@@ -56,7 +56,7 @@ export const useAgentsStore = defineStore("agents", {
       business: Business,
       limit: number = 50,
       options = {},
-      filter: string = "by-volume",
+      filter: string = "by-value",
       refresh = false
     ): Promise<TopPerformingAgent[]> {
       try {
@@ -112,9 +112,19 @@ export const useAgentsStore = defineStore("agents", {
     //     .catch((error) => handleAxiosRequestError(error));
     // },
 
-    async getAgent(business: Business, agent_id: any): Promise<User | null> {
+    async getAgent(
+      business: Business,
+      agent_id: any,
+      options: Object
+    ): Promise<User | null> {
       try {
-        const response = await axios.get(`/v2/sale-agents/${agent_id}`);
+        const params = {
+          businesses_id: business.id,
+          ...options,
+        };
+        const response = await axios.get(`/v2/sale-agents/${agent_id}`, {
+          params,
+        });
         if (response) {
           const agent = response.data.data;
           return new User(agent);

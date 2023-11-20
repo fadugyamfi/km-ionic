@@ -42,15 +42,20 @@
       </IonToolbar>
     </IonHeader>
     <ion-content>
-      <SalesStatistics
-        :total-sales="agent?.total_sales"
-        :avg-sales="agent?.avg_sales"
-      ></SalesStatistics>
-      <Performance :agent="agent"></Performance>
-      <BestSellingItems
-        :top-selling-product="agent?.top_selling_product"
-        :total-customers="agent?.total_customers"
-      ></BestSellingItems>
+      <div class="ion-padding ion-text-center" v-show="fetching">
+        <IonSpinner name="crescent"></IonSpinner>
+      </div>
+      <section v-if="!fetching">
+        <SalesStatistics
+          :total-sales="agent?.total_sales"
+          :avg-sales="agent?.avg_sales"
+        ></SalesStatistics>
+        <Performance :agent="agent"></Performance>
+        <BestSellingItems
+          :top-selling-product="agent?.top_selling_product"
+          :total-customers="agent?.total_customers"
+        ></BestSellingItems>
+      </section>
     </ion-content>
   </ion-page>
 </template>
@@ -121,7 +126,7 @@ const onSegmentChanged = (event: CustomEvent) => {
   searchFilters.value.start_dt = formatMySQLDateTime(start_dt.toISOString());
   searchFilters.value.end_dt = formatMySQLDateTime(end_dt.toISOString());
 
-  // fetchAgent();
+  fetchAgent();
 };
 const fetchAgent = async (options = {}) => {
   fetching.value = true;
@@ -131,7 +136,8 @@ const fetchAgent = async (options = {}) => {
 
   agent.value = await agentsStore.getAgent(
     userStore.activeBusiness as Business,
-    agentId
+    agentId,
+    searchFilters.value
   );
   fetching.value = false;
 };

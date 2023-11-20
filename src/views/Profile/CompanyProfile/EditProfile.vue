@@ -144,6 +144,7 @@ const form = useForm({
   location: "",
   email: "",
   phone_number: "",
+  business_types_id: 1,
 });
 
 const formValid = computed(() => {
@@ -168,6 +169,7 @@ const fetchCompany = async () => {
     location: company.value?.location,
     phone_number: company.value?.phone_number,
     email: company.value?.email,
+    business_types_id: 1,
   });
   fetching.value = false;
 };
@@ -186,19 +188,36 @@ const getLocation = async () => {
   }
 };
 const updateProfile = async () => {
-  fetching.value = true;
-  const userStore = useUserStore();
-  const businessStore = useBusinessStore();
-  company.value = await businessStore.updateBusiness(
-    Number(userStore.activeBusiness?.id)
-  );
-  Object.assign(form.fields, {
-    name: company.value?.name,
-    location: company.value?.location,
-    phone_number: company.value?.phone_number,
-    email: company.value?.email,
-  });
-  fetching.value = false;
+  try {
+    toastStore.blockUI("Hold On As We Update Your Profile");
+    const userStore = useUserStore();
+    const businessStore = useBusinessStore();
+    company.value = await businessStore.updateBusiness(
+      Number(userStore.activeBusiness?.id),
+      form.fields
+    );
+    if (company.value) {
+      toastStore.unblockUI();
+      toastStore.showSuccess("Profile has been updated successfully");
+      Object.assign(form.fields, {
+        name: company.value?.name,
+        location: company.value?.location,
+        phone_number: company.value?.phone_number,
+        email: company.value?.email,
+      });
+    } else {
+      toastStore.unblockUI();
+      toastStore.showError(
+        "Failed to update Profile. Please try again",
+        "",
+        "bottom",
+        "footer"
+      );
+    }
+  } catch (error) {
+  } finally {
+    toastStore.unblockUI();
+  }
 };
 onMounted(() => {
   fetchCompany();

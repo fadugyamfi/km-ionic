@@ -13,15 +13,18 @@
           </h6>
           <p>
             <IonText color="dark" class="fw-semibold"
-              >You have met 12
-              <!-- {{ percentageComplete }}  -->
+              >You have met
+              {{ percentageComplete }}
               % of your target
             </IonText>
           </p>
         </IonLabel>
       </IonItem>
       <section class="ion-margin-horizontal ion-margin-bottom">
-        <IonProgressBar :value="12 / 100" color="warning"></IonProgressBar>
+        <IonProgressBar
+          :value="(percentageComplete as number) / 100"
+          color="warning"
+        ></IonProgressBar>
       </section>
     </IonCardContent>
   </IonCard>
@@ -49,6 +52,11 @@ export default defineComponent({
   },
   data() {
     return {};
+  },
+  computed: {
+    percentageComplete() {
+      return this.agent?.latest_target_percentage_complete;
+    },
   },
 });
 </script>

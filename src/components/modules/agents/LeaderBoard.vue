@@ -17,7 +17,9 @@
       />
       <section class="details">
         <h6>{{ topThree[2]?.name }}</h6>
-        <IonText>GHS {{ topThree[2]?.total_sales_value }}</IonText>
+        <IonText>{{
+          Filters.currency(topThree[2]?.total_sales_value || 0)
+        }}</IonText>
       </section>
     </div>
     <div class="winner">
@@ -29,7 +31,9 @@
       />
       <section class="details">
         <h6>{{ topThree[0]?.name }}</h6>
-        <IonText>GHS {{ topThree[0]?.total_sales_value }}</IonText>
+        <IonText>{{
+          Filters.currency(topThree[0]?.total_sales_value || 0)
+        }}</IonText>
       </section>
     </div>
     <div class="not-winner">
@@ -40,7 +44,9 @@
       />
       <section class="details">
         <h6>{{ topThree[1]?.name }}</h6>
-        <IonText>GHS {{ topThree[1]?.total_sales_value }}</IonText>
+        <IonText>
+          {{ Filters.currency(topThree[1]?.total_sales_value || 0) }}</IonText
+        >
       </section>
     </div>
   </section>
@@ -54,13 +60,8 @@
         <IonLabel>{{ $t("general.thisWeek") }}</IonLabel>
       </IonSegmentButton>
       <IonSegmentButton value="pastmonth">
-        <section class="d-flex">
+        <section>
           <IonLabel>{{ $t("general.thisMonth") }}</IonLabel>
-          <Image
-            v-if="thisMonth"
-            src="/images/Star-8.svg"
-            style="width: 20px; margin-left: 5px"
-          ></Image>
         </section>
       </IonSegmentButton>
       <IonSegmentButton value="alltime">
@@ -98,6 +99,7 @@ import { mapStores } from "pinia";
 import { useAgentsStore } from "@/stores/AgentsStore";
 import { useUserStore } from "@/stores/UserStore";
 import Business from "@/models/Business";
+import Filters from "@/utilities/Filters";
 
 export default defineComponent({
   components: {
@@ -121,6 +123,7 @@ export default defineComponent({
       topPerformingAgents: [] as TopPerformingAgent[],
       topThree: [] as TopPerformingAgent[],
       remaining: [] as TopPerformingAgent[],
+      Filters,
     };
   },
   computed: {
