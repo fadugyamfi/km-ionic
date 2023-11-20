@@ -71,15 +71,12 @@ import {
 } from "@ionic/vue";
 
 import { defineComponent } from "vue";
-// import OrdersCard from "@/components/modules/order/OrdersCard.vue";
 import UpdateButon from "@/components/modules/order/UpdateButon.vue";
 
 import { mapStores } from "pinia";
 import { useUserStore } from "@/stores/UserStore";
-import { handleAxiosRequestError } from "@/utilities";
 import { chatbubbleOutline, shareOutline } from "ionicons/icons";
 import OrderImages from "@/components/modules/order/OrderImages.vue";
-// import OrderDetailItems from "@/components/modules/order/OrderDetailItems.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderStatusHistoryView from "@/components/modules/order/OrderStatusHistoryView.vue";
 import Image from "@/components/Image.vue";

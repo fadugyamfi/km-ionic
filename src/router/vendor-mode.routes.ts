@@ -109,8 +109,19 @@ export const VendorModeRoutes = [
             ],
           },
           {
+            path: ":id/record-repayment",
+            component: () => import("@/views/Vendor/Sales/RecordRepayment.vue"),
+          },
+          {
             path: "history",
             component: () => import("@/views/Vendor/Sales/SalesHistory.vue"),
+          },
+          {
+            path: "products/:id",
+            component: () => import("@/views/Shopper/ProductDetails.vue"),
+            meta: {
+              showCartButtons: false
+            }
           },
           {
             path: ":id",

@@ -58,11 +58,11 @@ import {
   IonText,
 } from "@ionic/vue";
 import { PropType, defineComponent } from "vue";
-import Image from "../../Image.vue";
-import { Order } from "../../../models/Order";
+import Image from "@/components/Image.vue";
+import { Order } from "@/models/Order";
 import { ellipsisHorizontal } from "ionicons/icons";
 import filters from "@/utilities/Filters";
-import ProfileAvatar from "../../ProfileAvatar.vue";
+import ProfileAvatar from "@/components/ProfileAvatar.vue";
 
 export default defineComponent({
   props: {

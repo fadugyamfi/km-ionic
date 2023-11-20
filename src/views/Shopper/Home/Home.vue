@@ -6,17 +6,19 @@
     <ion-content :fullscreen="true">
       <CategoryPills></CategoryPills>
 
-      <SuppliersNearYou></SuppliersNearYou>
-
-      <section class="shopper-home-section">
-        <ModeToggleCard></ModeToggleCard>
-      </section>
+      <PromoSpace></PromoSpace>
 
       <TopCategories></TopCategories>
 
       <TopBrands></TopBrands>
 
       <RecentlyViewedProducts></RecentlyViewedProducts>
+
+      <SuppliersNearYou></SuppliersNearYou>
+
+      <section class="shopper-home-section">
+        <ModeToggleCard></ModeToggleCard>
+      </section>
     </ion-content>
   </ion-page>
 </template>
@@ -30,6 +32,7 @@ import TopCategories from './TopCategories.vue';
 import TopBrands from './TopBrands.vue';
 import RecentlyViewedProducts from './RecentlyViewedProducts.vue';
 import CategoryPills from './CategoryPills.vue';
+import PromoSpace from './PromoSpace.vue';
 </script>
 
 <style lang="scss">

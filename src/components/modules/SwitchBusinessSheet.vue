@@ -1,5 +1,5 @@
 <template>
-  <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 1]">
+  <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5, 1]">
     <IonContent class="ion-padding">
       <header class="fw-semibold ion-padding ion-text-center">
         {{ $t("profile.switchBusiness") }}
@@ -35,24 +35,12 @@ import {
 } from "@ionic/vue";
 import { defineComponent, PropType } from "vue";
 import { chevronDownOutline, chevronUpOutline } from "ionicons/icons";
-import { useForm } from "@/composables/form";
 import { useUserStore } from "@/stores/UserStore";
 import { mapStores } from "pinia";
-import Stock from "@/models/Stock";
 import Business from "@/models/Business";
 import { useToastStore } from "@/stores/ToastStore";
 
 export default defineComponent({
-  props: {
-    product: {
-      type: Object as PropType<Stock | null>,
-      default: true,
-    },
-    productVariations: {
-      type: Array as PropType<any>,
-      default: true,
-    },
-  },
   components: {
     IonModal,
     IonContent,
@@ -70,12 +58,7 @@ export default defineComponent({
       chevronDownOutline,
       chevronUpOutline,
       showQuantitySelector: true,
-      checked: true,
-      form: useForm({
-        stock_quantity: "",
-        product_variation: "",
-        product_color: "",
-      }),
+      checked: true
     };
   },
 
@@ -91,18 +74,6 @@ export default defineComponent({
   },
 
   methods: {
-    update() {
-      this.$el.dismiss();
-      console.log(this.form.fields);
-      this.$emit("update", this.form.fields);
-    },
-
-    toggleQuantitySelector() {
-      this.showQuantitySelector = !this.showQuantitySelector;
-    },
-    updateProductQuantity(quantity: number) {
-      this.form.fields.stock_quantity = quantity;
-    },
     async onToggle(e: any, business: Business) {
       try {
         this.checked = e.detail.checked;

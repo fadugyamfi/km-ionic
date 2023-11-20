@@ -11,13 +11,13 @@
         color="medium"
         class="font-medium"
       >
-        Payment made on {{ credit.payment_date.split(" ")[0] }}
+        Payment made on {{ credit.payment_date?.split(" ")[0] }}
       </IonText>
       <IonText color="medium" class="font-medium d-flex">
-        paid via {{ credit.payment_mode.name }}
+        paid via {{ credit.payment_mode?.name }}
         <Image class="momo" src="/images/momo.svg"></Image>
       </IonText>
-      <IonText class="fw-bold">GHS {{ credit.amount }}</IonText></IonLabel
+      <IonText class="fw-bold">{{ Filters.currency(credit.amount) }}</IonText></IonLabel
     >
     <IonButton
       slot="end"
@@ -49,10 +49,12 @@ import Image from "@/components/Image.vue";
 import Customer from "@/models/Customer";
 import { useCustomerStore } from "@/stores/CustomerStore";
 import ProfileAvatar from "../../../ProfileAvatar.vue";
+import Filters from "../../../../utilities/Filters";
+import { SalePayment } from "../../../../models/SalePayment";
 
 const props = defineProps({
   credit: {
-    type: Object,
+    type: SalePayment,
     default: () => [],
   },
 });

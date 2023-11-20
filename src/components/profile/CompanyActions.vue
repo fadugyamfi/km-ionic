@@ -12,7 +12,7 @@
     </IonItem>
 
     <IonList lines="none">
-      <IonItem :detail="true" class="profile-item" :disabled="true">
+      <IonItem :detail="true" :button="true" class="profile-item" :disabled="true">
         <IonAvatar slot="start">
           <img src="/images/ic_location.svg" class="action-img" />
         </IonAvatar>
@@ -21,6 +21,7 @@
 
       <IonItem
         :detail="true"
+        :button="true"
         class="profile-item"
         router-link="/profile/company/customers"
       >
@@ -32,6 +33,7 @@
 
       <IonItem
         :detail="true"
+        :button="true"
         class="profile-item"
         router-link="/profile/company/stocks"
       >
@@ -41,21 +43,21 @@
         <IonLabel>Stock</IonLabel>
       </IonItem>
 
-      <IonItem :detail="true" class="profile-item" :disabled="true">
+      <IonItem :detail="true" :button="true" class="profile-item" :disabled="true">
         <IonAvatar slot="start">
           <img src="/images/ic_user.svg" class="action-img" />
         </IonAvatar>
         <IonLabel>Team</IonLabel>
       </IonItem>
 
-      <IonItem :detail="true" class="profile-item" :disabled="true">
+      <IonItem :detail="true" :button="true" class="profile-item" :disabled="true">
         <IonAvatar slot="start">
           <img src="/images/ic_help_support.svg" class="action-img" />
         </IonAvatar>
         <IonLabel>Agents</IonLabel>
       </IonItem>
 
-      <IonItem :detail="true" class="profile-item" @click="onAddSale()">
+      <IonItem :detail="true" :button="true" class="profile-item" @click="onAddSale()">
         <IonAvatar slot="start">
           <img src="/images/ic_help_support.svg" class="action-img" />
         </IonAvatar>
@@ -64,6 +66,7 @@
 
       <IonItem
         :detail="true"
+        :button="true"
         class="profile-item"
         :disabled="false"
         @click="showFilterSheet = true"

@@ -22,6 +22,7 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import { useProductCategoryStore } from "@/stores/ProductCategoryStore";
 import StockChip from "./StockChip.vue";
 import ProductCategory from "@/models/ProductCategory";
+import { all } from "axios";
 
 const emit = defineEmits(["filter"]);
 
@@ -31,8 +32,12 @@ const selectedCategory = ref<any>();
 const fetchCategories = async () => {
   const productCategoryStore = useProductCategoryStore();
   const response = await productCategoryStore.getCategories();
-  response.unshift({ name: "All" });
-  
+  const allCategory = new ProductCategory({ name: "All" });
+
+  if( !response.some((el) => el.name == allCategory.name) ) {
+    response.unshift(allCategory);
+  }
+
   categories.value = response.map((cat) => {
     return {
       ...cat,

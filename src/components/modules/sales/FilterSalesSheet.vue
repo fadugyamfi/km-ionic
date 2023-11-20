@@ -2,7 +2,7 @@
     <IonModal ref="modal" :initial-breakpoint="0.50" :breakpoints="[0, 0.50]">
         <IonContent>
             <header class="fw-semibold ion-padding ion-text-center">
-                Filter Sales History
+                {{ title }}
             </header>
             <main class="ion-padding-vertical">
                 <IonGrid>
@@ -18,7 +18,7 @@
                     </IonRow>
                 </IonGrid>
 
-                <IonGrid>
+                <IonGrid v-if="filterBySaleType">
                     <IonRow>
                         <IonCol size="12">
                             <IonLabel>Sale Type</IonLabel>
@@ -44,9 +44,20 @@
 import { IonCol, IonContent, IonFooter, IonGrid, IonInput, IonLabel, IonModal, IonRow, IonSelect, IonSelectOption } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import KolaYellowButton from '../../KolaYellowButton.vue';
+import Filters from '../../../utilities/Filters';
 
 
 export default defineComponent({
+
+    props: {
+        filterBySaleType: {
+            default: true
+        },
+
+        title: {
+            default: 'Filter Sales History'
+        }
+    },
 
     components: {
         IonModal,
@@ -63,10 +74,13 @@ export default defineComponent({
     },
 
     data() {
+        const startDate = new Date();
+        startDate.setDate( startDate.getDate() - 7 );
+
         return {
             form: {
-                start_dt: '',
-                end_dt: '',
+                start_dt: Filters.date(startDate.toISOString(), 'input'),
+                end_dt: Filters.date(new Date().toISOString(), 'input'),
                 sale_types_id: ''
             }
         }

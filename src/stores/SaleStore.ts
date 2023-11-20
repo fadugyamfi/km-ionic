@@ -9,6 +9,7 @@ import Product from "../models/Product";
 import { SaleItem } from "../models/SaleItem";
 import { useUserStore } from "./UserStore";
 import { formatDateMySQL, formatMySQLDateTime, handleAxiosRequestError } from "../utilities";
+import { SalePayment } from "../models/SalePayment";
 
 const storage = new AppStorage();
 const KOLA_SALES = 'kola.sales';
@@ -101,8 +102,11 @@ export const useSaleStore = defineStore("sale", {
 
             return axios.get('/v2/sales', { params })
                 .then(response => {
-                    this.sales = response.data.data.map((el: object) => new Sale(el));
-                    return this.sales;
+                    const sales = response.data.data.map((el: object) => new Sale(el));
+
+                    this.sales = [...sales];
+
+                    return sales;
                 })
                 .catch(error => {
                     handleAxiosRequestError(error);
@@ -135,6 +139,23 @@ export const useSaleStore = defineStore("sale", {
                 })
                 .catch(error => {
                     handleAxiosRequestError(error)
+                });
+        },
+
+        async recordRepayment(payment: SalePayment) {
+            return axios.post(`/v2/sale-payments`, payment)
+                .then((response) => {
+                    if( response.status >= 200 && response.status < 300) {
+                        payment.update( response.data.data );
+                        return payment;
+                    } else {
+                        handleAxiosRequestError(response);
+                    }
+                })
+                .catch(error => {
+                    handleAxiosRequestError(error)
+
+                    return error;
                 });
         }
     }

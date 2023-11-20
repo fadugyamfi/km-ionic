@@ -14,14 +14,14 @@ const storage = new AppStorage();
 
 type UserStoreState = {
     onboarded: Boolean,
-    user?: User|null,
+    user?: User | null,
     fetching: Boolean,
     appMode: string | null,
     registering: Boolean,
     resettingPIN: Boolean,
     registrationFlow?: String,
-    auth?: object|null,
-    apiHeaders?: object|null,
+    auth?: object | null,
+    apiHeaders?: object | null,
     userBusinesses?: Business[],
     activeBusiness?: Business | null,
     verification: {
@@ -92,7 +92,7 @@ export const useUserStore = defineStore("user", {
             return state.user;
         },
 
-        getApiHeaders(state): object|null {
+        getApiHeaders(state): object | null {
             try {
                 const auth: any = state.auth;
 
@@ -118,7 +118,7 @@ export const useUserStore = defineStore("user", {
 
     actions: {
         async loadStoredData() {
-            if( this.user && this.auth ) {
+            if (this.user && this.auth) {
                 return;
             }
 
@@ -130,7 +130,7 @@ export const useUserStore = defineStore("user", {
             const activeBusiness = await storage.get('kola.active-business');
             const userRegistering = await storage.get('kola.user-registering');
 
-            if( onboardedResult ) {
+            if (onboardedResult) {
                 this.onboarded = !!onboardedResult;
             }
 
@@ -139,7 +139,7 @@ export const useUserStore = defineStore("user", {
                 this.user = user;
             }
 
-            if( authResult ) {
+            if (authResult) {
                 axios.defaults.headers.common['Authorization'] = `Bearer ${authResult?.access_token}`;
                 this.auth = authResult;
             }
@@ -152,7 +152,7 @@ export const useUserStore = defineStore("user", {
 
         async toggleAppMode() {
             this.appMode = this.appMode == 'shopping' ? 'vendor' : 'shopping';
-            await storage.set('kola.app-mode', this.appMode, 7, 'days' );
+            await storage.set('kola.app-mode', this.appMode, 7, 'days');
         },
 
         async storeUser(user: User) {
@@ -174,7 +174,7 @@ export const useUserStore = defineStore("user", {
         async verifyPhoneNumber(credentials: { phone_number: string, request_otp?: boolean }) {
             this.verification.phone_number = credentials.phone_number;
 
-            if( this.resettingPIN ) {
+            if (this.resettingPIN) {
                 credentials.request_otp = true;
             }
 
@@ -189,7 +189,7 @@ export const useUserStore = defineStore("user", {
         async verifyOtp(credentials: { phone_number: string; code: string; }) {
             return axios.post('/v2/auth/verify-otp', credentials)
                 .then(response => {
-                    this.storeUser( new User(response.data.data.user) );
+                    this.storeUser(new User(response.data.data.user));
                     this.storeAuth(response.data.data.auth);
 
                     return response.data
@@ -272,7 +272,7 @@ export const useUserStore = defineStore("user", {
                     const businesses = response.data.data;
                     this.userBusinesses = businesses.map((el: any) => new Business(el.business));
 
-                    if( typeof this.userBusinesses != 'undefined' && this.userBusinesses.length > 0 ) {
+                    if (typeof this.userBusinesses != 'undefined' && this.userBusinesses.length > 0) {
                         await storage.set('kola.user-businesses', this.userBusinesses, 1, 'month');
                         this.setActiveBusiness(this.userBusinesses[0])
                     }
@@ -300,6 +300,10 @@ export const useUserStore = defineStore("user", {
         async updateRequestAuthorization() {
             const auth = await storage.get('kola.auth');
             axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;
-          }
+        },
+
+        isInShoppingMode() {
+            return this.appMode == 'shopping';
+        }
     },
 });

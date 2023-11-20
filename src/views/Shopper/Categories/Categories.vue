@@ -18,7 +18,7 @@
     </section>
 
 
-    <ion-content :fullscreen="true">
+    <ion-content>
       <ProductCategoryList :categories="categories"></ProductCategoryList>
     </ion-content>
   </ion-page>

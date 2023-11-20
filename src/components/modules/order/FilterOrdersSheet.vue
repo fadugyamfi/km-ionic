@@ -13,6 +13,7 @@
                 class="kola-input"
                 type="date"
                 v-model="form.start_dt"
+                placeholder="YYYY-MM-DD"
               ></IonInput>
             </IonCol>
             <IonCol size="6">
@@ -21,13 +22,16 @@
                 class="kola-input"
                 type="date"
                 v-model="form.end_dt"
+                placeholder="YYYY-MM-DD"
               ></IonInput>
             </IonCol>
           </IonRow>
         </IonGrid>
       </main>
       <footer class="ion-padding">
-        <KolaYellowButton @click="update()"> Update </KolaYellowButton>
+        <KolaYellowButton @click="update()">
+          {{ $t('general.update') }}
+        </KolaYellowButton>
       </footer>
     </IonContent>
   </IonModal>

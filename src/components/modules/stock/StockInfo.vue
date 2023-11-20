@@ -31,7 +31,7 @@
           </section>
           <IonButton
             fill="clear"
-            @click="removeFromStock(product)"
+            @click="removeFromStock(product as Stock)"
             color="medium"
             class="ion-no-margin ion-no-padding ion-align-self-start"
           >

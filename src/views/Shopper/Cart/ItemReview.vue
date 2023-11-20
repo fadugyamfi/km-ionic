@@ -121,6 +121,7 @@ const createOrder = () => {
     total_items: orderBusiness.value._order_items.length,
     order_items: orderBusiness.value._order_items,
 
+
   });
 
   router.push(`/shopper/cart/business/${route.params.id}/order-confirmation`);

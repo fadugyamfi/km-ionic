@@ -27,12 +27,12 @@
         <ReceivedOrderItems :order="(order as Order)" />
 
         <section class="ion-padding-horizontal update-button-section">
-          <KolaYellowButton v-if="order?.isPendingApproval()" @click="approveOrder()">
+          <KolaYellowButton v-if="order?.isPendingApproval()" @click="confirmApproval()">
             <IonSpinner v-if="orderStore.approving" name="crescent"></IonSpinner>
             <IonText>{{ 'Accept Order' }}</IonText>
           </KolaYellowButton>
 
-          <KolaWhiteButton class="ion-margin-top" v-if="order?.isPendingApproval()" @click="cancelOrder()">
+          <KolaWhiteButton class="ion-margin-top" v-if="order?.isPendingApproval()" @click="confirmCancellation()">
             <IonSpinner v-if="orderStore.cancelling" name="crescent"></IonSpinner>
             <IonText>{{ 'Cancel Order' }}</IonText>
           </KolaWhiteButton>
@@ -40,6 +40,13 @@
 
         <OrderStatusHistoryView :order="(order as Order)" />
       </section>
+
+      <ConfirmModal
+        :isOpen="showConfirm"
+        :description="confirmDescription"
+        @confirm="doConfirm()"
+        @dismiss="showConfirm = false"
+      ></ConfirmModal>
     </ion-content>
   </IonPage>
 </template>
@@ -49,7 +56,6 @@ import { Order, OrderStatus } from '@/models/Order';
 import { IonIcon, IonContent, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonButton, IonSpinner, IonText } from '@ionic/vue';
 import { IonSelect, IonSelectOption, IonAvatar, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 import { defineComponent } from 'vue';
-import OrdersCard from '@/components/modules/order/OrdersCard.vue';
 import UpdateButon from '@/components/modules/order/UpdateButon.vue';
 import { mapStores } from 'pinia';
 import { useOrderStore } from '@/stores/OrderStore';
@@ -62,6 +68,7 @@ import KolaWhiteButton from '../../../components/KolaWhiteButton.vue';
 import { useUserStore } from '../../../stores/UserStore';
 import { useToastStore } from '../../../stores/ToastStore';
 import ReceivedOrderItems from '../../../components/modules/order/ReceivedOrderItems.vue';
+import ConfirmModal from '../../../components/modals/ConfirmModal.vue';
 
 export default defineComponent({
   components: {
@@ -73,7 +80,6 @@ export default defineComponent({
     IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle,
     IonIcon,
     IonContent,
-    OrdersCard,
     UpdateButon,
     IonButton,
     OrderImages,
@@ -83,7 +89,7 @@ export default defineComponent({
     KolaWhiteButton,
     IonText,
     ReceivedOrderItems
-  },
+},
 
   name: 'OrderDetails',
 
@@ -92,8 +98,11 @@ export default defineComponent({
       loading: false,
       approving: false,
       cancelling: false,
+      showConfirm: false,
+      confirmAction: '',
+      confirmDescription: '',
       chatbubbleOutline,
-      order: null as Order | null
+      order: null as Order | null,
     }
   },
 
@@ -123,6 +132,29 @@ export default defineComponent({
       }
     },
 
+    confirmApproval() {
+      this.confirmAction = 'approve';
+      this.confirmDescription = 'Are you sure you want approve this order?'
+      this.showConfirm = true;
+    },
+
+    confirmCancellation() {
+      this.confirmAction = 'cancel',
+      this.confirmDescription = 'Are you sure you want cancel this order?'
+      this.showConfirm = true;
+    },
+
+    doConfirm() {
+      this.showConfirm = false;
+
+      if( this.confirmAction == 'approve' ) {
+        this.approveOrder();
+        return;
+      }
+
+      this.cancelOrder();
+    },
+
     async approveOrder() {
       try {
         const response = await this.orderStore.approveOrder(this.order as Order);
@@ -138,8 +170,8 @@ export default defineComponent({
       try {
         const response = await this.orderStore.cancelOrder(this.order as Order);
 
-        this.toastStore.showSuccess(this.$t('vendor.orders.orderHasBeenCanceled'), '', 'bottom', 'vendorTabs')
-      } catch (error) {
+        this.toastStore.showSuccess( this.$t('vendor.orders.orderHasBeenCanceled'), '', 'bottom', 'vendorTabs')
+      } catch(error) {
         handleAxiosRequestError(error);
         this.toastStore.showError(this.$t('vendor.orders.anErrorOccured'), '', 'bottom', 'vendorTabs')
       }
