@@ -110,7 +110,7 @@ import { useBusinessStore } from "@/stores/BusinessStore";
 import { useToastStore } from "@/stores/ToastStore";
 import { useGeolocation } from "@/composables/useGeolocation";
 import { useRouter } from "vue-router";
-import Business from "@/models/Business";
+import User from "@/models/User";
 import { useForm } from "@/composables/form";
 
 const toastStore = useToastStore();

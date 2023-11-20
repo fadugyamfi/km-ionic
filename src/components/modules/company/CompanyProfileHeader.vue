@@ -18,13 +18,14 @@
 
 <script lang="ts">
 import { IonAvatar, IonButton } from "@ionic/vue";
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import ProfileAvatar from "../../ProfileAvatar.vue";
+import Business from "@/models/Business";
 
 export default defineComponent({
   props: {
     company: {
-      type: Object,
+      type: Object as PropType<Business | null>,
       default: () => ({}),
     },
   },
@@ -41,9 +42,9 @@ export default defineComponent({
     onLoadError(event: Event) {
       (event.target as HTMLImageElement).src = this.defaultBanner;
     },
-    changePhoto(){
-        this.$router.push('/profile/company/change-photo')
-    }
+    changePhoto() {
+      this.$router.push("/profile/company/change-photo");
+    },
   },
 });
 </script>

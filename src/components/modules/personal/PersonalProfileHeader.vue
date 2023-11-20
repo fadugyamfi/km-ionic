@@ -11,13 +11,14 @@
 
 <script lang="ts">
 import { IonAvatar, IonButton } from "@ionic/vue";
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import ProfileAvatar from "../../ProfileAvatar.vue";
+import User from "@/models/User";
 
 export default defineComponent({
   props: {
     user: {
-      type: Object,
+      type: Object as PropType<User | null>,
       default: () => ({}),
     },
   },
