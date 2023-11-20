@@ -1,6 +1,6 @@
 <template>
     <section>
-        <IonItem lines="none" class="profile-item ion-margin-top">
+        <IonItem lines="none" class="profile-item ion-margin-top" router-link="/profile/personal/edit-profile">
             <ProfileAvatar slot="start" :src="userStore.user?.image" :username="userStore.user?.name" customSize="32px"></ProfileAvatar>
 
             <IonLabel>{{ userStore.user?.name }}</IonLabel>

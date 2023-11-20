@@ -10,6 +10,7 @@ export default class Business {
     public id?: number | string;
     public name?: string;
     public location: NullableString = null;
+    public email?: string;
     public phone_number: NullableString = null;
     public description: NullableString = null;
     public min_order_amount: NullableStringOrNumber = null;

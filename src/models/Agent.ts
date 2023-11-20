@@ -1,4 +1,4 @@
-export default class User {
+export default class Agent {
   public id_cms_privileges?: number;
   public phone_number?: string;
   public name?: string;
@@ -9,6 +9,11 @@ export default class User {
   public image?: string;
   public photo?: string;
   public email?: string;
+  public total_customers?: number;
+  public top_selling_product?: object;
+  public avg_sales?: number;
+  public total_sales?: number;
+  public latest_target_percentage_complete?: number;
 
   constructor(data: Object) {
     Object.assign(this, data);
