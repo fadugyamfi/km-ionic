@@ -1,25 +1,32 @@
 <template>
   <section class="ion-margin-top">
     <IonCard>
-      <IonCardHeader class="ion-no-padding">
-        <section v-if="product?.stock_quantity == 0">
+      <IonCardHeader class="ion-no-padding" v-if="product?.stock_quantity == 0">
           <IonText class="d-flex ion-align-items-center stock-availabilty">
             <IonIcon class="warning" :icon="alertCircleOutline"></IonIcon
             >{{ $t("profile.stock.productOutOfStock") }}</IonText
           >
-        </section>
       </IonCardHeader>
 
-      <IonCardContent class="ion-no-padding">
+      <IonCardContent>
         <section
           class="details ion-margin-vertical d-flex ion-align-items-start ion-justify-content-between"
         >
-          <section class="product-info">
-            <h6 class="fw-bold">
-              {{ product?.product_name }} - {{ product?.currency?.symbol }}
-              {{ product?.product_price }}
+          <section class="product-info ion-margin-end">
+            <h6 class="fw-bold d-flex ion-justify-content-between">
+              <span>{{ product?.product_name }}</span>
+              <span>{{ Filters.currency(product?.product_price || 0, product?.currency?.symbol as string) }}</span>
             </h6>
-            <IonText style="color: #787486">25kg/24pcs</IonText>
+            <IonText style="color: #787486">
+              <span v-if="product?.weight_value">{{ product?.weight_value }}kg</span>
+              <span v-if="product?.weight_value && product?.group_quantity">/</span>
+              <span v-if="product?.group_quantity">{{ product?.group_quantity }}pcs</span>
+            </IonText>
+            <p>
+              <IonText>
+                {{ product?.stock_quantity }} in stock
+              </IonText>
+            </p>
             <IonText
               v-if="product?.min_order_amount"
               color="medium"
@@ -83,6 +90,7 @@ import StockTags from "./StockDetailTags.vue";
 import DeleteStockModal from "./DeleteStockModal.vue";
 import { useStockStore } from "@/stores/StockStore";
 import { useToastStore } from "@/stores/ToastStore";
+import Filters from "../../../utilities/Filters";
 
 export default defineComponent({
   components: {
@@ -118,6 +126,7 @@ export default defineComponent({
       trashOutline,
       selectedStock: null as Stock | null,
       showConfirmDeleteModal: false,
+      Filters
     };
   },
   computed: {
@@ -153,7 +162,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 ion-card {
-  padding: 24px 12px;
+  // padding: 24px 12px;
   margin: 0px;
 }
 ion-icon {
