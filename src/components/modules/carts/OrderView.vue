@@ -15,13 +15,14 @@
             <IonText color="medium" class="font-medium">
               Item total:
               {{
-                order && order.getTotal()
-                ? order.getTotal().toLocaleString("en-GB", {
-                  style: "currency",
-                  currency: "GHS",
-                })
-                : "N/A"
-              }}
+                cartStore.getTotalCost()
+              //   order && order.getTotal()
+              //   ? order.getTotal().toLocaleString("en-GB", {
+              //     style: "currency",
+              //     currency: "GHS",
+              //   })
+              //   : "N/A"
+               }}
             </IonText>
 
             <IonText color="medium" class="font-medium">
@@ -99,6 +100,23 @@ export default defineComponent({
     topFiveItems() {
       return this.order?.order_items?.filter((oi, index) => index < 4) || [];
     }
+
+//     totalCost() => {
+//   let total = 0;
+
+//   const order = this.cartStore?.orders?.find(
+//     (o: Order) => o?.businesses_id == this.$route.params.id
+//   );
+
+//   if (order) {
+//     total = order.order_items?.reduce(
+//       (acc, item) => acc + (item.total_price || 0),
+//       0
+//     );
+//   }
+
+//   return total;
+// });
   },
 
   methods: {
