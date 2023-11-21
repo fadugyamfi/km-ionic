@@ -266,7 +266,8 @@
       "actionIsUnreversible": "This action cannot be undone",
       "remove": "Remove",
       "new": "new",
-      "updateCustomerInfo": "Update customer information"
+      "updateCustomerInfo": "Update customer information",
+      "noRecords": "You have no records"
     },
     "stock": {
       "stock": "Stock",

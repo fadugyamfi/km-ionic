@@ -3,14 +3,37 @@
     <section class="profile-home-section ion-padding-top">
       <header class="ion-padding-horizontal">
         <h6>Order history</h6>
-        <IonText color="primary" :router-link="`/profile/company/customers/${route.params.id}/orders`">
-          View all
+        <IonText
+          v-if="orders.length > 0"
+          color="primary"
+          :router-link="`/profile/company/customers/${route.params.id}/orders`"
+        >
+          {{ $t("shopper.home.viewAll") }}
         </IonText>
       </header>
     </section>
-    <IonList lines="none" class="ion-padding-horizontal customers-select-list simple">
-      <IonItem v-for="order in orders" :key="order.id" class="ion-align-items-start">
-        <ProfileAvatar slot="start" :image="order.customer?.logo" :username="order.customer?.name" custom-size="40px">
+    <section
+      v-if="orders.length == 0"
+      class="no-records ion-padding-horizontal"
+    >
+      <IonText>{{ $t('profile.customers.noRecords') }}</IonText>
+    </section>
+    <IonList
+      v-else
+      lines="none"
+      class="ion-padding-horizontal customers-select-list simple"
+    >
+      <IonItem
+        v-for="order in orders"
+        :key="order.id"
+        class="ion-align-items-start"
+      >
+        <ProfileAvatar
+          slot="start"
+          :image="order.customer?.logo"
+          :username="order.customer?.name"
+          custom-size="40px"
+        >
         </ProfileAvatar>
 
         <IonLabel>
@@ -20,7 +43,7 @@
             </span>
           </p>
           <IonText class="font-medium">
-            <IonChip>{{ order.order_status?.name || 'Pending' }}</IonChip>
+            <IonChip>{{ order.order_status?.name || "Pending" }}</IonChip>
           </IonText>
         </IonLabel>
         <IonText> {{ filters.date(order.created_at, "short") }}</IonText>
@@ -29,13 +52,7 @@
   </section>
 </template>
 <script lang="ts" setup>
-import {
-  IonList,
-  IonText,
-  IonItem,
-  IonChip,
-  IonLabel,
-} from "@ionic/vue";
+import { IonList, IonText, IonItem, IonChip, IonLabel } from "@ionic/vue";
 import { PropType } from "vue";
 import { useRoute } from "vue-router";
 import { Order } from "@/models/Order";
@@ -109,6 +126,12 @@ const route = useRoute();
   ion-item ion-label p {
     font-weight: bold;
     color: #111;
+  }
+}
+.no-records {
+  ion-text {
+    font-size: 12px;
+    color: #787486 !important;
   }
 }
 </style>

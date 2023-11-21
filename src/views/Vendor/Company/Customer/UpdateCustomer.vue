@@ -264,13 +264,10 @@ const getLocation = async () => {
   }
 };
 const fetchCustomer = async () => {
-  console.log("hit me");
   fetching.value = true;
   const userStore = useUserStore();
-  // console.log( userStore.activeBusiness, route.params.id)
 
   const customerStore = useCustomerStore();
-  console.log(customerStore);
   customer.value = await customerStore.getCustomer(
     userStore.activeBusiness as Business,
     route.params.id
