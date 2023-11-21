@@ -162,7 +162,8 @@ import NoResults from "../../../components/layout/NoResults.vue";
 import PaymentOptionsHeader from "@/components/header/PaymentOptionsHeader.vue";
 import PayOnDelivery from "@/components/modules/deliveryDetails/PayOnDelivery.vue";
 import { useCartStore } from "@/stores/CartStore";
-import { Order } from "../../../models/Order";
+import { Order } from "@/models/Order";
+
 
 type DropdownName = "pay2Weeks" | "pay4Weeks";
 
@@ -234,25 +235,34 @@ export default defineComponent({
     },
   },
   methods: {
-    storePaymentOption() {
-      const cartStore = useCartStore();
-      const order = cartStore.orders.find(
-        (b) => b.businesses_id == Number(this.$route.params.id)
-      );
+  storePaymentOption() {
+    const cartStore = useCartStore();
+    
+    // Find the order based on the business ID
+    const order = cartStore.orders.find(
+      (b) => b.businesses_id === Number(this.$route.params.id)
+    );
 
-      if( order ) {
-        order.payment_option_id = +this.form.fields.payment_option_id;
-      }
+    if (order) {
+      // Update the payment option ID
+      order.payment_option_id = +this.form.fields.payment_option_id;
 
-      cartStore.persist()
+      // Persist the changes
+      cartStore.persist();
 
-      const routePath =
-      this.form.fields.payment_option_id === "1"
+      // Define the route path based on payment_option_id
+      const routePath = this.form.fields.payment_option_id === "1"
         ? `/shopper/cart/business/${this.$route.params.id}/payment-method`
         : `/shopper/cart/business/${this.$route.params.id}/item-review`;
 
-    this.$router.push(routePath);
-    },
+      // Push the new route
+      this.$router.push(routePath);
+    } else {
+      console.error('Order not found for the specified business ID');
+    }
+  },
+
+
 
     toggleDropdown(dropdownName: DropdownName) {
       this.showDropdown[dropdownName] = !this.showDropdown[dropdownName];
