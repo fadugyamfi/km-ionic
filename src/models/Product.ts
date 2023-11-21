@@ -30,6 +30,10 @@ export default class Product {
         Object.assign(this, data);
     }
 
+    update(data: object) {
+        Object.assign(this, data);
+    }
+
     get currency(): Currency | null | undefined {
         return this._currency
     }

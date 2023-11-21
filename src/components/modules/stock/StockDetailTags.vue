@@ -1,8 +1,8 @@
 <template>
-  <section class="ion-no-border ion-padding-top tags">
-    <IonText v-for="tag in tags" :key="tag.id" class="tag">{{
-      tag.name
-    }}</IonText>
+  <section class="ion-no-border ion-padding-top tags" v-if="tags.length > 0">
+    <IonText v-for="tag in tags" :key="tag.id" class="tag">
+      {{ tag.name }}
+    </IonText>
   </section>
 </template>
 <script setup lang="ts">
@@ -25,6 +25,7 @@ const props = defineProps({
   color: #036;
   margin-right: 6px;
 }
+
 .tags {
   border-top: 1px solid #F1F1F1;
 }

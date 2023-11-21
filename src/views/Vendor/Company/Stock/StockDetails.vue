@@ -27,7 +27,7 @@
         <IonSpinner name="crescent"></IonSpinner>
       </section>
       <section v-if="!fetching">
-        <Image :src="product?.image"></Image>
+        <Image :src="product?.image" style="height: 250px;"></Image>
         <StockInfo :product="product" />
         <section class="ion-padding-vertical">
           <KolaYellowButton @click="showFilterSheet = true">
@@ -164,7 +164,7 @@ export default defineComponent({
           product_categories_id: this.product?.product_categories_id,
           product_name: this.product?.product_name,
           product_groups_id: this.product?.product_groups_id,
-          product_price: this.product?.product_price,
+          product_price: form.product_price || this.product?.product_price,
           product_units_id: this.product?.product_units_id,
           brands_id: this.product?.brands_id,
           product_sku: this.product?.product_sku,
@@ -183,6 +183,7 @@ export default defineComponent({
         if (product) {
           this.toastStore.unblockUI();
           await this.toastStore.showSuccess("Product has been restocked");
+          this.product?.update(product);
         } else {
           this.toastStore.unblockUI();
           this.toastStore.showError(

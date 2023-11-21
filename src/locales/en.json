@@ -167,7 +167,9 @@
       "delivery": "Delivery"
     },
     "cart": {
-      "proceedToCheckout": "Proceed To Checkout"
+      "proceedToCheckout": "Proceed To Checkout",
+      "trackOrder": "Track Order",
+      "confirmTime": "Expect your item to be delivered between 24-72 hours. Our agent will call to confirm"
     }
   },
   "vendor": {
@@ -266,7 +268,8 @@
       "actionIsUnreversible": "This action cannot be undone",
       "remove": "Remove",
       "new": "new",
-      "updateCustomerInfo": "Update customer information"
+      "updateCustomerInfo": "Update customer information",
+      "noRecords": "You have no records"
     },
     "stock": {
       "stock": "Stock",

@@ -31,11 +31,11 @@ const selectedCategory = ref<any>();
 
 const fetchCategories = async () => {
   const productCategoryStore = useProductCategoryStore();
-  const response = await productCategoryStore.getCategories();
+  let response = await productCategoryStore.getCategories();
   const allCategory = new ProductCategory({ name: "All" });
 
-  if( !response.some((el) => el.name == allCategory.name) ) {
-    response.unshift(allCategory);
+  if (!response.some((el) => el.name == allCategory.name)) {
+    response = [allCategory, ...response];
   }
 
   categories.value = response.map((cat) => {
@@ -62,6 +62,5 @@ onMounted(() => {
   &:last-child {
     width: 50px !important;
   }
-
 }
 </style>
