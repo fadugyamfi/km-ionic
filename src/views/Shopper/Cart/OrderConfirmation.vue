@@ -3,7 +3,7 @@
     <section class="ion-padding">
       <OrderCloseHeader />
     </section>
-    <ion-content class="background-image" no-scroll padding>
+    <ion-content class="background-image ion-padding-horizontal" no-scroll padding>
       <section>
         <img src="/img/orderConfirmation.jpeg" />
         <p class="order-title">
@@ -19,7 +19,7 @@
         :isOpen="showFilterSheet"
         @didDismiss="showFilterSheet = false"
         :order="order"
-        
+
       ></OrderConfirmSheet>
     </ion-content>
   </ion-page>

@@ -15,7 +15,7 @@
                 </IonToolbar>
             </IonHeader>
         </section>
-        <ion-content :fullscreen="true">
+        <ion-content>
             <section class="banner">
                 <img :src="defaultBanner" @error="onLoadError" />
                 <aside>
