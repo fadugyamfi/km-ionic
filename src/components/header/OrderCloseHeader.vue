@@ -2,7 +2,9 @@
   <IonHeader class="inner-header">
     <IonToolbar class="ion-align-items-center">
       <IonButtons slot="start">
-        <img loading="lazy" src="/img/icons/close.svg" class="image" />
+        <ion-button @click="navigateBack">
+          <img loading="lazy" src="/img/icons/close.svg" class="image" />
+        </ion-button>
       </IonButtons>
       <IonTitle class="fw-bold">Order Confirmation</IonTitle>
     </IonToolbar>
@@ -10,14 +12,9 @@
 </template>
 
 <script lang="ts">
-import {
-  IonHeader,
-  IonToolbar,
-  IonButtons,
-  IonBackButton,
-  IonTitle,
-} from "@ionic/vue";
+import { IonHeader, IonToolbar, IonButtons, IonTitle, IonButton } from "@ionic/vue";
 import NotificationButton from "@/components/notifications/NotificationButton.vue";
+import { useRoute, useRouter } from "vue-router";
 
 export default {
   components: {
@@ -25,8 +22,21 @@ export default {
     IonTitle,
     IonButtons,
     IonHeader,
-    IonBackButton,
     IonToolbar,
+    IonButton,
+  },
+  setup() {
+    const route = useRoute();
+    const router = useRouter();
+
+    const navigateBack = () => {
+      const destination = `/shopper/home`;
+      router.push(destination);
+    };
+
+    return {
+      navigateBack,
+    };
   },
 };
 </script>

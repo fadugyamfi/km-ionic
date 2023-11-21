@@ -1,36 +1,36 @@
-
 export default class User {
+  public id_cms_privileges?: number;
+  public phone_number?: string;
+  public name?: string;
+  public parent_users_id?: number;
+  public location?: string;
+  public id?: number;
+  public role?: any;
+  public image?: string;
+  public photo?: string;
+  public email?: string;
 
-    public id_cms_privileges?: number;
-    public phone_number?: string;
-    public name?: string;
-    public parent_users_id?: number;
-    public location?: string;
-    public id?: number;
-    public role?: any;
-    public image?: string;
+  constructor(data: Object) {
+    Object.assign(this, data);
+  }
 
-    constructor(data: Object) {
-        Object.assign(this, data)
-    }
+  firstName() {
+    return this.name?.split(" ")[0];
+  }
 
-    firstName() {
-        return this.name?.split(' ')[0];
-    }
+  isSuperAdmin() {
+    return this.id_cms_privileges == 1;
+  }
 
-    isSuperAdmin() {
-        return this.id_cms_privileges == 1;
-    }
+  isSaleAgent() {
+    return this.id_cms_privileges == 5;
+  }
 
-    isSaleAgent() {
-        return this.id_cms_privileges == 5;
-    }
+  isSalesManager() {
+    return this.id_cms_privileges == 2; // Sales Manager
+  }
 
-    isSalesManager() {
-        return this.id_cms_privileges == 2; // Sales Manager
-    }
-
-    isOwner() {
-        return this.id_cms_privileges == 4; // Owner
-    }
+  isOwner() {
+    return this.id_cms_privileges == 4; // Owner
+  }
 }

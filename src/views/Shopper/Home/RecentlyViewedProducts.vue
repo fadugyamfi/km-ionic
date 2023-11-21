@@ -1,7 +1,7 @@
 <template>
     <section class="shopper-home-section ion-padding-top">
         <header class="ion-padding-horizontal ion-padding-bottom">
-            <h6>Recently View Products</h6>
+            <h6>Recently Viewed Products</h6>
 
             <!-- <IonText color="primary" router-link="/shopper/home/recent-products">
                 View all

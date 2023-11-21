@@ -27,7 +27,7 @@
               <p class="text-product">{{ item.product_name }}</p>
               <p>{{ $t('general.quantity') }}: {{ item.quantity }}</p>
               <p class="price">
-                {{ Filters.currency( item.quantity * (item.product_price || 0), item.currency_symbol ) }}
+                {{ Filters.currency(item.quantity * (item.product_price || 0), item.currency_symbol) }}
               </p>
             </ion-col>
             <ion-col size="1" class="remove-button">
@@ -35,16 +35,17 @@
                 <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
               </ion-button>
             </ion-col>
-            <ProductQuantitySelector :initialQuantity="item.quantity" @change="updateQuantity(item, $event)"></ProductQuantitySelector>
+            <ProductQuantitySelector :initialQuantity="item.quantity" @change="updateQuantity(item, $event)">
+            </ProductQuantitySelector>
           </ion-row>
         </IonItem>
       </IonList>
 
-      <ItemReview />
+      <ItemReview  :order = "order" />
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="createOrder" :disabled="!minOrderAmountReached"  > Continue </KolaYellowButton>
+      <KolaYellowButton @click="createOrder" :disabled="!minOrderAmountReached"> Continue </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -73,13 +74,11 @@ import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
 import Image from "@/components/Image.vue";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
-import { Order } from "@/models/Order";
-import BusinessMinimumOrderReached from "@/components/modules/business/BusinessMinimumOrderReached.vue";
+import { Order } from "../../../models/Order";
+import BusinessMinimumOrderReached from "../../../components/modules/business/BusinessMinimumOrderReached.vue";
 import Filters from "@/utilities/Filters";
 
-
 const route = useRoute();
-
 
 const router = useRouter();
 
@@ -102,8 +101,6 @@ const removeFromCart = (index: number) => {
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
 
-
-
 const getOrderBusiness = () => {
   console.log("jello");
   const business = orders.value.find(
@@ -124,6 +121,7 @@ const createOrder = () => {
     total_items: orderBusiness.value._order_items.length,
     order_items: orderBusiness.value._order_items,
 
+
   });
 
   router.push(`/shopper/cart/business/${route.params.id}/order-confirmation`);
@@ -140,8 +138,6 @@ const totalCost = computed(() => {
 
   return total;
 });
-
-
 
 onMounted(async () => {
   if (cartStore.orders.length == 0) {
@@ -165,10 +161,12 @@ ion-icon {
     background-color: rgba(0, 255, 85, 0.174);
   }
 
-  font-size: 20px !important; /* Increase the icon size */
+  font-size: 20px !important;
+  /* Increase the icon size */
   padding: 3px;
   border-radius: 50%;
-  margin-right: 10px; /* Increase the spacing between icon and text */
+  margin-right: 10px;
+  /* Increase the spacing between icon and text */
 }
 
 .item-row {
@@ -257,5 +255,4 @@ ion-icon.remove-icon {
 
 .text-product {
   color: black;
-}
-</style>
+}</style>

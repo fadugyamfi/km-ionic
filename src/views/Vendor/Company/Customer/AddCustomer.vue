@@ -80,6 +80,19 @@
           @ion-input="form.validate($event)"
           required
         ></IonInput>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{
+            'ion-invalid ion-touched': form.errors.business_owner_phone,
+          }"
+          label="Business owner phone number"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.business_owner_phone"
+          name="business_owner_phone"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
         <h6>{{ $t("profile.customers.assignToSalesAgentOrManager") }}</h6>
         <IonSelect
           class="kola-input ion-margin-bottom"
@@ -195,6 +208,7 @@ const form = useForm({
   location: "",
   business_owner_name: "",
   phone_number: "",
+  business_owner_phone: "",
   cms_users_id: "",
   business_types_id: "",
 });
@@ -208,6 +222,7 @@ const formValid = computed(() => {
     fields.location.length > 0 &&
     isNaN(Number(fields.cms_users_id)) == false &&
     fields.phone_number.length > 0 &&
+    fields.business_owner_phone.length > 0 &&
     fields.business_types_id
   );
 });

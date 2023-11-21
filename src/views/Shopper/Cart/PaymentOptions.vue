@@ -110,7 +110,7 @@
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="storePaymentOption">Continue</KolaYellowButton>
+      <KolaYellowButton @click="storePaymentOption">{{ buttonText }}</KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -226,6 +226,13 @@ export default defineComponent({
       },
     };
   },
+  computed: {
+    buttonText(): string {
+      return this.form.fields.payment_option_id === "1"
+        ? "Proceed To Checkout"
+        : "Place Order";
+    },
+  },
   methods: {
     storePaymentOption() {
       const cartStore = useCartStore();
@@ -238,7 +245,13 @@ export default defineComponent({
       }
 
       cartStore.persist()
-      this.$router.push(`/shopper/cart/business/${this.$route.params.id}/item-review`);
+
+      const routePath =
+      this.form.fields.payment_option_id === "1"
+        ? `/shopper/cart/business/${this.$route.params.id}/payment-method`
+        : `/shopper/cart/business/${this.$route.params.id}/item-review`;
+
+    this.$router.push(routePath);
     },
 
     toggleDropdown(dropdownName: DropdownName) {

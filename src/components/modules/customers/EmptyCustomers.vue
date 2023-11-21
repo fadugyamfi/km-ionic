@@ -13,7 +13,7 @@
       <KolaYellowButton @click="addCustomer()" class="ion-margin-bottom">
         Add Customer
       </KolaYellowButton>
-      <KolaGreenButton> Invite customers </KolaGreenButton>
+      <InviteCustomerButton style="font-size: 0.75em;" />
     </IonFooter>
   </div>
 </template>
@@ -21,15 +21,22 @@
 <script lang="ts">
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import KolaGreenButton from "@/components/KolaGreenButton.vue";
+import InviteCustomerButton from "@/components/buttons/InviteCustomerButton.vue";
 import { IonText, IonFooter } from "@ionic/vue";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  components: { IonText, IonFooter, KolaYellowButton, KolaGreenButton },
+  components: {
+    IonText,
+    IonFooter,
+    KolaYellowButton,
+    KolaGreenButton,
+    InviteCustomerButton,
+  },
 
   methods: {
     addCustomer() {
-      this.$router.push('/profile/company/customers/add-customer');
+      this.$router.push("/profile/company/customers/add-customer");
     },
   },
 });

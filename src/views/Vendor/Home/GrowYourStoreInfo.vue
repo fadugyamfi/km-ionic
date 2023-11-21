@@ -15,15 +15,7 @@
           </p>
         </section>
       </section>
-
-      <IonButton
-        @click="inviteCustomer()"
-        expand="block"
-        class="intro-btn success ion-margin-bottom"
-      >
-        {{ $t("vendor.home.inviteCustomers") }}
-      </IonButton>
-
+      <InviteCustomerButton />
       <section class="intro-point">
         <span class="icon">
           <IonImg src="/images/vendor/trending.svg"></IonImg>
@@ -76,11 +68,8 @@ import {
   IonRow,
   IonText,
 } from "@ionic/vue";
-import { Share } from "@capacitor/share";
 import { defineComponent } from "vue";
-import { useUserStore } from "@/stores/UserStore";
-import { mapStores } from "pinia";
-import { isPlatform } from "@ionic/vue";
+import InviteCustomerButton from "@/components/buttons/InviteCustomerButton.vue";
 export default defineComponent({
   data() {
     return {};
@@ -95,30 +84,11 @@ export default defineComponent({
     IonText,
     IonImg,
     IonButton,
-  },
-
-  computed: {
-    ...mapStores(useUserStore),
-    downloadUrl() {
-      if (isPlatform("ios")) {
-        return "https://m.kola.market/";
-      } else if (isPlatform("android")) {
-        return "https://play.google.com/store/apps/details?id=com.kola.market.androidApp&pli=1";
-      } else {
-        return "https://m.kola.market/";
-      }
-    },
+    InviteCustomerButton,
   },
   methods: {
     openWhatsAppChat() {
       window.open("https://wa.me/233270404501", "_system", "location=yes");
-    },
-    async inviteCustomer() {
-      const response = await Share.share({
-        title: `${this.userStore.activeBusiness?.name} on Kola Market`,
-        text: `Hi, this is ${this.userStore.activeBusiness?.name} on Kola Market. Follow this link to place your orders with us and enjoy express delivery.`,
-        url: this.downloadUrl,
-      });
     },
   },
 });

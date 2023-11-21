@@ -7,9 +7,9 @@
             <Image style="width: 32px" src="/img/icons/group.svg"></Image>
             <IonLabel style="margin-left: 8px">
               <p class="fw-bold">Order Confirmed</p>
-              <IonText color="medium" class="font-medium"
-                >Supplier will prepare your order shortly</IonText
-              >
+              <IonText color="medium" class="font-medium">
+                Supplier will prepare your order shortly
+              </IonText>
             </IonLabel>
           </IonItem>
         </IonList>
@@ -18,7 +18,7 @@
   </section>
 
   <section>
-    <OrderStatusHistoryView></OrderStatusHistoryView>
+    <OrderStatusHistoryView :order="order"></OrderStatusHistoryView>
   </section>
 
   <section>
@@ -31,13 +31,12 @@
           </IonLabel>
         </IonItem>
         <IonItem>
-          <IonLabel class="font-color"
-            >You are responsible for 10% tax on this item.<span
-              class="learn-more"
-            >
+          <IonLabel class="font-color ion-text-wrap">
+            You are responsible for 10% tax on this item.
+            <span class="learn-more">
               Learn More
-            </span></IonLabel
-          >
+            </span>
+          </IonLabel>
         </IonItem>
       </IonCardContent>
     </IonCard>
@@ -150,8 +149,10 @@ export default defineComponent({
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  line-height: 140%; /* 16.8px */
+  line-height: 140%;
+  /* 16.8px */
 }
+
 .order-no {
   color: #6b7785;
   font-size: 12px;
