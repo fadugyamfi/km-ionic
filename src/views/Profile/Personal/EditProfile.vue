@@ -16,7 +16,7 @@
             <section
               class="d-flex ion-align-items-center ion-justify-content-center"
             >
-              <IonLabel>{{ $t('profile.editProfile') }}</IonLabel>
+              <IonLabel>{{ $t("profile.editProfile") }}</IonLabel>
             </section></IonTitle
           >
         </ion-toolbar>
@@ -122,6 +122,7 @@ const validating = ref(false);
 
 const user = computed(() => userStore.user);
 const form = useForm({
+  id: "",
   name: "",
   email: "",
   phone_number: "",
@@ -147,9 +148,10 @@ const onContinue = async () => {
   userStore
     .verifyPhoneNumber({
       phone_number: form.fields.phone_number as string,
+      request_otp: true,
     })
     .then((response) => {
-      router.push("/profile/personal/validate-otp");
+      router.push("/auth/verify-otp");
     })
     .catch((error) => {
       handleAxiosRequestError(error);
@@ -183,6 +185,7 @@ const updateProfile = async () => {
 
 onMounted(() => {
   form.fields = {
+    id: user.value?.id,
     name: user.value?.name,
     email: user.value?.email,
     phone_number: user.value?.phone_number,

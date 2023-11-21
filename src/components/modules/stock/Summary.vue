@@ -2,7 +2,7 @@
   <section class="d-flex">
     <IonCard>
       <ion-card-header>
-        <ion-card-title>GHS 3789.00</ion-card-title>
+        <ion-card-title>{{ Filters.currency(totalValue) }}</ion-card-title>
         <ion-card-subtitle>{{
           $t("profile.stock.totalValueStock")
         }}</ion-card-subtitle>
@@ -27,8 +27,9 @@ import {
   IonCardSubtitle,
   IonCardTitle,
 } from "@ionic/vue";
+import Filters from "../../../utilities/Filters";
 
-const props = defineProps(["totalItems"]);
+const props = defineProps(["totalItems", "totalValue"]);
 </script>
 
 <style lang="scss" scoped>

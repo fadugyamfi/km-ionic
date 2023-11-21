@@ -42,7 +42,7 @@
       </div>
 
       <section v-if="!fetching" class="ion-margin-top">
-        <Summary :total-items="meta.total" />
+        <Summary :total-value="stockSummary.total_value" :total-items="meta.total" />
         <AvailableStock :stocks="stocks" />
         <EmptyStock v-if="stocks?.length == 0"></EmptyStock>
       </section>
@@ -103,12 +103,13 @@ const stockStore = useStockStore();
 const stocks = ref<Stock[]>();
 
 const searchFilters = ref({
-  start_dt: "",
-  end_dt: "",
+  start_dt: null as string | null,
+  end_dt: null as string | null,
   product_categories_id: null as number | null,
 });
 
 const meta = computed(() => stockStore.meta);
+const stockSummary = computed(() => stockStore.stockSummary);
 
 // const handleRefresh = async (event: RefresherCustomEvent) => {
 //   refreshing.value = true;

@@ -100,7 +100,6 @@ export const useCustomerStore = defineStore("customer", {
       const cacheKey = `kola.business.${business.id}.customers`;
 
       if( await storage.has(cacheKey) ) {
-        console.log(cacheKey);
         const data = await storage.get(cacheKey);
 
         if( data ) {
@@ -111,7 +110,6 @@ export const useCustomerStore = defineStore("customer", {
       }
 
       const response = await axios.get(`/v2/businesses/${business.id}/customers/${customer_id}`);
-      console.log(response);
       if (response.status >= 200 && response.status < 300) {
         const data = response.data.data;
         return new Customer(data);

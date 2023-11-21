@@ -11,6 +11,10 @@ export const useStockStore = defineStore("stock", {
     return {
       stocks: [] as Stock[],
       meta: { total: null as number | null },
+      stockSummary: {
+        total_value: 0,
+        out_of_stock: 0
+      },
       selectedStock: null as Stock | null,
       recentlyViewedStocks: [] as Stock[],
       productGroups: [],
@@ -46,6 +50,7 @@ export const useStockStore = defineStore("stock", {
         const response = await axios.get("/v2/products", { params });
         this.stocks = this.mapResponseToStocks(response);
         this.meta = response.data.meta;
+        this.stockSummary = response.data.stock;
 
         return this.stocks;
       } catch (error) {
