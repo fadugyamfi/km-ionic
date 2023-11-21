@@ -82,7 +82,7 @@ export default defineComponent({
       toggleFilterSheet,
       route,
       router,
-      order,
+      order
     };
   },
 });

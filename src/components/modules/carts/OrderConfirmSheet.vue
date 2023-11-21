@@ -2,9 +2,9 @@
   <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5, 1]">
     <IonContent>
 
-    <section>
-      <OrderConfirmedDetail :order="(order as Order)"></OrderConfirmedDetail>
-    </section>
+      <section>
+        <OrderConfirmedDetail :order="(order as Order)"></OrderConfirmedDetail>
+      </section>
     </IonContent>
   </IonModal>
 </template>
@@ -38,7 +38,7 @@ interface FormData {
 }
 
 export default defineComponent({
-  props:{
+  props: {
     order: {
       type: Order,
       required: true

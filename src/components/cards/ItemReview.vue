@@ -15,16 +15,16 @@
       </section>
     </section>
     <section class="d-flex ion-justify-content-between ion-align-items-center">
-    <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
-      <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>
-      Delivery Address
-    </IonText>
-    <!-- <section class="d-flex ion-align-items-center">
+      <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+        <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>
+        Delivery Address
+      </IonText>
+      <!-- <section class="d-flex ion-align-items-center">
       <IonText class="ion-margin-end date-color" @click="toggleFilterSheet">
         Change address
       </IonText>
     </section> -->
-  </section>
+    </section>
     <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
       <IonText class="fw-semibold">Total Cost</IonText>
       <section class="d-flex ion-align-items-center">
@@ -32,7 +32,7 @@
       </section>
     </section>
   </IonCard>
-  <DeliveryAddressSheet   :isOpen="showFilterSheet" @didDismiss="showFilterSheet = false"></DeliveryAddressSheet>
+  <DeliveryAddressSheet :isOpen="showFilterSheet" @didDismiss="showFilterSheet = false"></DeliveryAddressSheet>
 </template>
 
 <script setup lang="ts">

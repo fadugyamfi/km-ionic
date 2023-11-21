@@ -30,26 +30,14 @@
             </IonLabel>
           </IonItem>
           <IonItem>
-            <IonText
-              color="medium"
-              class="font-medium"
-              style="margin-bottom: 8px"
-            >
-              <IonIcon
-                :icon="locationOutline"
-                style="margin-right: 3px"
-              ></IonIcon>
+            <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+              <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>
               {{ order.delivery_location }}
             </IonText>
           </IonItem>
           <IonItem>
-            <IonText
-              color="medium"
-              class="font-medium"
-              style="margin-bottom: 8px"
-            >
-              <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon
-              >{{ order.delivery_date }}
+            <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+              <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon>{{ order.delivery_date }}
             </IonText>
           </IonItem>
         </IonList>
@@ -120,6 +108,7 @@ ion-item {
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 22px; /* 157.143% */
+  line-height: 22px;
+  /* 157.143% */
 }
 </style>
