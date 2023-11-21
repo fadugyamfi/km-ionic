@@ -19,7 +19,7 @@
           </IonHeader>
       </section>
 
-      <ion-content :fullscreen="true">
+      <ion-content>
           <section v-if="fetching" class="ion-text-center d-flex ion-justify-content-center ion-padding">
               <IonSpinner name="crescent" ></IonSpinner>
           </section>

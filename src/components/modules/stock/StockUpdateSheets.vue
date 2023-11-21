@@ -1,10 +1,15 @@
 <template>
-  <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5]">
+  <IonModal ref="modal" :initial-breakpoint="0.75" :breakpoints="[0, 0.5, 0.75]">
     <IonContent class="ion-padding">
       <header class="fw-semibold ion-padding ion-text-center">
         {{ $t("profile.stock.updateStock") }}
       </header>
       <main class="ion-padding-vertical">
+        <section class="ion-margin-bottom">
+          <IonItem lines="none">
+            <IonInput :label="`Price (${product?.currency?.symbol || 'GHS'})`" placeholder="0.00" v-model="form.fields.product_price"></IonInput>
+          </IonItem>
+        </section>
         <section>
           <IonItem @click="toggleQuantitySelector" lines="none">
             <IonLabel>Select quantity</IonLabel>
@@ -135,6 +140,7 @@ export default defineComponent({
       chevronUpOutline,
       showQuantitySelector: true,
       form: useForm({
+        product_price: 0,
         stock_quantity: "",
         product_variation: "",
         product_color: "",
@@ -147,7 +153,6 @@ export default defineComponent({
   methods: {
     update() {
       this.$el.dismiss();
-      console.log(this.form.fields);
       this.$emit("update", this.form.fields);
     },
 
@@ -158,6 +163,11 @@ export default defineComponent({
       this.form.fields.stock_quantity = quantity;
     },
   },
+
+  mounted() {
+    this.form.fields.product_price = this.product?.product_price;
+    this.form.fields.stock_quantity = this.product?.stock_quantity;
+  }
 });
 </script>
 
@@ -171,7 +181,7 @@ ion-modal {
 }
 
 ion-input {
-  --padding-start: 0.4em;
+  // --padding-start: 0.4em;
   --padding-end: 0.4em;
 }
 .stock-input {

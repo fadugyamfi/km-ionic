@@ -31,9 +31,14 @@
 
           <section v-if="stock.stock_quantity == 0">
             <IonText class="d-flex ion-align-items-center">
-              <IonIcon class="warning" :icon="alertCircleOutline"></IonIcon>out
-              of stock</IonText
-            >
+              <IonIcon class="warning" :icon="alertCircleOutline"></IonIcon>
+              out of stock
+              </IonText>
+          </section>
+          <section v-else>
+            <IonText class="d-flex ion-align-items-center">
+              {{ Filters.number(stock.stock_quantity as number, 0) }} in stock
+            </IonText>
           </section>
         </IonCardHeader>
       </ion-card>
@@ -72,6 +77,7 @@ import { mapStores } from "pinia";
 import { useStockStore } from "@/stores/StockStore";
 import { useToastStore } from "@/stores/ToastStore";
 import DeleteStockModal from "./DeleteStockModal.vue";
+import Filters from "../../../utilities/Filters";
 
 export default defineComponent({
   props: {
@@ -93,6 +99,7 @@ export default defineComponent({
       alertCircleOutline,
       selectedStock: null as Stock | null,
       showConfirmDeleteModal: false,
+      Filters,
     };
   },
 
