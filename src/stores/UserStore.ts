@@ -323,6 +323,7 @@ export const useUserStore = defineStore("user", {
       await storage.remove("kola.user");
       await storage.remove("kola.auth");
       await storage.remove("kola.step");
+      this.user = null;
     },
 
     async logout() {

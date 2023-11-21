@@ -89,7 +89,6 @@ const fetchCustomer = async () => {
     userStore.activeBusiness as Business,
     route.params.id
   ) as Customer;
-console.log(customer.value);
   fetching.value = false;
 };
 

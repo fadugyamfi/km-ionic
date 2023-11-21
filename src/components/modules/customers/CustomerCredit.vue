@@ -3,14 +3,19 @@
     <header class="ion-padding-horizontal">
       <h6>Credit payment</h6>
       <IonText
+        v-if="credits.length > 0"
         color="primary"
         :router-link="`/profile/company/customers/${$route.params.id}/credit-payments`"
       >
-        View all
+        {{ $t("shopper.home.viewAll") }}
       </IonText>
     </header>
   </section>
+  <section v-if="credits.length == 0" class="no-records ion-padding-horizontal">
+    <IonText>{{ $t("profile.customers.noRecords") }}</IonText>
+  </section>
   <IonList
+    v-else
     lines="none"
     class="ion-padding-horizontal customers-select-list simple"
   >
@@ -19,7 +24,11 @@
       :key="credit.id"
       class="ion-align-items-start ion-margin-bottom"
     >
-      <ProfileAvatar slot="start" :src="credit.business?.logo" :username="credit?.business?.name"></ProfileAvatar>
+      <ProfileAvatar
+        slot="start"
+        :src="credit.business?.logo"
+        :username="credit?.business?.name"
+      ></ProfileAvatar>
 
       <IonLabel>
         <p class="ion-no-margin">
@@ -56,7 +65,7 @@ import { useRouter } from "vue-router";
 import Image from "@/components/Image.vue";
 import Customer from "@/models/Customer";
 import { useCustomerStore } from "@/stores/CustomerStore";
-import ProfileAvatar from '@/components/ProfileAvatar.vue';
+import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import Filters from "@/utilities/Filters";
 
 const props = defineProps({
@@ -137,6 +146,12 @@ const customerStore = useCustomerStore();
     font-weight: bold;
     color: #111;
     margin-bottom: 5px;
+  }
+}
+.no-records {
+  ion-text {
+    font-size: 12px;
+    color: #787486 !important;
   }
 }
 .momo {
