@@ -64,6 +64,7 @@ onMounted(() => {
   if ((cartStore.orders.length == 0)) {
     cartStore.loadFromStorage();
   }
+  console.log('busness')
 });
 </script>
 
