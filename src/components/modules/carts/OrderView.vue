@@ -6,33 +6,33 @@
       </IonThumbnail>
 
       <section class="w-100">
-        <section style="height: 100%" class="d-flex ion-justify-content-between">
+        <section
+          style="height: 100%"
+          class="d-flex ion-justify-content-between"
+        >
           <section class="d-flex flex-column business-description">
-            <IonText class="fw-semibold ellipsis" style="margin-bottom: 5px">
+            <IonText class="fw-semibold ellipsis font-medium">
               {{ order?.business?.name || "Unknown" }}
             </IonText>
 
             <IonText color="medium" class="font-medium">
               Item total:
-              {{
-                order && order.getTotal()
-                ? order.getTotal().toLocaleString("en-GB", {
-                  style: "currency",
-                  currency: "GHS",
-                })
-                : "N/A"
-              }}
+              {{ Filters.currency(itemTotal as number) }}
             </IonText>
 
             <IonText color="medium" class="font-medium">
               <BusinessMinimumOrderReached
                 :business="order?.business"
-                :total-cost="(order?.getTotal() as number)"
+                :total-cost="(itemTotal as number)"
               ></BusinessMinimumOrderReached>
             </IonText>
 
             <section class="d-flex">
-              <IonThumbnail v-for="product in topFiveItems" :key="product.products_id" class="cart-items">
+              <IonThumbnail
+                v-for="product in topFiveItems"
+                :key="product.products_id"
+                class="cart-items"
+              >
                 <Image :src="product.product_image"></Image>
               </IonThumbnail>
             </section>
@@ -41,7 +41,13 @@
       </section>
     </section>
 
-    <IonButton slot="end" fill="clear" color="dark" class="ion-no-margin ion-no-padding ion-align-self-start" @click="removeOrder()">
+    <IonButton
+      slot="end"
+      fill="clear"
+      color="dark"
+      class="ion-no-margin ion-no-padding ion-align-self-start"
+      @click="removeOrder()"
+    >
       <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
     </IonButton>
   </IonItem>
@@ -67,6 +73,7 @@ import Product from "@/models/Product";
 import { Order } from "@/models/Order";
 import { OrderItem } from "../../../models/OrderItem";
 import BusinessMinimumOrderReached from "../business/BusinessMinimumOrderReached.vue";
+import Filters from "../../../utilities/Filters";
 
 export default defineComponent({
   components: {
@@ -78,8 +85,8 @@ export default defineComponent({
     IonIcon,
     Image,
     IonCol,
-    BusinessMinimumOrderReached
-},
+    BusinessMinimumOrderReached,
+  },
 
   props: {
     order: {
@@ -90,6 +97,7 @@ export default defineComponent({
   data() {
     return {
       closeCircleOutline,
+      Filters,
     };
   },
 
@@ -98,7 +106,15 @@ export default defineComponent({
 
     topFiveItems() {
       return this.order?.order_items?.filter((oi, index) => index < 4) || [];
-    }
+    },
+
+    itemTotal() {
+      const total = this.order?.order_items?.reduce(
+        (acc, item) => acc + (item.total_price || 0),
+        0
+      );
+      return total;
+    },
   },
 
   methods: {
@@ -107,8 +123,13 @@ export default defineComponent({
     },
 
     viewOrderItems() {
-      this.$router.push(`/shopper/cart/business/${this.order?.businesses_id}/orders`);
+      this.$router.push(
+        `/shopper/cart/business/${this.order?.businesses_id}/orders`
+      );
     },
+  },
+  mounted() {
+    console.log(this.order);
   },
 });
 </script>

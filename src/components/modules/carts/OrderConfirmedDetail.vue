@@ -4,7 +4,7 @@
       <IonCardContent class="ion-no-padding">
         <IonList lines="none">
           <IonItem>
-            <Image style="width: 32px" src="/img/icons/group.svg"></Image>
+            <!-- <Image style="width: 32px;" src="/img/icons/group.svg"></Image> -->
             <IonLabel style="margin-left: 8px">
               <p class="fw-bold">Order Confirmed</p>
               <IonText color="medium" class="font-medium">
