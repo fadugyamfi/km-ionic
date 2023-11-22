@@ -14,12 +14,12 @@
         </ion-toolbar>
       </ion-header>
 
-      <IonSegment value="personal" mode="ios" v-model="viewing">
-        <IonSegmentButton value="personal">
-          <IonLabel>Personal</IonLabel>
-        </IonSegmentButton>
+      <IonSegment value="company" mode="ios" v-model="viewing">
         <IonSegmentButton value="company">
           <ion-label>Company</ion-label>
+        </IonSegmentButton>
+        <IonSegmentButton value="personal">
+          <IonLabel>Personal</IonLabel>
         </IonSegmentButton>
       </IonSegment>
 
@@ -40,7 +40,7 @@ import CompanyActions from '@/components/profile/CompanyActions.vue';
 import { ref } from 'vue';
 
 const userStore = useUserStore();
-const viewing = ref('personal');
+const viewing = ref('company');
 </script>
 
 <style scoped lang="scss">

@@ -43,6 +43,15 @@
                 <IonLabel>Help & Support</IonLabel>
             </IonItem>
 
+            <hr />
+
+            <IonItem :detail="true" :button="true" class="profile-item" @click="openSettings()">
+                <IonAvatar slot="start">
+                    <IonIcon :icon="settingsOutline" style="font-size: 21px;"></IonIcon>
+                </IonAvatar>
+                <IonLabel>Settings</IonLabel>
+            </IonItem>
+
             <IonItem :detail="true" :button="true" class="profile-item" @click="logout()">
                 <IonAvatar slot="start">
                     <IonIcon :icon="powerOutline" style="font-size: 21px;"></IonIcon>
@@ -58,13 +67,14 @@ import { IonIcon, IonLabel, IonItem, IonAvatar, IonList, modalController } from 
 import { defineComponent } from 'vue';
 import { useUserStore } from '@/stores/UserStore';
 import { mapStores } from 'pinia';
-import { search, createOutline, powerOutline } from 'ionicons/icons';
+import { search, createOutline, powerOutline, settingsOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { useToastStore } from '../../stores/ToastStore';
 import { handleAxiosRequestError } from '../../utilities';
 import { AxiosError } from 'axios';
 import ProfileAvatar from '@/components/ProfileAvatar.vue';
 import NotificationsModal from '@/components/notifications/NotificationsModal.vue';
+import SettingsModal from '@/components/modules/settings/SettingsModal.vue';
 
 
 export default defineComponent({
@@ -82,7 +92,8 @@ export default defineComponent({
             createOutline,
             powerOutline,
             search,
-            router
+            router,
+            settingsOutline
         }
     },
 
@@ -119,7 +130,27 @@ export default defineComponent({
             if (role === 'confirm') {
                 // message.value = `Hello, ${data}!`;
             }
+        },
+
+        async openSettings() {
+            const modal = await modalController.create({
+                component: SettingsModal,
+            });
+
+            modal.present();
+
+            const { data, role } = await modal.onWillDismiss();
+
+            if (role === 'confirm') {
+                // message.value = `Hello, ${data}!`;
+            }
         }
     }
 });
 </script>
+
+<style scoped lang="scss">
+hr {
+    border-top: solid 1px #f1f1f1;
+}
+</style>

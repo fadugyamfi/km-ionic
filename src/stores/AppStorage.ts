@@ -111,10 +111,11 @@ export default class AppStorage {
      *
      * @param exceptions Array of keys to exclude
      */
-    clearAll(exceptions: string[] = []) {
-      this.keys
-        .filter(key => exceptions.indexOf(key) === -1)
-        .forEach(async (key) => await this.remove(key));
+    async clearAll(exceptions: string[] = []) {
+      const keys = await this._storage?.keys();
+
+      keys?.filter(key => exceptions.indexOf(key) === -1)
+           .forEach(async (key) => await this.remove(key));
     }
 
     /**

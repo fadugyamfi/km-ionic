@@ -1,6 +1,6 @@
 {
   "name": "kola-market-ionic",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "private": true,
   "description": "Kola Market App",
   "scripts": {
@@ -23,6 +23,7 @@
     "@capacitor/ios": "5.4.0",
     "@capacitor/keyboard": "5.0.6",
     "@capacitor/preferences": "^5.0.6",
+    "@capacitor/push-notifications": "^5.1.0",
     "@capacitor/share": "^5.0.6",
     "@capacitor/status-bar": "5.0.6",
     "@ionic/pwa-elements": "^3.2.2",
