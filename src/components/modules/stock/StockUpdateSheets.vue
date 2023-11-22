@@ -49,8 +49,9 @@
             v-for="variation in productVariations"
             :key="variation.id"
             :value="variation.id"
-            >{{ variation.name }}</IonSelectOption
-          >
+            >
+            {{ variation.name }}
+          </IonSelectOption>
         </IonSelect>
         <IonSelect
           class="stock-input ion-margin-top"
@@ -69,14 +70,15 @@
             v-for="variation in productVariations"
             :key="variation.id"
             :value="variation.id"
-            >{{ variation.name }}</IonSelectOption
-          >
+            >
+            {{ variation.name }}
+          </IonSelectOption>
         </IonSelect>
       </main>
       <footer>
-        <KolaYellowButton @click="update()">{{
-          $t("profile.stock.saveChanges")
-        }}</KolaYellowButton>
+        <KolaYellowButton @click="update()">
+          {{ $t("profile.stock.saveChanges") }}
+        </KolaYellowButton>
       </footer>
     </IonContent>
   </IonModal>

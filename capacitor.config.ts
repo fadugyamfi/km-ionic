@@ -6,14 +6,20 @@ const config: CapacitorConfig = {
   webDir: 'dist',
   server: {
     androidScheme: 'https'
-  }
-,
-    android: {
-       buildOptions: {
-          keystorePath: 'c:\Users\icewa\.android\keystore',
-          keystoreAlias: 'key0',
-       }
+  },
+
+  android: {
+    buildOptions: {
+      keystorePath: '.\keystore',
+      keystoreAlias: 'key0',
     }
-  };
+  },
+
+  plugins: {
+    PushNotifications: {
+      presentationOptions: ["badge", "sound", "alert"],
+    },
+  },
+};
 
 export default config;

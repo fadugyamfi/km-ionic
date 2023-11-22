@@ -1,5 +1,5 @@
 <template>
-    <IonModal :isOpen="isOpen" id="delete-modal" ref="modal">
+    <IonModal :isOpen="isOpen" id="confirm-modal" ref="modal">
         <div class="wrapper ion-padding">
             <div class="ion-text-center">
                 <p class="d-flex ion-justify-content-center">
@@ -63,6 +63,7 @@ export default defineComponent({
 
     methods: {
         close() {
+            this.$emit('dismiss');
             this.$el.dismiss();
         },
 
@@ -72,7 +73,6 @@ export default defineComponent({
         },
 
         dismiss() {
-            this.$emit('dismiss');
             this.close();
         }
     }
@@ -80,19 +80,20 @@ export default defineComponent({
 </script>
 
 <style scoped>
-ion-modal#delete-modal {
+ion-modal#confirm-modal {
     --width: fit-content;
     --min-width: 250px;
+    --max-width: 90%;
     --height: fit-content;
     --border-radius: 6px;
     --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
 }
 
-ion-modal#delete-modal h1 {
+ion-modal#confirm-modal h1 {
     margin: 20px 20px 10px 20px;
 }
 
-ion-modal#delete-modal ion-icon {
+ion-modal#confirm-modal ion-icon {
     margin-right: 6px;
     width: 48px;
     height: 48px;
