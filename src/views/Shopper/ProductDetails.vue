@@ -1,32 +1,36 @@
 <template>
     <IonPage>
-        <IonHeader>
-            <IonToolbar>
-                <IonButtons slot="start">
-                    <IonBackButton defaultHref="/shopper/home" :icon="close"></IonBackButton>
-                </IonButtons>
+        <section class="ion-padding">
+            <IonHeader class="inner-header">
+                <IonToolbar>
+                    <IonButtons slot="start">
+                        <IonBackButton defaultHref="/shopper/home" :icon="close"></IonBackButton>
+                    </IonButtons>
 
-                <IonTitle size="small">
-                    {{ $t("shopper.productDetails.productDetails") }}
-                </IonTitle>
+                    <IonTitle size="small">
+                        {{ $t("shopper.productDetails.productDetails") }}
+                    </IonTitle>
 
-                <IonButtons slot="end">
-                    <FavoriteButton :product="product || undefined"></FavoriteButton>
+                    <IonButtons slot="end">
+                        <FavoriteButton :product="product || undefined"></FavoriteButton>
 
-                    <CartStatusButton :product="product || undefined"></CartStatusButton>
+                        <CartStatusButton :product="product || undefined"></CartStatusButton>
 
-                    <IonButton slot="icon-only">
-                        <IonIcon :icon="shareOutline"></IonIcon>
-                    </IonButton>
-                </IonButtons>
-            </IonToolbar>
-        </IonHeader>
+                        <IonButton slot="icon-only">
+                            <IonIcon :icon="shareOutline"></IonIcon>
+                        </IonButton>
+                    </IonButtons>
+                </IonToolbar>
+            </IonHeader>
+        </section>
 
         <IonContent class="ion-padding" v-if="product">
             <header>
                 <Swiper>
                     <SwiperSlide>
-                        <Image :src="product?.image" style="max-height: 200px; border-radius: 10px; overflow: hidden;"></Image>
+                        <section style="height: 200px; border-radius: 10px;">
+                            <Image :src="product?.image" style="height: 200px;"></Image>
+                        </section>
                     </SwiperSlide>
                 </Swiper>
             </header>
@@ -227,6 +231,7 @@ main {
     }
     .title-section {
         font-weight: bold;
+        font-size: 1em;
 
         .price {
             text-align: right;
