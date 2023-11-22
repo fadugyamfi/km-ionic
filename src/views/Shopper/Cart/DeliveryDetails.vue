@@ -7,8 +7,10 @@
 
     <!-- Main Content -->
     <ion-content class="ion-padding">
-      <h6 class="fw-semibold" style="margin-top: 0px">Add Delivery Address</h6>
       <form>
+        <h6 class="fw-semibold" style="margin-top: 0px">
+          Add Delivery Address
+        </h6>
         <IonInput
           class="kola-input delivery-details-input"
           :class="{ 'ion-invalid ion-touched': form.errors.delivery_location }"
@@ -59,12 +61,10 @@
           readonly
         ></IonInput>
         <section>
-          <section class="d-flex flex-column ion-margin-bottom">
-            <IonText class="fw-semibold">Delivery</IonText>
-            <IonText color="medium" class="font-medium">
-              Select delivery method
-            </IonText>
-          </section>
+          <h6 class="fw-semibold" style="margin-bottom: 6px">Delivery</h6>
+          <IonText color="medium" class="font-medium">
+            Select delivery method
+          </IonText>
           <DeliveryMethod
             :location="form.fields.location"
             :delivery-date="form.fields.delivery_date"
@@ -111,6 +111,7 @@ const form = useForm({
   delivery_nearest_landmark: "",
   delivery_date: "",
   delivery_method: "",
+  payment_option_id: "2",
 });
 const selectDeliveryMethod = (method: string) => {
   form.fields.delivery_method = method;
@@ -145,7 +146,7 @@ const storeDeliveryDetails = () => {
         ...form.fields,
       };
       cartStore.persist();
-      router.push(`/shopper/cart/business/${route.params.id}/payment-options`);
+      router.push(`/shopper/cart/business/${route.params.id}/item-review`);
     } else {
       console.error("Business ID not found in cartStore.orders");
     }
@@ -196,5 +197,9 @@ onMounted(async () => {
 
 ion-footer {
   background-color: #fefefe;
+}
+h6 {
+  font-size: 14px;
+  margin-top: 24px;
 }
 </style>

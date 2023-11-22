@@ -5,13 +5,10 @@
         <IonBackButton
           :defaultHref="`/shopper/cart/business/${$route.params.id}/orders`"
         ></IonBackButton>
-        
       </IonButtons>
       <IonTitle class="fw-bold"> Shipping Details </IonTitle>
-      <IonButtons slot="end" style="margin-right: 10px;">
-        <IonButton class="save-for-later-button" 
-          >Save for later</IonButton
-        >
+      <IonButtons slot="end" style="margin-right: 10px">
+        <IonButton class="save-for-later-button">Save for later</IonButton>
       </IonButtons>
     </IonToolbar>
   </IonHeader>
@@ -41,5 +38,15 @@ export default {
 };
 </script>
 <style scoped="scss">
-
+.save-for-later-button {
+  --background: #f0f0f0 !important;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  --color: #8D9093;
+  --border-radius: 8px !important;
+  --box-shadow: none;
+  text-transform: none;
+  font-weight: 600;
+  font-size: 0.75em;
+}
 </style>

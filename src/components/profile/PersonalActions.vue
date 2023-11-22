@@ -69,7 +69,7 @@
         :detail="true"
         :button="true"
         class="profile-item"
-        :disabled="true"
+        @click="openWhatsAppChat()"
       >
         <IonAvatar slot="start">
           <img src="/images/ic_help_support.svg" class="action-img" />
@@ -199,6 +199,9 @@ export default defineComponent({
       if (role === "confirm") {
         // message.value = `Hello, ${data}!`;
       }
+    },
+    openWhatsAppChat() {
+      window.open("https://wa.me/233270404501", "_system", "location=yes");
     },
   },
 });

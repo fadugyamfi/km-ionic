@@ -45,7 +45,7 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="createOrder" :disabled="!minOrderAmountReached"> Continue </KolaYellowButton>
+      <KolaYellowButton @click="createOrder" :disabled="!minOrderAmountReached"> Place Order </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
