@@ -1,156 +1,211 @@
 <template>
-    <section>
-        <IonItem lines="none" class="profile-item ion-margin-top" router-link="/profile/personal/edit-profile">
-            <ProfileAvatar slot="start" :src="userStore.user?.image" :username="userStore.user?.name" customSize="32px"></ProfileAvatar>
+  <section>
+    <IonItem
+      lines="none"
+      class="profile-item ion-margin-top"
+      router-link="/profile/personal/edit-profile"
+    >
+      <ProfileAvatar
+        slot="start"
+        :src="userStore.user?.image"
+        :username="userStore.user?.name"
+        customSize="32px"
+      ></ProfileAvatar>
 
-            <IonLabel>{{ userStore.user?.name }}</IonLabel>
-            <IonIcon slot="end" :icon="createOutline"></IonIcon>
-        </IonItem>
+      <IonLabel>{{ userStore.user?.name }}</IonLabel>
+      <IonIcon slot="end" :icon="createOutline"></IonIcon>
+    </IonItem>
 
-        <IonList lines="none">
-            <IonItem :detail="true" :button="true" class="profile-item" :disabled="true">
-                <IonAvatar slot="start">
-                    <img src="/images/ic_location.svg" class="action-img" />
-                </IonAvatar>
-                <IonLabel>Address</IonLabel>
-            </IonItem>
+    <IonList lines="none">
+      <IonItem
+        :detail="true"
+        :button="true"
+        class="profile-item"
+        :disabled="true"
+      >
+        <IonAvatar slot="start">
+          <img src="/images/ic_location.svg" class="action-img" />
+        </IonAvatar>
+        <IonLabel>Address</IonLabel>
+      </IonItem>
 
-            <IonItem :detail="true" :button="true" class="profile-item" :disabled="true">
-                <IonAvatar slot="start">
-                    <img src="/images/ic_password.svg" class="action-img" />
-                </IonAvatar>
-                <IonLabel>Password</IonLabel>
-            </IonItem>
+      <IonItem
+        :detail="true"
+        :button="true"
+        class="profile-item"
+        router-link="/profile/personal/reset-pin"
+      >
+        <IonAvatar slot="start">
+          <img src="/images/ic_password.svg" class="action-img" />
+        </IonAvatar>
+        <IonLabel>Reset Pin</IonLabel>
+      </IonItem>
 
-            <IonItem :detail="true" :button="true" class="profile-item" @click="showNotifications()">
-                <IonAvatar slot="start">
-                    <img src="/images/ic_notification.svg" class="action-img" />
-                </IonAvatar>
-                <IonLabel>Notifications</IonLabel>
-            </IonItem>
+      <IonItem
+        :detail="true"
+        :button="true"
+        class="profile-item"
+        @click="showNotifications()"
+      >
+        <IonAvatar slot="start">
+          <img src="/images/ic_notification.svg" class="action-img" />
+        </IonAvatar>
+        <IonLabel>Notifications</IonLabel>
+      </IonItem>
 
-            <IonItem :detail="true" :button="true" class="profile-item" :disabled="true">
-                <IonAvatar slot="start">
-                    <img src="/images/ic_user.svg" class="action-img" />
-                </IonAvatar>
-                <IonLabel>Account Activity</IonLabel>
-            </IonItem>
+      <IonItem
+        :detail="true"
+        :button="true"
+        class="profile-item"
+        :disabled="true"
+      >
+        <IonAvatar slot="start">
+          <img src="/images/ic_user.svg" class="action-img" />
+        </IonAvatar>
+        <IonLabel>Account Activity</IonLabel>
+      </IonItem>
 
-            <IonItem :detail="true" :button="true" class="profile-item" :disabled="true">
-                <IonAvatar slot="start">
-                    <img src="/images/ic_help_support.svg" class="action-img" />
-                </IonAvatar>
-                <IonLabel>Help & Support</IonLabel>
-            </IonItem>
+      <IonItem
+        :detail="true"
+        :button="true"
+        class="profile-item"
+        :disabled="true"
+      >
+        <IonAvatar slot="start">
+          <img src="/images/ic_help_support.svg" class="action-img" />
+        </IonAvatar>
+        <IonLabel>Help & Support</IonLabel>
+      </IonItem>
 
-            <hr />
+      <hr />
 
-            <IonItem :detail="true" :button="true" class="profile-item" @click="openSettings()">
-                <IonAvatar slot="start">
-                    <IonIcon :icon="settingsOutline" style="font-size: 21px;"></IonIcon>
-                </IonAvatar>
-                <IonLabel>Settings</IonLabel>
-            </IonItem>
+      <IonItem
+        :detail="true"
+        :button="true"
+        class="profile-item"
+        @click="openSettings()"
+      >
+        <IonAvatar slot="start">
+          <IonIcon :icon="settingsOutline" style="font-size: 21px"></IonIcon>
+        </IonAvatar>
+        <IonLabel>Settings</IonLabel>
+      </IonItem>
 
-            <IonItem :detail="true" :button="true" class="profile-item" @click="logout()">
-                <IonAvatar slot="start">
-                    <IonIcon :icon="powerOutline" style="font-size: 21px;"></IonIcon>
-                </IonAvatar>
-                <IonLabel>Log Out</IonLabel>
-            </IonItem>
-        </IonList>
-    </section>
+      <IonItem
+        :detail="true"
+        :button="true"
+        class="profile-item"
+        @click="logout()"
+      >
+        <IonAvatar slot="start">
+          <IonIcon :icon="powerOutline" style="font-size: 21px"></IonIcon>
+        </IonAvatar>
+        <IonLabel>Log Out</IonLabel>
+      </IonItem>
+    </IonList>
+  </section>
 </template>
 
 <script lang="ts">
-import { IonIcon, IonLabel, IonItem, IonAvatar, IonList, modalController } from '@ionic/vue';
-import { defineComponent } from 'vue';
-import { useUserStore } from '@/stores/UserStore';
-import { mapStores } from 'pinia';
-import { search, createOutline, powerOutline, settingsOutline } from 'ionicons/icons';
-import { useRouter } from 'vue-router';
-import { useToastStore } from '../../stores/ToastStore';
-import { handleAxiosRequestError } from '../../utilities';
-import { AxiosError } from 'axios';
-import ProfileAvatar from '@/components/ProfileAvatar.vue';
-import NotificationsModal from '@/components/notifications/NotificationsModal.vue';
-import SettingsModal from '@/components/modules/settings/SettingsModal.vue';
-
+import {
+  IonIcon,
+  IonLabel,
+  IonItem,
+  IonAvatar,
+  IonList,
+  modalController,
+} from "@ionic/vue";
+import { defineComponent } from "vue";
+import { useUserStore } from "@/stores/UserStore";
+import { mapStores } from "pinia";
+import {
+  search,
+  createOutline,
+  powerOutline,
+  settingsOutline,
+} from "ionicons/icons";
+import { useRouter } from "vue-router";
+import { useToastStore } from "../../stores/ToastStore";
+import { handleAxiosRequestError } from "../../utilities";
+import { AxiosError } from "axios";
+import ProfileAvatar from "@/components/ProfileAvatar.vue";
+import NotificationsModal from "@/components/notifications/NotificationsModal.vue";
+import SettingsModal from "@/components/modules/settings/SettingsModal.vue";
 
 export default defineComponent({
+  components: { IonList, IonAvatar, IonItem, IonLabel, IonIcon, ProfileAvatar },
 
-    components: { IonList, IonAvatar, IonItem, IonLabel, IonIcon, ProfileAvatar },
+  computed: {
+    ...mapStores(useUserStore),
+  },
 
-    computed: {
-        ...mapStores( useUserStore )
+  data() {
+    const router = useRouter();
+
+    return {
+      createOutline,
+      powerOutline,
+      search,
+      router,
+      settingsOutline,
+    };
+  },
+
+  methods: {
+    logout() {
+      const toastStore = useToastStore();
+      toastStore.blockUI("Logging Out...");
+
+      this.userStore
+        .logout()
+        .then(() => {
+          this.router.replace("/auth/login");
+        })
+        .catch((error: AxiosError) => {
+          handleAxiosRequestError(error);
+
+          // account not authenticated
+          if (error.response?.status == 403 || error.code == "ERR_NETWORK") {
+            this.userStore.clearSessionInfo();
+            this.router.replace("/auth/login");
+          }
+        })
+        .finally(() => toastStore.unblockUI());
     },
 
-    data() {
-        const router = useRouter();
+    async showNotifications() {
+      const modal = await modalController.create({
+        component: NotificationsModal,
+      });
 
-        return {
-            createOutline,
-            powerOutline,
-            search,
-            router,
-            settingsOutline
-        }
+      modal.present();
+
+      const { data, role } = await modal.onWillDismiss();
+
+      if (role === "confirm") {
+        // message.value = `Hello, ${data}!`;
+      }
     },
 
-    methods: {
-        logout() {
-            const toastStore = useToastStore();
-            toastStore.blockUI("Logging Out...");
+    async openSettings() {
+      const modal = await modalController.create({
+        component: SettingsModal,
+      });
 
-            this.userStore.logout()
-                .then(() => {
-                    this.router.replace('/auth/login');
-                })
-                .catch((error: AxiosError) => {
-                    handleAxiosRequestError(error);
+      modal.present();
 
-                    // account not authenticated
-                    if( error.response?.status == 403 || error.code == 'ERR_NETWORK' ) {
-                        this.userStore.clearSessionInfo();
-                        this.router.replace('/auth/login');
-                    }
-                })
-                .finally(() => toastStore.unblockUI());
-        },
+      const { data, role } = await modal.onWillDismiss();
 
-        async showNotifications() {
-            const modal = await modalController.create({
-                component: NotificationsModal,
-            });
-
-            modal.present();
-
-            const { data, role } = await modal.onWillDismiss();
-
-            if (role === 'confirm') {
-                // message.value = `Hello, ${data}!`;
-            }
-        },
-
-        async openSettings() {
-            const modal = await modalController.create({
-                component: SettingsModal,
-            });
-
-            modal.present();
-
-            const { data, role } = await modal.onWillDismiss();
-
-            if (role === 'confirm') {
-                // message.value = `Hello, ${data}!`;
-            }
-        }
-    }
+      if (role === "confirm") {
+        // message.value = `Hello, ${data}!`;
+      }
+    },
+  },
 });
 </script>
 
 <style scoped lang="scss">
 hr {
-    border-top: solid 1px #f1f1f1;
+  border-top: solid 1px #f1f1f1;
 }
 </style>
