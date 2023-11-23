@@ -3,7 +3,7 @@
     <IonToolbar class="ion-align-items-center">
       <IonButtons slot="start">
         <IonBackButton
-          :defaultHref="`/shopper/cart/business/${$route.params.id}/payment-options`"
+          :defaultHref="`/shopper/cart/business/${$route.params.id}/delivery-details`"
         ></IonBackButton>
       </IonButtons>
       <IonTitle class="fw-bold">Order summary </IonTitle>

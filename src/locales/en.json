@@ -65,6 +65,7 @@
       "businessName": "Business Name",
       "businessLocation": "Business Location",
       "newPinCode": "New PIN Code",
+      "oldPinCode": "Old PIN Code",
       "confirmPinCode": "Confirm PIN Code"
     },
     "vendor": {

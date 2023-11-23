@@ -111,6 +111,10 @@ export const ProfileRoutes = [
             path: "edit-profile",
             component: () => import("@/views/Profile/Personal/EditProfile.vue"),
           },
+          {
+            path: "reset-pin",
+            component: () => import("@/views/Profile/Personal/ResetPin.vue"),
+          },
         ],
       },
     ],

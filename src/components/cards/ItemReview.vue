@@ -1,23 +1,34 @@
 <template>
   <IonCard>
-    <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
+    <section
+      class="d-flex ion-justify-content-between ion-align-items-center"
+      style="margin-bottom: 8px"
+    >
       <IonText class="fw-semibold">Items total</IonText>
       <section class="d-flex ion-align-items-center">
-        <IonText class="fw-semibold ion-margin-end">{{ Filters.currency(totalCost as number, 'GHS') }}</IonText>
+        <IonText class="fw-semibold ion-margin-end">{{
+          Filters.currency(totalCost as number, "GHS")
+        }}</IonText>
       </section>
     </section>
-    <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
+    <section
+      class="d-flex ion-justify-content-between ion-align-items-center"
+      style="margin-bottom: 8px"
+    >
       <IonText class="fw-semibold">Delivery</IonText>
       <section class="d-flex ion-align-items-center">
         <IonText class="fw-semibold ion-margin-end">
-          {{ Filters.currency(deliveryFee, 'GHS') }}
+          {{ Filters.currency(deliveryFee, "GHS") }}
         </IonText>
       </section>
     </section>
-    <section class="d-flex ion-justify-content-between ion-align-items-center">
+    <section class="d-flex flex-column">
       <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
         <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon>
-        Delivery Address
+        {{ business?.delivery_location }}
+      </IonText>
+      <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+        Pay on delivery
       </IonText>
       <!-- <section class="d-flex ion-align-items-center">
       <IonText class="ion-margin-end date-color" @click="toggleFilterSheet">
@@ -25,14 +36,22 @@
       </IonText>
     </section> -->
     </section>
-    <section class="d-flex ion-justify-content-between ion-align-items-center" style="margin-bottom: 8px">
+    <section
+      class="d-flex ion-justify-content-between ion-align-items-center"
+      style="margin-bottom: 8px"
+    >
       <IonText class="fw-semibold">Total Cost</IonText>
       <section class="d-flex ion-align-items-center">
-        <IonText class="fw-semibold ion-margin-end">{{ Filters.currency(totalWithDelivery as number, 'GHS') }}</IonText>
+        <IonText class="fw-semibold ion-margin-end">{{
+          Filters.currency(totalWithDelivery as number, "GHS")
+        }}</IonText>
       </section>
     </section>
   </IonCard>
-  <DeliveryAddressSheet :isOpen="showFilterSheet" @didDismiss="showFilterSheet = false"></DeliveryAddressSheet>
+  <DeliveryAddressSheet
+    :isOpen="showFilterSheet"
+    @didDismiss="showFilterSheet = false"
+  ></DeliveryAddressSheet>
 </template>
 
 <script setup lang="ts">
@@ -42,8 +61,7 @@ import { useCartStore } from "@/stores/CartStore";
 import { locationOutline, timeOutline } from "ionicons/icons";
 import { useRoute } from "vue-router";
 import DeliveryAddressSheet from "@/components/modules/carts/DeliveryAddressSheet.vue";
-import Filters from '@/utilities/Filters'
-
+import Filters from "@/utilities/Filters";
 
 const route = useRoute();
 const showFilterSheet = ref(false);
@@ -55,6 +73,13 @@ const cartStore = useCartStore();
 
 cartStore.loadFromStorage();
 const cartOrders = computed(() => cartStore.orders);
+
+const business = computed(() => {
+  const business = cartOrders.value.find(
+    (business: any) => business?.businesses_id == route.params.id
+  );
+  return business;
+});
 
 const totalCost = computed(() => {
   const business = cartOrders.value.find(
@@ -77,13 +102,12 @@ const deliveryFee = ref(0);
 
 const totalWithDelivery = computed(() => {
   return totalCost.value + deliveryFee.value;
-})
+});
 </script>
-
 
 <style scoped lang="scss">
 .date-color {
-  color: #666EED;
+  color: #666eed;
 }
 
 ion-card {
