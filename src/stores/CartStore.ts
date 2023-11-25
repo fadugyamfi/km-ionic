@@ -80,7 +80,7 @@ export const useCartStore = defineStore("cart", {
       // }
 
       // let exists = false;
-      const order = this.orders.find(o => o.businesses_id == product.businesses_id);
+      const order = this.orders.find(o => o.businesses_id == product?.businesses_id);
 
       if( !order ) {
         return false;
