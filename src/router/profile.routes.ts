@@ -90,6 +90,7 @@ export const ProfileRoutes = [
               },
             ],
           },
+
           {
             path: "edit-profile",
             component: () =>
@@ -117,6 +118,33 @@ export const ProfileRoutes = [
           },
         ],
       },
+      
+      {
+        path: "address",
+        component: () => import("@/views/Profile/Address.vue"),
+        children: [
+          {
+            path: "",
+            component: () =>
+              import("@/views/Profile/Address/AddressList.vue"),
+          },
+          {
+            path: "add-address",
+            component: () =>
+              import("@/views/Profile/Address/AddAddress.vue"),
+          },
+          {
+            path: "edit-address",
+            component: () =>
+              import("@/views/Profile/Address/EditAddress.vue"),
+          },
+        ],
+      },
+      {
+        path: "account-activity",
+        component: () =>
+          import("@/views/Profile/AccountActivity.vue"),
+      }, 
     ],
   },
 ];

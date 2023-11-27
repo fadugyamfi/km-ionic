@@ -21,7 +21,8 @@
         :detail="true"
         :button="true"
         class="profile-item"
-        :disabled="true"
+        :disabled="false"
+        router-link="/profile/address"
       >
         <IonAvatar slot="start">
           <img src="/images/ic_location.svg" class="action-img" />
@@ -57,7 +58,8 @@
         :detail="true"
         :button="true"
         class="profile-item"
-        :disabled="true"
+        :disabled="false"
+        router-link="/profile/account-activity"
       >
         <IonAvatar slot="start">
           <img src="/images/ic_user.svg" class="action-img" />
