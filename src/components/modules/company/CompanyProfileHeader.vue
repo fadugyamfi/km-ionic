@@ -9,9 +9,9 @@
         :image="company?.logo"
         :username="company?.name"
       ></ProfileAvatar>
-      <!-- <IonButton fill="clear" size="small" @click="changePhoto" style="text-transform: none"
+      <IonButton fill="clear" size="small" @click="changePhoto" style="text-transform: none"
         >Change profile photo
-      </IonButton> -->
+      </IonButton>
     </aside>
   </section>
 </template>

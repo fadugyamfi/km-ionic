@@ -1,11 +1,14 @@
 <template>
-  <section class="d-flex ion-justify-content-center">
+  <section class="d-flex ion-justify-content-center flex-column ion-align-items-center">
     <ProfileAvatar
       font-size="40px"
       custom-size="90px"
       :image="user?.photo"
       :username="user?.name"
     ></ProfileAvatar>
+    <IonButton fill="clear" size="small" @click="changePhoto" style="text-transform: none"
+        >Change profile photo
+      </IonButton>
   </section>
 </template>
 
@@ -36,7 +39,7 @@ export default defineComponent({
       (event.target as HTMLImageElement).src = this.defaultBanner;
     },
     changePhoto() {
-      this.$router.push("/profile/company/change-photo");
+      this.$router.push("/profile/personal/change-photo");
     },
   },
 });

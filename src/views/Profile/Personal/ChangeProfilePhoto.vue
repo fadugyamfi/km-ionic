@@ -49,7 +49,10 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <FooterNavigation @continue="onContinue()"></FooterNavigation>
+      <!-- <FooterNavigation @continue="onContinue()"></FooterNavigation> -->
+      <KolaYellowButton @click="updateProfile()">
+        {{ $t("profile.customers.save") }}</KolaYellowButton
+      >
     </IonFooter>
   </IonPage>
 </template>
@@ -69,7 +72,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/vue";
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import FooterNavigation from "@/views/Signup/Vendor/FooterNavigation.vue";
 import HeaderArea from "@/views/Signup/Vendor/HeaderArea.vue";
 import { usePhotoGallery, UserPhoto } from "@/composables/usePhotoGallery";
@@ -77,7 +80,10 @@ import { mapStores } from "pinia";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useToastStore } from "@/stores/ToastStore";
 import { handleAxiosRequestError } from "@/utilities";
+import { useForm } from "@/composables/form";
+import Business from "@/models/Business";
 import { useUserStore } from "@/stores/UserStore";
+import KolaYellowButton from "@/components/KolaYellowButton.vue";
 
 export default defineComponent({
   components: {
@@ -95,6 +101,7 @@ export default defineComponent({
     HeaderArea,
     IonImg,
     IonButton,
+    KolaYellowButton,
   },
 
   data() {
@@ -144,8 +151,72 @@ export default defineComponent({
       }
     },
 
-    async onContinue() {
-      this.$router.push("/profile/company/change-cover-photo");
+    // async onContinue() {
+    //   const toastStore = useToastStore();
+    //   const userStore = useUserStore();
+
+    //   this.businessStore.cacheRegistrationInfo();
+
+    //   toastStore.blockUI(this.$t("Registering Your Business. Please hold"));
+
+    //   try {
+    //     const business = await this.businessStore.createBusinessAsVendor();
+
+    //     if (business) {
+    //       userStore.changePin({
+    //         phone_number: this.businessStore.registration.business_owner_phone,
+    //         pin: this.businessStore.registration.user.pin,
+    //         pin_confirmation:
+    //           this.businessStore.registration.user.pin_confirmation,
+    //       });
+
+    //       //   this.$router.push("/signup/vendor/signup-complete");
+    //     }
+    //   } catch (error) {
+    //     handleAxiosRequestError(error);
+    //   } finally {
+    //     toastStore.unblockUI();
+    //   }
+    // },
+
+    async updateProfile() {
+      const toastStore = useToastStore();
+      const company = ref<Business | null>();
+      const form = useForm({
+        name: "",
+        location: "",
+        email: "",
+        phone_number: "",
+        business_types_id: 1,
+      });
+      try {
+        toastStore.blockUI("Hold On As We Update Company Profile");
+        const userStore = useUserStore();
+        const businessStore = useBusinessStore();
+        company.value = await businessStore.updateBusiness(
+          Number(userStore.activeBusiness?.id),
+          form.fields
+        );
+        if (company.value) {
+          toastStore.unblockUI();
+          toastStore.showSuccess(
+            "Profile Photo has been updated successfully"
+          );
+          Object.assign(form.fields, {
+            name: company.value?.name,
+            location: company.value?.location,
+            phone_number: company.value?.phone_number,
+            email: company.value?.email,
+          });
+          this.$router.push("/profile/personal/edit-profile");
+        } else {
+          toastStore.unblockUI();
+          
+        }
+      } catch (error) {
+      } finally {
+        toastStore.unblockUI();
+      }
     },
   },
 });
