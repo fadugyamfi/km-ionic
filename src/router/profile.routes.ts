@@ -100,6 +100,11 @@ export const ProfileRoutes = [
             component: () =>
               import("@/views/Profile/CompanyProfile/ChangePhoto.vue"),
           },
+          {
+            path: "change-cover-photo",
+            component: () =>
+              import("@/views/Profile/CompanyProfile/ChangeCoverPhoto.vue"),
+          },
         ],
       },
       {
@@ -110,6 +115,11 @@ export const ProfileRoutes = [
           {
             path: "edit-profile",
             component: () => import("@/views/Profile/Personal/EditProfile.vue"),
+          },
+          {
+            path: "change-photo",
+            component: () =>
+              import("@/views/Profile/Personal/ChangeProfilePhoto.vue"),
           },
           {
             path: "reset-pin",
