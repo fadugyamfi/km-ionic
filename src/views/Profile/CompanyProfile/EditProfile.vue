@@ -9,14 +9,15 @@
               :icon="arrowBackOutline"
               text=""
               style="margin-left: 10px"
-              defaultHref="/vendor/profile"
+              @click="() => router.push(defaultBackRoute)"
+              defaultHref=""
             ></ion-back-button>
           </ion-buttons>
           <IonTitle size="small" class="fw-bold">
             <section
               class="d-flex ion-align-items-center ion-justify-content-center"
             >
-              <IonLabel>{{ $t('profile.editProfile') }}</IonLabel>
+              <IonLabel>{{ $t("profile.editProfile") }}</IonLabel>
             </section></IonTitle
           >
         </ion-toolbar>
@@ -27,7 +28,28 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <section v-if="!fetching">
-        <CompanyProfileHeader :company="company" />
+        <section class="banner">
+          <img
+            :src="company?.photo || defaultBanner"
+            @error="onLoadError($event)"
+          />
+
+          <aside class="d-flex">
+            <ProfileAvatar
+              font-size="40px"
+              custom-size="90px"
+              :image="company?.logo"
+              :username="company?.name"
+            ></ProfileAvatar>
+            <IonButton
+              fill="clear"
+              size="small"
+              @click="changePhoto"
+              style="text-transform: none"
+              >Change cover & profile photo
+            </IonButton>
+          </aside>
+        </section>
         <form class="ion-padding" v-show="!fetching">
           <IonInput
             class="kola-input ion-margin-bottom"
@@ -115,6 +137,7 @@ import {
   IonSpinner,
   IonInput,
   IonFooter,
+  IonAvatar,
 } from "@ionic/vue";
 import {
   chatbubbleOutline,
@@ -129,12 +152,16 @@ import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useToastStore } from "@/stores/ToastStore";
 import { useGeolocation } from "@/composables/useGeolocation";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Business from "@/models/Business";
 import { useForm } from "@/composables/form";
+import ProfileAvatar from "@/components/ProfileAvatar.vue";
 
 const toastStore = useToastStore();
 const route = useRoute();
+const router = useRouter();
+
+const defaultBanner = ref("/images/vendor/banner.png");
 
 const fetching = ref(false);
 
@@ -147,6 +174,15 @@ const form = useForm({
   business_types_id: 1,
 });
 
+const defaultBackRoute = computed(() => {
+  const userStore = useUserStore();
+  if (userStore.appMode == "vendor") {
+    return "/vendor/profile";
+  } else {
+    return "/shopper/profile";
+  }
+});
+
 const formValid = computed(() => {
   const fields = form.fields;
 
@@ -156,6 +192,14 @@ const formValid = computed(() => {
     fields.phone_number.length > 0
   );
 });
+const onLoadError = (event: Event) => {
+  (event.target as HTMLImageElement).src = defaultBanner.value;
+};
+const changePhoto = () => {
+  const userStore = useUserStore();
+  Object.assign(userStore.companyForm, form.fields);
+  router.push("/profile/company/change-photo");
+};
 
 const fetchCompany = async () => {
   fetching.value = true;
@@ -243,5 +287,41 @@ h6 {
   font-weight: 400;
   line-height: 16px;
   color: #74787c;
+}
+.banner {
+  position: relative;
+  margin-bottom: 40px;
+
+  img {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  aside {
+    position: absolute;
+    bottom: -25%;
+    left: 5%;
+    align-items: center;
+
+    ion-avatar {
+      border-radius: 50%;
+      background-color: #f5f5f5;
+      border: solid 1px #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 90px;
+      height: 90px;
+
+      .initials {
+        font-size: 48px;
+      }
+    }
+    ion-button {
+      margin-top: 30px;
+      --color: #666eed;
+      font-weight: 600;
+    }
+  }
 }
 </style>

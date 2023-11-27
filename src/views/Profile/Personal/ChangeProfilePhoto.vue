@@ -4,7 +4,7 @@
       <IonToolbar>
         <IonButtons slot="start">
           <IonBackButton
-            defaultHref="/profile/company/edit-profile"
+            defaultHref="/profile/personal/edit-profile"
           ></IonBackButton>
         </IonButtons>
         <IonTitle></IonTitle>
@@ -49,7 +49,6 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <!-- <FooterNavigation @continue="onContinue()"></FooterNavigation> -->
       <KolaYellowButton @click="updateProfile()">
         {{ $t("profile.customers.save") }}</KolaYellowButton
       >
@@ -115,7 +114,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useBusinessStore),
+    ...mapStores(useUserStore, useToastStore),
   },
 
   methods: {
@@ -127,8 +126,7 @@ export default defineComponent({
 
         this.photo = photos.value ? photos.value[0] : null;
         if (this.photo) {
-          this.businessStore.registration.logo_image = this.photo
-            .base64Data as string;
+          this.userStore.userForm.photo = this.photo.base64Data as string;
         }
       } catch (e) {
         console.log(e);
@@ -143,79 +141,35 @@ export default defineComponent({
 
         this.photo = photos.value ? photos.value[0] : null;
         if (this.photo) {
-          this.businessStore.registration.logo_image = this.photo
-            .base64Data as string;
+          this.userStore.userForm.photo = this.photo.base64Data as string;
         }
       } catch (e) {
         console.log(e);
       }
     },
 
-    // async onContinue() {
-    //   const toastStore = useToastStore();
-    //   const userStore = useUserStore();
-
-    //   this.businessStore.cacheRegistrationInfo();
-
-    //   toastStore.blockUI(this.$t("Registering Your Business. Please hold"));
-
-    //   try {
-    //     const business = await this.businessStore.createBusinessAsVendor();
-
-    //     if (business) {
-    //       userStore.changePin({
-    //         phone_number: this.businessStore.registration.business_owner_phone,
-    //         pin: this.businessStore.registration.user.pin,
-    //         pin_confirmation:
-    //           this.businessStore.registration.user.pin_confirmation,
-    //       });
-
-    //       //   this.$router.push("/signup/vendor/signup-complete");
-    //     }
-    //   } catch (error) {
-    //     handleAxiosRequestError(error);
-    //   } finally {
-    //     toastStore.unblockUI();
-    //   }
-    // },
-
     async updateProfile() {
-      const toastStore = useToastStore();
-      const company = ref<Business | null>();
-      const form = useForm({
-        name: "",
-        location: "",
-        email: "",
-        phone_number: "",
-        business_types_id: 1,
-      });
       try {
-        toastStore.blockUI("Hold On As We Update Company Profile");
-        const userStore = useUserStore();
-        const businessStore = useBusinessStore();
-        company.value = await businessStore.updateBusiness(
-          Number(userStore.activeBusiness?.id),
-          form.fields
-        );
-        if (company.value) {
-          toastStore.unblockUI();
-          toastStore.showSuccess(
-            "Profile Photo has been updated successfully"
-          );
-          Object.assign(form.fields, {
-            name: company.value?.name,
-            location: company.value?.location,
-            phone_number: company.value?.phone_number,
-            email: company.value?.email,
-          });
-          this.$router.push("/profile/personal/edit-profile");
+        this.toastStore.blockUI("Hold On As We Update Your Profile");
+        const response = await this.userStore.updateUserInfo();
+        if (response) {
+          this.toastStore.unblockUI();
+          this.toastStore.showSuccess("Profile has been updated successfully");
+          setTimeout(() => {
+            this.$router.push("/profile/personal/edit-profile");
+          }, 500);
         } else {
-          toastStore.unblockUI();
-          
+          this.toastStore.unblockUI();
+          this.toastStore.showError(
+            "Failed to update Profile. Please try again",
+            "",
+            "bottom",
+            "footer"
+          );
         }
       } catch (error) {
       } finally {
-        toastStore.unblockUI();
+        this.toastStore.unblockUI();
       }
     },
   },

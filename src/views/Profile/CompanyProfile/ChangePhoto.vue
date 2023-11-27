@@ -74,7 +74,6 @@ import FooterNavigation from "@/views/Signup/Vendor/FooterNavigation.vue";
 import HeaderArea from "@/views/Signup/Vendor/HeaderArea.vue";
 import { usePhotoGallery, UserPhoto } from "@/composables/usePhotoGallery";
 import { mapStores } from "pinia";
-import { useBusinessStore } from "@/stores/BusinessStore";
 import { useToastStore } from "@/stores/ToastStore";
 import { handleAxiosRequestError } from "@/utilities";
 import { useUserStore } from "@/stores/UserStore";
@@ -108,7 +107,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useBusinessStore),
+    ...mapStores(useUserStore),
   },
 
   methods: {
@@ -120,8 +119,7 @@ export default defineComponent({
 
         this.photo = photos.value ? photos.value[0] : null;
         if (this.photo) {
-          this.businessStore.registration.logo_image = this.photo
-            .base64Data as string;
+          this.userStore.companyForm.logo = this.photo.base64Data as string;
         }
       } catch (e) {
         console.log(e);
@@ -136,15 +134,14 @@ export default defineComponent({
 
         this.photo = photos.value ? photos.value[0] : null;
         if (this.photo) {
-          this.businessStore.registration.logo_image = this.photo
-            .base64Data as string;
+          this.userStore.companyForm.logo = this.photo.base64Data as string;
         }
       } catch (e) {
         console.log(e);
       }
     },
 
-    async onContinue() {
+    onContinue() {
       this.$router.push("/profile/company/change-cover-photo");
     },
   },

@@ -29,7 +29,8 @@ type UserStoreState = {
     phone_number: String;
     response: any;
   };
-  userForm?: object | null;
+  userForm?: any;
+  companyForm?: any;
 };
 
 type Auth = {
@@ -70,7 +71,22 @@ export const useUserStore = defineStore("user", {
           two_factor_auth_sent: false,
         },
       },
-      userForm: null,
+      userForm: {
+        id: "",
+        name: "",
+        email: "",
+        phone_number: "",
+        photo: ""
+      },
+      companyForm: {
+        business_types_id: "",
+        email: null,
+        location: "",
+        name: "",
+        phone_number: "",
+        photo: "",
+        logo: "",
+      },
     };
   },
 
