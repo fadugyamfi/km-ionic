@@ -35,12 +35,9 @@ export const useCartStore = defineStore("cart", {
 
   actions: {
     async createOrder(postData: Object): Promise<Order | null> {
-     // const userStore = useUserStore();
+      // const userStore = useUserStore();
       return axios
-        .post(
-          `/v2/orders`,
-          postData
-        )
+        .post(`/v2/orders`, postData)
         .then((response) => {
           if (response.status >= 200 && response.status < 300) {
             const data = response.data.data;
@@ -50,11 +47,12 @@ export const useCartStore = defineStore("cart", {
         .catch((error) => handleAxiosRequestError(error));
     },
 
-
     async loadFromStorage() {
       let data = await storage.get(KOLA_CART);
 
-      this.orders = (data ? data.map((d: object) => new Order(d)) : []) as Order[];
+      this.orders = (
+        data ? data.map((d: object) => new Order(d)) : []
+      ) as Order[];
 
       return this;
     },
@@ -80,13 +78,19 @@ export const useCartStore = defineStore("cart", {
       // }
 
       // let exists = false;
-      const order = this.orders.find(o => o.businesses_id == product?.businesses_id);
+      const order = this.orders.find(
+        (o) => o.businesses_id == product?.businesses_id
+      );
 
-      if( !order ) {
+      if (!order) {
         return false;
       }
 
-      return order?.order_items.findIndex(oi => oi.products_id == product.id) as number > -1;
+      return (
+        (order?.order_items.findIndex(
+          (oi) => oi.products_id == product.id
+        ) as number) > -1
+      );
 
       // this.orders.forEach((order: Order) => {
       //   const index = order.order_items.findIndex(
@@ -106,6 +110,8 @@ export const useCartStore = defineStore("cart", {
     },
 
     addProduct(product: Product, quantity = 1) {
+      console.log(product);
+      console.log(product.business);
       const toastStore = useToastStore();
       const userStore = useUserStore();
 
@@ -141,7 +147,7 @@ export const useCartStore = defineStore("cart", {
           total_price: quantity * (product.product_price || 0),
           currencies_id: 1, // GHS
           product_units_id: 1, // GHS
-          cms_users_id: userStore.user?.id
+          cms_users_id: userStore.user?.id,
         });
 
         order.order_items.push(orderItem);
@@ -187,14 +193,57 @@ export const useCartStore = defineStore("cart", {
     },
 
     updateQuantity(product: Product, quantity = 1) {
-      const order = this.orders.find(o => o.businesses_id == product.businesses_id);
-      const orderItem = order?.order_items.find(oi => oi.products_id == product.id);
+      const order = this.orders.find(
+        (o) => o.businesses_id == product.businesses_id
+      );
+      const orderItem = order?.order_items.find(
+        (oi) => oi.products_id == product.id
+      );
 
-      if( !orderItem ) {
+      if (!orderItem) {
         return;
       }
 
       orderItem.quantity = quantity;
+    },
+
+    reOrder(order: Order) {
+      const userStore = useUserStore();
+
+      let newOrder = this.orders.find(
+        (order) => order.businesses_id == order.businesses_id
+      );
+
+      if (!newOrder) {
+        newOrder = new Order({
+          businesses_id: order.businesses_id,
+          customer_id: userStore.activeBusiness?.id,
+          cms_users_id: userStore.user?.id,
+          business: order.business,
+          order_items: [],
+        });
+      }
+
+      this.orders.push(newOrder);
+      console.log(order);
+      let orderItems = order.order_items.map((item) => {
+        return new OrderItem({
+          businesses_id: item.businesses_id,
+          products_id: item.id,
+          product_price: item?.product?.product_price,
+          currency_symbol: item.currency?.symbol,
+          product_image: item?.product?.image,
+          product_name: item?.product?.product_name,
+          unit_price: item?.product?.product_price,
+          quantity: item.quantity,
+          total_price: item.total_price,
+          currencies_id: 1, // GHS
+          product_units_id: 1, // GHS
+          cms_users_id: userStore.user?.id,
+        });
+      });
+      newOrder.order_items = orderItems;
+      this.persist();
     },
 
     async persist() {

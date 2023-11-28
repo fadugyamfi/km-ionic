@@ -19,6 +19,7 @@
                 :button="true"
                 lines="full"
                 aria-label="sync"
+                :disabled="!canReorder(order)"
                 @click="reOrder(order)"
               >
                 <ion-icon
@@ -95,6 +96,7 @@ import Image from "../../Image.vue";
 import PlacedOrderListItem from "./PlacedOrderListItem.vue";
 import DeleteModal from "../../modals/DeleteModal.vue";
 import { useCartStore } from "@/stores/CartStore";
+import { useToastStore } from "@/stores/ToastStore";
 
 export default defineComponent({
   props: {
@@ -123,7 +125,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useOrderStore, useCartStore),
+    ...mapStores(useOrderStore, useCartStore, useToastStore),
   },
 
   data() {
@@ -170,8 +172,27 @@ export default defineComponent({
       this.$emit("view-details", order);
       this.$router.push(`/shopper/orders/${order.id}`);
     },
-    reOrder(order: Order) {
-      this.cartStore.reOrder(order);
+    async reOrder(order: Order) {
+      this.closeMenu();
+      const toastStore = useToastStore();
+      try {
+        toastStore.blockUI("");
+        const orderReorder = await this.orderStore.fetchOrder(Number(order.id));
+        if (orderReorder) {
+          toastStore.unblockUI();
+          this.cartStore.reOrder(orderReorder);
+          this.$router.push("/shopper/cart/business");
+        } else {
+          toastStore.showError(
+            "Failed to Reorder. Please try again",
+            "",
+            "bottom",
+            "footer"
+          );
+        }
+      } catch (error) {
+        toastStore.unblockUI();
+      }
     },
     editOrder(order: Order) {
       this.$router.push(`/shopper/orders/${order.id}/edit-order`);
