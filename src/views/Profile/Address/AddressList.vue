@@ -17,7 +17,8 @@
 
         <IonIcon slot="end" :icon="createOutline"></IonIcon>
       </IonItem>
-      <IonItem lines="none">
+      <IonItem lines="none" router-link="/profile/address/add-address"
+>
         <IonIcon class="success" :icon="addCircleOutline"></IonIcon>
         <IonText class="new-bussiness" color="medium"> Add New Address </IonText>
       </IonItem>

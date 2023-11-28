@@ -306,7 +306,21 @@
       "agentSaleReport": "Agent sales report",
       "filterAgent": "Filter agents sales report"
     },
-    "editProfile": "Edit Profile"
+    "editProfile": "Edit Profile",
+    "address": {
+    "address": "Address",
+    "city": "City",
+    "state": "State",
+    "zip": "Zip",
+    "country": "Country",
+    "region": "Region(You can select multiple regions location)",
+    "addAddress": "Add Address",
+    "editAddress": "Edit Address",
+    "save": "Save",
+    "cancel": "Cancel"
+    }
+
+
   },
   "settings": {
     "title": "Settings",
