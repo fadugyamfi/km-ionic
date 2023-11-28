@@ -7,33 +7,31 @@ import { handleAxiosRequestError } from "../utilities";
 import { useUserStore } from "./UserStore";
 import { ChangeStatusRequest } from "../models/types";
 
-
 const toastStore = useToastStore();
 
 const storage = new AppStorage();
 
-export const useOrderStore = defineStore('order', {
-
+export const useOrderStore = defineStore("order", {
   state: () => {
     return {
       orders: [
-        new Order({
-          id: 1,
-          businesses_id: 71,
-          customer_id: 72,
-          start_dt: '2023-10-25 10:00:00',
-          created_at: '2023-10-25 10:00:00',
-          due_date: '2023-11-01',
-          order_status_id: 8,
-          order_status: {
-            id: 8,
-            name: 'Cancelled'
-          }
-        })
+        // new Order({
+        //   id: 1,
+        //   businesses_id: 71,
+        //   customer_id: 72,
+        //   start_dt: "2023-10-25 10:00:00",
+        //   created_at: "2023-10-25 10:00:00",
+        //   due_date: "2023-11-01",
+        //   order_status_id: 8,
+        //   order_status: {
+        //     id: 8,
+        //     name: "Cancelled",
+        //   },
+        // }),
       ] as Order[],
       approving: false,
       cancelling: false,
-    }
+    };
   },
 
   actions: {
@@ -44,9 +42,9 @@ export const useOrderStore = defineStore('order', {
         const params = {
           customer_id: userStore.activeBusiness?.id,
           limit: 50,
-          ...options
+          ...options,
         };
-        const response = await axios.get('/v2/orders', { params });
+        const response = await axios.get("/v2/orders", { params });
 
         if (response.status === 200) {
           const ordersData = response.data.data;
@@ -66,10 +64,10 @@ export const useOrderStore = defineStore('order', {
         const params = {
           businesses_id: userStore.activeBusiness?.id,
           limit: 50,
-          ...options
+          ...options,
         };
 
-        const response = await axios.get('/v2/orders', { params });
+        const response = await axios.get("/v2/orders", { params });
 
         if (response.status === 200) {
           const ordersData = response.data.data;
@@ -105,34 +103,38 @@ export const useOrderStore = defineStore('order', {
 
         if (response.status == 200) {
           this.orders = this.orders.filter((order) => order.id !== orderId);
-          toastStore.showSuccess('Order deleted successfully.');
+          toastStore.showSuccess("Order deleted successfully.");
         }
 
         return response;
       } catch (error) {
         console.log(error);
         handleAxiosRequestError(error);
-        toastStore.showError('Failed to delete order.');
+        toastStore.showError("Failed to delete order.");
       }
 
       return null;
     },
 
-    async updateOrder(orderId: any, updatedData: any) {
+    async updateOrder(orderId: any, updatedData: any): Promise<Boolean> {
       try {
         const response = await axios.put(`/v2/orders/${orderId}`, updatedData); // Replace with your API endpoint for updating orders
         if (response.status === 200) {
           // Find the index of the updated order in the store
-          const orderIndex = this.orders.findIndex((order) => order.id === orderId);
+          const orderIndex = this.orders.findIndex(
+            (order) => order.id === orderId
+          );
           if (orderIndex !== -1) {
             // Update the order in the store with the new data
             this.orders[orderIndex] = new Order(response.data.data);
-            toastStore.showSuccess('Order updated successfully.');
+            toastStore.showSuccess("Order updated successfully.");
           }
         }
       } catch (error) {
         handleAxiosRequestError(error);
-        toastStore.showError('Failed to update order.');
+        toastStore.showError("Failed to update order.");
+      } finally {
+        return true;
       }
     },
 
@@ -141,47 +143,49 @@ export const useOrderStore = defineStore('order', {
         const response = await axios.put(`/v2/orders/${orderId}`, editedData); // Replace with your API endpoint for editing orders
         if (response.status === 200) {
           // Find the index of the edited order in the store
-          const orderIndex = this.orders.findIndex((order) => order.id === orderId);
+          const orderIndex = this.orders.findIndex(
+            (order) => order.id === orderId
+          );
           if (orderIndex !== -1) {
             // Update the order in the store with the edited data
             this.orders[orderIndex] = new Order(response.data.data);
-            toastStore.showSuccess('Order edited successfully.');
+            toastStore.showSuccess("Order edited successfully.");
           }
         }
       } catch (error) {
         handleAxiosRequestError(error);
-        toastStore.showError('Failed to edit order.');
+        toastStore.showError("Failed to edit order.");
       }
     },
 
     async reorderOrder(orderId: number) {
       try {
-
-        const orderToReorder = this.orders.find((order) => order.id === orderId);
+        const orderToReorder = this.orders.find(
+          (order) => order.id === orderId
+        );
 
         if (!orderToReorder) {
-          toastStore.showError('Order not found for reorder.');
+          toastStore.showError("Order not found for reorder.");
           return;
         }
-
 
         const newOrderData = {
           businesses_id: orderToReorder.businesses_id,
           customer_id: orderToReorder.customer_id,
         };
 
-        const response = await axios.post('/v2/orders', newOrderData);
+        const response = await axios.post("/v2/orders", newOrderData);
         if (response.status === 201) {
           const newOrderData = response.data.data;
           const newOrder = new Order(newOrderData);
 
           this.orders.push(newOrder);
 
-          toastStore.showSuccess('Order reordered successfully.');
+          toastStore.showSuccess("Order reordered successfully.");
         }
       } catch (error) {
         handleAxiosRequestError(error);
-        toastStore.showError('Failed to reorder order.');
+        toastStore.showError("Failed to reorder order.");
       }
     },
 
@@ -195,16 +199,15 @@ export const useOrderStore = defineStore('order', {
           cms_users_id: userStore.user?.id as number,
           order_id: order?.id as number,
           order_status_id: OrderStatus.APPROVED,
-          comment: ''
+          comment: "",
         });
 
         return response;
-      } catch(error) {
+      } catch (error) {
         handleAxiosRequestError(error);
       } finally {
         this.approving = false;
       }
-
     },
 
     async cancelOrder(order: Order) {
@@ -217,11 +220,11 @@ export const useOrderStore = defineStore('order', {
           cms_users_id: userStore.user?.id as number,
           order_id: order?.id as number,
           order_status_id: OrderStatus.CANCELLED,
-          comment: ''
+          comment: "",
         });
 
         return response;
-      } catch(error) {
+      } catch (error) {
         handleAxiosRequestError(error);
       } finally {
         this.cancelling = false;
@@ -230,26 +233,28 @@ export const useOrderStore = defineStore('order', {
 
     async changeOrderStatus(orderId: number, payload: ChangeStatusRequest) {
       try {
-        const response = await axios.put(`/v2/orders/${orderId}/status`, payload)
+        const response = await axios.put(
+          `/v2/orders/${orderId}/status`,
+          payload
+        );
 
-        if( response?.status == 200 ) {
-          const order = this.orders.find(o => o.id == orderId);
+        if (response?.status == 200) {
+          const order = this.orders.find((o) => o.id == orderId);
 
-          if( order ) {
+          if (order) {
             order.update({
               order_status: response.data.data.order_status,
-              ...response.data.data.order
-            })
+              ...response.data.data.order,
+            });
           }
           return response;
         } else {
-
         }
-      } catch(error) {
+      } catch (error) {
         handleAxiosRequestError(error);
 
         throw error;
       }
-    }
+    },
   },
 });
