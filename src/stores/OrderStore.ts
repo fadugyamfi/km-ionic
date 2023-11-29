@@ -6,6 +6,8 @@ import axios from "axios";
 import { handleAxiosRequestError } from "../utilities";
 import { useUserStore } from "./UserStore";
 import { ChangeStatusRequest } from "../models/types";
+import Product from "@/models/Product";
+import { OrderItem } from "@/models/OrderItem";
 
 const toastStore = useToastStore();
 
@@ -29,6 +31,8 @@ export const useOrderStore = defineStore("order", {
         //   },
         // }),
       ] as Order[],
+      editedOrder: {} as Order | null,
+      editing: false,
       approving: false,
       cancelling: false,
     };
@@ -47,6 +51,7 @@ export const useOrderStore = defineStore("order", {
         const response = await axios.get("/v2/orders", { params });
 
         if (response.status === 200) {
+          this.editing = false
           const ordersData = response.data.data;
           this.orders = ordersData.map((data: any) => new Order(data));
 
@@ -80,11 +85,18 @@ export const useOrderStore = defineStore("order", {
       }
     },
 
-    async fetchOrder(orderId: number): Promise<Order | null> {
+    async fetchOrder(
+      orderId: number,
+      editing: boolean = false
+    ): Promise<Order | null> {
       try {
         const response = await axios.get(`/v2/orders/${orderId}`);
         if (response.status == 200) {
+          this.editing = false
           const order = new Order(response.data.data);
+          if (editing) {
+            this.editedOrder = order;
+          }
           return order;
         }
 
@@ -127,6 +139,8 @@ export const useOrderStore = defineStore("order", {
           if (orderIndex !== -1) {
             // Update the order in the store with the new data
             this.orders[orderIndex] = new Order(response.data.data);
+            this.editedOrder = null;
+            this.editing = false;
             toastStore.showSuccess("Order updated successfully.");
           }
         }
@@ -254,6 +268,51 @@ export const useOrderStore = defineStore("order", {
         handleAxiosRequestError(error);
 
         throw error;
+      }
+    },
+
+    addToEditingOrder(product: Product, quantity = 1) {
+      const toastStore = useToastStore();
+      const userStore = useUserStore();
+      if (
+        product &&
+        product?.businesses_id !== this.editedOrder.businesses_id
+      ) {
+        toastStore.showError(
+          `Please add a product from ${
+            this.editedOrder.business?.name?.split(" ")[0]
+          }`,
+          "",
+          "bottom",
+          "footer"
+        );
+        return;
+      }
+      let orderItem = this.editedOrder.order_items.find(
+        (item: OrderItem) => item.products_id == product.id
+      );
+      if (!orderItem) {
+        orderItem = new OrderItem({
+          product: product,
+          businesses_id: product.businesses_id,
+          products_id: product.id,
+          product_price: product.product_price,
+          currency_symbol: product.currency?.symbol,
+          product_image: product.image,
+          product_name: product.product_name,
+          unit_price: product.product_price,
+          quantity: quantity,
+          total_price: quantity * (product.product_price || 0),
+          currencies_id: 1, // GHS
+          product_units_id: 1, // GHS
+          cms_users_id: userStore.user?.id,
+        });
+
+        this.editedOrder.order_items.push(orderItem);
+        toastStore.showSuccess("Added To Order");
+      } else {
+        orderItem.quantity = quantity;
+        toastStore.showInfo("Increased quantity in Order");
       }
     },
   },

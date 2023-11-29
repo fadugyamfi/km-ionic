@@ -72,12 +72,26 @@
               </ProductQuantitySelector>
             </ion-row>
           </IonItem>
+          <IonButton
+            fill="clear"
+            size="small"
+            style="text-transform: none"
+            class="ion-text-start add-new-item"
+            @click="addNewItem"
+          >
+            <IonIcon
+              :icon="addCircleOutline"
+              style="margin-right: 5px"
+            ></IonIcon>
+            Add new item
+          </IonButton>
         </IonList>
         <EditOrderSummaryCard :order="(order as Order)" />
       </section>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton @click="updateOrder"> Update Order </KolaYellowButton>
+      <KolaWhiteButton @click="cancel"> Cancel </KolaWhiteButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -106,6 +120,7 @@ import {
   closeCircleOutline,
   warningOutline,
   chatbubbleOutline,
+  addCircleOutline,
 } from "ionicons/icons";
 
 import { onMounted, ref, computed } from "vue";
@@ -123,20 +138,22 @@ import { handleAxiosRequestError } from "@/utilities";
 import { OrderItem } from "@/models/OrderItem";
 import EditOrderSummaryCard from "@/components/modules/order/EditOrderSummaryCard.vue";
 import BusinessMinimumOrderReached from "@/components/modules/business/BusinessMinimumOrderReached.vue";
+import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
+import router from "@/router";
 
 const route = useRoute();
 const orderStore = useOrderStore();
 
 const fetching = ref(false);
 
-const order = ref<Order | null>();
+const order = computed(() => orderStore.editedOrder);
 
 const getOrder = async () => {
   fetching.value = true;
   const order_id = +route.params.id;
-  order.value = orderStore.orders.find((o) => o.id == order_id) as Order;
+  // order.value = orderStore.orders.find((o) => o.id == order_id) as Order;
   try {
-    order.value = await orderStore.fetchOrder(order_id);
+    const response = await orderStore.fetchOrder(order_id, true);
   } catch (error) {
     handleAxiosRequestError(error);
   } finally {
@@ -160,6 +177,13 @@ const removeFromCart = (index: number) => {
 const updateQuantity = (item: OrderItem, newQuantity: number) => {
   item.quantity = newQuantity;
   item.total_price = item.quantity * (item.product?.product_price || 0);
+};
+
+const addNewItem = () => {
+  orderStore.editing = true;
+  router.push(
+    `/shopper/home/businesses/${order.value?.businesses_id}/products`
+  );
 };
 
 const updateOrder = async () => {
@@ -190,6 +214,11 @@ const updateOrder = async () => {
   };
   const reponse = await orderStore.updateOrder(+route.params.id, updatedOrder);
   toastStore.unblockUI();
+};
+
+const cancel = () => {
+  orderStore.editing = false;
+  router.push("/shopper/orders/history");
 };
 
 onMounted(() => {
@@ -288,5 +317,8 @@ ion-icon.remove-icon {
 }
 .price {
   color: #000;
+}
+.add-new-item {
+  --color: #666eed;
 }
 </style>

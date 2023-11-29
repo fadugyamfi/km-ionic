@@ -8,6 +8,7 @@ import AppStorage from "./AppStorage";
 import { useUserStore } from "./UserStore";
 import { OrderItem } from "../models/OrderItem";
 import { handleAxiosRequestError } from "@/utilities";
+import { useOrderStore } from "./OrderStore";
 
 const storage = new AppStorage();
 const KOLA_CART = "kola.cart";
@@ -110,10 +111,14 @@ export const useCartStore = defineStore("cart", {
     },
 
     addProduct(product: Product, quantity = 1) {
-      console.log(product);
-      console.log(product.business);
       const toastStore = useToastStore();
       const userStore = useUserStore();
+      const orderStore = useOrderStore();
+
+      if (orderStore.editing) {
+        orderStore.addToEditingOrder(product, quantity);
+        return;
+      }
 
       let order = this.orders.find(
         (order) => order.businesses_id == product.businesses_id

@@ -78,7 +78,7 @@ const toggleFilterSheet = () => {
 };
 
 const totalCost = computed(() =>
-  props.order._order_items?.reduce(
+  props.order?._order_items?.reduce(
     (total, item) => total + (item.total_price || 0),
     0
   )
