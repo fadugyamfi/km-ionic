@@ -134,7 +134,7 @@ export const ProfileRoutes = [
               import("@/views/Profile/Address/AddAddress.vue"),
           },
           {
-            path: "edit-address",
+            path: "business/:business_id/location/:id/edit-address",
             component: () =>
               import("@/views/Profile/Address/EditAddress.vue"),
           },

@@ -7,7 +7,9 @@
             <IonBackButton defaultHref="/shopper/home"></IonBackButton>
           </IonButtons>
 
-          <IonTitle size="small"><b>{{ meta.title || $t("general.businesses") }}</b></IonTitle>
+          <IonTitle size="small"
+            ><b>{{ meta.title || $t("general.businesses") }}</b></IonTitle
+          >
 
           <IonButtons slot="end">
             <NotificationButton></NotificationButton>
@@ -15,9 +17,14 @@
         </IonToolbar>
       </IonHeader>
 
-      <IonToolbar style="margin-top: 5px;">
-        <IonSearchbar class="search-input" placeholder="Search..." v-model="search.term"
-                      @ion-change="fetchBusinesses()"  @keyup.enter="fetchBusinesses()">
+      <IonToolbar style="margin-top: 5px">
+        <IonSearchbar
+          class="search-input"
+          placeholder="Search..."
+          v-model="search.term"
+          @ion-change="fetchBusinesses()"
+          @keyup.enter="fetchBusinesses()"
+        >
         </IonSearchbar>
       </IonToolbar>
     </section>
@@ -26,7 +33,7 @@
       <div class="ion-text-center" v-if="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-        <!-- Display your list of businesses here -->
+      <!-- Display your list of businesses here -->
       <BusinessList :businesses="businesses"></BusinessList>
 
       <NoResults
@@ -34,20 +41,30 @@
         :title="$t('shopper.businesses.noResultsAvailable')"
         :description="$t('shopper.businesses.pleaseTryYourSearchAgain')"
       ></NoResults>
-
     </IonContent>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonSearchbar, IonText, IonSpinner } from '@ionic/vue';
-import { ref, onMounted } from 'vue';
-import Business from '@/models/Business';
-import { useBusinessStore } from '@/stores/BusinessStore';
-import BusinessList from '@/components/modules/business/BusinessList.vue';
-import NotificationButton from '@/components/notifications/NotificationButton.vue';
-import { useRoute, useRouter } from 'vue-router'; // Import 'useRouter'
-import NoResults from '../../../components/layout/NoResults.vue';
+import {
+  IonPage,
+  IonContent,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonTitle,
+  IonSearchbar,
+  IonText,
+  IonSpinner,
+} from "@ionic/vue";
+import { ref, onMounted } from "vue";
+import Business from "@/models/Business";
+import { useBusinessStore } from "@/stores/BusinessStore";
+import BusinessList from "@/components/modules/business/BusinessList.vue";
+import NotificationButton from "@/components/notifications/NotificationButton.vue";
+import { useRoute, useRouter } from "vue-router"; // Import 'useRouter'
+import NoResults from "../../../components/layout/NoResults.vue";
 
 const businessStore = useBusinessStore();
 const route = useRoute();
@@ -55,14 +72,14 @@ const businesses = ref<Business[]>([]);
 const meta = route.meta;
 const fetching = ref(false);
 
-const search = { term: '' }
+const search = { term: "" };
 
 async function fetchBusinesses() {
-  if( fetching.value == true ) return;
+  if (fetching.value == true) return;
 
   fetching.value = true;
 
-  if (meta.businessType == 'supplier') {
+  if (meta.businessType == "supplier") {
     businesses.value = await businessStore.getSuppliers(search.term);
   } else {
     businesses.value = await businessStore.getBusinesses(search.term);
@@ -85,7 +102,7 @@ onMounted(() => fetchBusinesses());
 .info {
   font-weight: normal;
   text-align: center;
-  color: #666EED;
+  color: #666eed;
   justify-content: center;
   display: flex;
   align-items: center;

@@ -5,22 +5,26 @@
     </section>
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
       <IonItem
+        v-for="address in userBusinessStore.businessLocations"
+        :key="address.city"
         lines="none"
         class="profile-item ion-margin-top d-flex flex-column ion-align-items-start"
-        router-link="/profile/address/edit-address"
+        :router-link="`/profile/address/business/${address.business_id}/location/${address.id}/edit-address`"
       >
+      <!-- {{ address }} -->
         <div class="d-flex flex-column">
-          <IonLabel>{{ userStore.user?.name }}</IonLabel>
-          <IonText class="success">Accra, Osu</IonText>
-          <IonText class="success">Accra</IonText>
+          <IonLabel>{{ address?.business?.name }}</IonLabel>
+          <IonText class="success">{{ address?.address }}</IonText>
+          <IonText class="success">{{ address?.city }}</IonText>
         </div>
-
         <IonIcon slot="end" :icon="createOutline"></IonIcon>
       </IonItem>
-      <IonItem lines="none" router-link="/profile/address/add-address"
->
+
+      <IonItem lines="none" router-link="/profile/address/add-address">
         <IonIcon class="success" :icon="addCircleOutline"></IonIcon>
-        <IonText class="new-bussiness" color="medium"> Add New Address </IonText>
+        <IonText class="new-bussiness" color="medium">
+          Add New Address
+        </IonText>
       </IonItem>
     </ion-content>
   </ion-page>
@@ -46,9 +50,9 @@ import {
   settingsOutline,
   addCircleOutline,
 } from "ionicons/icons";
-import { useRouter } from "vue-router";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import AddressHeader from "@/components/header/AddressHeader.vue";
+import { useBusinessStore } from "@/stores/BusinessStore";
 
 export default defineComponent({
   components: {
@@ -64,23 +68,29 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useUserStore),
+    ...mapStores(useUserStore, useBusinessStore),
   },
 
   data() {
-    const router = useRouter();
+    const userBusinessStore = useBusinessStore();
 
     return {
       createOutline,
       powerOutline,
       search,
-      router,
       settingsOutline,
       addCircleOutline,
+      useUserStore,
+      userBusinessStore,
     };
   },
 
   methods: {},
+  mounted() {
+    this.userBusinessStore.getBusinessLocations(
+      this.userStore.activeBusiness?.id
+    );
+  },
 });
 </script>
 

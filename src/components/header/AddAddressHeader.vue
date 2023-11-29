@@ -2,7 +2,7 @@
   <IonHeader class="inner-header">
     <IonToolbar class="ion-align-items-center">
       <IonButtons slot="start">
-        <IonBackButton defaultHref="/shopper/home"></IonBackButton>
+        <IonBackButton defaultHref="/profile/address"></IonBackButton>
       </IonButtons>
       <IonTitle class="fw-bold">Add Address </IonTitle>
       <IonButtons slot="end">
