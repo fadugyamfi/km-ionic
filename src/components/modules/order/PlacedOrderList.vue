@@ -57,7 +57,7 @@ import { mapStores } from 'pinia';
 import filters from '@/utilities/Filters';
 import Image from '../../Image.vue';
 import PlacedOrderListItem from './PlacedOrderListItem.vue';
-import DeleteModal from '../../modals/DeleteModal.vue';
+import DeleteModal from "@/components/modals/DeleteModal.vue";
 
 export default defineComponent({
 

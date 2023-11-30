@@ -234,6 +234,14 @@
       "messageSupplier": "Message Supplier",
       "deleteOrderFromList": "Delete Order From List",
       "youCantUndoThisAction": "You can't undo this action"
+    },
+    "credit": {
+      "totalCredit": "Total Credit",
+      "totalRecovered": "Total Recovered",
+      "creditHistory": "Credit History",
+      "viewAll": "View All",
+      "deleteCreditFromList": "Delete Credit From List"
+
     }
   },
   "modules": {
