@@ -5,13 +5,13 @@
     </section>
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
       <IonItem
-        v-for="address in userBusinessStore.businessLocations"
-        :key="address.city"
+        v-for="address in businessLocations"
+        :key="address.id"
         lines="none"
         class="profile-item ion-margin-top d-flex flex-column ion-align-items-start"
         :router-link="`/profile/address/business/${address.business_id}/location/${address.id}/edit-address`"
       >
-      <!-- {{ address }} -->
+
         <div class="d-flex flex-column">
           <IonLabel>{{ address?.business?.name }}</IonLabel>
           <IonText class="success">{{ address?.address }}</IonText>
@@ -53,6 +53,7 @@ import {
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import AddressHeader from "@/components/header/AddressHeader.vue";
 import { useBusinessStore } from "@/stores/BusinessStore";
+import Address from "@/models/Address";
 
 export default defineComponent({
   components: {
@@ -72,24 +73,25 @@ export default defineComponent({
   },
 
   data() {
-    const userBusinessStore = useBusinessStore();
-
     return {
       createOutline,
       powerOutline,
       search,
       settingsOutline,
       addCircleOutline,
-      useUserStore,
-      userBusinessStore,
+      businessLocations: [] as Address[] | null,
     };
   },
 
-  methods: {},
+  methods: {
+  async  getBusinessLocations() {
+      this.businessLocations = await this.businessStore.getBusinessLocations(
+        Number(this.userStore.activeBusiness?.id)
+      );
+    },
+  },
   mounted() {
-    this.userBusinessStore.getBusinessLocations(
-      this.userStore.activeBusiness?.id
-    );
+    this.getBusinessLocations();
   },
 });
 </script>

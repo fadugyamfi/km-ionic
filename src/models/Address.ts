@@ -5,14 +5,14 @@ import {
 } from "@/utilities/Types";
 
 
-
-export default class Agent {
+export default class Address {
+  public id?: number;
   public business_id?: number;
   public address?: string | null;
   public country_id: NullableNumber = null;
   public state_id?: string | null;
   public city?: number | null;
-  public _business?: Business | null;
+  public business?: Business | null;
   public _country?: Country | null;
 
   constructor(data: Object) {

@@ -7,6 +7,7 @@ import User from "@/models/User";
 import AppStorage from "./AppStorage";
 import { useToastStore } from "./ToastStore";
 import Product from "@/models/Product";
+import Address from "@/models/Address";
 import { useRouter } from "vue-router";
 
 const storage = new AppStorage();
@@ -441,14 +442,14 @@ export const useBusinessStore = defineStore("business", {
         .catch(error => handleAxiosRequestError(error));
     },
 
-    async getBusinessLocations(business_id: number) {
-
+    async getBusinessLocations(business_id: number): Promise<Address[] | null> {
       try {
         const response = await axios.get(`/v2/businesses/${business_id}/locations`);
         this.businessLocations = response.data.data;
         return this.businessLocations;
       } catch (error) {
         handleAxiosRequestError(error);
+        return null;
       }
     },
 

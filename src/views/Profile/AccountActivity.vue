@@ -35,7 +35,7 @@
       <section v-show="!fetching">
         <NoResults v-if="orderStore.orders?.length == 0"></NoResults>
 
-        <PlacedOrderList :orders="orderStore.orders"></PlacedOrderList>
+        <AccountActivity></AccountActivity>
       </section>
 
       <FilterOrdersSheet :isOpen="showFilterSheet" @didDismiss="showFilterSheet = false" @update="onFilterUpdate($event)">
