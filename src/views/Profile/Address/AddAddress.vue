@@ -84,10 +84,10 @@
       </form>
     </ion-content>
     <IonFooter class="ion-padding-top ion-no-border">
-          <KolaYellowButton
+          <KolaWhiteButton
             :disabled="!formValid"
             @click.prevent="createCancel"
-            >{{ $t("profile.address.cancel") }}</KolaYellowButton
+            >{{ $t("profile.address.cancel") }}</KolaWhiteButton
           >
           <KolaYellowButton
             :disabled="!formValid"
@@ -129,6 +129,7 @@ import {
   chevronDownOutline,
 } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
 import { useLocationStore } from "@/stores/LocationStore";
 import { useGeolocation } from "@/composables/useGeolocation";

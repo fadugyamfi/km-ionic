@@ -15,6 +15,7 @@ const toastStore = useToastStore();
 export const useBusinessStore = defineStore("business", {
   state: () => ({
     businessLocations: [],
+    updatebusinessLocations: [],
     businesses: null as Business[] | null,
     customers: null as Business[] | null,
     selectedBusiness: null as Business | null,
