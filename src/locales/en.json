@@ -26,6 +26,8 @@
     "today": "Today",
     "thisWeek": "This Week",
     "pastMonth": "Past Month",
+    "month": "Month",
+    "year": "Year",
     "delete": "Delete",
     "accept": "Accept",
     "update": "Update",
@@ -307,7 +309,36 @@
       "agentSaleReport": "Agent sales report",
       "filterAgent": "Filter agents sales report"
     },
-    "editProfile": "Edit Profile"
+    "editProfile": "Edit Profile",
+
+    "address": {
+    "address": "Address",
+    "city": "City",
+    "state": "State",
+    "zip": "Zip",
+    "country": "Country",
+    "region": "Region(You can select multiple regions location)",
+    "addAddress": "Add Address",
+    "editAddress": "Edit Address",
+    "save": "Save",
+    "cancel": "Cancel"
+    },
+
+    "accountActivity": {
+      "accountActivitys": "Account Activity",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip",
+      "country": "Country",
+      "region": "Region(You can select multiple regions location)",
+      "addAddress": "Add Address",
+      "editAddress": "Edit Address",
+      "save": "Save",
+      "cancel": "Cancel"
+      }
+  
+
+
   },
   "settings": {
     "title": "Settings",
