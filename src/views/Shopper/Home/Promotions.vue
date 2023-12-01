@@ -9,15 +9,12 @@
     </header>
 
     <Swiper :slides-per-view="2">
-      <SwiperSlide
-        v-for="product in promotion.promotion_items"
-        :key="product.promotion_id"
-      >
-        <ProductCard
-          :product="product?.product"
-          :show-description="false"
-        ></ProductCard>
-      </SwiperSlide>
+      <template v-for="promotionItem in promotion.promotion_items" :key="promotionItem.id">
+        <SwiperSlide v-if="promotionItem.product">
+          <ProductCard :product="promotionItem?.product" :show-description="false"></ProductCard>
+        </SwiperSlide>
+      </template>
+
     </Swiper>
   </section>
 </template>

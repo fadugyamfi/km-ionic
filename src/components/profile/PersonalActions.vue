@@ -7,7 +7,7 @@
     >
       <ProfileAvatar
         slot="start"
-        :src="userStore.user?.image"
+        :image="userStore.user?.photo"
         :username="userStore.user?.name"
         customSize="32px"
       ></ProfileAvatar>

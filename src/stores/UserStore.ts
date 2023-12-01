@@ -276,6 +276,7 @@ export const useUserStore = defineStore("user", {
         .put(`/v2/users/${this.user?.id}`, this.userForm)
         .then((response) => {
           this.storeUser(new User(response.data.data));
+          this.resetUserForm();
           return this.user;
         })
         .catch((error) => handleAxiosRequestError(error))
@@ -360,5 +361,15 @@ export const useUserStore = defineStore("user", {
     isInShoppingMode() {
       return this.appMode == "shopping";
     },
+
+    resetUserForm() {
+      this.userForm = {
+        id: "",
+        name: "",
+        email: "",
+        phone_number: "",
+        photo: ""
+      };
+    }
   },
 });
