@@ -16,21 +16,7 @@ const storage = new AppStorage();
 export const useOrderStore = defineStore("order", {
   state: () => {
     return {
-      orders: [
-        // new Order({
-        //   id: 1,
-        //   businesses_id: 71,
-        //   customer_id: 72,
-        //   start_dt: "2023-10-25 10:00:00",
-        //   created_at: "2023-10-25 10:00:00",
-        //   due_date: "2023-11-01",
-        //   order_status_id: 8,
-        //   order_status: {
-        //     id: 8,
-        //     name: "Cancelled",
-        //   },
-        // }),
-      ] as Order[],
+      orders: [] as Order[],
       editedOrder: {} as Order | null,
       editing: false,
       approving: false,
@@ -276,11 +262,11 @@ export const useOrderStore = defineStore("order", {
       const userStore = useUserStore();
       if (
         product &&
-        product?.businesses_id !== this.editedOrder.businesses_id
+        product?.businesses_id !== this.editedOrder?.businesses_id
       ) {
         toastStore.showError(
           `Please add a product from ${
-            this.editedOrder.business?.name?.split(" ")[0]
+            this.editedOrder?.business?.name?.split(" ")[0]
           }`,
           "",
           "bottom",
@@ -288,7 +274,7 @@ export const useOrderStore = defineStore("order", {
         );
         return;
       }
-      let orderItem = this.editedOrder.order_items.find(
+      let orderItem = this.editedOrder?.order_items.find(
         (item: OrderItem) => item.products_id == product.id
       );
       if (!orderItem) {
@@ -308,7 +294,7 @@ export const useOrderStore = defineStore("order", {
           cms_users_id: userStore.user?.id,
         });
 
-        this.editedOrder.order_items.push(orderItem);
+        this.editedOrder?.order_items.push(orderItem);
         toastStore.showSuccess("Added To Order");
       } else {
         orderItem.quantity = quantity;

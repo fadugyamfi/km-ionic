@@ -1,33 +1,29 @@
 <template>
-  <IonCard class="ion-no-margin">
-    <IonCardContent class="ion-no-padding">
-      <IonItem lines="none">
-        <ProfileAvatar
-          slot="start"
-          :image="agent?.photo"
-          :username="agent?.name"
-        ></ProfileAvatar>
-        <IonLabel>
-          <h6>
-            <IonText color="medium">{{ $t('general.performance') }}</IonText>
-          </h6>
-          <p>
-            <IonText color="dark" class="fw-semibold"
-              >You have met
-              {{ percentageComplete }}
-              % of your target
-            </IonText>
-          </p>
-        </IonLabel>
-      </IonItem>
-      <section class="ion-margin-horizontal ion-margin-bottom">
-        <IonProgressBar
-          :value="(percentageComplete as number) / 100"
-          color="warning"
-        ></IonProgressBar>
-      </section>
-    </IonCardContent>
-  </IonCard>
+    <IonRow>
+      <IonCol size="12">
+        <IonCard class="ion-no-margin">
+          <IonCardContent class="ion-no-padding">
+            <IonItem lines="none">
+              <ProfileAvatar slot="start" :image="agent?.photo" :username="agent?.name"></ProfileAvatar>
+              <IonLabel>
+                <h6>
+                  <IonText color="medium">{{ $t('general.performance') }}</IonText>
+                </h6>
+                <p>
+                  <IonText color="dark" class="fw-semibold">You have met
+                    {{ percentageComplete }}
+                    % of your target
+                  </IonText>
+                </p>
+              </IonLabel>
+            </IonItem>
+            <section class="ion-margin-horizontal ion-margin-bottom">
+              <IonProgressBar :value="(percentageComplete as number) / 100" color="warning"></IonProgressBar>
+            </section>
+          </IonCardContent>
+        </IonCard>
+      </IonCol>
+    </IonRow>
 </template>
 
 <script lang="ts">
@@ -38,6 +34,9 @@ import {
   IonItem,
   IonProgressBar,
   IonLabel,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from "@ionic/vue";
 import { defineComponent, PropType } from "vue";
 import ProfileAvatar from "../ProfileAvatar.vue";
@@ -52,7 +51,10 @@ export default defineComponent({
     ProfileAvatar,
     IonText,
     IonLabel,
-  },
+    IonGrid,
+    IonRow,
+    IonCol
+},
   props: {
     agent: {
       type: Object as PropType<Agent | null>,
@@ -70,4 +72,5 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

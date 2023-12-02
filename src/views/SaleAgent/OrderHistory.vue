@@ -7,7 +7,14 @@
             <ion-back-button defaultHref="/shopper/home"></ion-back-button>
           </ion-buttons>
 
-          <IonTitle size="small" class="fw-bold">{{ $t('profile.accountActivity.accountActivitys') }}</IonTitle>
+          <IonTitle size="small" class="fw-bold">Order History</IonTitle>
+          <ion-buttons slot="end">
+            <IonButton @click="showFilterSheet = true" color="dark">
+              <IonIcon :icon="optionsOutline"></IonIcon>
+            </IonButton>
+
+            <NotificationButton />
+          </ion-buttons>
         </ion-toolbar>
       </ion-header>
 
@@ -18,15 +25,17 @@
               {{ $t('general.today') }}
             </IonLabel>
           </IonSegmentButton>
-          <IonSegmentButton value="month">
-            <IonLabel>{{ $t('general.month') }}</IonLabel>
+          <IonSegmentButton value="thisweek">
+            <IonLabel>{{ $t('general.thisWeek') }}</IonLabel>
           </IonSegmentButton>
-          <IonSegmentButton value="year">
-            <IonLabel>{{ $t('general.year') }}</IonLabel>
+          <IonSegmentButton value="pastmonth">
+            <IonLabel>{{ $t('general.pastMonth') }}</IonLabel>
           </IonSegmentButton>
         </IonSegment>
       </IonToolbar>
     </IonHeader>
+
+
     <ion-content>
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
@@ -35,7 +44,7 @@
       <section v-show="!fetching">
         <NoResults v-if="orderStore.orders?.length == 0"></NoResults>
 
-        <!-- <AccountActivityList></AccountActivityList> -->
+        <ReceivedOrderList :orders="orderStore.orders"></ReceivedOrderList>
       </section>
 
       <FilterOrdersSheet :isOpen="showFilterSheet" @didDismiss="showFilterSheet = false" @update="onFilterUpdate($event)">
@@ -65,14 +74,14 @@ import {
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import { defineComponent, ref } from 'vue';
 import { useOrderStore } from '@/stores/OrderStore';
-import PlacedOrderList from '@/components/modules/order/PlacedOrderList.vue';
+import ReceivedOrderList from '@/components/modules/order/ReceivedOrderList.vue';
 import { search, arrowBack, ellipsisHorizontal, filter, optionsOutline, add } from 'ionicons/icons';
 import { mapStores } from 'pinia';
 import { formatMySQLDateTime, handleAxiosRequestError } from '@/utilities';
 import filters from '@/utilities/Filters';
 import FilterOrdersSheet from '@/components/modules/order/FilterOrdersSheet.vue';
 import NoResults from '@/components/layout/NoResults.vue';
-import AccountActivityList from '../../components/modules/accountActivity/AccountActivityList.vue';
+import { useUserStore } from '@/stores/UserStore';
 
 export default defineComponent({
 
@@ -84,7 +93,9 @@ export default defineComponent({
       showFilterSheet: false,
       searchFilters: {
         start_dt: '',
-        end_dt: ''
+        end_dt: '',
+        customer_id: null,
+        cms_users_id: null as number | undefined | null
       }
     }
   },
@@ -101,25 +112,26 @@ export default defineComponent({
     IonBackButton,
     IonBadge,
     IonTitle,
-    PlacedOrderList,
+    ReceivedOrderList,
     NotificationButton,
     IonButton,
     IonIcon,
     FilterOrdersSheet,
     NoResults,
-    IonSpinner,
-    AccountActivityList
-},
+    IonSpinner
+  },
 
   computed: {
-    ...mapStores(useOrderStore)
+    ...mapStores(useOrderStore, useUserStore)
   },
 
   methods: {
     async fetchOrders() {
       try {
         this.fetching = true;
+        this.searchFilters.cms_users_id = this.userStore.user?.id;
         await this.orderStore.fetchPlacedOrders(this.searchFilters);
+
       } catch (error) {
         handleAxiosRequestError(error)
       } finally {

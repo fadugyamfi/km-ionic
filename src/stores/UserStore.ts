@@ -171,6 +171,11 @@ export const useUserStore = defineStore("user", {
       this.registering = userRegistering || false;
     },
 
+    async setAppModeAsVendor() {
+      this.appMode = 'vendor';
+      await storage.set('kola.app-mode', this.appMode, 7, 'days');
+    },
+
     async toggleAppMode() {
       this.appMode = this.appMode == "shopping" ? "vendor" : "shopping";
       await storage.set("kola.app-mode", this.appMode, 7, "days");
