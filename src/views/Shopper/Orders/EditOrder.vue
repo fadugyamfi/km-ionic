@@ -42,11 +42,12 @@
 
             <ion-row class="item-row">
               <ion-col size="10 ">
-                <h6 class="text-product">{{ item.product?.product_name }}</h6>
+                <h6 class="text-product">{{ item._product?.product_name }}</h6>
                 <p class="price">
                   {{
                     Filters.currency(
-                      (item.quantity || 0) * (item.product?.product_price || 0),
+                      (item.quantity || 0) *
+                        (item._product?.product_price || 0),
                       item.currency_symbol
                     )
                   }}
@@ -169,14 +170,15 @@ const totalCost = computed(() =>
 );
 
 const removeFromCart = (index: number) => {
-  order.value?.order_items.splice(index, 1);
+  order.value?._order_items.splice(index, 1);
   const toastStore = useToastStore();
   toastStore.showSuccess("Removed Item From Order");
+  orderStore.persist();
 };
 
 const updateQuantity = (item: OrderItem, newQuantity: number) => {
   item.quantity = newQuantity;
-  item.total_price = item.quantity * (item.product?.product_price || 0);
+  item.total_price = item.quantity * (item._product?.product_price || 0);
 };
 
 const addNewItem = () => {
@@ -217,8 +219,10 @@ const updateOrder = async () => {
 };
 
 const cancel = () => {
-  orderStore.editing = false;
   router.push("/shopper/orders/history");
+  orderStore.editing = false;
+  orderStore.editedOrder = {} as Order;
+  orderStore.persist();
 };
 
 onMounted(() => {

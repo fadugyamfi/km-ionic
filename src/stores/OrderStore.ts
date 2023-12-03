@@ -12,6 +12,7 @@ import { OrderItem } from "@/models/OrderItem";
 const toastStore = useToastStore();
 
 const storage = new AppStorage();
+const KOLA_EDITED_ORDER = "kola.edited-order";
 
 export const useOrderStore = defineStore("order", {
   state: () => {
@@ -31,7 +32,7 @@ export const useOrderStore = defineStore("order", {
         //   },
         // }),
       ] as Order[],
-      editedOrder: {} as Order | null,
+      editedOrder: {} as Order,
       editing: false,
       approving: false,
       cancelling: false,
@@ -39,6 +40,18 @@ export const useOrderStore = defineStore("order", {
   },
 
   actions: {
+    async loadFromStorage() {
+      let data = await storage.get(KOLA_EDITED_ORDER);
+      console.log(data);
+      Object.assign(this.editedOrder, data);
+
+      // this.editedOrder = (
+      //   data ? data.map((d: object) => new Order(d)) : []
+      // ) as Order[];
+
+      // return this;
+    },
+
     async fetchPlacedOrders(options = {}) {
       const userStore = useUserStore();
 
@@ -51,7 +64,7 @@ export const useOrderStore = defineStore("order", {
         const response = await axios.get("/v2/orders", { params });
 
         if (response.status === 200) {
-          this.editing = false
+          this.editing = false;
           const ordersData = response.data.data;
           this.orders = ordersData.map((data: any) => new Order(data));
 
@@ -92,10 +105,20 @@ export const useOrderStore = defineStore("order", {
       try {
         const response = await axios.get(`/v2/orders/${orderId}`);
         if (response.status == 200) {
-          this.editing = false
-          const order = new Order(response.data.data);
+          this.editing = false;
+          let order = new Order(response.data.data);
+          Object.assign(order, {
+            order_items: order._order_items.map((item) => {
+              return new OrderItem(item);
+            }),
+          });
           if (editing) {
-            this.editedOrder = order;
+            const cachedData = await this.loadFromStorage();
+            if (order.id == this.editedOrder.id) {
+              return this.editedOrder;
+            } else {
+              this.editedOrder = order;
+            }
           }
           return order;
         }
@@ -139,7 +162,7 @@ export const useOrderStore = defineStore("order", {
           if (orderIndex !== -1) {
             // Update the order in the store with the new data
             this.orders[orderIndex] = new Order(response.data.data);
-            this.editedOrder = null;
+            this.editedOrder = {} as Order;
             this.editing = false;
             toastStore.showSuccess("Order updated successfully.");
           }
@@ -276,11 +299,11 @@ export const useOrderStore = defineStore("order", {
       const userStore = useUserStore();
       if (
         product &&
-        product?.businesses_id !== this.editedOrder.businesses_id
+        product?.businesses_id !== this.editedOrder?.businesses_id
       ) {
         toastStore.showError(
           `Please add a product from ${
-            this.editedOrder.business?.name?.split(" ")[0]
+            this.editedOrder?.business?.name?.split(" ")[0]
           }`,
           "",
           "bottom",
@@ -311,9 +334,13 @@ export const useOrderStore = defineStore("order", {
         this.editedOrder.order_items.push(orderItem);
         toastStore.showSuccess("Added To Order");
       } else {
-        orderItem.quantity = quantity;
+        orderItem.quantity = orderItem.quantity ? orderItem.quantity + 1 : 1;
         toastStore.showInfo("Increased quantity in Order");
       }
+      this.persist();
+    },
+    async persist() {
+      await storage.set(KOLA_EDITED_ORDER, this.editedOrder, 1, "days");
     },
   },
 });
