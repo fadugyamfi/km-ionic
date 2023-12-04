@@ -59,7 +59,7 @@
           </IonSelectOption>
         </IonSelect>
 
-        <IonSelect
+        <IonInput
           class="kola-input ion-margin-bottom"
           :label="$t('profile.address.city')"
           :class="{
@@ -73,14 +73,8 @@
           :toggle-icon="chevronDownOutline"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption
-            v-for="region in regions"
-            :key="region.id"
-            :value="region.id"
-          >
-            {{ region.name }}
-          </IonSelectOption>
-        </IonSelect>
+      
+        </IonInput>
       </form>
     </ion-content>
     <IonFooter class="ion-padding-top ion-no-border">
