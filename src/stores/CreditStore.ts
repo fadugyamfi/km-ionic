@@ -35,6 +35,7 @@ export const useCreditStore = defineStore("credit", {
       try {
         const response = await axios.get(`v2/sales/${id}`);
         const credit = new Credit(response.data.data);
+        console.log(credit)
         return credit;
       } catch (error) {
         handleAxiosRequestError(error);

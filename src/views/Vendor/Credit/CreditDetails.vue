@@ -7,7 +7,7 @@
             <IonBackButton defaultHref="/vendor/credits"></IonBackButton>
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
-            {{ $t("vendor.credit.creditOrder") }} - #{{ order?.id }}
+            {{ $t("vendor.credit.creditOrder") }} - #{{ credit?.id }}
           </IonTitle>
           <IonButtons slot="end">
             <IonButton>
@@ -26,23 +26,25 @@
       </section>
 
       <section v-else>
-        <OrderImages :order="(order as Order)" />
+        <CreditImages :sale-items="credit?.sale_items" />
         <ion-card class="ion-padding">
           <ionText>Payment due date</ionText>
-          <p>
+          <section
+            class="d-flex ion-justify-content-between ion-align-items-baseline"
+          >
             <IonText color="medium" slot="start">{{
-              $t("vendor.credit.paymentTerms")
+              filters.date(credit?.sale_ended_at as string, "short")
             }}</IonText>
-            <IonText color="danger" class="fw-semibold" slot="end">
-              <!-- {{ Filters.currency(avgSales) }} -->
-              50% each week
-            </IonText>
-          </p>
+
+            <IonChip color="danger" class="font-medium" slot="end">
+              Due: 22/09/2023
+            </IonChip>
+          </section>
         </ion-card>
 
         <OutstandingCreditStatistics></OutstandingCreditStatistics>
 
-        <PlacedOrderItems :order="(order as Order)"></PlacedOrderItems>
+        <PlacedCreditItems :credit="credit"></PlacedCreditItems>
 
         <section class="ion-padding-horizontal update-button-section">
           <KolaYellowButton>
@@ -64,7 +66,6 @@
 </template>
 
 <script lang="ts">
-import { Order } from "@/models/Order";
 import {
   IonIcon,
   IonContent,
@@ -84,21 +85,23 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonCardContent,
+  IonChip,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import UpdateButon from "@/components/modules/order/UpdateButon.vue";
 import { mapStores } from "pinia";
 import { handleAxiosRequestError } from "@/utilities";
 import { chatbubbleOutline } from "ionicons/icons";
-import OrderImages from "@/components/modules/order/OrderImages.vue";
+import CreditImages from "@/components/modules/vendorCredit/CreditImages.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderStatusHistoryView from "@/components/modules/order/OrderStatusHistoryView.vue";
 import { useCustomerStore } from "@/stores/CustomerStore";
-import PlacedOrderItems from "@/components/modules/order/PlacedOrderItems.vue";
+import PlacedCreditItems from "@/components/modules/vendorCredit/PlacedCreditItems.vue";
 import RecordRepayment from "@/components/modules/vendorCredit/RecordRepayment.vue";
 import OutstandingCreditStatistics from "@/components/modules/vendorCredit/OutstandingCreditStatistics.vue";
 import Credit from "@/models/Credit";
 import { useCreditStore } from "@/stores/CreditStore";
+import filters from "@/utilities/Filters";
 
 export default defineComponent({
   components: {
@@ -119,22 +122,24 @@ export default defineComponent({
     IonContent,
     UpdateButon,
     IonButton,
-    OrderImages,
+    CreditImages,
     IonSpinner,
     KolaYellowButton,
     OrderStatusHistoryView,
-    PlacedOrderItems,
+    PlacedCreditItems,
     RecordRepayment,
     OutstandingCreditStatistics,
+    IonChip,
   },
 
-  name: "OrderDetails",
+  name: "CreditDetails",
 
   data() {
     return {
       loading: false,
       chatbubbleOutline,
       credit: null as Credit | null,
+      filters,
     };
   },
 

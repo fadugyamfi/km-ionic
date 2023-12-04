@@ -8,4 +8,10 @@ export default class Credit {
   public customer?: Customer;
   public total_sales_price?: number | string;
   public business?: Business;
+  public sale_items?: any[];
+  public sale_ended_at?: string;
+
+  constructor(data: object | null) {
+    Object.assign(this, data);
+  }
 }
