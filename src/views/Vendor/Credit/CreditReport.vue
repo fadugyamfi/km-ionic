@@ -21,7 +21,9 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <section v-if="!fetching">
-        <CreditStatistics></CreditStatistics>
+        <CreditStatistics
+          :creditSummary="creditSummary.credit_sales"
+        ></CreditStatistics>
         <div class="d-flex ion-align-items-center credit-history ion-padding">
           <h6 slot="start" class="fw-bold">
             {{ $t("vendor.credit.creditHistory") }}
@@ -74,9 +76,6 @@ import {
   IonText,
   IonPopover,
 } from "@ionic/vue";
-import { defineComponent, ref } from "vue";
-import { useOrderStore } from "@/stores/OrderStore";
-import ReceivedOrderList from "@/components/modules/order/ReceivedOrderList.vue";
 import {
   search,
   arrowBack,
@@ -87,6 +86,9 @@ import {
   trashOutline,
   add,
 } from "ionicons/icons";
+import { defineComponent, ref } from "vue";
+import { useOrderStore } from "@/stores/OrderStore";
+import ReceivedOrderList from "@/components/modules/order/ReceivedOrderList.vue";
 import { mapStores } from "pinia";
 import { formatMySQLDateTime, handleAxiosRequestError } from "@/utilities";
 import filters from "@/utilities/Filters";
@@ -95,6 +97,7 @@ import NoResults from "@/components/layout/NoResults.vue";
 import CreditStatistics from "@/components/modules/vendorCredit/CreditStatistics.vue";
 import CreditHistoryItem from "@/components/modules/vendorCredit/CreditHistoryItem.vue";
 import { useCreditStore } from "@/stores/CreditStore";
+import Credit from "@/models/Credit"
 
 const date = new Date();
 
@@ -115,7 +118,8 @@ export default defineComponent({
         start_dt: "",
         end_dt: "",
       },
-      credits: [] as any[] | null,
+      credits: [] as Credit[] | null,
+      creditSummary: {} as any,
       showFilterSheet: false,
       event: null as any,
       openPopover: -1,
@@ -155,7 +159,7 @@ export default defineComponent({
       try {
         this.fetching = true;
         this.credits = await this.creditStore.getCredits(this.searchFilters);
-        this.credits = this.credits?.splice(0, 3) as any[];
+        this.credits = this.credits?.splice(0, 3) as Credit[];
       } catch (error) {
         handleAxiosRequestError(error);
       } finally {
@@ -173,6 +177,19 @@ export default defineComponent({
       this.event = event;
       this.openPopover = index;
     },
+
+    async getCreditSummary() {
+      try {
+        this.fetching = true;
+        this.creditSummary = await this.creditStore.getCreditSummary(
+          this.searchFilters
+        );
+      } catch (error) {
+        handleAxiosRequestError(error);
+      } finally {
+        this.fetching = false;
+      }
+    },
   },
 
   mounted() {
@@ -182,6 +199,7 @@ export default defineComponent({
     this.searchFilters.start_dt = formatMySQLDateTime(start_dt.toISOString());
     this.searchFilters.end_dt = formatMySQLDateTime(end_dt.toISOString());
     this.fetchCredits();
+    this.getCreditSummary();
   },
 });
 </script>

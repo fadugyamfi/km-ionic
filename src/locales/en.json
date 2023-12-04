@@ -240,7 +240,12 @@
       "totalRecovered": "Total Recovered",
       "creditHistory": "Credit History",
       "viewAll": "View All",
-      "deleteCreditFromList": "Delete Credit From List"
+      "deleteCreditFromList": "Delete Credit From List",
+      "creditOrder": "Credit Order",
+      "outstandingCredit": "Outstanding Credit",
+      "paymentTerms": "Payment Terms",
+      "pleaseTryAgain": "Please try again",
+      "noResultsFound": "No results found"
 
     }
   },

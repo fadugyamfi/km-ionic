@@ -40,10 +40,12 @@
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
+      <EmptyCredit v-if="credits?.length == 0"></EmptyCredit>
+
       <CreditHistoryItem
         @openMenu="openMenu($event, index)"
         v-for="(credit, index) in credits"
-        :key="credit.id"
+        :key="credit?.id"
         :credit="credit"
         popover
       >
@@ -131,6 +133,8 @@ import FilterOrdersSheet from "@/components/modules/order/FilterOrdersSheet.vue"
 import NoResults from "@/components/layout/NoResults.vue";
 import CreditHistoryItem from "@/components/modules/vendorCredit/CreditHistoryItem.vue";
 import DeleteModal from "@/components/modals/DeleteModal.vue";
+import router from "@/router";
+import EmptyCredit from "@/components/modules/vendorCredit/EmptyCredit.vue";
 
 export default defineComponent({
   data() {
@@ -144,7 +148,7 @@ export default defineComponent({
       chatbubbleOutline,
       createOutline,
       add,
-      credits: [] as any[] | null,
+      router: router,
       fetching: false,
       filters,
       showFilterSheet: false,
@@ -182,17 +186,21 @@ export default defineComponent({
     IonPopover,
     IonItem,
     DeleteModal,
+    EmptyCredit,
   },
 
   computed: {
     ...mapStores(useCreditStore),
+    credits(): any[] {
+      return this.creditStore.credits;
+    },
   },
 
   methods: {
     async fetchCredits() {
       try {
         this.fetching = true;
-        this.credits = await this.creditStore.getCredits(this.searchFilters);
+        await this.creditStore.getCredits(this.searchFilters);
       } catch (error) {
         handleAxiosRequestError(error);
       } finally {

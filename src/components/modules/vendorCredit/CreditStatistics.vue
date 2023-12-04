@@ -7,7 +7,7 @@
             $t("vendor.credit.totalCredit")
           }}</IonText>
           <IonText color="dark" class="fw-semibold">
-            {{ Filters.currency(totalSales) }}
+            {{ Filters.currency(creditSummary?.total_value) }}
           </IonText>
         </IonCardContent>
       </IonCard>
@@ -19,7 +19,7 @@
             $t("vendor.credit.totalRecovered")
           }}</IonText>
           <IonText color="dark" class="fw-semibold">
-            {{ Filters.currency(avgSales) }}
+            {{ Filters.currency(creditSummary?.repayment_value) }}
           </IonText>
         </IonCardContent>
       </IonCard>
@@ -41,13 +41,9 @@ export default defineComponent({
     IonText,
   },
   props: {
-    totalSales: {
-      type: Number,
-      default: 0,
-    },
-    avgSales: {
-      type: Number,
-      default: 0,
+    creditSummary: {
+      type: Object,
+      default: () => {},
     },
   },
   data() {

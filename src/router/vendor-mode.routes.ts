@@ -139,7 +139,12 @@ export const VendorModeRoutes = [
           },
           {
             path: "history",
-            component: () => import("@/views/Vendor/Credit/CreditHistoryList.vue"),
+            component: () =>
+              import("@/views/Vendor/Credit/CreditHistoryList.vue"),
+          },
+          {
+            path: ":id/credit-details",
+            component: () => import("@/views/Vendor/Credit/CreditDetails.vue"),
           },
         ],
       },

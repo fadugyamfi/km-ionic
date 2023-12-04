@@ -1,5 +1,9 @@
 <template>
-  <IonItem :button="true" lines="none">
+  <IonItem
+    :button="true"
+    lines="none"
+    @click="router.push(`/vendor/credits/${credit?.id}/credit-details`)"
+  >
     <ProfileAvatar
       slot="start"
       :image="credit?.business?.logo"
@@ -61,14 +65,14 @@ import { useRouter } from "vue-router";
 import Image from "@/components/Image.vue";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import Filters from "@/utilities/Filters";
-import { SalePayment } from "@/models/SalePayment";
+import Credit from "@/models/Credit"
 import { useToastStore } from "@/stores/ToastStore";
 
 const toastStore = useToastStore();
 
 const props = defineProps({
   credit: {
-    type: SalePayment,
+    type: Credit,
     default: () => {},
   },
   popover: {
