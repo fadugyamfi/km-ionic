@@ -1,37 +1,37 @@
 <template>
-  <IonItem class="ion-align-items-start ion-margin-bottom">
+  <IonItem :button="true" lines="none">
     <ProfileAvatar
       slot="start"
-      :image="credit.business?.logo"
-      :username="credit.business?.name"
+      :image="credit?.business?.logo"
+      :username="credit?.business?.name"
       custom-size="40px"
+      class="ion-align-self-start ion-margin-top"
     ></ProfileAvatar>
-
     <IonLabel>
-      <p class="ion-no-margin">
-        {{ credit.business?.name }}
+      <p>
+        <IonText color="dark">{{ credit?.business?.name }}- </IonText>
+        <IonText color="medium">GHS {{ credit?.total_sales_price }}</IonText>
       </p>
-      <IonText
-        style="margin-bottom: 5px !important"
-        color="medium"
-        class="font-medium"
-      >
-        Payment made on {{ credit.payment_date?.split(" ")[0] }}
-      </IonText>
-      <IonText color="medium" class="font-medium d-flex">
-        paid via {{ credit.payment_mode?.name }}
-        <Image class="momo" src="/images/momo.svg"></Image>
-      </IonText>
-      <IonText class="fw-bold">{{
-        Filters.currency(credit.amount)
-      }}</IonText></IonLabel
-    >
+      <p class="font-medium">
+        <IonText color="medium"> Frytol Oil 24kg/21pieces </IonText>
+      </p>
+      <p class="font-medium">
+        <IonText color="medium">
+          Order date: {{ Filters.date(credit?.created_at as string, "short") }}
+        </IonText>
+      </p>
+
+      <p>
+        <IonChip color="danger" class="font-medium"> Due: 22/09/2023 </IonChip>
+      </p>
+    </IonLabel>
     <IonButton
-      slot="end"
+      v-if="popover"
+      @click="openMenu"
       fill="clear"
       color="dark"
-      class="ion-align-self-start ion-margin-top"
-      @click.stop="openMenu($event)"
+      slot="end"
+      class="ion-align-self-start"
     >
       <IonIcon :icon="ellipsisHorizontal"></IonIcon>
     </IonButton>
@@ -48,21 +48,32 @@ import {
   IonIcon,
   IonLabel,
   IonButton,
+  IonPopover,
+  IonContent,
 } from "@ionic/vue";
-import { ellipsisHorizontal } from "ionicons/icons";
+import {
+  ellipsisHorizontal,
+  createOutline,
+  trashOutline,
+} from "ionicons/icons";
 import { PropType, ref } from "vue";
 import { useRouter } from "vue-router";
 import Image from "@/components/Image.vue";
-import Customer from "@/models/Customer";
-import { useCustomerStore } from "@/stores/CustomerStore";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import Filters from "@/utilities/Filters";
 import { SalePayment } from "@/models/SalePayment";
+import { useToastStore } from "@/stores/ToastStore";
+
+const toastStore = useToastStore();
 
 const props = defineProps({
   credit: {
     type: SalePayment,
-    default: () => [],
+    default: () => {},
+  },
+  popover: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -137,6 +148,12 @@ const openMenu = (event: CustomEvent) => {
     color: #111;
     margin-bottom: 5px;
   }
+}
+ion-label {
+  padding-inline-start: 0px;
+}
+.due-date {
+  margin-left: 8px;
 }
 .momo {
   max-width: 20px;
