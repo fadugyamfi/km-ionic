@@ -311,7 +311,7 @@ export const useOrderStore = defineStore("order", {
         );
         return;
       }
-      let orderItem = this.editedOrder.order_items.find(
+      let orderItem = this.editedOrder._order_items.find(
         (item: OrderItem) => item.products_id == product.id
       );
       if (!orderItem) {
@@ -331,7 +331,7 @@ export const useOrderStore = defineStore("order", {
           cms_users_id: userStore.user?.id,
         });
 
-        this.editedOrder.order_items.push(orderItem);
+        this.editedOrder._order_items.push(orderItem);
         toastStore.showSuccess("Added To Order");
       } else {
         orderItem.quantity = orderItem.quantity ? orderItem.quantity + 1 : 1;

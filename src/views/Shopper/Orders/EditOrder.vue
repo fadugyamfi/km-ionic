@@ -24,7 +24,7 @@
       <section v-if="!fetching">
         <section class="ion-padding">
           <IonText class="fw-bold">
-            {{ order?.business?.name || "No Business" }}
+            {{ order?._business?.name || "No Business" }}
           </IonText>
           <BusinessMinimumOrderReached
             :business="order?.business"
@@ -199,9 +199,9 @@ const updateOrder = async () => {
     product_units_id: order.value?.product_units_id,
     payment_modes_id: order.value?.payment_modes_id,
     payment_option_id: order.value?.payment_option_id,
-    total_items: order.value?.order_items.length,
+    total_items: order.value?._order_items.length,
     total_order_amount: totalCost.value,
-    order_items: order.value?.order_items.map((item) => {
+    order_items: order.value?._order_items.map((item) => {
       return {
         products_id: item.products_id,
         quantity: item.quantity,
