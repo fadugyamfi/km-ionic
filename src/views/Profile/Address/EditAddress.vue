@@ -35,7 +35,7 @@
           </IonButton>
         </IonItem>
 
-        <IonSelect
+        <IonSelect  
           class="kola-input ion-margin-bottom"
           :label="$t('profile.address.region')"
           :class="{
@@ -50,7 +50,7 @@
           @ion-change="form.validateSelectInput($event)"
         >
           >
-          <IonSelectOption
+          <IonSelectOption  
             v-for="region in regions"
             :key="region.id"
             :value="region.id"
@@ -84,7 +84,7 @@
       </form>
     </ion-content>
     <IonFooter class="ion-padding-top ion-no-border">
-      <KolaWhiteButton :disabled="!formValid" @click.prevent="">{{
+      <KolaWhiteButton :disabled="!formValid" @click.prevent="cancel">{{
         $t("profile.address.cancel")
       }}</KolaWhiteButton>
       <KolaYellowButton
@@ -114,6 +114,7 @@ import {
   IonCheckbox,
   IonHeader,
   IonSpinner,
+  
 } from "@ionic/vue";
 import {
   close,
@@ -136,6 +137,7 @@ import { useForm } from "@/composables/form";
 import { useRoute, useRouter } from "vue-router";
 import { computed, onMounted, ref } from "vue";
 import { useUserStore } from "@/stores/UserStore";
+import Address from "@/models/Address";
 import EditAddressHeader from "@/components/header/EditAddressHeader.vue";
 
 const toastStore = useToastStore();
@@ -151,7 +153,7 @@ const fetching = ref(false);
 
 const form = useForm({
   city: "",
-  region_id: "",
+  statusbar: "",
   address: "",
 });
 
@@ -192,6 +194,11 @@ const updateBusinessLocations = async () => {
   }
 };
 
+const cancel = () => {
+  // Handle cancel action
+};
+
+
 const getRegions = async () => {
   try {
     const countryId = businessStore?.registration?.country_id;
@@ -219,17 +226,14 @@ const getLocation = async () => {
 
 const fetchAddress = async () => {
   fetching.value = true;
-  const userStore = useUserStore();
   const businessStore = useBusinessStore();
-
   try {
     const address = await businessStore.getBusinessLocation(
       route.params.business_id,
       route.params.id
     );
-
     if (address) {
-      form.fields.region_id = address.region_id;
+      form.fields.state_id = address.state_id;
       form.fields.city = address.city;
       form.fields.address = address.address;
     } else {

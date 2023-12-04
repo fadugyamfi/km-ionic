@@ -453,7 +453,7 @@ export const useBusinessStore = defineStore("business", {
       }
     },
 
-    async createBusinessLocations(postData: Object): Promise<| null> {
+    async createBusinessLocations(postData: Object): Promise<Address[] | null> {
       const userStore = useUserStore();
       return axios
         .post(
@@ -491,7 +491,7 @@ export const useBusinessStore = defineStore("business", {
     async getBusinessLocation(
       business_id: any,
       location_id: any
-    ): Promise<| null> {
+    ): Promise< Address| null > {
       const userStore = useUserStore();
       return axios
         .get(
@@ -505,6 +505,7 @@ export const useBusinessStore = defineStore("business", {
           }
         })
         .catch((error) => handleAxiosRequestError(error));
+     
     },
 
 
