@@ -34,12 +34,9 @@
 
       <section v-show="!fetching">
         <NoResults v-if="orderStore.orders?.length == 0"></NoResults>
-
-        <AccountActivity></AccountActivity>
+          <AccountActivityListItem  :orders="orderStore.orders"></AccountActivityListItem>
       </section>
 
-      <FilterOrdersSheet :isOpen="showFilterSheet" @didDismiss="showFilterSheet = false" @update="onFilterUpdate($event)">
-      </FilterOrdersSheet>
     </ion-content>
 
   </ion-page>
@@ -72,6 +69,7 @@ import { formatMySQLDateTime, handleAxiosRequestError } from '@/utilities';
 import filters from '@/utilities/Filters';
 import FilterOrdersSheet from '@/components/modules/order/FilterOrdersSheet.vue';
 import NoResults from '@/components/layout/NoResults.vue';
+import AccountActivityListItem from '@/components/modules/accountActivity/AccountActivityListItem.vue';
 
 export default defineComponent({
 
@@ -106,7 +104,8 @@ export default defineComponent({
     IonIcon,
     FilterOrdersSheet,
     NoResults,
-    IonSpinner
+    IonSpinner,
+    AccountActivityListItem
   },
 
   computed: {
@@ -131,7 +130,7 @@ export default defineComponent({
       const option = event.detail.value;
 
       switch (option) {
-        case 'pastmonth':
+        case 'month':
           start_dt.setMonth(start_dt.getMonth() - 1);
           break;
 
@@ -139,8 +138,8 @@ export default defineComponent({
           start_dt.setDate(start_dt.getDate() - 1);
           break;
 
-        case 'thisweek':
-          start_dt.setDate(start_dt.getDate() - 7);
+        case 'year':
+          start_dt.setDate(start_dt.setFullYear(2022,0,1));
           break;
       }
 
@@ -150,15 +149,10 @@ export default defineComponent({
       this.fetchOrders();
     },
 
-    onFilterUpdate(event: { start_dt: string, end_dt: string }) {
-      this.searchFilters.start_dt = event.start_dt;
-      this.searchFilters.end_dt = event.end_dt || formatMySQLDateTime(new Date().toISOString());
-      this.fetchOrders();
-    }
   },
 
   mounted() {
-    this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'thisweek' } }));
+    this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'today' } }));
   }
 })
 </script>
