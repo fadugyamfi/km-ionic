@@ -11,7 +11,10 @@
           </IonTitle>
           <IonButtons slot="end">
             <IonButton>
-              <IonIcon slot="icon-only" :icon="chatbubbleOutline"></IonIcon>
+              <IonIcon :icon="shareOutline"></IonIcon>
+            </IonButton>
+            <IonButton>
+              <IonIcon :icon="chatbubbleOutline"></IonIcon>
             </IonButton>
           </IonButtons>
         </IonToolbar>
@@ -32,34 +35,37 @@
           <section
             class="d-flex ion-justify-content-between ion-align-items-baseline"
           >
-            <IonText color="medium" slot="start">{{
+            <IonText color="dark" class="fw-bold" slot="start">{{
               filters.date(credit?.sale_ended_at as string, "short")
             }}</IonText>
 
-            <IonChip color="danger" class="font-medium" slot="end">
-              Due: 22/09/2023
+            <IonChip color="danger" class="font-medium fw-bold" slot="end">
+              12 days overdue
             </IonChip>
           </section>
         </ion-card>
-
-        <OutstandingCreditStatistics></OutstandingCreditStatistics>
-
-        <PlacedCreditItems :credit="credit"></PlacedCreditItems>
-
+        <section>
+          <ReceivedCreditStatistics></ReceivedCreditStatistics>
+        </section>
+        <section>
+          <ReceivedCreditItems :credit="credit"></ReceivedCreditItems>
+        </section>
         <section class="ion-padding-horizontal update-button-section">
-          <KolaYellowButton>
+          <KolaYellowButton @click="recordRepayment">
             {{ "Record repayment" }}
           </KolaYellowButton>
           <p class="font-medium">
-            <iontext color="medium"
-              >An overview of how much repayment you have received from Racy
-              Ventures</iontext
+            <IonText color="medium"
+              >An overview of how much repayment you have received from
+              {{ credit?.customer?.name }}</IonText
             >
           </p>
         </section>
-        <RecordRepayment></RecordRepayment>
-        <RecordRepayment></RecordRepayment>
-        <RecordRepayment></RecordRepayment>
+        <ReceivedRepayment
+          v-for="receivedRepayment in receivedRepayments"
+          :key="receivedRepayment.id"
+          :receivedRepayment="receivedRepayment"
+        ></ReceivedRepayment>
       </section>
     </ion-content>
   </IonPage>
@@ -86,22 +92,24 @@ import {
   IonCardTitle,
   IonCardContent,
   IonChip,
+  IonText,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import UpdateButon from "@/components/modules/order/UpdateButon.vue";
 import { mapStores } from "pinia";
 import { handleAxiosRequestError } from "@/utilities";
-import { chatbubbleOutline } from "ionicons/icons";
-import CreditImages from "@/components/modules/vendorCredit/CreditImages.vue";
+import { chatbubbleOutline, shareOutline } from "ionicons/icons";
+import CreditImages from "@/components/modules/credit/CreditImages.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderStatusHistoryView from "@/components/modules/order/OrderStatusHistoryView.vue";
 import { useCustomerStore } from "@/stores/CustomerStore";
-import PlacedCreditItems from "@/components/modules/vendorCredit/PlacedCreditItems.vue";
-import RecordRepayment from "@/components/modules/vendorCredit/RecordRepayment.vue";
-import OutstandingCreditStatistics from "@/components/modules/vendorCredit/OutstandingCreditStatistics.vue";
+import ReceivedCreditItems from "@/components/modules/credit/ReceivedCreditItems.vue";
+import ReceivedRepayment from "@/components/modules/credit/ReceivedRepayment.vue";
+import ReceivedCreditStatistics from "@/components/modules/credit/ReceivedCreditStatistics.vue";
 import Credit from "@/models/Credit";
 import { useCreditStore } from "@/stores/CreditStore";
 import filters from "@/utilities/Filters";
+import { SalePayment } from "@/models/SalePayment";
 
 export default defineComponent({
   components: {
@@ -126,10 +134,11 @@ export default defineComponent({
     IonSpinner,
     KolaYellowButton,
     OrderStatusHistoryView,
-    PlacedCreditItems,
-    RecordRepayment,
-    OutstandingCreditStatistics,
+    ReceivedCreditItems,
+    ReceivedRepayment,
+    ReceivedCreditStatistics,
     IonChip,
+    IonText,
   },
 
   name: "CreditDetails",
@@ -138,13 +147,17 @@ export default defineComponent({
     return {
       loading: false,
       chatbubbleOutline,
+      shareOutline,
       credit: null as Credit | null,
+      receivedRepayments: [] as SalePayment[] | null,
       filters,
+      handleAxiosRequestError,
     };
   },
 
-  mounted() {
-    this.getCredit();
+  async mounted() {
+    await this.getCredit();
+    this.getRecordedRepayments();
   },
 
   computed: {
@@ -153,8 +166,35 @@ export default defineComponent({
 
   methods: {
     async getCredit() {
-      const credit_id = +this.$route.params.id;
-      this.credit = await this.creditStore.getCredit(credit_id);
+      try {
+        this.loading = true;
+        const credit_id = +this.$route.params.id;
+        this.credit = await this.creditStore.getCredit(credit_id);
+      } catch (error) {
+        this.loading = false;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async getRecordedRepayments() {
+      try {
+        this.loading = true;
+        this.receivedRepayments = await this.creditStore.getRecordedRepayments(
+          this.credit?.customer?.id as string | number
+        );
+        this.receivedRepayments = this.receivedRepayments?.splice(
+          0,
+          3
+        ) as SalePayment[];
+      } catch (error) {
+        handleAxiosRequestError(error);
+        this.loading = false;
+      } finally {
+        this.loading = false;
+      }
+    },
+    recordRepayment() {
+      this.$router.push(`/vendor/credits/${this.credit?.id}/record-repayment`);
     },
   },
 });
@@ -170,7 +210,7 @@ export default defineComponent({
 }
 
 .update-button-section {
-  margin-top: 2em;
-  margin-bottom: 3em;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 </style>

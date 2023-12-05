@@ -5,18 +5,18 @@
         <IonItem lines="none">
           <ProfileAvatar
             slot="start"
-            :image="order?.business?.logo"
-            :username="order?.business?.name"
+            :image="credit?.customer?.logo"
+            :username="credit?.customer?.name"
             customSize="32px"
           ></ProfileAvatar>
 
-          <IonLabel class="font-medium">{{ order?.business?.name }}</IonLabel>
+          <IonLabel class="font-medium">{{ credit?.customer?.name }}</IonLabel>
         </IonItem>
       </IonCardHeader>
 
       <IonCardContent class="product-list ion-no-padding">
         <IonList lines="none">
-          <IonItem v-for="item in order?.order_items" :key="item.id">
+          <IonItem v-for="item in credit?.sale_items" :key="item.id">
             <IonLabel class="ion-text-wrap font-medium">
               {{ item.product?.product_name }}
               <section>
@@ -37,31 +37,28 @@
               }}
             </IonLabel>
           </IonItem>
+          <IonItem>
+            <IonLabel class="ion-text-wrap font-medium fw-bold">
+              Total amount due
+            </IonLabel>
+            <IonLabel
+              slot="end"
+              class="font-medium text-end ion-align-self-start fw-bold"
+            >
+              GHS 300.00
+            </IonLabel>
+          </IonItem>
         </IonList>
       </IonCardContent>
     </IonCard>
-
-    <section>
-      <OrderDeliverySummary
-        :show-change-address="showChangeAddress"
-        :show-change-date="showChangeDate"
-        :order="(order as Order)"
-      ></OrderDeliverySummary>
-    </section>
   </section>
 </template>
 
 <script lang="ts">
-import { Order, OrderStatus } from "@/models/Order";
 import {
-  IonAccordion,
   IonItem,
   IonLabel,
-  IonThumbnail,
   IonIcon,
-  IonGrid,
-  IonRow,
-  IonCol,
   IonCard,
   IonCardHeader,
   IonCardContent,
@@ -73,33 +70,27 @@ import { PropType, defineComponent } from "vue";
 import Image from "@/components/Image.vue";
 import Filters from "@/utilities/Filters";
 import { OrderItem } from "../../../models/OrderItem";
-import OrderDeliverySummary from "@/components/modules/order/OrderDeliverySummary.vue";
 import ProfileAvatar from "../../ProfileAvatar.vue";
+import Credit from "@/models/Credit";
 
 export default defineComponent({
   components: {
-    IonAccordion,
     IonItem,
     IonLabel,
-    IonThumbnail,
     IonIcon,
     Image,
-    IonGrid,
-    IonRow,
-    IonCol,
     IonCard,
     IonCardHeader,
     IonCardContent,
     IonList,
     IonText,
     IonButton,
-    OrderDeliverySummary,
     ProfileAvatar,
   },
 
   props: {
     credit: {
-      type: Object as PropType<Order | null>,
+      type: Object as PropType<Credit | null>,
     },
   },
 
@@ -109,30 +100,13 @@ export default defineComponent({
     };
   },
 
-  computed: {
-    showChangeDate() {
-      return this.order?.order_status_id == OrderStatus.PENDING;
-    },
-
-    showChangeAddress() {
-      return this.order?.order_status_id == OrderStatus.PENDING;
-    },
-  },
-
   methods: {
-    getItemUnit(orderItem: OrderItem) {
-      if (orderItem.product_units_id == 2) {
-        return this.$tc("general.units.piece", orderItem.quantity as number);
+    getItemUnit(saleItem: OrderItem) {
+      if (saleItem.product_units_id == 2) {
+        return this.$tc("general.units.piece", saleItem.quantity as number);
       }
 
-      return this.$tc("general.units.box", orderItem.quantity as number);
-    },
-
-    update() {
-      this.$router.push({
-        name: "OrderUpdate",
-        params: { id: this.order?.id },
-      });
+      return this.$tc("general.units.box", saleItem.quantity as number);
     },
   },
 });

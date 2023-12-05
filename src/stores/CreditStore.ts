@@ -4,14 +4,16 @@ import { handleAxiosRequestError } from "@/utilities";
 import { useUserStore } from "./UserStore";
 import { business } from "ionicons/icons";
 import { useToastStore } from "./ToastStore";
-import Credit from "@/models/Credit.ts";
+import Credit from "@/models/Credit";
+import { SalePayment } from "@/models/SalePayment";
 const userStore = useUserStore();
 const toastStore = useToastStore();
 export const useCreditStore = defineStore("credit", {
   state: () => {
     return {
-      credits: [],
+      credits: [] as Credit[] | null,
       creditSummary: {},
+      recordedRepayments: [] as SalePayment[] | null,
     };
   },
   actions: {
@@ -35,7 +37,7 @@ export const useCreditStore = defineStore("credit", {
       try {
         const response = await axios.get(`v2/sales/${id}`);
         const credit = new Credit(response.data.data);
-        console.log(credit)
+        console.log(credit);
         return credit;
       } catch (error) {
         handleAxiosRequestError(error);
@@ -69,6 +71,22 @@ export const useCreditStore = defineStore("credit", {
       } catch (error) {
         handleAxiosRequestError(error);
         toastStore.showError("Failed to delete credit");
+        return null;
+      }
+    },
+    async getRecordedRepayments(
+      business_id: string | number
+    ): Promise<SalePayment[] | null> {
+      try {
+        const response = await axios.get(
+          `v2/sale-payments?businesses_id=${business_id}`
+        );
+        this.recordedRepayments = response.data.data.map(
+          (item: any) => new SalePayment(item)
+        );
+        return this.recordedRepayments;
+      } catch (error) {
+        handleAxiosRequestError(error);
         return null;
       }
     },

@@ -2,18 +2,17 @@
   <IonItem
     :button="true"
     lines="none"
-    @click="router.push(`/vendor/credits/${credit?.id}/credit-details`)"
   >
     <ProfileAvatar
       slot="start"
-      :image="credit?.business?.logo"
-      :username="credit?.business?.name"
+      :image="credit?.customer?.logo"
+      :username="credit?.customer?.name"
       custom-size="40px"
       class="ion-align-self-start ion-margin-top"
     ></ProfileAvatar>
     <IonLabel>
       <p>
-        <IonText color="dark">{{ credit?.business?.name }}- </IonText>
+        <IonText color="dark">{{ credit?.customer?.name }}- </IonText>
         <IonText color="medium">GHS {{ credit?.total_sales_price }}</IonText>
       </p>
       <p class="font-medium">
@@ -31,7 +30,7 @@
     </IonLabel>
     <IonButton
       v-if="popover"
-      @click="openMenu"
+      @click.stop="openMenu"
       fill="clear"
       color="dark"
       slot="end"

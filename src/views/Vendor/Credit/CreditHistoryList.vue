@@ -40,54 +40,61 @@
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-      <EmptyCredit v-if="credits?.length == 0"></EmptyCredit>
+      <section v-if="!fetching">
+        <EmptyCredit v-if="credits?.length == 0"></EmptyCredit>
 
-      <CreditHistoryItem
-        @openMenu="openMenu($event, index)"
-        v-for="(credit, index) in credits"
-        :key="credit?.id"
-        :credit="credit"
-        popover
-      >
-        <template v-slot:popover>
-          <IonPopover
-            :event="event"
-            :isOpen="openPopover == index"
-            @didDismiss="openPopover = -1"
-          >
-            <IonContent class="ion-no-padding">
-              <IonList lines="full" class="ion-no-padding">
-                <ion-item :button="true" lines="full">
-                  <ion-icon slot="start" :icon="createOutline"></ion-icon>
-                  {{ $t("vendor.sales.recordRepayment") }}
-                </ion-item>
-                <ion-item
-                  :button="true"
-                  lines="full"
-                  @click="deleteCredit(credit)"
-                >
-                  <ion-icon slot="start" :icon="trashOutline"></ion-icon>
-                  {{ $t("general.delete") }}
-                </ion-item>
-              </IonList>
-            </IonContent>
-          </IonPopover>
-        </template>
-      </CreditHistoryItem>
+        <CreditHistoryItem
+          @click="viewDetails(credit)"
+          @openMenu="openMenu($event, index)"
+          v-for="(credit, index) in credits"
+          :key="credit?.id"
+          :credit="credit"
+          popover
+        >
+          <template v-slot:popover>
+            <IonPopover
+              :event="event"
+              :isOpen="openPopover == index"
+              @didDismiss="openPopover = -1"
+            >
+              <IonContent class="ion-no-padding">
+                <IonList lines="full" class="ion-no-padding">
+                  <ion-item
+                    :button="true"
+                    lines="full"
+                    @click="recordRepayment(credit)"
+                  >
+                    <ion-icon slot="start" :icon="createOutline"></ion-icon>
+                    {{ $t("vendor.sales.recordRepayment") }}
+                  </ion-item>
+                  <ion-item
+                    :button="true"
+                    lines="full"
+                    @click="deleteCredit(credit)"
+                  >
+                    <ion-icon slot="start" :icon="trashOutline"></ion-icon>
+                    {{ $t("general.delete") }}
+                  </ion-item>
+                </IonList>
+              </IonContent>
+            </IonPopover>
+          </template>
+        </CreditHistoryItem>
 
-      <FilterOrdersSheet
-        :isOpen="showFilterSheet"
-        @didDismiss="showFilterSheet = false"
-        @update="onFilterUpdate($event)"
-      >
-      </FilterOrdersSheet>
-      <DeleteModal
-        :title="$t('vendor.credit.deleteCreditFromList')"
-        :description="$t('vendor.orders.youCantUndoThisAction')"
-        :isOpen="showConfirmDeleteModal"
-        @dismiss="showConfirmDeleteModal = false"
-        @confirm="onConfirmDelete()"
-      ></DeleteModal>
+        <FilterCreditSheet
+          :isOpen="showFilterSheet"
+          @didDismiss="showFilterSheet = false"
+          @update="onFilterUpdate($event)"
+        >
+        </FilterCreditSheet>
+        <DeleteModal
+          :title="$t('vendor.credit.deleteCreditFromList')"
+          :description="$t('vendor.orders.youCantUndoThisAction')"
+          :isOpen="showConfirmDeleteModal"
+          @dismiss="showConfirmDeleteModal = false"
+          @confirm="onConfirmDelete()"
+        ></DeleteModal>
+      </section>
     </ion-content>
   </ion-page>
 </template>
@@ -114,7 +121,6 @@ import {
 } from "@ionic/vue";
 import { defineComponent, ref } from "vue";
 import { useCreditStore } from "@/stores/CreditStore";
-import ReceivedOrderList from "@/components/modules/order/ReceivedOrderList.vue";
 import {
   search,
   arrowBack,
@@ -129,12 +135,13 @@ import {
 import { mapStores } from "pinia";
 import { formatMySQLDateTime, handleAxiosRequestError } from "@/utilities";
 import filters from "@/utilities/Filters";
-import FilterOrdersSheet from "@/components/modules/order/FilterOrdersSheet.vue";
+import FilterCreditSheet from "@/components/modules/credit/FilterCreditSheet.vue";
 import NoResults from "@/components/layout/NoResults.vue";
-import CreditHistoryItem from "@/components/modules/vendorCredit/CreditHistoryItem.vue";
+import CreditHistoryItem from "@/components/modules/credit/CreditHistoryItem.vue";
 import DeleteModal from "@/components/modals/DeleteModal.vue";
 import router from "@/router";
-import EmptyCredit from "@/components/modules/vendorCredit/EmptyCredit.vue";
+import EmptyCredit from "@/components/modules/credit/EmptyCredit.vue";
+import Credit from "@/models/Credit";
 
 export default defineComponent({
   data() {
@@ -148,7 +155,6 @@ export default defineComponent({
       chatbubbleOutline,
       createOutline,
       add,
-      router: router,
       fetching: false,
       filters,
       showFilterSheet: false,
@@ -175,10 +181,9 @@ export default defineComponent({
     IonBackButton,
     IonBadge,
     IonTitle,
-    ReceivedOrderList,
     IonButton,
     IonIcon,
-    FilterOrdersSheet,
+    FilterCreditSheet,
     NoResults,
     IonSpinner,
     CreditHistoryItem,
@@ -191,7 +196,7 @@ export default defineComponent({
 
   computed: {
     ...mapStores(useCreditStore),
-    credits(): any[] {
+    credits() {
       return this.creditStore.credits;
     },
   },
@@ -207,7 +212,13 @@ export default defineComponent({
         this.fetching = false;
       }
     },
-
+    recordRepayment(credit: Credit) {
+      this.$router.push(`/vendor/credits/${credit.id}/record-repayment`);
+      this.closeMenu();
+    },
+    viewDetails(credit: Credit) {
+      this.$router.push(`/vendor/credits/${credit.id}/credit-details`);
+    },
     onSegmentChanged(event: CustomEvent) {
       let start_dt = new Date();
       let end_dt = new Date();

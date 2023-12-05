@@ -146,6 +146,10 @@ export const VendorModeRoutes = [
             path: ":id/credit-details",
             component: () => import("@/views/Vendor/Credit/CreditDetails.vue"),
           },
+          {
+            path: ":id/record-repayment",
+            component: () => import("@/views/Vendor/Credit/RecordRepayment.vue"),
+          },
         ],
       },
       {

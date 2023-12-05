@@ -21,9 +21,9 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <section v-if="!fetching">
-        <CreditStatistics
+        <CreditSummary
           :creditSummary="creditSummary.credit_sales"
-        ></CreditStatistics>
+        ></CreditSummary>
         <div class="d-flex ion-align-items-center credit-history ion-padding">
           <h6 slot="start" class="fw-bold">
             {{ $t("vendor.credit.creditHistory") }}
@@ -46,12 +46,12 @@
         >
         </CreditHistoryItem>
 
-        <FilterVendorCreditSheet
+        <FilterCreditSheet
           :isOpen="showFilterSheet"
           @didDismiss="showFilterSheet = false"
           @update="onFilterUpdate($event)"
         >
-        </FilterVendorCreditSheet>
+        </FilterCreditSheet>
       </section>
     </ion-content>
   </ion-page>
@@ -92,12 +92,12 @@ import ReceivedOrderList from "@/components/modules/order/ReceivedOrderList.vue"
 import { mapStores } from "pinia";
 import { formatMySQLDateTime, handleAxiosRequestError } from "@/utilities";
 import filters from "@/utilities/Filters";
-import FilterVendorCreditSheet from "@/components/modules/vendorCredit/FilterVendorCreditSheet.vue";
+import FilterCreditSheet from "@/components/modules/credit/FilterCreditSheet.vue";
 import NoResults from "@/components/layout/NoResults.vue";
-import CreditStatistics from "@/components/modules/vendorCredit/CreditStatistics.vue";
-import CreditHistoryItem from "@/components/modules/vendorCredit/CreditHistoryItem.vue";
+import CreditSummary from "@/components/modules/credit/CreditSummary.vue";
+import CreditHistoryItem from "@/components/modules/credit/CreditHistoryItem.vue";
 import { useCreditStore } from "@/stores/CreditStore";
-import Credit from "@/models/Credit"
+import Credit from "@/models/Credit";
 
 const date = new Date();
 
@@ -141,10 +141,10 @@ export default defineComponent({
     ReceivedOrderList,
     IonButton,
     IonIcon,
-    FilterVendorCreditSheet,
+    FilterCreditSheet,
     NoResults,
     IonSpinner,
-    CreditStatistics,
+    CreditSummary,
     CreditHistoryItem,
     IonText,
     IonPopover,
@@ -159,7 +159,7 @@ export default defineComponent({
       try {
         this.fetching = true;
         this.credits = await this.creditStore.getCredits(this.searchFilters);
-        this.credits = this.credits?.splice(0, 3) as Credit[];
+        this.credits = this.credits?.splice(0, 4) as Credit[];
       } catch (error) {
         handleAxiosRequestError(error);
       } finally {
@@ -228,6 +228,7 @@ export default defineComponent({
   justify-content: space-between;
   font-size: 14px;
   padding-bottom: 10px;
+  margin-top: 20px;
 
   h6 {
     font-weight: bold;

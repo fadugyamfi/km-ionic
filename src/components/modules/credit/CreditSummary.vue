@@ -1,5 +1,5 @@
 <template>
-  <IonRow class="ion-padding">
+  <IonRow class="ion-padding-horizontal">
     <IonCol size="6">
       <IonCard class="ion-no-margin total-credit">
         <IonCardContent class="d-flex flex-column ion-align-items-center">
