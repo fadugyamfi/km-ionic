@@ -95,6 +95,21 @@
         :detail="true"
         :button="true"
         class="profile-item"
+        @click="deleteAccount()"
+      >
+        <IonAvatar slot="start">
+          <IonIcon
+            color="danger"
+            :icon="trashOutline"
+            style="font-size: 21px"
+          ></IonIcon>
+        </IonAvatar>
+        <IonLabel color="danger">Delete Account</IonLabel>
+      </IonItem>
+      <IonItem
+        :detail="true"
+        :button="true"
+        class="profile-item"
         @click="logout()"
       >
         <IonAvatar slot="start">
@@ -103,6 +118,13 @@
         <IonLabel>Log Out</IonLabel>
       </IonItem>
     </IonList>
+    <DeleteModal
+      title="Delete Account"
+      description="You can't undo this action"
+      :isOpen="showConfirmDeleteModal"
+      @dismiss="showConfirmDeleteModal = false"
+      @confirm="onConfirmDelete()"
+    ></DeleteModal>
   </section>
 </template>
 
@@ -123,6 +145,7 @@ import {
   createOutline,
   powerOutline,
   settingsOutline,
+  trashOutline,
 } from "ionicons/icons";
 import { useRouter } from "vue-router";
 import { useToastStore } from "../../stores/ToastStore";
@@ -131,9 +154,18 @@ import { AxiosError } from "axios";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import NotificationsModal from "@/components/notifications/NotificationsModal.vue";
 import SettingsModal from "@/components/modules/settings/SettingsModal.vue";
+import DeleteModal from "../modals/DeleteModal.vue";
 
 export default defineComponent({
-  components: { IonList, IonAvatar, IonItem, IonLabel, IonIcon, ProfileAvatar },
+  components: {
+    IonList,
+    IonAvatar,
+    IonItem,
+    IonLabel,
+    IonIcon,
+    ProfileAvatar,
+    DeleteModal,
+  },
 
   computed: {
     ...mapStores(useUserStore),
@@ -148,6 +180,8 @@ export default defineComponent({
       search,
       router,
       settingsOutline,
+      trashOutline,
+      showConfirmDeleteModal: false,
     };
   },
 
@@ -171,6 +205,24 @@ export default defineComponent({
           }
         })
         .finally(() => toastStore.unblockUI());
+    },
+    deleteAccount() {
+      this.showConfirmDeleteModal = true;
+    },
+    async onConfirmDelete() {
+      const toastStore = useToastStore();
+      try {
+        this.showConfirmDeleteModal = false;
+        toastStore.blockUI("Deleting Account...");
+        const response = await this.userStore.deleteUser();
+        if (response) {
+          this.$router.push("/auth/login");
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      } finally {
+        toastStore.unblockUI();
+      }
     },
 
     async showNotifications() {
