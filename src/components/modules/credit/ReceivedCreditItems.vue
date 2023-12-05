@@ -45,7 +45,7 @@
               slot="end"
               class="font-medium text-end ion-align-self-start fw-bold"
             >
-              GHS 300.00
+            {{ Filters.currency(credit?.total_sales_price) }}
             </IonLabel>
           </IonItem>
         </IonList>

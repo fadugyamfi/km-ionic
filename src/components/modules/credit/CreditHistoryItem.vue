@@ -11,20 +11,23 @@
       <p>
         <IonText color="dark">{{ credit?.customer?.name }}- </IonText>
         <IonText color="medium">
-          {{ Filters.currency(credit?.total_sales_price) }}</IonText
+          {{ Filters.currency(credit?.total_sales_price as number) }}</IonText
         >
       </p>
-      <!-- <p class="font-medium">
-        <IonText color="medium"> Frytol Oil 24kg/21pieces </IonText>
-      </p> -->
+      <p class="font-medium">
+        <IonText color="medium">{{ credit?.display_label }} </IonText>
+      </p>
       <p class="font-medium">
         <IonText color="medium">
-          Order date: {{ Filters.date(credit?.created_at as string, "short") }}
+          Order date:
+          {{ Filters.date(credit?.order?.created_at as string, "short") }}
         </IonText>
       </p>
 
-      <p>
-        <IonChip color="danger" class="font-medium"> Due: 22/09/2023 </IonChip>
+      <p v-if="credit.order.due_date">
+        <IonChip color="danger" class="font-medium">
+          Due: {{ Filters.date(credit?.order?.due_date as string, "short") }}
+        </IonChip>
       </p>
     </IonLabel>
     <IonButton

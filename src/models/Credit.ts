@@ -1,5 +1,6 @@
 import Customer from "@/models/Customer.ts";
 import Business from "@/models/Business.ts";
+import Order from "@/models/Order.ts";
 
 export default class Credit {
   public id?: number | string;
@@ -10,6 +11,8 @@ export default class Credit {
   public business?: Business;
   public sale_items?: any[];
   public sale_ended_at?: string;
+  public order?: Order;
+
 
   constructor(data: object | null) {
     Object.assign(this, data);

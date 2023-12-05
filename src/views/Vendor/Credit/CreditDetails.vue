@@ -36,16 +36,19 @@
             class="d-flex ion-justify-content-between ion-align-items-baseline"
           >
             <IonText color="dark" class="fw-bold" slot="start">{{
-              filters.date(credit?.sale_ended_at as string, "short")
+              filters.date(credit?.order?.due_date as string, "short") || "N/A"
             }}</IonText>
 
-            <IonChip color="danger" class="font-medium fw-bold" slot="end">
-              12 days overdue
+            <IonChip v-if="credit?.order?.days_overdue" color="danger" class="font-medium fw-bold" slot="end">
+              {{
+                credit?.order?.days_overdue 
+               
+              }} days overdue
             </IonChip>
           </section>
         </ion-card>
         <section>
-          <ReceivedCreditStatistics></ReceivedCreditStatistics>
+          <ReceivedCreditStatistics :credit="credit"></ReceivedCreditStatistics>
         </section>
         <section>
           <ReceivedCreditItems :credit="credit"></ReceivedCreditItems>
@@ -90,7 +93,6 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
-  IonCardContent,
   IonChip,
   IonText,
 } from "@ionic/vue";
@@ -102,7 +104,6 @@ import { chatbubbleOutline, shareOutline } from "ionicons/icons";
 import CreditImages from "@/components/modules/credit/CreditImages.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderStatusHistoryView from "@/components/modules/order/OrderStatusHistoryView.vue";
-import { useCustomerStore } from "@/stores/CustomerStore";
 import ReceivedCreditItems from "@/components/modules/credit/ReceivedCreditItems.vue";
 import ReceivedRepayment from "@/components/modules/credit/ReceivedRepayment.vue";
 import ReceivedCreditStatistics from "@/components/modules/credit/ReceivedCreditStatistics.vue";

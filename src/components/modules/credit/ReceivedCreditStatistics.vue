@@ -20,7 +20,7 @@
           }}</IonText>
           <IonText color="dark" class="fw-semibold">
             <!-- {{ Filters.currency(avgSales) }} -->
-            50% each week
+            N/A
           </IonText>
         </IonCardContent>
       </IonCard>
