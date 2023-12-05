@@ -34,7 +34,7 @@
 
       <section v-show="!fetching">
         <NoResults v-if="orderStore.orders?.length == 0"></NoResults>
-          <AccountActivityListItem  :orders="orderStore.orders"></AccountActivityListItem>
+          <!-- <AccountActivityListItem  :orders="orderStore.orders"></AccountActivityListItem> -->
       </section>
 
     </ion-content>
@@ -113,6 +113,16 @@ export default defineComponent({
   },
 
   methods: {
+    async fetchAccountActivities() {
+      try {
+        this.fetching = true;
+        await this.orderStore.fetchPlacedOrders(this.searchFilters);
+      } catch (error) {
+        handleAxiosRequestError(error)
+      } finally {
+        this.fetching = false;
+      }
+    },
     async fetchOrders() {
       try {
         this.fetching = true;

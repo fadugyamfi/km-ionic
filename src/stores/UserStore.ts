@@ -13,6 +13,8 @@ const meta = (key: string) => {
 const storage = new AppStorage();
 
 type UserStoreState = {
+
+  fetechAccountActivities: [];
   onboarded: Boolean;
   user?: User | null;
   fetching: Boolean;
@@ -46,6 +48,7 @@ export interface ChangePINRequest {
 export const useUserStore = defineStore("user", {
   state: (): UserStoreState => {
     return {
+      fetechAccountActivities: [],
       onboarded: false,
       appMode: "shopping",
       fetching: false,
@@ -341,8 +344,30 @@ export const useUserStore = defineStore("user", {
       ] = `Bearer ${auth?.access_token}`;
     },
 
+
     isInShoppingMode() {
       return this.appMode == "shopping";
     },
+
+    async fetechAccountActivities(  
+      id: any
+    ): Promise< null > {
+      const userStore = useUserStore();
+      return axios
+        .get(
+          `/v2/users/${id}/activites`,
+
+        )
+        .then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            const data = response.data.data;
+            return data;
+          }
+        })
+        .catch((error) => handleAxiosRequestError(error));
+    
+    },
+
+
   },
 });

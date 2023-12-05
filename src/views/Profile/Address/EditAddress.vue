@@ -82,8 +82,8 @@
         $t("profile.address.cancel")
       }}</KolaWhiteButton>
       <KolaYellowButton
-        :disabled="!formValid"
-        @click.prevent="updateBusinessLocations"
+      :disabled="!formValid"
+              @click.prevent="updateBusinessLocations"
         >{{ $t("profile.customers.save") }}</KolaYellowButton
       >
     </IonFooter>
@@ -153,8 +153,7 @@ const form = useForm({
 
 const formValid = computed(() => {
   const fields = form.fields;
-
-  return fields.region_id;
+  return !!fields.region_id; 
 });
 
 const updateBusinessLocations = async () => {

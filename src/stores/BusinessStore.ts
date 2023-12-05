@@ -505,7 +505,6 @@ export const useBusinessStore = defineStore("business", {
           }
         })
         .catch((error) => handleAxiosRequestError(error));
-     
     },
 
 
