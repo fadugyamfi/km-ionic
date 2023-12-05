@@ -1,8 +1,5 @@
 <template>
-  <IonItem
-    :button="true"
-    lines="none"
-  >
+  <IonItem :button="true" lines="none">
     <ProfileAvatar
       slot="start"
       :image="credit?.customer?.logo"
@@ -13,11 +10,13 @@
     <IonLabel>
       <p>
         <IonText color="dark">{{ credit?.customer?.name }}- </IonText>
-        <IonText color="medium">GHS {{ credit?.total_sales_price }}</IonText>
+        <IonText color="medium">
+          {{ Filters.currency(credit?.total_sales_price) }}</IonText
+        >
       </p>
-      <p class="font-medium">
+      <!-- <p class="font-medium">
         <IonText color="medium"> Frytol Oil 24kg/21pieces </IonText>
-      </p>
+      </p> -->
       <p class="font-medium">
         <IonText color="medium">
           Order date: {{ Filters.date(credit?.created_at as string, "short") }}

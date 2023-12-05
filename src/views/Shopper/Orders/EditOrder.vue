@@ -207,14 +207,17 @@ const updateOrder = async () => {
         quantity: item.quantity,
         total_price: item.total_price,
         unit_price: item.unit_price,
-        products_units_id: item.product_units_id,
+        product_units_id: item.product_units_id,
         cms_users_id: item.cms_users_id,
         businesses_id: item.businesses_id,
         currencies_id: item.currencies_id,
       };
     }),
   };
-  const reponse = await orderStore.updateOrder(+route.params.id, updatedOrder);
+  const response = await orderStore.updateOrder(+route.params.id, updatedOrder);
+  if (response) {
+    router.push("/shopper/orders/history");
+  }
   toastStore.unblockUI();
 };
 

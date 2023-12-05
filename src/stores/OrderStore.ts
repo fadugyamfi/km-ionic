@@ -17,21 +17,7 @@ const KOLA_EDITED_ORDER = "kola.edited-order";
 export const useOrderStore = defineStore("order", {
   state: () => {
     return {
-      orders: [
-        // new Order({
-        //   id: 1,
-        //   businesses_id: 71,
-        //   customer_id: 72,
-        //   start_dt: "2023-10-25 10:00:00",
-        //   created_at: "2023-10-25 10:00:00",
-        //   due_date: "2023-11-01",
-        //   order_status_id: 8,
-        //   order_status: {
-        //     id: 8,
-        //     name: "Cancelled",
-        //   },
-        // }),
-      ] as Order[],
+      orders: [] as Order[],
       editedOrder: {} as Order,
       editing: false,
       approving: false,
@@ -44,12 +30,6 @@ export const useOrderStore = defineStore("order", {
       let data = await storage.get(KOLA_EDITED_ORDER);
       console.log(data);
       Object.assign(this.editedOrder, data);
-
-      // this.editedOrder = (
-      //   data ? data.map((d: object) => new Order(d)) : []
-      // ) as Order[];
-
-      // return this;
     },
 
     async fetchPlacedOrders(options = {}) {
@@ -154,15 +134,17 @@ export const useOrderStore = defineStore("order", {
     async updateOrder(orderId: any, updatedData: any): Promise<Boolean> {
       try {
         const response = await axios.put(`/v2/orders/${orderId}`, updatedData); // Replace with your API endpoint for updating orders
-        if (response.status === 200) {
+        if (response) {
           // Find the index of the updated order in the store
           const orderIndex = this.orders.findIndex(
             (order) => order.id === orderId
           );
+          console.log(orderIndex, this.orders);
           if (orderIndex !== -1) {
             // Update the order in the store with the new data
             this.orders[orderIndex] = new Order(response.data.data);
             this.editedOrder = {} as Order;
+            this.persist();
             this.editing = false;
             toastStore.showSuccess("Order updated successfully.");
           }
