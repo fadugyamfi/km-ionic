@@ -217,6 +217,7 @@ export default defineComponent({
         const userStore = useUserStore();
 
         const payment = new SalePayment({
+          cms_users_id: userStore.user?.id,
           sales_id: +this.$route.params.id,
           businesses_id: userStore.activeBusiness?.id,
           ...this.form.fields,

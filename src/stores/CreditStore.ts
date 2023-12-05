@@ -75,12 +75,15 @@ export const useCreditStore = defineStore("credit", {
       }
     },
     async getRecordedRepayments(
-      business_id: string | number
+      business_id: string | number,
+      sales_id: string | number
     ): Promise<SalePayment[] | null> {
       try {
-        const response = await axios.get(
-          `v2/sale-payments?businesses_id=${business_id}`
-        );
+        const params = {
+          businesses_id: business_id,
+          sales_id,
+        };
+        const response = await axios.get("v2/sale-payments", { params });
         this.recordedRepayments = response.data.data.map(
           (item: any) => new SalePayment(item)
         );

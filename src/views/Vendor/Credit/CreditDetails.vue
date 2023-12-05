@@ -39,11 +39,13 @@
               filters.date(credit?.order?.due_date as string, "short") || "N/A"
             }}</IonText>
 
-            <IonChip v-if="credit?.order?.days_overdue" color="danger" class="font-medium fw-bold" slot="end">
-              {{
-                credit?.order?.days_overdue 
-               
-              }} days overdue
+            <IonChip
+              v-if="credit?.order?.days_overdue"
+              color="danger"
+              class="font-medium fw-bold"
+              slot="end"
+            >
+              {{ credit?.order?.days_overdue }} days overdue
             </IonChip>
           </section>
         </ion-card>
@@ -181,12 +183,9 @@ export default defineComponent({
       try {
         this.loading = true;
         this.receivedRepayments = await this.creditStore.getRecordedRepayments(
-          this.credit?.customer?.id as string | number
+          this.credit?.customer?.id as string | number,
+          +this.$route.params.id
         );
-        this.receivedRepayments = this.receivedRepayments?.splice(
-          0,
-          3
-        ) as SalePayment[];
       } catch (error) {
         handleAxiosRequestError(error);
         this.loading = false;

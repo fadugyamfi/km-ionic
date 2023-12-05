@@ -49,6 +49,8 @@ export class Order {
     public delivery_location?: string;
     public delivery_date?: string;
     public payment_option_id?: number;
+    public days_overdue?: number | string;
+    public due_date?: number | string;
     public order_items_count = 0;
 
     public _order_status_histories: OrderStatusHistory[] = [];

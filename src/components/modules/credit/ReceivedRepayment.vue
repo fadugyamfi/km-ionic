@@ -10,7 +10,8 @@
     <IonLabel>
       <p>
         <IonText color="dark"
-          >{{ receivedRepayment?.business?.name }} paid-
+          >{{ receivedRepayment?.business?.name }}
+          {{ receivedRepayment.isPaid() ? "paid" : "" }} -
         </IonText>
         <IonText color="medium"
           >{{
