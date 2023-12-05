@@ -39,13 +39,13 @@
           class="kola-input ion-margin-bottom"
           :label="$t('profile.address.region')"
           :class="{
-            'ion-invalid ion-touched': form.errors.region,
+            'ion-invalid ion-touched': form.errors.state_id,
           }"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.region"
+          v-model="form.fields.state_id"
           required
-          name="region"
+          name="state_id"
           :toggle-icon="chevronDownOutline"
           @ion-change="form.validateSelectInput($event)"
         >
@@ -147,21 +147,25 @@ const fetching = ref(false);
 
 const form = useForm({
   city: "",
-  statusbar: "",
+  state_id: "",
   address: "",
 });
 
 const formValid = computed(() => {
   const fields = form.fields;
-  return !!fields.region_id; 
+  return fields.state_id && fields.address && fields.city; 
 });
 
 const updateBusinessLocations = async () => {
   try {
     toastStore.blockUI("Hold On As We Add Your Address");
-    const businessLocation = await businessStore.updateBusinessLocations(
-      form.fields
-      //router.params.id
+    const businessLocation = await businessStore.updateBusinessLocation(
+      form.fields,
+      userStore.activeBusiness?.id as string,
+      route.params.id as string,
+    
+    
+      
     );
 
     if (businessLocation) {
