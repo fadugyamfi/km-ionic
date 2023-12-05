@@ -162,10 +162,7 @@ const updateBusinessLocations = async () => {
     const businessLocation = await businessStore.updateBusinessLocation(
       form.fields,
       userStore.activeBusiness?.id as string,
-      route.params.id as string,
-    
-    
-      
+      route.params.id as string,  
     );
 
     if (businessLocation) {
