@@ -39,6 +39,7 @@
         </div>
 
         <CreditHistoryItem
+          @click="viewDetails(credit)"
           @openMenu="openMenu($event, index)"
           v-for="(credit, index) in credits"
           :key="credit.id"
@@ -189,6 +190,9 @@ export default defineComponent({
       } finally {
         this.fetching = false;
       }
+    },
+    viewDetails(credit: Credit) {
+      this.$router.push(`/vendor/credits/${credit.id}/credit-details`);
     },
   },
 
