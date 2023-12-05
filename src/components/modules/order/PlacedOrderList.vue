@@ -8,27 +8,46 @@
       @openMenu="openMenu($event, index)"
     >
       <template v-slot:popover>
-        <IonPopover :event="event" :isOpen="openPopover == index" @didDismiss="openPopover = -1">
-            <IonContent class="ion-no-padding">
-                <IonList lines="full" class="ion-no-padding">
-                    <ion-item :button="true" lines="full" aria-label="sync">
-                        <ion-icon slot="start" :icon="sync" aria-hidden="true"></ion-icon>
-                        {{ $t('general.reorder') }}
-                    </ion-item>
-                    <ion-item :button="true" lines="full" :disabled="true">
-                        <ion-icon slot="start" :icon="chatbubbleOutline"></ion-icon>
-                        {{ $t('vendor.orders.messageSupplier') }}
-                    </ion-item>
-                    <ion-item :button="true" lines="full">
-                        <ion-icon slot="start" :icon="createOutline"></ion-icon>
-                        {{ $t('general.edit') }}
-                    </ion-item>
-                    <ion-item :button="true" lines="full" @click="deleteOrder(order)">
-                        <ion-icon slot="start" :icon="trashOutline"></ion-icon>
-                        {{ $t('general.delete') }}
-                    </ion-item>
-                </IonList>
-            </IonContent>
+        <IonPopover
+          :event="event"
+          :isOpen="openPopover == index"
+          @didDismiss="openPopover = -1"
+        >
+          <IonContent class="ion-no-padding">
+            <IonList lines="full" class="ion-no-padding">
+              <ion-item
+                :button="true"
+                lines="full"
+                aria-label="sync"
+                :disabled="!canReorder(order)"
+                @click="reOrder(order)"
+              >
+                <ion-icon
+                  slot="start"
+                  :icon="sync"
+                  aria-hidden="true"
+                ></ion-icon>
+                {{ $t("general.reorder") }}
+              </ion-item>
+              <ion-item :button="true" lines="full" :disabled="true">
+                <ion-icon slot="start" :icon="chatbubbleOutline"></ion-icon>
+                {{ $t("vendor.orders.messageSupplier") }}
+              </ion-item>
+              <ion-item
+                :button="true"
+                lines="full"
+                :disabled="!canUpdate(order)"
+                @click="editOrder(order)"
+              >
+                <ion-icon slot="start" :icon="createOutline"></ion-icon>
+                {{ $t("general.edit") }}
+              </ion-item>
+              <ion-item :button="true" lines="full" @click="deleteOrder(order)">
+                <ion-icon slot="start" :icon="trashOutline"></ion-icon>
+                {{ $t("general.delete") }}
+              </ion-item>
+            </IonList>
+          </IonContent>
         </IonPopover>
       </template>
     </PlacedOrderListItem>
@@ -44,23 +63,42 @@
 </template>
 
 <script lang="ts">
-import { defineProps, computed, PropType, ref, defineComponent } from 'vue';
-import { IonAvatar, IonBadge, IonIcon, IonItem, IonLabel, IonList, IonPopover, IonContent, IonSkeletonText, IonButton, IonChip, IonText } from '@ionic/vue';
-import { chatbubbleOutline, createOutline, ellipsisHorizontal, trashOutline } from 'ionicons/icons';
-import { create } from 'ionicons/icons';
-import { trash } from 'ionicons/icons';
-import { sync } from 'ionicons/icons';
-import { chatbubble } from 'ionicons/icons';
-import { useOrderStore } from '@/stores/OrderStore';
-import { Order } from '@/models/Order';
-import { mapStores } from 'pinia';
-import filters from '@/utilities/Filters';
-import Image from '../../Image.vue';
-import PlacedOrderListItem from './PlacedOrderListItem.vue';
-import DeleteModal from "@/components/modals/DeleteModal.vue";
+import { defineProps, computed, PropType, ref, defineComponent } from "vue";
+import {
+  IonAvatar,
+  IonBadge,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonPopover,
+  IonContent,
+  IonSkeletonText,
+  IonButton,
+  IonChip,
+  IonText,
+} from "@ionic/vue";
+import {
+  chatbubbleOutline,
+  createOutline,
+  ellipsisHorizontal,
+  trashOutline,
+} from "ionicons/icons";
+import { create } from "ionicons/icons";
+import { trash } from "ionicons/icons";
+import { sync } from "ionicons/icons";
+import { chatbubble } from "ionicons/icons";
+import { useOrderStore } from "@/stores/OrderStore";
+import { Order } from "@/models/Order";
+import { mapStores } from "pinia";
+import filters from "@/utilities/Filters";
+import Image from "../../Image.vue";
+import PlacedOrderListItem from "./PlacedOrderListItem.vue";
+import DeleteModal from "../../modals/DeleteModal.vue";
+import { useCartStore } from "@/stores/CartStore";
+import { useToastStore } from "@/stores/ToastStore";
 
 export default defineComponent({
-
   props: {
     orders: {
       type: Array as PropType<Order[]>,
@@ -69,34 +107,46 @@ export default defineComponent({
   },
 
   components: {
-    IonAvatar, IonBadge, IonIcon, IonItem, IonLabel, IonList, IonPopover, IonContent, IonSkeletonText,
+    IonAvatar,
+    IonBadge,
+    IonIcon,
+    IonItem,
+    IonLabel,
+    IonList,
+    IonPopover,
+    IonContent,
+    IonSkeletonText,
     IonButton,
     IonChip,
     IonText,
     Image,
     PlacedOrderListItem,
-    DeleteModal
-},
+    DeleteModal,
+  },
 
   computed: {
-    ...mapStores(useOrderStore)
+    ...mapStores(useOrderStore, useCartStore, useToastStore),
   },
 
   data() {
     return {
-      sync, create, trash, chatbubble, chatbubbleOutline,
-      createOutline, ellipsisHorizontal, trashOutline,
+      sync,
+      create,
+      trash,
+      chatbubble,
+      chatbubbleOutline,
+      createOutline,
+      ellipsisHorizontal,
+      trashOutline,
       event: null as any,
       openPopover: -1,
       selectedOrder: null as Order | null,
       showConfirmDeleteModal: false,
-      filters
-    }
+      filters,
+    };
   },
 
   methods: {
-
-
     openMenu(event: any, index: number) {
       this.event = event;
       this.openPopover = index;
@@ -119,13 +169,51 @@ export default defineComponent({
     },
 
     viewDetails(order: Order) {
-      this.$emit('view-details', order);
+      this.$emit("view-details", order);
       this.$router.push(`/shopper/orders/${order.id}`);
-    }
-  }
-})
-
-
+    },
+    async reOrder(order: Order) {
+      this.closeMenu();
+      const toastStore = useToastStore();
+      try {
+        toastStore.blockUI("");
+        const orderReorder = await this.orderStore.fetchOrder(Number(order.id));
+        if (orderReorder) {
+          toastStore.unblockUI();
+          this.cartStore.reOrder(orderReorder);
+          this.$router.push("/shopper/cart/business");
+        } else {
+          toastStore.showError(
+            "Failed to Reorder. Please try again",
+            "",
+            "bottom",
+            "footer"
+          );
+        }
+      } catch (error) {
+        toastStore.unblockUI();
+      }
+    },
+    editOrder(order: Order) {
+      this.$router.push(`/shopper/orders/${order.id}/edit-order`);
+      this.closeMenu();
+    },
+    canUpdate(order: Order): Boolean {
+      if (order.order_status_id == 1 || order.order_status_id == 2) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    canReorder(order: Order): Boolean {
+      if (order.order_status_id && order.order_status_id >= 7) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
+});
 </script>
 <style scoped lang="scss">
 .order-list {
@@ -139,7 +227,6 @@ export default defineComponent({
   --align-content: center;
   --justify-content: center;
   --align-items: center;
-
 }
 
 .badge {

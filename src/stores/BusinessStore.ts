@@ -181,6 +181,7 @@ export const useBusinessStore = defineStore("business", {
         const params = {
           businesses_id: business.id,
           limit,
+          product_name_has: this.searchQuery,
         };
 
         const response = await axios.get(`/v2/products`, { params });
@@ -417,25 +418,27 @@ export const useBusinessStore = defineStore("business", {
     async getBusinessSummary(business: Business, options = {}) {
       const params = { ...options };
 
-      return axios.get(`/v2/businesses/${business.id}/summary`, { params })
-        .then(response => {
+      return axios
+        .get(`/v2/businesses/${business.id}/summary`, { params })
+        .then((response) => {
           this.businessSummary = response.data.data;
           return this.businessSummary;
         })
-        .catch(error => handleAxiosRequestError(error))
+        .catch((error) => handleAxiosRequestError(error));
     },
 
     async getTopSellingProducts(business: Business, options = {}) {
       const params = {
         businesses_id: business.id,
         limit: 30,
-        filter: 'by-value',
-        ...options
-      }
+        filter: "by-value",
+        ...options,
+      };
 
-      return axios.get('/v2/metrics/top-products', { params })
-        .then(response => response.data.data)
-        .catch(error => handleAxiosRequestError(error));
-    }
-  }
+      return axios
+        .get("/v2/metrics/top-products", { params })
+        .then((response) => response.data.data)
+        .catch((error) => handleAxiosRequestError(error));
+    },
+  },
 });
