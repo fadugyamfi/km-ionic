@@ -12,10 +12,13 @@
             <IonLabel>{{ $t('general.orders') }}</IonLabel>
         </IonTabButton>
 
-        <IonTabButton tab="tab3" href="/shopper/cart/business">
+        <IonTabButton tab="tab3" class="cartTab" href="/shopper/cart/business">
             <img src="/images/navigation/cart.svg" />
             <img class="active" src="/images/navigation/cart_active.svg" />
             <IonLabel>{{ $t('general.cart') }}</IonLabel>
+            <IonBadge v-if="cartStore.orders?.length > 0">
+                {{ cartStore.orders?.length }}
+            </IonBadge>
         </IonTabButton>
 
         <IonTabButton tab="tab4" href="/shopper/credits">
@@ -33,14 +36,34 @@
 </template>
 
 <script lang="ts">
-import { IonLabel, IonTabBar, IonTabButton } from '@ionic/vue';
+import { IonBadge, IonLabel, IonTabBar, IonTabButton } from '@ionic/vue';
+import { mapStores } from 'pinia';
 import { defineComponent } from 'vue';
+import { useCartStore } from '@/stores/CartStore';
 
 
 export default defineComponent({
     data() {
         return {};
     },
-    components: { IonTabBar, IonTabButton, IonLabel }
+    components: { IonTabBar, IonTabButton, IonLabel, IonBadge },
+
+    computed: {
+        ...mapStores( useCartStore )
+    }
 })
 </script>
+
+<style scoped lang="scss">
+.cartTab {
+    position: relative;
+
+    ion-badge {
+        --background: #003366;
+        position: absolute;
+        font-size: 0.7em;
+        top: 5px;
+        right: 5px;
+    }
+}
+</style>

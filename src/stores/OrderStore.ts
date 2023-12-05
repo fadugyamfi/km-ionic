@@ -9,8 +9,6 @@ import { ChangeStatusRequest } from "../models/types";
 import Product from "@/models/Product";
 import { OrderItem } from "@/models/OrderItem";
 
-const toastStore = useToastStore();
-
 const storage = new AppStorage();
 
 export const useOrderStore = defineStore("order", {
@@ -115,6 +113,8 @@ export const useOrderStore = defineStore("order", {
     },
 
     async updateOrder(orderId: any, updatedData: any): Promise<Boolean> {
+      const toastStore = useToastStore();
+
       try {
         const response = await axios.put(`/v2/orders/${orderId}`, updatedData); // Replace with your API endpoint for updating orders
         if (response.status === 200) {
@@ -139,6 +139,8 @@ export const useOrderStore = defineStore("order", {
     },
 
     async editOrder(orderId: any, editedData: any) {
+      const toastStore = useToastStore();
+
       try {
         const response = await axios.put(`/v2/orders/${orderId}`, editedData); // Replace with your API endpoint for editing orders
         if (response.status === 200) {
@@ -159,6 +161,8 @@ export const useOrderStore = defineStore("order", {
     },
 
     async reorderOrder(orderId: number) {
+      const toastStore = useToastStore();
+
       try {
         const orderToReorder = this.orders.find(
           (order) => order.id === orderId

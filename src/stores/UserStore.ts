@@ -171,8 +171,17 @@ export const useUserStore = defineStore("user", {
       this.registering = userRegistering || false;
     },
 
+    isInShoppingMode() {
+      return this.appMode == "shopping";
+    },
+
     async setAppModeAsVendor() {
       this.appMode = 'vendor';
+      await storage.set('kola.app-mode', this.appMode, 7, 'days');
+    },
+
+    async setAppModeAsShopping() {
+      this.appMode = 'shopping';
       await storage.set('kola.app-mode', this.appMode, 7, 'days');
     },
 
@@ -361,10 +370,6 @@ export const useUserStore = defineStore("user", {
       axios.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${auth?.access_token}`;
-    },
-
-    isInShoppingMode() {
-      return this.appMode == "shopping";
     },
 
     resetUserForm() {

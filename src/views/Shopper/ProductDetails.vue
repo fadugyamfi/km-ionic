@@ -116,10 +116,10 @@ import BusinessMinimumOrder from '@/components/modules/business/BusinessMinimumO
 import ProductTags from '@/components/modules/products/ProductTags.vue';
 import ProductQuantitySelector from '@/components/modules/products/ProductQuantitySelector.vue';
 import FavoriteButton from '@/components/modules/products/FavoriteButton.vue';
-import CartStatusButton from '../../components/modules/products/CartStatusButton.vue';
-import { useCartStore } from '../../stores/CartStore';
-import { handleAxiosRequestError } from '../../utilities';
-import ProfileAvatar from '../../components/ProfileAvatar.vue';
+import CartStatusButton from '@/components/modules/products/CartStatusButton.vue';
+import { useCartStore } from '@/stores/CartStore';
+import { handleAxiosRequestError } from '@/utilities';
+import ProfileAvatar from '@/components/ProfileAvatar.vue';
 
 
 export default defineComponent({

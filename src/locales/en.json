@@ -243,6 +243,12 @@
     "business": {
       "noDescriptAvailable": "No Description Available",
       "unknownLocation": "Unknown Location"
+    },
+    "favorites": {
+      "title": "Your Favorites",
+      "brands": "Brands",
+      "products": "Products",
+      "businesses": "Businesses"
     }
   },
   "profile": {

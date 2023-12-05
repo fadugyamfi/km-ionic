@@ -13,8 +13,6 @@ import { useOrderStore } from "./OrderStore";
 const storage = new AppStorage();
 const KOLA_CART = "kola.cart";
 
-const businessStore = useBusinessStore();
-
 export type CartItem = {
   product: Product;
   quantity: number;
