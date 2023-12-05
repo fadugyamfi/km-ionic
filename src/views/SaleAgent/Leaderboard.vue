@@ -7,54 +7,21 @@
             <ion-back-button defaultHref="/agent/home"></ion-back-button>
           </ion-buttons>
 
-          <IonTitle size="small" class="fw-bold">Order History</IonTitle>
+          <IonTitle size="small" class="fw-bold">{{ $t('general.leaderboard') }}</IonTitle>
           <ion-buttons slot="end">
-            <IonButton @click="showFilterSheet = true" color="dark">
+            <!-- <IonButton @click="showFilterSheet = true" color="dark">
               <IonIcon :icon="optionsOutline"></IonIcon>
-            </IonButton>
+            </IonButton> -->
 
             <NotificationButton />
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-
-      <IonToolbar>
-        <IonSegment value="thisweek" mode="ios" @ionChange="onSegmentChanged($event)">
-          <IonSegmentButton value="today">
-            <IonLabel>
-              {{ $t('general.today') }}
-            </IonLabel>
-          </IonSegmentButton>
-          <IonSegmentButton value="thisweek">
-            <IonLabel>{{ $t('general.thisWeek') }}</IonLabel>
-          </IonSegmentButton>
-          <IonSegmentButton value="pastmonth">
-            <IonLabel>{{ $t('general.pastMonth') }}</IonLabel>
-          </IonSegmentButton>
-        </IonSegment>
-      </IonToolbar>
     </IonHeader>
 
 
     <ion-content>
-      <IonFab slot="fixed" vertical="bottom" horizontal="end">
-        <IonFabButton @click="onRaiseOrder()">
-          <IonIcon :icon="add"></IonIcon>
-        </IonFabButton>
-      </IonFab>
-
-      <div class="ion-padding ion-text-center" v-show="fetching">
-        <IonSpinner name="crescent"></IonSpinner>
-      </div>
-
-      <section v-show="!fetching">
-        <NoResults v-if="orderStore.orders?.length == 0"></NoResults>
-
-        <ReceivedOrderList :orders="orderStore.orders"></ReceivedOrderList>
-      </section>
-
-      <FilterOrdersSheet :isOpen="showFilterSheet" @didDismiss="showFilterSheet = false" @update="onFilterUpdate($event)">
-      </FilterOrdersSheet>
+      <LeaderBoard></Leaderboard>
     </ion-content>
 
   </ion-page>
@@ -76,8 +43,8 @@ import {
   IonButton,
   IonIcon,
   IonSpinner,
-IonFab,
-IonFabButton
+  IonFab,
+  IonFabButton
 } from '@ionic/vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import { defineComponent, ref } from 'vue';
@@ -90,6 +57,7 @@ import filters from '@/utilities/Filters';
 import FilterOrdersSheet from '@/components/modules/order/FilterOrdersSheet.vue';
 import NoResults from '@/components/layout/NoResults.vue';
 import { useUserStore } from '@/stores/UserStore';
+import LeaderBoard from '../../components/modules/agents/LeaderBoard.vue';
 
 export default defineComponent({
 
@@ -128,7 +96,8 @@ export default defineComponent({
     NoResults,
     IonSpinner,
     IonFab,
-    IonFabButton
+    IonFabButton,
+    LeaderBoard
 },
 
   computed: {

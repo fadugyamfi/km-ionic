@@ -310,8 +310,10 @@ export const useUserStore = defineStore("user", {
 
           const user = await this.fetchUserInfo();
 
-          if (!this.user?.isSuperAdmin()) {
+          if (this.user?.isOwner()) {
             this.fetchUserBusinesses();
+          } else {
+            this.fetchUserBusinesses(user?.parent_users_id);
           }
 
           return user;
@@ -323,9 +325,11 @@ export const useUserStore = defineStore("user", {
         });
     },
 
-    async fetchUserBusinesses() {
+    async fetchUserBusinesses(user_id: number|null = null) {
+      let user = user_id || this.user?.id;
+
       return axios
-        .get(`/v2/users/${this.user?.id}/businesses`)
+        .get(`/v2/users/${user}/businesses`)
         .then(async (response) => {
           const businesses = response.data.data;
           this.userBusinesses = businesses.map(
@@ -336,12 +340,7 @@ export const useUserStore = defineStore("user", {
             typeof this.userBusinesses != "undefined" &&
             this.userBusinesses.length > 0
           ) {
-            await storage.set(
-              "kola.user-businesses",
-              this.userBusinesses,
-              1,
-              "month"
-            );
+            await storage.set("kola.user-businesses", this.userBusinesses, 1, "month");
             this.setActiveBusiness(this.userBusinesses[0]);
           }
         });

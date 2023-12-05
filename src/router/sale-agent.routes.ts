@@ -129,6 +129,10 @@ export const SaleAgentRoutes = [
         path: "profile",
         component: () => import("@/views/Vendor/Profile.vue"),
       },
+      {
+        path: "leaderboard",
+        component: () => import("@/views/SaleAgent/Leaderboard.vue"),
+      },
     ],
   },
 ];

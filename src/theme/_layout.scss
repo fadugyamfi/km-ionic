@@ -98,7 +98,8 @@ ion-tabs {
     box-shadow: -4px 0px 8px rgba(0, 0, 0, 0.12);
 
     ion-tab-button {
-      img.active {
+      img.active,
+      ion-icon.active {
         display: none;
       }
 
@@ -107,11 +108,14 @@ ion-tabs {
       }
 
       &.tab-selected {
-        img.active {
+        img.active,
+        ion-icon.active {
           display: block;
+          color: #369;
         }
 
-        img:not(.active) {
+        img:not(.active),
+        ion-icon:not(.active) {
           display: none;
         }
 

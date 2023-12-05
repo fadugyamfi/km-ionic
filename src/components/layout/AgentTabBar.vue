@@ -18,10 +18,15 @@
       <IonLabel>{{ $t('general.sales') }}</IonLabel>
     </IonTabButton>
 
-    <IonTabButton tab="tab4" href="/agent/credits">
+    <!-- <IonTabButton tab="tab4" href="/agent/credits">
       <img src="/images/navigation/credit.svg" />
       <img src="/images/navigation/credit_active.svg" class="active" />
       <IonLabel>{{ $t('general.credit') }}</IonLabel>
+    </IonTabButton> -->
+    <IonTabButton tab="tab4" href="/agent/leaderboard">
+      <IonIcon :icon="starOutline"></IonIcon>
+      <IonIcon :icon="star" class="active"></IonIcon>
+      <IonLabel>{{ $t('general.leaderboard') }}</IonLabel>
     </IonTabButton>
 
     <IonTabButton tab="tab5" href="/agent/profile">
@@ -33,11 +38,19 @@
 </template>
 
 <script lang="ts">
-import { IonLabel, IonTabBar, IonTabButton } from '@ionic/vue';
+import { IonIcon, IonLabel, IonTabBar, IonTabButton } from '@ionic/vue';
+import { starOutline, star } from 'ionicons/icons';
 import { defineComponent } from 'vue';
 
 
 export default defineComponent({
-    components: { IonTabBar, IonTabButton, IonLabel }
+    components: { IonTabBar, IonTabButton, IonLabel, IonIcon },
+
+    data() {
+      return {
+        starOutline,
+        star
+      }
+    }
 })
 </script>
