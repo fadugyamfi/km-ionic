@@ -35,7 +35,7 @@
       <section v-show="!fetching">
         <NoResults v-if="orderStore.orders?.length == 0"></NoResults>
 
-        <AccountActivity></AccountActivity>
+        <!-- <AccountActivity></AccountActivity> -->
       </section>
 
     </ion-content>
