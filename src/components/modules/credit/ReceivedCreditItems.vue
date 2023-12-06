@@ -45,7 +45,7 @@
               slot="end"
               class="font-medium text-end ion-align-self-start fw-bold"
             >
-            {{ Filters.currency(credit?.total_sales_price) }}
+            {{ Filters.currency( Number(credit?.total_sales_price) ) }}
             </IonLabel>
           </IonItem>
         </IonList>

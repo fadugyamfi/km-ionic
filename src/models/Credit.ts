@@ -11,13 +11,23 @@ export default class Credit {
   public business?: Business;
   public sale_items?: any[];
   public sale_ended_at?: string;
-  public order?: Order;
   public sale_payments_sum_amount: number = 0;
+  public display_label?: string;
+  public _order?: Order;
 
   constructor(data: object | null) {
     Object.assign(this, data);
   }
+
   isPaid() {
     return this.sale_payments_sum_amount >= this.total_sales_price;
+  }
+
+  get order(): Order | undefined {
+    return this._order;
+  }
+
+  set order(value: object) {
+    this._order = new Order(value);
   }
 }

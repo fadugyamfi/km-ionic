@@ -24,7 +24,7 @@
         </IonText>
       </p>
 
-      <p v-if="credit.order.due_date">
+      <p v-if="credit.order?.due_date">
         <IonChip color="danger" class="font-medium">
           Due: {{ Filters.date(credit?.order?.due_date as string, "short") }}
         </IonChip>
