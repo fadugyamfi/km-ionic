@@ -27,7 +27,23 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <section v-if="!fetching">
-        <PersonalProfileHeader :user="user" />
+        <section
+          class="d-flex ion-justify-content-center flex-column ion-align-items-center"
+        >
+          <ProfileAvatar
+            font-size="40px"
+            custom-size="90px"
+            :image="user?.photo"
+            :username="user?.name"
+          ></ProfileAvatar>
+          <IonButton
+            fill="clear"
+            size="small"
+            @click="changePhoto"
+            style="text-transform: none"
+            >Change profile photo
+          </IonButton>
+        </section>
         <form class="ion-padding" v-show="!fetching">
           <IonInput
             class="kola-input ion-margin-bottom"
@@ -112,6 +128,7 @@ import { useGeolocation } from "@/composables/useGeolocation";
 import { useRouter } from "vue-router";
 import User from "@/models/User";
 import { useForm } from "@/composables/form";
+import ProfileAvatar from "@/components/ProfileAvatar.vue";
 
 const toastStore = useToastStore();
 const userStore = useUserStore();
@@ -119,6 +136,15 @@ const router = useRouter();
 
 const fetching = ref(false);
 const validating = ref(false);
+
+const defaultBackRoute = computed(() => {
+  const userStore = useUserStore();
+  if (userStore.appMode == "vendor") {
+    return "/vendor/profile";
+  } else {
+    return "/shopper/profile";
+  }
+});
 
 const user = computed(() => userStore.user);
 const form = useForm({
@@ -137,6 +163,11 @@ const formValid = computed(() => {
 const isChangeNumber = computed(
   () => form.fields.phone_number !== user.value?.phone_number
 );
+
+const changePhoto = () => {
+  Object.assign(userStore.userForm, form.fields);
+  router.push("/profile/personal/change-photo");
+};
 
 const onContinue = async () => {
   validating.value = true;
@@ -167,7 +198,6 @@ const updateProfile = async () => {
     if (user) {
       toastStore.unblockUI();
       toastStore.showSuccess("Profile has been updated successfully");
-      router.push("/profile/personal/edit-profile");
     } else {
       toastStore.unblockUI();
       toastStore.showError(

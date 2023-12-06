@@ -4,6 +4,7 @@ import { VendorSignupRoutes } from "./vendor-signup.routes";
 import { ShopperModeRoutes } from "./shopper-mode.routes";
 import { VendorModeRoutes } from "./vendor-mode.routes";
 import { ProfileRoutes } from "./profile.routes";
+import { SaleAgentRoutes } from "./sale-agent.routes";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -57,6 +58,9 @@ const routes: Array<RouteRecordRaw> = [
 
   // Profile Routes
   ...ProfileRoutes,
+
+  // Sale Agent Routes
+  ...SaleAgentRoutes
 ];
 
 const router = createRouter({

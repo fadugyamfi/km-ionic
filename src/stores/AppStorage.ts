@@ -41,7 +41,7 @@ export default class AppStorage {
         expires: later.getTime()
       };
 
-      await this._storage?.set(key, JSON.stringify(data));
+      await this._storage?.set(key, JSON.parse(JSON.stringify(data)));
       this.storeKey(key);
 
       return this;
@@ -58,8 +58,8 @@ export default class AppStorage {
       this.storeKey(key);
 
       try {
-        const data = await this._storage?.get(key);
-        result = JSON.parse(data);
+        result = await this._storage?.get(key);
+        // result = JSON.parse(data);
 
         if (result && this.isResultExpired(result)) {
           await this._storage?.remove(key);

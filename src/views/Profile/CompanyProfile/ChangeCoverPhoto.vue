@@ -4,7 +4,7 @@
       <IonToolbar>
         <IonButtons slot="start">
           <IonBackButton
-            defaultHref="/profile/company/edit-profile"
+            defaultHref="/profile/company/change-photo"
           ></IonBackButton>
         </IonButtons>
         <IonTitle></IonTitle>
@@ -13,7 +13,7 @@
 
     <IonContent class="ion-padding">
       <HeaderArea
-        :title="$t('signup.vendor.uploadYourProfilePhoto')"
+        :title="$t('signup.vendor.uploadYourCoverPhoto')"
         :subtext="$t('signup.vendor.uploadInstructions')"
       ></HeaderArea>
 
@@ -49,7 +49,9 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <FooterNavigation @continue="onContinue()"></FooterNavigation>
+      <KolaYellowButton @click="updateProfile()">
+        {{ $t("profile.customers.save") }}</KolaYellowButton
+      >
     </IonFooter>
   </IonPage>
 </template>
@@ -74,9 +76,11 @@ import FooterNavigation from "@/views/Signup/Vendor/FooterNavigation.vue";
 import HeaderArea from "@/views/Signup/Vendor/HeaderArea.vue";
 import { usePhotoGallery, UserPhoto } from "@/composables/usePhotoGallery";
 import { mapStores } from "pinia";
+import { useBusinessStore } from "@/stores/BusinessStore";
 import { useToastStore } from "@/stores/ToastStore";
 import { handleAxiosRequestError } from "@/utilities";
 import { useUserStore } from "@/stores/UserStore";
+import KolaYellowButton from "@/components/KolaYellowButton.vue";
 
 export default defineComponent({
   components: {
@@ -94,6 +98,7 @@ export default defineComponent({
     HeaderArea,
     IonImg,
     IonButton,
+    KolaYellowButton
   },
 
   data() {
@@ -107,7 +112,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useUserStore),
+    ...mapStores(useUserStore, useToastStore, useBusinessStore),
   },
 
   methods: {
@@ -119,7 +124,7 @@ export default defineComponent({
 
         this.photo = photos.value ? photos.value[0] : null;
         if (this.photo) {
-          this.userStore.companyForm.logo = this.photo.base64Data as string;
+          this.userStore.companyForm.photo = this.photo.base64Data as string;
         }
       } catch (e) {
         console.log(e);
@@ -134,15 +139,39 @@ export default defineComponent({
 
         this.photo = photos.value ? photos.value[0] : null;
         if (this.photo) {
-          this.userStore.companyForm.logo = this.photo.base64Data as string;
+          this.userStore.companyForm.photo = this.photo.base64Data as string;
         }
       } catch (e) {
         console.log(e);
       }
     },
 
-    onContinue() {
-      this.$router.push("/profile/company/change-cover-photo");
+    async updateProfile() {
+      try {
+        this.toastStore.blockUI("Hold On As We Update Company Profile");
+        const response = await this.businessStore.updateBusiness(
+          Number(this.userStore.activeBusiness?.id),
+          this.userStore.companyForm
+        );
+        if (response) {
+          this.toastStore.unblockUI();
+          this.toastStore.showSuccess("Company profile has been updated successfully");
+          setTimeout(() => {
+            this.$router.push("/profile/company/edit-profile");
+          }, 500);
+        } else {
+          this.toastStore.unblockUI();
+          this.toastStore.showError(
+            "Failed to update Company profile. Please try again",
+            "",
+            "bottom",
+            "footer"
+          );
+        }
+      } catch (error) {
+      } finally {
+        this.toastStore.unblockUI();
+      }
     },
   },
 });

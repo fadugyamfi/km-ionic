@@ -1,12 +1,17 @@
 <template>
   <ion-page>
-
     <ShopperHeader :show-search="true"></ShopperHeader>
 
     <ion-content :fullscreen="true">
       <CategoryPills></CategoryPills>
 
       <PromoSpace></PromoSpace>
+
+      <Promotions
+        v-for="promotion in promotions"
+        :key="promotion.id"
+        :promotion="promotion"
+      ></Promotions>
 
       <TopCategories></TopCategories>
 
@@ -24,38 +29,53 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent } from '@ionic/vue';
-import ShopperHeader from '@/components/layout/ShopperHeader.vue';
-import SuppliersNearYou from '@/views/Shopper/Home/SuppliersNearYou.vue';
-import ModeToggleCard from '@/components/cards/ModeToggleCard.vue';
-import TopCategories from './TopCategories.vue';
-import TopBrands from './TopBrands.vue';
-import RecentlyViewedProducts from './RecentlyViewedProducts.vue';
-import CategoryPills from './CategoryPills.vue';
-import PromoSpace from './PromoSpace.vue';
+import { IonPage, IonContent } from "@ionic/vue";
+import { onMounted, ref } from "vue";
+import ShopperHeader from "@/components/layout/ShopperHeader.vue";
+import SuppliersNearYou from "@/views/Shopper/Home/SuppliersNearYou.vue";
+import ModeToggleCard from "@/components/cards/ModeToggleCard.vue";
+import Promotions from "./Promotions.vue";
+import TopCategories from "./TopCategories.vue";
+import TopBrands from "./TopBrands.vue";
+import RecentlyViewedProducts from "./RecentlyViewedProducts.vue";
+import CategoryPills from "./CategoryPills.vue";
+import PromoSpace from "./PromoSpace.vue";
+import Promotion from "@/models/Promotion";
+import { usePromotionStore } from "@/stores/Promotion";
+
+const promotions = ref<Promotion[]>([]);
+
+const fetchPromotions = async () => {
+  const promotionStore = usePromotionStore();
+  promotions.value = await promotionStore.getPromotions();
+};
+
+onMounted(() => {
+  fetchPromotions();
+});
 </script>
 
 <style lang="scss">
-
 .shopper-home-section {
-    margin-bottom: 10px;
-    margin-top: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
 
-    header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 14px;
-        padding-bottom: 10px;
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-bottom: 10px;
 
-        h6 {
-            font-weight: bold;
-            font-size: 1em;
-            margin: 0px;
-        }
-
-        a {
-            padding: 3px 10px;
-        }
+    h6 {
+      font-weight: bold;
+      font-size: 1em;
+      margin: 0px;
     }
-}</style>
+
+    a {
+      padding: 3px 10px;
+    }
+  }
+}
+</style>

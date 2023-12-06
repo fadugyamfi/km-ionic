@@ -6,6 +6,7 @@ export class OrderItem {
 
     public id?: number | string;
     public businesses_id?: number;
+    public cms_users_id?: number | string;
     public products_id? : number;
     public product_name? : string;
     public product_image? : string;

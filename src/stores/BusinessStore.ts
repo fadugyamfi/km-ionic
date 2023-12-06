@@ -9,9 +9,9 @@ import { useToastStore } from "./ToastStore";
 import Product from "@/models/Product";
 import Address from "@/models/Address";
 import { useRouter } from "vue-router";
+import Customer from "../models/Customer";
 
 const storage = new AppStorage();
-const toastStore = useToastStore();
 
 export const useBusinessStore = defineStore("business", {
   state: () => ({

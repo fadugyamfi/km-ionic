@@ -4,7 +4,7 @@
       <IonToolbar>
         <IonButtons slot="start">
           <IonBackButton
-            defaultHref="/profile/company/edit-profile"
+            defaultHref="/profile/personal/edit-profile"
           ></IonBackButton>
         </IonButtons>
         <IonTitle></IonTitle>
@@ -49,7 +49,9 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <FooterNavigation @continue="onContinue()"></FooterNavigation>
+      <KolaYellowButton @click="updateProfile()">
+        {{ $t("profile.customers.save") }}</KolaYellowButton
+      >
     </IonFooter>
   </IonPage>
 </template>
@@ -69,14 +71,18 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/vue";
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import FooterNavigation from "@/views/Signup/Vendor/FooterNavigation.vue";
 import HeaderArea from "@/views/Signup/Vendor/HeaderArea.vue";
 import { usePhotoGallery, UserPhoto } from "@/composables/usePhotoGallery";
 import { mapStores } from "pinia";
+import { useBusinessStore } from "@/stores/BusinessStore";
 import { useToastStore } from "@/stores/ToastStore";
 import { handleAxiosRequestError } from "@/utilities";
+import { useForm } from "@/composables/form";
+import Business from "@/models/Business";
 import { useUserStore } from "@/stores/UserStore";
+import KolaYellowButton from "@/components/KolaYellowButton.vue";
 
 export default defineComponent({
   components: {
@@ -94,6 +100,7 @@ export default defineComponent({
     HeaderArea,
     IonImg,
     IonButton,
+    KolaYellowButton,
   },
 
   data() {
@@ -107,7 +114,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useUserStore),
+    ...mapStores(useUserStore, useToastStore),
   },
 
   methods: {
@@ -119,7 +126,7 @@ export default defineComponent({
 
         this.photo = photos.value ? photos.value[0] : null;
         if (this.photo) {
-          this.userStore.companyForm.logo = this.photo.base64Data as string;
+          this.userStore.userForm.photo = this.photo.base64Data as string;
         }
       } catch (e) {
         console.log(e);
@@ -134,15 +141,36 @@ export default defineComponent({
 
         this.photo = photos.value ? photos.value[0] : null;
         if (this.photo) {
-          this.userStore.companyForm.logo = this.photo.base64Data as string;
+          this.userStore.userForm.photo = this.photo.base64Data as string;
         }
       } catch (e) {
         console.log(e);
       }
     },
 
-    onContinue() {
-      this.$router.push("/profile/company/change-cover-photo");
+    async updateProfile() {
+      try {
+        this.toastStore.blockUI("Hold On As We Update Your Profile");
+        const response = await this.userStore.updateUserInfo();
+        if (response) {
+          this.toastStore.unblockUI();
+          this.toastStore.showSuccess("Profile has been updated successfully");
+          setTimeout(() => {
+            this.$router.push("/profile/personal/edit-profile");
+          }, 500);
+        } else {
+          this.toastStore.unblockUI();
+          this.toastStore.showError(
+            "Failed to update Profile. Please try again",
+            "",
+            "bottom",
+            "footer"
+          );
+        }
+      } catch (error) {
+      } finally {
+        this.toastStore.unblockUI();
+      }
     },
   },
 });

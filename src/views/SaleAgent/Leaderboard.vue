@@ -4,40 +4,24 @@
       <ion-header class="inner-header">
         <ion-toolbar class="ion-align-items-center">
           <ion-buttons slot="start">
-            <ion-back-button defaultHref="/shopper/home"></ion-back-button>
+            <ion-back-button defaultHref="/agent/home"></ion-back-button>
           </ion-buttons>
 
-          <IonTitle size="small" class="fw-bold">{{ $t('profile.accountActivity.accountActivitys') }}</IonTitle>
+          <IonTitle size="small" class="fw-bold">{{ $t('general.leaderboard') }}</IonTitle>
+          <ion-buttons slot="end">
+            <!-- <IonButton @click="showFilterSheet = true" color="dark">
+              <IonIcon :icon="optionsOutline"></IonIcon>
+            </IonButton> -->
+
+            <NotificationButton />
+          </ion-buttons>
         </ion-toolbar>
       </ion-header>
-
-      <IonToolbar>
-        <IonSegment value="thisweek" mode="ios" @ionChange="onSegmentChanged($event)">
-          <IonSegmentButton value="today">
-            <IonLabel>
-              {{ $t('general.today') }}
-            </IonLabel>
-          </IonSegmentButton>
-          <IonSegmentButton value="month">
-            <IonLabel>{{ $t('general.month') }}</IonLabel>
-          </IonSegmentButton>
-          <IonSegmentButton value="year">
-            <IonLabel>{{ $t('general.year') }}</IonLabel>
-          </IonSegmentButton>
-        </IonSegment>
-      </IonToolbar>
     </IonHeader>
+
+
     <ion-content>
-      <div class="ion-padding ion-text-center" v-show="fetching">
-        <IonSpinner name="crescent"></IonSpinner>
-      </div>
-
-      <section v-show="!fetching">
-        <NoResults v-if="orderStore.orders?.length == 0"></NoResults>
-
-        <AccountActivity></AccountActivity>
-      </section>
-
+      <LeaderBoard></Leaderboard>
     </ion-content>
 
   </ion-page>
@@ -58,18 +42,22 @@ import {
   IonTitle,
   IonButton,
   IonIcon,
-  IonSpinner
+  IonSpinner,
+  IonFab,
+  IonFabButton
 } from '@ionic/vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import { defineComponent, ref } from 'vue';
 import { useOrderStore } from '@/stores/OrderStore';
-import PlacedOrderList from '@/components/modules/order/PlacedOrderList.vue';
+import ReceivedOrderList from '@/components/modules/order/ReceivedOrderList.vue';
 import { search, arrowBack, ellipsisHorizontal, filter, optionsOutline, add } from 'ionicons/icons';
 import { mapStores } from 'pinia';
 import { formatMySQLDateTime, handleAxiosRequestError } from '@/utilities';
 import filters from '@/utilities/Filters';
 import FilterOrdersSheet from '@/components/modules/order/FilterOrdersSheet.vue';
 import NoResults from '@/components/layout/NoResults.vue';
+import { useUserStore } from '@/stores/UserStore';
+import LeaderBoard from '../../components/modules/agents/LeaderBoard.vue';
 
 export default defineComponent({
 
@@ -81,7 +69,9 @@ export default defineComponent({
       showFilterSheet: false,
       searchFilters: {
         start_dt: '',
-        end_dt: ''
+        end_dt: '',
+        customer_id: null,
+        cms_users_id: null as number | undefined | null
       }
     }
   },
@@ -98,34 +88,29 @@ export default defineComponent({
     IonBackButton,
     IonBadge,
     IonTitle,
-    PlacedOrderList,
+    ReceivedOrderList,
     NotificationButton,
     IonButton,
     IonIcon,
     FilterOrdersSheet,
     NoResults,
-    IonSpinner
-  },
+    IonSpinner,
+    IonFab,
+    IonFabButton,
+    LeaderBoard
+},
 
   computed: {
-    ...mapStores(useOrderStore)
+    ...mapStores(useOrderStore, useUserStore)
   },
 
   methods: {
-    async fetchAccountActivities() {
-      try {
-        this.fetching = true;
-        await this.orderStore.fetchPlacedOrders(this.searchFilters);
-      } catch (error) {
-        handleAxiosRequestError(error)
-      } finally {
-        this.fetching = false;
-      }
-    },
     async fetchOrders() {
       try {
         this.fetching = true;
+        this.searchFilters.cms_users_id = this.userStore.user?.id;
         await this.orderStore.fetchPlacedOrders(this.searchFilters);
+
       } catch (error) {
         handleAxiosRequestError(error)
       } finally {
@@ -139,7 +124,7 @@ export default defineComponent({
       const option = event.detail.value;
 
       switch (option) {
-        case 'month':
+        case 'pastmonth':
           start_dt.setMonth(start_dt.getMonth() - 1);
           break;
 
@@ -147,8 +132,8 @@ export default defineComponent({
           start_dt.setDate(start_dt.getDate() - 1);
           break;
 
-        case 'year':
-          start_dt.setDate(start_dt.setFullYear(2022,0,1));
+        case 'thisweek':
+          start_dt.setDate(start_dt.getDate() - 7);
           break;
       }
 
@@ -158,10 +143,19 @@ export default defineComponent({
       this.fetchOrders();
     },
 
+    onFilterUpdate(event: { start_dt: string, end_dt: string }) {
+      this.searchFilters.start_dt = event.start_dt;
+      this.searchFilters.end_dt = event.end_dt || formatMySQLDateTime(new Date().toISOString());
+      this.fetchOrders();
+    },
+
+    onRaiseOrder() {
+
+    }
   },
 
   mounted() {
-    this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'today' } }));
+    this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'thisweek' } }));
   }
 })
 </script>
