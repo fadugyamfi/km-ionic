@@ -2,12 +2,12 @@
   <IonHeader class="ion-no-border">
     <ion-toolbar>
       <IonTitle>
-        <IonText class="welcome">Welcome {{ userStore.activeBusiness?.name }} 👋</IonText>
+        <IonText class="welcome">
+          {{ $t('general.welcome') }} {{ userStore.user?.name }} 👋
+        </IonText>
       </IonTitle>
 
       <IonButtons slot="end">
-        <FavoritesButton></FavoritesButton>
-        <CartStatusButton></CartStatusButton>
         <NotificationButton></NotificationButton>
       </IonButtons>
     </ion-toolbar>
@@ -28,9 +28,7 @@ import { defineComponent } from 'vue';
 import { mapStores } from 'pinia';
 import { useUserStore } from '@/stores/UserStore';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
-import FavoritesButton from '@/components/modules/favorites/FavoritesButton.vue';
-import { useProductStore } from '@/stores/ProductStore';
-import CartStatusButton from '../modules/products/CartStatusButton.vue';
+import { useProductStore } from '../../stores/ProductStore';
 
 export default defineComponent({
 
@@ -50,10 +48,8 @@ export default defineComponent({
     IonIcon,
     IonText,
     NotificationButton,
-    FavoritesButton,
-    IonSearchbar,
-    CartStatusButton
-},
+    IonSearchbar
+  },
 
   computed: {
     ...mapStores(useUserStore)

@@ -26,6 +26,8 @@
     "today": "Today",
     "thisWeek": "This Week",
     "pastMonth": "Past Month",
+    "month": "Month",
+    "year": "Year",
     "delete": "Delete",
     "accept": "Accept",
     "update": "Update",
@@ -43,7 +45,9 @@
     "avgSalesValue": "Avg. Sales Value",
     "performance": "Performance",
     "noOfCustomers": "No. of Customers",
-    "bestSellingItem": "Best Selling Item"
+    "bestSellingItem": "Best Selling Item",
+    "welcome": "Welcome",
+    "leaderboard": "Leaderboard"
   },
   "onboarding": {
     "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -253,6 +257,12 @@
     "business": {
       "noDescriptAvailable": "No Description Available",
       "unknownLocation": "Unknown Location"
+    },
+    "favorites": {
+      "title": "Your Favorites",
+      "brands": "Brands",
+      "products": "Products",
+      "businesses": "Businesses"
     }
   },
   "profile": {
@@ -320,7 +330,36 @@
       "agentSaleReport": "Agent sales report",
       "filterAgent": "Filter agents sales report"
     },
-    "editProfile": "Edit Profile"
+    "editProfile": "Edit Profile",
+
+    "address": {
+    "address": "Address",
+    "city": "City",
+    "state": "State",
+    "zip": "Zip",
+    "country": "Country",
+    "region": "Region(You can select multiple regions location)",
+    "addAddress": "Add Address",
+    "editAddress": "Edit Address",
+    "save": "Save",
+    "cancel": "Cancel"
+    },
+
+    "accountActivity": {
+      "accountActivitys": "Account Activity",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip",
+      "country": "Country",
+      "region": "Region(You can select multiple regions location)",
+      "addAddress": "Add Address",
+      "editAddress": "Edit Address",
+      "save": "Save",
+      "cancel": "Cancel"
+      }
+
+
+
   },
   "settings": {
     "title": "Settings",

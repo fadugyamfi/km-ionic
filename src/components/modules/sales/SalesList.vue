@@ -1,6 +1,6 @@
 <template>
     <IonList lines="full">
-        <IonItem v-for="(sale, index) in sales" :key="sale.id" @click="viewDetails(sale)">
+        <IonItem :button="true" v-for="(sale, index) in sales" :key="sale.id" @click="viewDetails(sale)">
             <ProfileAvatar slot="start" class="ion-align-self-start" :image="sale.customer?.logo"
                            :username="sale.customer?.name" customSize="45px"></ProfileAvatar>
 

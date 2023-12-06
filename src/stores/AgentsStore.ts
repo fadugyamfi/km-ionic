@@ -6,6 +6,7 @@ import Business from "@/models/Business";
 import Agent from "@/models/Agent";
 import TopPerformingAgent from "@/models/TopPerformingAgent";
 import AppStorage from "./AppStorage";
+import { Sale } from "../models/Sale";
 
 const storage = new AppStorage();
 
@@ -13,6 +14,7 @@ export const useAgentsStore = defineStore("agents", {
   state: () => ({
     agents: [] as Agent[],
     meta: {},
+    sales: [] as Sale[]
   }),
   actions: {
     async getBusinessSaleAgents(
@@ -78,39 +80,6 @@ export const useAgentsStore = defineStore("agents", {
       }
       return [];
     },
-    // async createBusinessCustomer(postData: Object): Promise<Customer | null> {
-    //   const userStore = useUserStore();
-    //   return axios
-    //     .post(
-    //       `/v2/businesses/${userStore.activeBusiness?.id}/customers`,
-    //       postData
-    //     )
-    //     .then((response) => {
-    //       if (response.status >= 200 && response.status < 300) {
-    //         const data = response.data.data;
-    //         return data;
-    //       }
-    //     })
-    //     .catch((error) => handleAxiosRequestError(error));
-    // },
-    // async updateCustomer(
-    //   postData: Object,
-    //   customer_id: any
-    // ): Promise<Customer | null> {
-    //   const userStore = useUserStore();
-    //   return axios
-    //     .put(
-    //       `/v2/businesses/${userStore.activeBusiness?.id}/customers/${customer_id}`,
-    //       postData
-    //     )
-    //     .then((response) => {
-    //       if (response.status >= 200 && response.status < 300) {
-    //         const data = response.data.data;
-    //         return data;
-    //       }
-    //     })
-    //     .catch((error) => handleAxiosRequestError(error));
-    // },
 
     async getAgent(
       business: Business,
@@ -146,6 +115,29 @@ export const useAgentsStore = defineStore("agents", {
         })
         .catch((error) => {
           handleAxiosRequestError(error);
+        });
+    },
+
+    async fetchSales(options = {}): Promise<Sale[]> {
+      const userStore = useUserStore();
+      const params = {
+        cms_users_id: userStore.user?.id,
+        limit: 50,
+        ...options
+      };
+
+      return axios.get('/v2/sales', { params })
+        .then(response => {
+          const sales = response.data.data.map((el: object) => new Sale(el));
+
+          this.sales = [...sales];
+
+          return sales;
+        })
+        .catch(error => {
+          handleAxiosRequestError(error);
+
+          return [];
         });
     },
   },

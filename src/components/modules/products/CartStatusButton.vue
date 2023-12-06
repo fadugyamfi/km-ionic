@@ -2,8 +2,16 @@
     <IonButton fill="clear" @click="goToCart()">
         <IonIcon slot="icon-only" :icon="cartOutline"></IonIcon>
         <IonBadge>
-            {{ cartStore.items?.length }}
+            {{ cartStore.orders?.length }}
         </IonBadge>
+
+        <ConfirmModal
+            :is-open="confirmSwitch"
+            :title="'Switching To Shopping Mode'"
+            :description="'Are you sure you want to continue'"
+            @confirm="switchAndGoToCart()"
+            @dismiss="confirmSwitch = false"
+        ></ConfirmModal>
     </IonButton>
 </template>
 
@@ -13,17 +21,33 @@ import { cartOutline } from 'ionicons/icons';
 import Product from '@/models/Product';
 import { useRouter } from 'vue-router';
 import { useCartStore } from '@/stores/CartStore';
+import { useUserStore } from '@/stores/UserStore';
+import ConfirmModal from '../../modals/ConfirmModal.vue';
+import { ref } from 'vue';
 
 const props = defineProps({
     product: Product
-})
+});
+
+const confirmSwitch = ref(false);
 
 const router = useRouter();
 const cartStore = useCartStore();
+const userStore = useUserStore();
 cartStore.loadFromStorage();
 
 const goToCart = () => {
+    if( !userStore.isInShoppingMode() ) {
+        confirmSwitch.value = true;
+        return;
+    }
+
     router.push('/shopper/cart');
+}
+
+const switchAndGoToCart = () => {
+    userStore.setAppModeAsShopping();
+    goToCart();
 }
 </script>
 

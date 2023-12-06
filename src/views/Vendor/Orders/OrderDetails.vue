@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import { Order, OrderStatus } from '@/models/Order';
+import { Order } from '@/models/Order';
 import { IonIcon, IonContent, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonButton, IonSpinner, IonText } from '@ionic/vue';
 import { IonSelect, IonSelectOption, IonAvatar, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 import { defineComponent } from 'vue';
@@ -64,11 +64,11 @@ import { chatbubbleOutline } from 'ionicons/icons';
 import OrderImages from '@/components/modules/order/OrderImages.vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import OrderStatusHistoryView from '@/components/modules/order/OrderStatusHistoryView.vue';
-import KolaWhiteButton from '../../../components/KolaWhiteButton.vue';
-import { useUserStore } from '../../../stores/UserStore';
-import { useToastStore } from '../../../stores/ToastStore';
-import ReceivedOrderItems from '../../../components/modules/order/ReceivedOrderItems.vue';
-import ConfirmModal from '../../../components/modals/ConfirmModal.vue';
+import KolaWhiteButton from '@/components/KolaWhiteButton.vue';
+import { useUserStore } from '@/stores/UserStore';
+import { useToastStore } from '@/stores/ToastStore';
+import ReceivedOrderItems from '@/components/modules/order/ReceivedOrderItems.vue';
+import ConfirmModal from '@/components/modals/ConfirmModal.vue';
 
 export default defineComponent({
   components: {
@@ -88,7 +88,8 @@ export default defineComponent({
     OrderStatusHistoryView,
     KolaWhiteButton,
     IonText,
-    ReceivedOrderItems
+    ReceivedOrderItems,
+    ConfirmModal
 },
 
   name: 'OrderDetails',
