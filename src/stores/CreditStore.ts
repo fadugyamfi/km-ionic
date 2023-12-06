@@ -62,6 +62,10 @@ export const useCreditStore = defineStore("credit", {
       }
     },
     async deleteCredit(id: string | number) {
+      if( !this.credits ) {
+        return;
+      }
+
       try {
         await axios.delete(`v2/sales/${id}`);
         this.credits = this.credits.filter(
