@@ -13,6 +13,8 @@ const meta = (key: string) => {
 const storage = new AppStorage();
 
 type UserStoreState = {
+
+  fetechAccountActivities: [];
   onboarded: Boolean;
   user?: User | null;
   fetching: Boolean;
@@ -47,6 +49,7 @@ export interface ChangePINRequest {
 export const useUserStore = defineStore("user", {
   state: (): UserStoreState => {
     return {
+      fetechAccountActivities: [],
       onboarded: false,
       appMode: "shopping",
       fetching: false,
@@ -370,6 +373,7 @@ export const useUserStore = defineStore("user", {
         "Authorization"
       ] = `Bearer ${auth?.access_token}`;
     },
+
 
     resetUserForm() {
       this.userForm = {

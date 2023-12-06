@@ -35,22 +35,22 @@
           </IonButton>
         </IonItem>
 
-        <IonSelect
+        <IonSelect  
           class="kola-input ion-margin-bottom"
           :label="$t('profile.address.region')"
           :class="{
-            'ion-invalid ion-touched': form.errors.region,
+            'ion-invalid ion-touched': form.errors.state_id,
           }"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.region"
+          v-model="form.fields.state_id"
           required
-          name="region"
+          name="state_id"
           :toggle-icon="chevronDownOutline"
           @ion-change="form.validateSelectInput($event)"
         >
           >
-          <IonSelectOption
+          <IonSelectOption  
             v-for="region in regions"
             :key="region.id"
             :value="region.id"
@@ -59,7 +59,7 @@
           </IonSelectOption>
         </IonSelect>
 
-        <IonSelect
+        <IonInput
           class="kola-input ion-margin-bottom"
           :label="$t('profile.address.city')"
           :class="{
@@ -73,23 +73,17 @@
           :toggle-icon="chevronDownOutline"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption
-            v-for="region in regions"
-            :key="region.id"
-            :value="region.id"
-          >
-            {{ region.name }}
-          </IonSelectOption>
-        </IonSelect>
+      
+        </IonInput>
       </form>
     </ion-content>
     <IonFooter class="ion-padding-top ion-no-border">
-      <KolaWhiteButton :disabled="!formValid" @click.prevent="">{{
+      <KolaWhiteButton :disabled="!formValid" @click.prevent="cancel">{{
         $t("profile.address.cancel")
       }}</KolaWhiteButton>
       <KolaYellowButton
-        :disabled="!formValid"
-        @click.prevent="updateBusinessLocations"
+      :disabled="!formValid"
+              @click.prevent="updateBusinessLocations"
         >{{ $t("profile.customers.save") }}</KolaYellowButton
       >
     </IonFooter>
@@ -114,6 +108,7 @@ import {
   IonCheckbox,
   IonHeader,
   IonSpinner,
+  
 } from "@ionic/vue";
 import {
   close,
@@ -136,6 +131,7 @@ import { useForm } from "@/composables/form";
 import { useRoute, useRouter } from "vue-router";
 import { computed, onMounted, ref } from "vue";
 import { useUserStore } from "@/stores/UserStore";
+import Address from "@/models/Address";
 import EditAddressHeader from "@/components/header/EditAddressHeader.vue";
 
 const toastStore = useToastStore();
@@ -151,22 +147,22 @@ const fetching = ref(false);
 
 const form = useForm({
   city: "",
-  region_id: "",
+  state_id: "",
   address: "",
 });
 
 const formValid = computed(() => {
   const fields = form.fields;
-
-  return fields.region_id;
+  return fields.state_id && fields.address && fields.city; 
 });
 
 const updateBusinessLocations = async () => {
   try {
     toastStore.blockUI("Hold On As We Add Your Address");
-    const businessLocation = await businessStore.updateBusinessLocations(
-      form.fields
-      //router.params.id
+    const businessLocation = await businessStore.updateBusinessLocation(
+      form.fields,
+      userStore.activeBusiness?.id as string,
+      route.params.id as string,  
     );
 
     if (businessLocation) {
@@ -191,6 +187,11 @@ const updateBusinessLocations = async () => {
     toastStore.unblockUI();
   }
 };
+
+const cancel = () => {
+  // Handle cancel action
+};
+
 
 const getRegions = async () => {
   try {
@@ -219,17 +220,14 @@ const getLocation = async () => {
 
 const fetchAddress = async () => {
   fetching.value = true;
-  const userStore = useUserStore();
   const businessStore = useBusinessStore();
-
   try {
     const address = await businessStore.getBusinessLocation(
       route.params.business_id,
       route.params.id
     );
-
     if (address) {
-      form.fields.region_id = address.region_id;
+      form.fields.state_id = address.state_id;
       form.fields.city = address.city;
       form.fields.address = address.address;
     } else {
@@ -245,6 +243,7 @@ const fetchAddress = async () => {
 onMounted(() => {
   getRegions();
   fetchAddress();
+  updateBusinessLocations();
 });
 </script>
 

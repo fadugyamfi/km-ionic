@@ -58,7 +58,7 @@
           </IonSelectOption>
         </IonSelect>
 
-        <IonSelect
+        <IonInput
           class="kola-input ion-margin-bottom"
           :label="$t('profile.address.city')"
           :class="{
@@ -68,18 +68,11 @@
           fill="solid"
           v-model="form.fields.city"
           required
-          name="sales-agent"
+          name="city"
           :toggle-icon="chevronDownOutline"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption
-            v-for="agent in salesAgents"
-            :key="agent.id"
-            :value="agent.id"
-          >
-            {{ agent.name }}
-          </IonSelectOption>
-        </IonSelect>
+        </IonInput>
       
       </form>
     </ion-content>
@@ -166,6 +159,10 @@ const formValid = computed(() => {
 
   return fields.region_id;
 });
+
+const createCancel = async () => {
+  
+};
 
 const createBusinessLocation = async () => {
   try {

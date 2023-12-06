@@ -16,7 +16,7 @@ const storage = new AppStorage();
 export const useBusinessStore = defineStore("business", {
   state: () => ({
     businessLocations: [],
-    updatebusinessLocations: [],
+    updatebusinessLocation: {},
     businesses: null as Business[] | null,
     customers: null as Business[] | null,
     selectedBusiness: null as Business | null,
@@ -453,7 +453,7 @@ export const useBusinessStore = defineStore("business", {
       }
     },
 
-    async createBusinessLocations(postData: Object): Promise<| null> {
+    async createBusinessLocations(postData: Object): Promise<Address[] | null> {
       const userStore = useUserStore();
       return axios
         .post(
@@ -471,13 +471,15 @@ export const useBusinessStore = defineStore("business", {
 
     async updateBusinessLocation(
       postData: Object,
-      business_id: any
-    ): Promise<| null> {
+      business_id: number | string,
+      location_id: number | string
+  
+    ): Promise<Address> {
       const userStore = useUserStore();
       return axios
         .put(
-          `/v2/businesses/${business_id}/locations/:location_id`,
-          postData
+          `/v2/businesses/${business_id}/locations/${location_id}`,
+          { ...postData, business_id: userStore.activeBusiness?.id }
         )
         .then((response) => {
           if (response.status >= 200 && response.status < 300) {
@@ -491,7 +493,7 @@ export const useBusinessStore = defineStore("business", {
     async getBusinessLocation(
       business_id: any,
       location_id: any
-    ): Promise<| null> {
+    ): Promise<Address | null> {
       const userStore = useUserStore();
       return axios
         .get(
@@ -520,7 +522,7 @@ export const useBusinessStore = defineStore("business", {
           if (data) {
             const address = data.map((el: object) => new Business(el));
             // You have duplicated 'address' variable. I assume you want to find a specific customer here.
-            const foundAddress = address.find((c: Customer) => c.id === address_id);
+            const foundAddress = address.find((c: Address) => c.id === address_id);
 
             if (foundAddress) {
               return foundAddress;
