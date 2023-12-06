@@ -243,6 +243,7 @@ const fetchAddress = async () => {
 onMounted(() => {
   getRegions();
   fetchAddress();
+  updateBusinessLocations();
 });
 </script>
 
