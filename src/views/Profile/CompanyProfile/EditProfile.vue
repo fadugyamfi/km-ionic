@@ -30,7 +30,7 @@
       <section v-if="!fetching">
         <section class="banner">
           <img
-            :src="company?.photo || defaultBanner"
+            :src="company?.cover_image || defaultBanner"
             @error="onLoadError($event)"
           />
 
@@ -294,6 +294,7 @@ h6 {
   img {
     max-width: 100%;
     width: 100%;
+    max-height: 200px;
   }
 
   aside {

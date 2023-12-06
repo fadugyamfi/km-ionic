@@ -155,19 +155,24 @@ export const useBusinessStore = defineStore("business", {
         return null;
       }
     },
+
     async updateBusiness(
       businessId: number,
       businessData: Object
     ): Promise<Business | null> {
+      const userStore = useUserStore();
+
       try {
-        const response = await axios.put(
-          `/v2/businesses/${businessId}`,
-          businessData
-        );
+        const url = `/v2/businesses/${businessId}`;
+        const response = await axios.put(url, businessData);
 
         if (response) {
           const { data } = response.data;
-          return new Business(data);
+          const business = new Business(data);
+
+          userStore.setActiveBusiness(business);
+
+          return business;
         }
 
         return null;
@@ -176,6 +181,7 @@ export const useBusinessStore = defineStore("business", {
         return null;
       }
     },
+
     async getBusinessProducts(
       business: Business,
       limit: number = 50
