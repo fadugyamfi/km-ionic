@@ -76,7 +76,8 @@
       
       </form>
     </ion-content>
-    <IonFooter class="ion-padding-top ion-no-border">
+    <section  class="top">
+  <IonFooter class="ion-padding-top ion-no-border">
           <KolaWhiteButton
             :disabled="!formValid"
             @click.prevent="createCancel"
@@ -88,6 +89,9 @@
             >{{ $t("profile.customers.save") }}</KolaYellowButton
           >
         </IonFooter>
+</section>
+   
+   
   </ion-page>
 </template>
 
@@ -239,5 +243,8 @@ ion-badge.badge {
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+}
+.top {
+  margin: 10px;
 }
 </style>
