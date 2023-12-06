@@ -292,11 +292,9 @@ export const useOrderStore = defineStore("order", {
       if (
         product &&
         product?.businesses_id !== this.editedOrder?.businesses_id
-        product?.businesses_id !== this.editedOrder?.businesses_id
       ) {
         toastStore.showError(
           `Please add a product from ${
-            this.editedOrder?.business?.name?.split(" ")[0]
             this.editedOrder?.business?.name?.split(" ")[0]
           }`,
           "",
@@ -329,6 +327,9 @@ export const useOrderStore = defineStore("order", {
         toastStore.showSuccess("Added To Order");
       } else {
         orderItem.quantity = orderItem.quantity ? orderItem.quantity + 1 : 1;
+        orderItem.total_price = orderItem.unit_price
+          ? orderItem.unit_price * orderItem.quantity
+          : 0;
         toastStore.showInfo("Increased quantity in Order");
       }
       this.persist();
