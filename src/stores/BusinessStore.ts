@@ -15,7 +15,7 @@ const storage = new AppStorage();
 
 export const useBusinessStore = defineStore("business", {
   state: () => ({
-    businessLocations: [],
+    businessLocations: [] as Address[],
     updatebusinessLocation: {},
     businesses: null as Business[] | null,
     customers: null as Business[] | null,
@@ -465,6 +465,7 @@ export const useBusinessStore = defineStore("business", {
         .then((response) => {
           if (response.status >= 200 && response.status < 300) {
             const data = response.data.data;
+            this.businessLocations.push( new Address(data) );
             return data;
           }
         })
@@ -475,7 +476,7 @@ export const useBusinessStore = defineStore("business", {
       postData: Object,
       business_id: number | string,
       location_id: number | string
-  
+
     ): Promise<Address> {
       const userStore = useUserStore();
       return axios
@@ -486,6 +487,12 @@ export const useBusinessStore = defineStore("business", {
         .then((response) => {
           if (response.status >= 200 && response.status < 300) {
             const data = response.data.data;
+            const index = this.businessLocations.findIndex(loc => loc.id == location_id);
+
+            if( index > -1 ) {
+              this.businessLocations[index] = new Address(data);
+            }
+
             return data;
           }
         })
