@@ -11,7 +11,7 @@
       <p>
         <IonText color="dark"
           >{{ receivedRepayment?.business?.name }}
-          {{ receivedRepayment.isPaid() ? "paid" : "" }} -
+          {{ credit.isPaid() ? "paid" : "" }} -
         </IonText>
         <IonText color="medium"
           >{{
@@ -53,10 +53,15 @@ import Image from "@/components/Image.vue";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import Filters from "@/utilities/Filters";
 import { SalePayment } from "@/models/SalePayment";
+import Credit from "@/models/Credit";
 
 const props = defineProps({
   receivedRepayment: {
     type: SalePayment as PropType<SalePayment>,
+    default: () => {},
+  },
+  credit: {
+    type: Credit,
     default: () => {},
   },
 });

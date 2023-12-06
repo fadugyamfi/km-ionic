@@ -46,7 +46,5 @@ export class SalePayment {
   set payment_mode(value: object) {
     this._payment_mode = value ? new PaymentMode(value) : null;
   }
-  isPaid() {
-    return this.amount >= this.total_sales_price;
-  }
+ 
 }
