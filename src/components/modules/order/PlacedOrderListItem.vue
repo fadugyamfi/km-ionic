@@ -118,6 +118,10 @@ export default defineComponent({
             label: "Processing",
           };
         case 3:
+          return {
+            color: "success",
+            label: "Approved",
+          };
         case 7:
           return {
             color: "success",

@@ -144,7 +144,6 @@ import {
   arrowBackOutline,
   navigateOutline,
 } from "ionicons/icons";
-import CompanyProfileHeader from "@/components/modules/company/CompanyProfileHeader.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { ref, onMounted, computed } from "vue";
 import { handleAxiosRequestError } from "@/utilities";

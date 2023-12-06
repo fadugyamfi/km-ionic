@@ -79,7 +79,7 @@ export const useUserStore = defineStore("user", {
         name: "",
         email: "",
         phone_number: "",
-        photo: ""
+        photo: "",
       },
       companyForm: {
         business_types_id: "",
@@ -326,6 +326,17 @@ export const useUserStore = defineStore("user", {
 
           throw new Error(error.response?.data?.api_message);
         });
+    },
+
+    async deleteUser() {
+      return axios.delete(`/v2/users/${this.user?.id}`).then((response) => {
+        if (!response.data) {
+          throw new Error("Failed to delete account. Please try again.");
+        } else {
+          this.clearSessionInfo();
+          return response.data;
+        }
+      });
     },
 
     async fetchUserBusinesses(user_id: number|null = null) {

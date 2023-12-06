@@ -206,7 +206,7 @@ export default defineComponent({
       }
     },
     canReorder(order: Order): Boolean {
-      if (order.order_status_id == 7) {
+      if (order.order_status_id && order.order_status_id >= 7) {
         return true;
       } else {
         return false;
