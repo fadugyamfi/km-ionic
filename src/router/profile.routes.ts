@@ -90,6 +90,7 @@ export const ProfileRoutes = [
               },
             ],
           },
+
           {
             path: "edit-profile",
             component: () =>
@@ -99,6 +100,11 @@ export const ProfileRoutes = [
             path: "change-photo",
             component: () =>
               import("@/views/Profile/CompanyProfile/ChangePhoto.vue"),
+          },
+          {
+            path: "change-cover-photo",
+            component: () =>
+              import("@/views/Profile/CompanyProfile/ChangeCoverPhoto.vue"),
           },
         ],
       },
@@ -112,11 +118,43 @@ export const ProfileRoutes = [
             component: () => import("@/views/Profile/Personal/EditProfile.vue"),
           },
           {
+            path: "change-photo",
+            component: () =>
+              import("@/views/Profile/Personal/ChangeProfilePhoto.vue"),
+          },
+          {
             path: "reset-pin",
             component: () => import("@/views/Profile/Personal/ResetPin.vue"),
           },
         ],
       },
+      
+      {
+        path: "address",
+        component: () => import("@/views/Profile/Address.vue"),
+        children: [
+          {
+            path: "",
+            component: () =>
+              import("@/views/Profile/Address/AddressList.vue"),
+          },
+          {
+            path: "add-address",
+            component: () =>
+              import("@/views/Profile/Address/AddAddress.vue"),
+          },
+          {
+            path: "business/:business_id/location/:id/edit-address",
+            component: () =>
+              import("@/views/Profile/Address/EditAddress.vue"),
+          },
+        ],
+      },
+      {
+        path: "account-activity",
+        component: () =>
+          import("@/views/Profile/AccountActivity.vue"),
+      }, 
     ],
   },
 ];

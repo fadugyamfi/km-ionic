@@ -12,7 +12,7 @@
     </IonItem>
 
     <IonList lines="none">
-      <IonItem :detail="true" :button="true" class="profile-item" router-link="/profile/company/edit-profile">
+      <IonItem v-if="userStore.user?.isOwner()" :detail="true" :button="true" class="profile-item" router-link="/profile/company/edit-profile">
         <IonAvatar slot="start">
           <img src="/images/ic_location.svg" class="action-img" />
         </IonAvatar>
@@ -43,7 +43,7 @@
         <IonLabel>Stock</IonLabel>
       </IonItem>
 
-      <IonItem :detail="true" :button="true" class="profile-item" :disabled="true">
+      <IonItem v-if="userStore.user?.isOwner()" :detail="true" :button="true" class="profile-item" :disabled="true">
         <IonAvatar slot="start">
           <img src="/images/ic_user.svg" class="action-img" />
         </IonAvatar>
@@ -51,6 +51,7 @@
       </IonItem>
 
       <IonItem
+        v-if="userStore.user?.isOwner()"
         :detail="true"
         class="profile-item"
         router-link="/profile/company/sale-agents"
@@ -69,6 +70,7 @@
       </IonItem>
 
       <IonItem
+        v-if="userStore.user?.isOwner()"
         :detail="true"
         :button="true"
         class="profile-item"

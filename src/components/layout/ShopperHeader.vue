@@ -6,6 +6,8 @@
       </IonTitle>
 
       <IonButtons slot="end">
+        <FavoritesButton></FavoritesButton>
+        <CartStatusButton></CartStatusButton>
         <NotificationButton></NotificationButton>
       </IonButtons>
     </ion-toolbar>
@@ -26,7 +28,9 @@ import { defineComponent } from 'vue';
 import { mapStores } from 'pinia';
 import { useUserStore } from '@/stores/UserStore';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
-import { useProductStore } from '../../stores/ProductStore';
+import FavoritesButton from '@/components/modules/favorites/FavoritesButton.vue';
+import { useProductStore } from '@/stores/ProductStore';
+import CartStatusButton from '../modules/products/CartStatusButton.vue';
 
 export default defineComponent({
 
@@ -46,8 +50,10 @@ export default defineComponent({
     IonIcon,
     IonText,
     NotificationButton,
-    IonSearchbar
-  },
+    FavoritesButton,
+    IonSearchbar,
+    CartStatusButton
+},
 
   computed: {
     ...mapStores(useUserStore)

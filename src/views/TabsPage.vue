@@ -3,8 +3,11 @@
     <ion-tabs>
       <IonRouterOutlet></IonRouterOutlet>
 
-      <ShopperTabBar v-if="userStore.appMode == 'shopping'"></ShopperTabBar>
-      <VendorTabBar v-else></VendorTabBar>
+      <AgentTabBar v-if="userStore.user?.isSaleAgent() || userStore.user?.isSalesManager()"></AgentTabBar>
+      <section v-else>
+        <ShopperTabBar v-if="userStore.isInShoppingMode()"></ShopperTabBar>
+        <VendorTabBar v-if="!userStore.isInShoppingMode()"></VendorTabBar>
+      </section>
     </ion-tabs>
   </ion-page>
 </template>
@@ -14,6 +17,7 @@ import { IonTabs, IonPage, IonRouterOutlet } from '@ionic/vue';
 import { useUserStore } from '../stores/UserStore';
 import ShopperTabBar from '../components/layout/ShopperTabBar.vue';
 import VendorTabBar from '../components/layout/VendorTabBar.vue';
+import AgentTabBar from '../components/layout/AgentTabBar.vue';
 
 const userStore = useUserStore();
 

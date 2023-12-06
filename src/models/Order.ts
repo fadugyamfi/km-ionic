@@ -35,9 +35,12 @@ export class Order {
 
     public id?: number | string;
     public businesses_id?: number;
+    public cms_users_id?: number | string;
     public customer_id?: number;
     public total_order_amount?: number | string;
     public order_status_id?: number;
+    public payment_modes_id?: number;
+    
 
     public created_at: any;
     public order_status: any;
@@ -46,6 +49,8 @@ export class Order {
     public delivery_location?: string;
     public delivery_date?: string;
     public payment_option_id?: number;
+    public days_overdue?: number | string;
+    public due_date?: number | string;
     public order_items_count = 0;
 
     public _order_status_histories: OrderStatusHistory[] = [];

@@ -94,7 +94,15 @@ export default defineComponent({
                 pin: this.pin
             })
 
-            .then(() => this.$router.replace('/shopper/home'))
+            .then(() => {
+                if( this.userStore.user?.isSaleAgent() || this.userStore.user?.isSalesManager() ) {
+                    this.userStore.setAppModeAsVendor();
+                    this.$router.replace('/agent/home');
+                    return;
+                }
+
+                this.$router.replace('/shopper/home');
+            })
 
             .catch(async (error: Error) => {
                 this.toastStore.showError(error.message || this.$t('Authentication Failed Unknown'), '', 'bottom', 'footer');

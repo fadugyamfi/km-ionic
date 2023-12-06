@@ -52,23 +52,26 @@
   </section>
   <section class="ion-padding-horizontal">
     <IonSegment
-      value="pastmonth"
+      value="alltime"
       mode="ios"
       @ionChange="onSegmentChanged($event)"
     >
       <IonSegmentButton value="thisweek">
         <IonLabel>{{ $t("general.thisWeek") }}</IonLabel>
       </IonSegmentButton>
-      <IonSegmentButton value="pastmonth">
-        <section>
-          <IonLabel>{{ $t("general.thisMonth") }}</IonLabel>
-        </section>
-      </IonSegmentButton>
+
       <IonSegmentButton value="alltime">
         <IonLabel>
           {{ $t("general.allTime") }}
         </IonLabel>
       </IonSegmentButton>
+
+      <IonSegmentButton value="pastmonth">
+        <section>
+          <IonLabel>{{ $t("general.thisMonth") }}</IonLabel>
+        </section>
+      </IonSegmentButton>
+
     </IonSegment>
   </section>
   <section v-if="!fetching && remaining.length > 0">
@@ -113,7 +116,7 @@ export default defineComponent({
         start_dt: "",
         end_dt: "",
       },
-      thisMonth: true,
+      thisMonth: false,
       fetching: false,
       topPerformingAgents: [] as TopPerformingAgent[],
       topThree: [] as TopPerformingAgent[],
@@ -167,7 +170,7 @@ export default defineComponent({
   },
   mounted() {
     this.onSegmentChanged(
-      new CustomEvent("load", { detail: { value: "pastmonth" } })
+      new CustomEvent("load", { detail: { value: "alltime" } })
     );
   },
 });

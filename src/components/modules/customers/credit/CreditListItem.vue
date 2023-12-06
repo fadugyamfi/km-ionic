@@ -1,6 +1,11 @@
 <template>
   <IonItem class="ion-align-items-start ion-margin-bottom">
-    <ProfileAvatar slot="start" :image="credit.business?.logo" :username="credit.business?.name" custom-size="40px"></ProfileAvatar>
+    <ProfileAvatar
+      slot="start"
+      :image="credit.business?.logo"
+      :username="credit.business?.name"
+      custom-size="40px"
+    ></ProfileAvatar>
 
     <IonLabel>
       <p class="ion-no-margin">
@@ -17,7 +22,9 @@
         paid via {{ credit.payment_mode?.name }}
         <Image class="momo" src="/images/momo.svg"></Image>
       </IonText>
-      <IonText class="fw-bold">{{ Filters.currency(credit.amount) }}</IonText></IonLabel
+      <IonText class="fw-bold">{{
+        Filters.currency(credit.amount)
+      }}</IonText></IonLabel
     >
     <IonButton
       slot="end"
@@ -40,17 +47,17 @@ import {
   IonChip,
   IonIcon,
   IonLabel,
-  IonButton
+  IonButton,
 } from "@ionic/vue";
-import { ellipsisHorizontal} from "ionicons/icons"
+import { ellipsisHorizontal } from "ionicons/icons";
 import { PropType, ref } from "vue";
 import { useRouter } from "vue-router";
 import Image from "@/components/Image.vue";
 import Customer from "@/models/Customer";
 import { useCustomerStore } from "@/stores/CustomerStore";
-import ProfileAvatar from "../../../ProfileAvatar.vue";
-import Filters from "../../../../utilities/Filters";
-import { SalePayment } from "../../../../models/SalePayment";
+import ProfileAvatar from "@/components/ProfileAvatar.vue";
+import Filters from "@/utilities/Filters";
+import { SalePayment } from "@/models/SalePayment";
 
 const props = defineProps({
   credit: {

@@ -120,8 +120,8 @@ export const VendorModeRoutes = [
             path: "products/:id",
             component: () => import("@/views/Shopper/ProductDetails.vue"),
             meta: {
-              showCartButtons: false
-            }
+              showCartButtons: false,
+            },
           },
           {
             path: ":id",
@@ -132,6 +132,25 @@ export const VendorModeRoutes = [
       {
         path: "credits",
         component: () => import("@/views/Vendor/Credits.vue"),
+        children: [
+          {
+            path: "",
+            component: () => import("@/views/Vendor/Credit/CreditReport.vue"),
+          },
+          {
+            path: "history",
+            component: () =>
+              import("@/views/Vendor/Credit/CreditHistoryList.vue"),
+          },
+          {
+            path: ":id/credit-details",
+            component: () => import("@/views/Vendor/Credit/CreditDetails.vue"),
+          },
+          {
+            path: ":id/record-repayment",
+            component: () => import("@/views/Vendor/Credit/RecordRepayment.vue"),
+          },
+        ],
       },
       {
         path: "profile",

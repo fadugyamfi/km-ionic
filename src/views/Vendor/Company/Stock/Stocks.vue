@@ -12,7 +12,9 @@
               defaultHref="/vendor/profile"
             ></ion-back-button>
           </ion-buttons>
-          <IonTitle size="small" class="fw-bold">{{ $t('profile.stock.stock') }}</IonTitle>
+          <IonTitle size="small" class="fw-bold">{{
+            $t("profile.stock.stock")
+          }}</IonTitle>
           <IonButtons slot="end">
             <IonButton
               color="dark"
@@ -42,7 +44,10 @@
       </div>
 
       <section v-if="!fetching" class="ion-margin-top">
-        <Summary :total-value="stockSummary.total_value" :total-items="meta.total" />
+        <Summary
+          :total-value="stockSummary.total_value"
+          :total-items="meta.total"
+        />
         <AvailableStock :stocks="stocks" />
         <EmptyStock v-if="stocks?.length == 0"></EmptyStock>
       </section>

@@ -26,6 +26,8 @@
     "today": "Today",
     "thisWeek": "This Week",
     "pastMonth": "Past Month",
+    "month": "Month",
+    "year": "Year",
     "delete": "Delete",
     "accept": "Accept",
     "update": "Update",
@@ -43,7 +45,9 @@
     "avgSalesValue": "Avg. Sales Value",
     "performance": "Performance",
     "noOfCustomers": "No. of Customers",
-    "bestSellingItem": "Best Selling Item"
+    "bestSellingItem": "Best Selling Item",
+    "welcome": "Welcome",
+    "leaderboard": "Leaderboard"
   },
   "onboarding": {
     "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -75,6 +79,7 @@
       "yourLocation": "Your Location",
       "helpUsUnderstandYourBusiness": "Help us understand your business better by providing some key details about your company",
       "uploadYourProfilePhoto": "Upload Your Profile Photo",
+      "uploadYourCoverPhoto": "Upload Your Cover Photo",
       "uploadInstructions": "Please upload a clear and professional photo of yourself or your brand logo to personalize your profile. Your profile photo will be visible to other users and will represent your identity on Kola Market.",
 
       "secureYourAccount": "Secure Your Account",
@@ -233,12 +238,31 @@
       "messageSupplier": "Message Supplier",
       "deleteOrderFromList": "Delete Order From List",
       "youCantUndoThisAction": "You can't undo this action"
+    },
+    "credit": {
+      "totalCredit": "Total Credit",
+      "totalRecovered": "Total Recovered",
+      "creditHistory": "Credit History",
+      "viewAll": "View All",
+      "deleteCreditFromList": "Delete Credit From List",
+      "creditOrder": "Credit Order",
+      "outstandingCredit": "Outstanding Credit",
+      "paymentTerms": "Payment Terms",
+      "pleaseTryAgain": "Please try again",
+      "noResultsFound": "No results found"
+
     }
   },
   "modules": {
     "business": {
       "noDescriptAvailable": "No Description Available",
       "unknownLocation": "Unknown Location"
+    },
+    "favorites": {
+      "title": "Your Favorites",
+      "brands": "Brands",
+      "products": "Products",
+      "businesses": "Businesses"
     }
   },
   "profile": {
@@ -306,7 +330,36 @@
       "agentSaleReport": "Agent sales report",
       "filterAgent": "Filter agents sales report"
     },
-    "editProfile": "Edit Profile"
+    "editProfile": "Edit Profile",
+
+    "address": {
+    "address": "Address",
+    "city": "City",
+    "state": "State",
+    "zip": "Zip",
+    "country": "Country",
+    "region": "Region(You can select multiple regions location)",
+    "addAddress": "Add Address",
+    "editAddress": "Edit Address",
+    "save": "Save",
+    "cancel": "Cancel"
+    },
+
+    "accountActivity": {
+      "accountActivitys": "Account Activity",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip",
+      "country": "Country",
+      "region": "Region(You can select multiple regions location)",
+      "addAddress": "Add Address",
+      "editAddress": "Edit Address",
+      "save": "Save",
+      "cancel": "Cancel"
+      }
+
+
+
   },
   "settings": {
     "title": "Settings",

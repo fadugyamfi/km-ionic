@@ -74,7 +74,6 @@ import FooterNavigation from "@/views/Signup/Vendor/FooterNavigation.vue";
 import HeaderArea from "@/views/Signup/Vendor/HeaderArea.vue";
 import { usePhotoGallery, UserPhoto } from "@/composables/usePhotoGallery";
 import { mapStores } from "pinia";
-import { useBusinessStore } from "@/stores/BusinessStore";
 import { useToastStore } from "@/stores/ToastStore";
 import { handleAxiosRequestError } from "@/utilities";
 import { useUserStore } from "@/stores/UserStore";
@@ -108,7 +107,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useBusinessStore),
+    ...mapStores(useUserStore),
   },
 
   methods: {
@@ -120,8 +119,7 @@ export default defineComponent({
 
         this.photo = photos.value ? photos.value[0] : null;
         if (this.photo) {
-          this.businessStore.registration.logo_image = this.photo
-            .base64Data as string;
+          this.userStore.companyForm.logo_image = this.photo.base64Data as string;
         }
       } catch (e) {
         console.log(e);
@@ -136,40 +134,15 @@ export default defineComponent({
 
         this.photo = photos.value ? photos.value[0] : null;
         if (this.photo) {
-          this.businessStore.registration.logo_image = this.photo
-            .base64Data as string;
+          this.userStore.companyForm.logo = this.photo.base64Data as string;
         }
       } catch (e) {
         console.log(e);
       }
     },
 
-    async onContinue() {
-      const toastStore = useToastStore();
-      const userStore = useUserStore();
-
-      this.businessStore.cacheRegistrationInfo();
-
-      toastStore.blockUI(this.$t("Registering Your Business. Please hold"));
-
-      try {
-        const business = await this.businessStore.createBusinessAsVendor();
-
-        if (business) {
-          userStore.changePin({
-            phone_number: this.businessStore.registration.business_owner_phone,
-            pin: this.businessStore.registration.user.pin,
-            pin_confirmation:
-              this.businessStore.registration.user.pin_confirmation,
-          });
-
-        //   this.$router.push("/signup/vendor/signup-complete");
-        }
-      } catch (error) {
-        handleAxiosRequestError(error);
-      } finally {
-        toastStore.unblockUI();
-      }
+    onContinue() {
+      this.$router.push("/profile/company/change-cover-photo");
     },
   },
 });
