@@ -30,17 +30,6 @@
         </IonChip>
       </p>
     </IonLabel>
-    <IonButton
-      v-if="popover"
-      @click.stop="openMenu"
-      fill="clear"
-      color="dark"
-      slot="end"
-      class="ion-align-self-start"
-    >
-      <IonIcon :icon="ellipsisHorizontal"></IonIcon>
-    </IonButton>
-    <slot name="popover"></slot>
   </IonItem>
 </template>
 <script lang="ts" setup>
@@ -75,10 +64,6 @@ const props = defineProps({
   credit: {
     type: Credit,
     default: () => {},
-  },
-  popover: {
-    type: Boolean,
-    default: false,
   },
 });
 
