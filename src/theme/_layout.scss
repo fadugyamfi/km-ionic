@@ -1,6 +1,11 @@
 body {
   background-color: var(--ion-background-color);
 }
+
+ion-page, .ion-page {
+  background-color: var(--ion-background-color, #FEFEFE);
+}
+
 .d-flex {
   display: flex;
 }
