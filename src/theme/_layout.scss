@@ -1,6 +1,9 @@
 body {
   background-color: var(--ion-background-color);
 }
+body.platform-ios.platform-cordova.platform-webview {
+  text-rendering: auto !important;
+}
 .d-flex {
   display: flex;
 }
