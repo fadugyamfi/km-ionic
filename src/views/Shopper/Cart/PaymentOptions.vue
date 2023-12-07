@@ -262,8 +262,6 @@ export default defineComponent({
     }
   },
 
-
-
     toggleDropdown(dropdownName: DropdownName) {
       this.showDropdown[dropdownName] = !this.showDropdown[dropdownName];
     },

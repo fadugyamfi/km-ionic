@@ -35,9 +35,9 @@
           <section
             class="d-flex ion-justify-content-between ion-align-items-baseline"
           >
-            <IonText color="dark" class="fw-bold" slot="start">{{
-              filters.date(credit?.order?.due_date as string, "short") || "N/A"
-            }}</IonText>
+            <IonText color="dark" class="fw-bold" slot="start"
+              >{{ getDueDate(credit?.order?.due_date as string) }}
+            </IonText>
 
             <IonChip
               v-if="credit?.order?.days_overdue"
@@ -70,6 +70,7 @@
           v-for="receivedRepayment in receivedRepayments"
           :key="receivedRepayment.id"
           :receivedRepayment="receivedRepayment"
+          :credit="credit"
         ></ReceivedRepayment>
       </section>
     </ion-content>
@@ -195,6 +196,12 @@ export default defineComponent({
     },
     recordRepayment() {
       this.$router.push(`/vendor/credits/${this.credit?.id}/record-repayment`);
+    },
+    getDueDate(due_date: string) {
+      if (due_date) {
+        return filters.date(due_date as string, "short");
+      }
+      return "N/A";
     },
   },
 });

@@ -96,7 +96,6 @@ import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
 import { useGeolocation } from "@/composables/useGeolocation";
 import DeliveryDetailsHeader from "@/components/header/DeliveryDetailsHeader.vue";
-import DeliveryMethod from "@/components/modules/deliveryDetails/DeliveryMethod.vue";
 import { useCartStore } from "@/stores/CartStore";
 import { useForm } from "@/composables/form";
 import { useRouter } from "vue-router";

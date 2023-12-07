@@ -9,8 +9,6 @@ import { ChangeStatusRequest } from "../models/types";
 import Product from "@/models/Product";
 import { OrderItem } from "@/models/OrderItem";
 
-const toastStore = useToastStore();
-
 const storage = new AppStorage();
 const KOLA_EDITED_ORDER = "kola.edited-order";
 
@@ -83,6 +81,7 @@ export const useOrderStore = defineStore("order", {
       editing: boolean = false
     ): Promise<Order | null> {
       try {
+        console.log("fetchOrder");
         const response = await axios.get(`/v2/orders/${orderId}`);
         if (response.status == 200) {
           this.editing = false;
@@ -112,7 +111,6 @@ export const useOrderStore = defineStore("order", {
 
     async deleteOrder(orderId: number) {
       const toastStore = useToastStore();
-
       try {
         const response = await axios.delete(`/v2/orders/${orderId}`); // Replace with your API endpoint
 
@@ -132,32 +130,30 @@ export const useOrderStore = defineStore("order", {
     },
 
     async updateOrder(orderId: any, updatedData: any): Promise<Boolean> {
+      const toastStore = useToastStore();
       try {
         const response = await axios.put(`/v2/orders/${orderId}`, updatedData); // Replace with your API endpoint for updating orders
-        if (response) {
-          // Find the index of the updated order in the store
-          const orderIndex = this.orders.findIndex(
-            (order) => order.id === orderId
-          );
-          console.log(orderIndex, this.orders);
-          if (orderIndex !== -1) {
-            // Update the order in the store with the new data
-            this.orders[orderIndex] = new Order(response.data.data);
-            this.editedOrder = {} as Order;
-            this.persist();
-            this.editing = false;
-            toastStore.showSuccess("Order updated successfully.");
-          }
-        }
+        // Find the index of the updated order in the store
+        const orderIndex = this.orders.findIndex(
+          (order) => order.id === orderId
+        );
+        // console.log(orderIndex, this.orders);
+        // if (orderIndex !== -1) {
+        // Update the order in the store with the new data
+        // this.orders[orderIndex] = new Order(response.data.data);
+        this.editing = false;
+        toastStore.showSuccess("Order updated successfully.");
+        return true;
+        // }
       } catch (error) {
         handleAxiosRequestError(error);
         toastStore.showError("Failed to update order.");
-      } finally {
-        return true;
+        return false;
       }
     },
 
     async editOrder(orderId: any, editedData: any) {
+      const toastStore = useToastStore();
       try {
         const response = await axios.put(`/v2/orders/${orderId}`, editedData); // Replace with your API endpoint for editing orders
         if (response.status === 200) {
@@ -177,7 +173,21 @@ export const useOrderStore = defineStore("order", {
       }
     },
 
+    async removeItem(item: OrderItem): Promise<Object | null> {
+      try {
+        const response = await axios.delete(`v2/order-items/${item.id}`);
+        if (response) {
+          return response.data;
+        }
+        return null;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return null;
+      }
+    },
+
     async reorderOrder(orderId: number) {
+      const toastStore = useToastStore();
       try {
         const orderToReorder = this.orders.find(
           (order) => order.id === orderId
@@ -317,6 +327,9 @@ export const useOrderStore = defineStore("order", {
         toastStore.showSuccess("Added To Order");
       } else {
         orderItem.quantity = orderItem.quantity ? orderItem.quantity + 1 : 1;
+        orderItem.total_price = orderItem.unit_price
+          ? orderItem.unit_price * orderItem.quantity
+          : 0;
         toastStore.showInfo("Increased quantity in Order");
       }
       this.persist();

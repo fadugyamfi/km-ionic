@@ -229,7 +229,7 @@ export default defineComponent({
           toastStore.showSuccess(
             this.$t("vendor.sales.paymentRecordedSuccessfully")
           );
-          this.$router.push(`/vendor/credits/${this.$route.params.id}`);
+          this.$router.push(`/vendor/credits/${this.$route.params.id}/credit-details`);
         }
       } catch (error) {
         toastStore.showError(this.$t("vendor.sales.paymentRecordingFailed"));

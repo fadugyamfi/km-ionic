@@ -268,10 +268,10 @@ const fetchCustomer = async () => {
   const userStore = useUserStore();
 
   const customerStore = useCustomerStore();
-  customer.value = await customerStore.getCustomer(
+  customer.value = (await customerStore.getCustomer(
     userStore.activeBusiness as Business,
     route.params.id
-  ) as Customer;
+  )) as Customer;
   fetching.value = false;
   form.fields.name = customer.value?.name;
   form.fields.location = customer.value?.location;

@@ -19,8 +19,8 @@
       <Image
         class="product-image"
         :class="{ float: !imgLoaded }"
-        :alt="product.product_name"
-        :src="product.image"
+        :alt="product?.product_name"
+        :src="product?.image"
         :no-img-src="noImage"
         @loaded="imgLoaded = true"
       />
@@ -36,7 +36,7 @@
           class="d-flex ion-align-items-center ion-justify-content-between"
         >
           <p class="product-title fw-semibold line-clamp">
-            {{ product.product_name }}
+            {{ product?.product_name }}
           </p>
 
           <IonButton
@@ -58,27 +58,27 @@
           <section class="fw-semibold">
             {{
               Filters.currency(
-                Number(product.product_price),
-                String(product.currency?.symbol || 'GHS')
+                Number(product?.product_price),
+                String(product?.currency?.symbol || 'GHS')
               )
             }}
           </section>
           <section class="font-medium">
-            <span v-if="product.weight_value"
-              >{{ product.weight_value }}kg</span
+            <span v-if="product?.weight_value"
+              >{{ product?.weight_value }}kg</span
             >
-            <span v-if="product.weight_value && product.group_quantity">/</span>
-            <span v-if="product.group_quantity"
-              >{{ product.group_quantity }}pcs</span
+            <span v-if="product?.weight_value && product?.group_quantity">/</span>
+            <span v-if="product?.group_quantity"
+              >{{ product?.group_quantity }}pcs</span
             >
           </section>
         </section>
 
         <section
-          v-if="showDescription && product.product_description"
+          v-if="showDescription && product?.product_description"
           class="product-description"
         >
-          <p class="ion-no-margin">{{ product.product_description }}</p>
+          <p class="ion-no-margin">{{ product?.product_description }}</p>
         </section>
       </IonCardHeader>
     </ion-card>

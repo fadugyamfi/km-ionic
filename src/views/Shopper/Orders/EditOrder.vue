@@ -57,7 +57,7 @@
               <ion-col size="1" class="remove-button">
                 <ion-button
                   fill="clear"
-                  @click.prevent.stop="removeFromCart(index)"
+                  @click.prevent.stop="removeFromCart(item, index)"
                 >
                   <ion-icon
                     class="remove-icon"
@@ -150,6 +150,7 @@ const fetching = ref(false);
 const order = computed(() => orderStore.editedOrder);
 
 const getOrder = async () => {
+  console.log("getOrder");
   fetching.value = true;
   const order_id = +route.params.id;
   // order.value = orderStore.orders.find((o) => o.id == order_id) as Order;
@@ -169,11 +170,16 @@ const totalCost = computed(() =>
   )
 );
 
-const removeFromCart = (index: number) => {
-  order.value?._order_items.splice(index, 1);
+const removeFromCart = async (item: OrderItem, index: number) => {
   const toastStore = useToastStore();
-  toastStore.showSuccess("Removed Item From Order");
-  orderStore.persist();
+  try {
+    const response = await orderStore.removeItem(item);
+    order.value?._order_items.splice(index, 1);
+    toastStore.showSuccess("Removed item from order");
+    orderStore.persist();
+  } catch (error) {
+    toastStore.showError("Failed to remove item from order.");
+  }
 };
 
 const updateQuantity = (item: OrderItem, newQuantity: number) => {
@@ -216,16 +222,18 @@ const updateOrder = async () => {
   };
   const response = await orderStore.updateOrder(+route.params.id, updatedOrder);
   if (response) {
-    router.push("/shopper/orders/history");
+    router.replace("/shopper/orders/history");
+    orderStore.editedOrder = {} as Order;
+    orderStore.persist();
   }
   toastStore.unblockUI();
 };
 
 const cancel = () => {
-  router.push("/shopper/orders/history");
   orderStore.editing = false;
   orderStore.editedOrder = {} as Order;
   orderStore.persist();
+  router.replace("/shopper/orders/history");
 };
 
 onMounted(() => {
