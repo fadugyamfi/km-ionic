@@ -9,9 +9,9 @@
         :key="address.id"
         lines="none"
         class="profile-item ion-margin-top d-flex flex-column ion-align-items-start"
-        :router-link="`/profile/address/business/${address.business_id}/location/${address.id}/edit-address`"
+    
       >
-<!-- {{ address }} -->
+
         <div class="d-flex flex-column">
           <IonLabel>{{ address?.business?.name }}</IonLabel>
           <IonText class="success">{{ address?.address }}</IonText>

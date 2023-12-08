@@ -90,16 +90,11 @@
           >
         </IonFooter>
 </section>
-   
-   
   </ion-page>
 </template>
 
 <script setup lang="ts">
 import {
-  IonBackButton,
-  IonButton,
-  IonButtons,
   IonContent,
   IonFooter,
   IonIcon,
