@@ -31,13 +31,17 @@
       <section v-else>
         <CreditImages :sale-items="credit?.sale_items" />
         <ion-card class="ion-padding">
-          <ionText>Payment due date</ionText>
+          <ionText color="dark" class="fw-bold"> Credit details</ionText>
           <section
             class="d-flex ion-justify-content-between ion-align-items-baseline"
           >
-            <IonText color="dark" class="fw-bold" slot="start">{{
-              filters.date(credit?.order?.due_date as string, "short") || "N/A"
-            }}</IonText>
+            <IonText slot="start"  class="font-medium" >
+              Order date:
+              {{
+                filters.date(credit?.order?.due_date as string, "short") ||
+                "N/A"
+              }}
+            </IonText>
 
             <IonChip
               v-if="credit?.order?.days_overdue"
@@ -48,8 +52,20 @@
               {{ credit?.order?.days_overdue }} days overdue
             </IonChip>
           </section>
-        </ion-card>
+           <IonLabel :button="true" lines="none" class="d-flex ion-justify-content-between flex-column ion-align-items-baseline">
 
+          
+            <p>
+              <IonChip color="danger"  class="font-medium" > 12 days overdue </IonChip>
+            </p>
+            <p>
+              <IonText  class="font-medium" >Achimota Golf club, 180a </IonText>
+            </p>
+            <p>
+              <IonText  class="font-medium" >Order delivered on - 2.08.2023</IonText>
+            </p>
+          </IonLabel>
+        </ion-card>
         <section>
           <ReceivedCreditItems :credit="credit"></ReceivedCreditItems>
         </section>
@@ -68,8 +84,8 @@
           v-for="receivedRepayment in receivedRepayments"
           :key="receivedRepayment.id"
           :receivedRepayment="receivedRepayment"
+          :credit="credit"
         ></ReceivedRepayment>
-        <PlacedCreditHistoryItem></PlacedCreditHistoryItem>
       </section>
     </ion-content>
   </IonPage>
@@ -96,6 +112,7 @@ import {
   IonCardTitle,
   IonChip,
   IonText,
+  IonLabel,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import UpdateButon from "@/components/modules/order/UpdateButon.vue";
@@ -144,6 +161,7 @@ export default defineComponent({
     PlacedCreditHistoryItem,
     IonChip,
     IonText,
+    IonLabel,
   },
 
   name: "CreditDetails",
