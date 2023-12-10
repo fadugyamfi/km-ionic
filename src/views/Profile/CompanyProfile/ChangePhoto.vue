@@ -119,7 +119,7 @@ export default defineComponent({
 
         this.photo = photos.value ? photos.value[0] : null;
         if (this.photo) {
-          this.userStore.companyForm.logo = this.photo.base64Data as string;
+          this.userStore.companyForm.logo_image = this.photo.base64Data as string;
         }
       } catch (e) {
         console.log(e);

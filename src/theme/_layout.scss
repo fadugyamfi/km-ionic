@@ -4,6 +4,11 @@ body {
 body.platform-ios.platform-cordova.platform-webview {
   text-rendering: auto !important;
 }
+
+ion-page, .ion-page {
+  background-color: var(--ion-background-color, #FEFEFE);
+}
+
 .d-flex {
   display: flex;
 }

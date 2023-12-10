@@ -87,8 +87,8 @@ export const useUserStore = defineStore("user", {
         location: "",
         name: "",
         phone_number: "",
-        photo: "",
-        logo: "",
+        cover_image: "",
+        logo_image: "",
       },
     };
   },

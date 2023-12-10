@@ -93,21 +93,7 @@
         <IonLabel>Settings</IonLabel>
       </IonItem>
 
-      <IonItem
-        :detail="true"
-        :button="true"
-        class="profile-item"
-        @click="deleteAccount()"
-      >
-        <IonAvatar slot="start">
-          <IonIcon
-            color="danger"
-            :icon="trashOutline"
-            style="font-size: 21px"
-          ></IonIcon>
-        </IonAvatar>
-        <IonLabel color="danger">Delete Account</IonLabel>
-      </IonItem>
+
       <IonItem
         :detail="true"
         :button="true"
@@ -118,6 +104,22 @@
           <IonIcon :icon="powerOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
         <IonLabel>Log Out</IonLabel>
+      </IonItem>
+
+      <IonItem
+        :detail="true"
+        :button="true"
+        class="profile-item" style="margin-top: 2em;"
+        @click="deleteAccount()"
+      >
+        <IonAvatar slot="start">
+          <IonIcon
+            color="danger"
+            :icon="trashOutline"
+            style="font-size: 21px"
+          ></IonIcon>
+        </IonAvatar>
+        <IonLabel color="danger">Delete Account</IonLabel>
       </IonItem>
     </IonList>
     <DeleteModal

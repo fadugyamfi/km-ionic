@@ -79,19 +79,19 @@ import {
 import { onMounted, ref } from "vue";
 import { useUserStore } from "@/stores/UserStore";
 import { formatMySQLDateTime } from "@/utilities";
-import Business from "@/models/Business";
-import Agent from "@/models/Agent";
 import { useRoute, useRouter } from "vue-router";
 import { useAgentsStore } from "@/stores/AgentsStore";
-import SalesStatistics from "@/components/modules/SalesStatistics.vue";
-import Performance from "@/components/modules/Performance.vue";
-import BestSellingItems from "@/components/modules/BestSellingItems.vue";
-import FilterAgentSaleReportSheet from "@/components/modules/agents/FilterAgentSaleReportSheet.vue";
-import AgentHeader from '@/components/layout/AgentHeader.vue';
 import { useSaleStore } from "../../stores/SaleStore";
 import { Sale } from "../../models/Sale";
-import SalesList from "../../components/modules/sales/SalesList.vue";
 import { optionsOutline } from "ionicons/icons";
+import Agent from "@/models/Agent";
+import AgentHeader from '@/components/layout/AgentHeader.vue';
+import BestSellingItems from "@/components/modules/BestSellingItems.vue";
+import Business from "@/models/Business";
+import FilterAgentSaleReportSheet from "@/components/modules/agents/FilterAgentSaleReportSheet.vue";
+import Performance from "@/components/modules/Performance.vue";
+import SalesStatistics from "@/components/modules/SalesStatistics.vue";
+import SalesList from "../../components/modules/sales/SalesList.vue";
 
 const fetching = ref(false);
 const route = useRoute();

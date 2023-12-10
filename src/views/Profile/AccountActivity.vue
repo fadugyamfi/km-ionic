@@ -12,7 +12,7 @@
       </ion-header>
 
       <IonToolbar>
-        <IonSegment value="thisweek" mode="ios" @ionChange="onSegmentChanged($event)">
+        <IonSegment value="month" mode="ios" @ionChange="onSegmentChanged($event)">
           <IonSegmentButton value="today">
             <IonLabel>
               {{ $t('general.today') }}
@@ -35,7 +35,7 @@
       <section v-show="!fetching">
         <NoResults v-if="orderStore.orders?.length == 0"></NoResults>
 
-        <AccountActivity></AccountActivity>
+        <!-- <AccountActivity></AccountActivity> -->
       </section>
 
     </ion-content>
@@ -148,7 +148,7 @@ export default defineComponent({
           break;
 
         case 'year':
-          start_dt.setDate(start_dt.setFullYear(2022,0,1));
+          start_dt.setFullYear( start_dt.getFullYear() - 1 );
           break;
       }
 

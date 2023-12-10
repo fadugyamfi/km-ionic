@@ -70,7 +70,7 @@
           v-for="receivedRepayment in receivedRepayments"
           :key="receivedRepayment.id"
           :receivedRepayment="receivedRepayment"
-          :credit="credit"
+          :credit="(credit as Credit)"
         ></ReceivedRepayment>
       </section>
     </ion-content>
