@@ -3,23 +3,14 @@
     <section class="ion-padding">
       <AddressHeader />
     </section>
-<<<<<<< HEAD
-    <ion-content :fullscreen="true" class="ion-padding-horizontal">
+    <IonContent class="ion-padding-horizontal">
       <IonItem
         v-for="address in businessLocations"
         :key="address.id"
         lines="none"
         class="profile-item ion-margin-top d-flex flex-column ion-align-items-start"
-    
+        :router-link="`/profile/address/business/${address.business_id}/location/${address.id}/edit-address`"
       >
-
-=======
-    <IonContent class="ion-padding-horizontal">
-      <IonItem v-for="address in businessLocations" :key="address.id" lines="none"
-               class="profile-item ion-margin-top d-flex flex-column ion-align-items-start"
-               :router-link="`/profile/address/business/${address.business_id}/location/${address.id}/edit-address`">
-        <!-- {{ address }} -->
->>>>>>> develop
         <div class="d-flex flex-column">
           <IonLabel>{{ address?.business?.name }}</IonLabel>
           <IonText class="success">{{ address?.address }}</IonText>
@@ -47,7 +38,7 @@ import {
   IonList,
   IonText,
   IonPage,
-IonContent,
+  IonContent,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useUserStore } from "@/stores/UserStore";
@@ -75,8 +66,8 @@ export default defineComponent({
     IonText,
     IonPage,
     AddressHeader,
-    IonContent
-},
+    IonContent,
+  },
 
   computed: {
     ...mapStores(useUserStore, useBusinessStore),

@@ -368,7 +368,7 @@ export const useUserStore = defineStore("user", {
         ...options,
       };
       try {
-       const response = await axios.get('/v2/activities', { params });
+        const response = await axios.get('/v2/activities', { params });
 
         if (response.status >= 200 && response.status < 300) {
           const data = response.data.data;
