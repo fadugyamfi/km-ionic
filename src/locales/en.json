@@ -47,7 +47,8 @@
     "noOfCustomers": "No. of Customers",
     "bestSellingItem": "Best Selling Item",
     "welcome": "Welcome",
-    "leaderboard": "Leaderboard"
+    "leaderboard": "Leaderboard",
+    "discount": "Discount"
   },
   "onboarding": {
     "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
