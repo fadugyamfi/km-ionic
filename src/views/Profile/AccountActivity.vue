@@ -15,16 +15,13 @@
 
       <IonToolbar>
         <IonSegment
-          value="thisweek"
+          value="today"
           mode="ios"
           @ionChange="onSegmentChanged($event)"
         >
           <IonSegmentButton value="today">
             <IonLabel>
               {{ $t("general.today") }}
-              <IonBadge v-if="selectedOption === 'today'">{{
-                accountActivities.length
-              }}</IonBadge>
             </IonLabel>
           </IonSegmentButton>
           <IonSegmentButton value="month">
@@ -87,7 +84,7 @@ import {
 } from "@ionic/vue";
 
 import { useUserStore } from "@/stores/UserStore";
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 import { useOrderStore } from "@/stores/OrderStore";
 import AccountActivityList from "@/components/modules/accountActivity/AccountActivityList.vue";
 import NoResults from "@/components/layout/NoResults.vue";
@@ -151,10 +148,17 @@ export default defineComponent({
     ...mapStores(useOrderStore, useUserStore),
   },
   methods: {
+
     async fetchUserAccountActivities() {
-      this.accountActivities = await this.userStore.getUserAccountActivities(
-        this.searchFilters
-      );
+      try{
+        this.fetching = true;
+        this.accountActivities = await this.userStore.getUserAccountActivities( this.searchFilters);
+      }catch(error){
+        handleAxiosRequestError(error)
+      }finally {
+        this.fetching = false;
+      }
+     
     },
 
     onSegmentChanged(event: CustomEvent) {
@@ -184,9 +188,8 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.fetchUserAccountActivities();
-    this.onSegmentChanged(
-      new CustomEvent("load", { detail: { value: "today" } })
+    this.onSegmentChanged(new CustomEvent("load", { detail: { value: "today" } })
+      
     );
   },
 });
@@ -214,9 +217,5 @@ ion-item {
   padding: 0px 0px 0;
 }
 
-ion-badge {
-  --background: rgba(245, 170, 41, 0.38);
-  --color: #344054;
-  margin-left: 8px;
-}
+
 </style>

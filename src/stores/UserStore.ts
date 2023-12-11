@@ -348,29 +348,28 @@ export const useUserStore = defineStore("user", {
           }
         });
     },
-  
-      async getUserAccountActivities(options = {}) {
-      // const userStore = useUserStore();
-      // const params = {
-      //   causer_id: userStore.user?.id,
-      //   limit: 50,
-      //   ...options,
-      // };
-    
-      try {
-    
-        // const response = await axios.get('/v2/activities', { params });
 
-          const response = await axios.get('/v2/activities');
+    async getUserAccountActivities(options = {}) {
+      const userStore = useUserStore();
+      const params = {
+        causer_id: userStore.user?.id,
+        limit: 50,
+        ...options,
+      };
+
+      try {
+
+        const response = await axios.get('/v2/activities', { params });
+
         if (response.status >= 200 && response.status < 300) {
           const data = response.data.data;
           return data;
         }
       } catch (error) {
-      
+
         handleAxiosRequestError(error);
       }
-    
+
       return null;
     },
 
