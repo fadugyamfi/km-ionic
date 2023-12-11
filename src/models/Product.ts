@@ -25,6 +25,8 @@ export default class Product {
     public _business?: Business | null
     public _tags?: Tag[] | null;
     public favorited?: FavoritedProduct | null;
+    public is_on_sale: number = 0;
+    public sale_price: number = 0;
 
     constructor(data: object) {
         Object.assign(this, data);
