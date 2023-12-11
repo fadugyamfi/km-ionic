@@ -3,8 +3,8 @@
     <ProfileAvatar
       slot="start"
       class="ion-align-self-start ion-margin-top"
-      :image="activity.business?.logo"
-      :username="activity.business?.name"
+      :image="activity.causer?.photo"
+      :username="activity.causer?.name"
     ></ProfileAvatar>
 
     <IonLabel>
