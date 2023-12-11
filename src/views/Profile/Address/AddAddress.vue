@@ -33,7 +33,6 @@
 
       </form>
     </ion-content>
-<<<<<<< HEAD
     <section  class="top">
   <IonFooter class="ion-padding-top ion-no-border">
           <KolaWhiteButton
@@ -48,20 +47,6 @@
           >
         </IonFooter>
 </section>
-=======
-
-
-    <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton :disabled="!formValid" class="ion-margin-bottom" @click.prevent="createBusinessLocation">
-        {{ $t("profile.customers.save") }}
-      </KolaYellowButton>
-
-      <KolaWhiteButton @click.prevent="createCancel">{{ $t("profile.address.cancel") }}
-      </KolaWhiteButton>
-    </IonFooter>
-
-
->>>>>>> develop
   </ion-page>
 </template>
 
