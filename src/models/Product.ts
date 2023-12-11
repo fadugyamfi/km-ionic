@@ -70,4 +70,10 @@ export default class Product {
     unfavorite() {
         this.favorited = null;
     }
+
+    get discountApplied() {
+        const sale_price = Number(this.sale_price);
+        const product_price = Number(this.product_price);
+        return Math.ceil(((product_price - sale_price) / product_price) * 100);
+    }
 }

@@ -36,8 +36,14 @@
             </header>
 
             <main>
-                <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
-                    <span class="product-name">{{  product?.product_name }}</span>
+                <section class="section title-section d-flex ion-align-items-start">
+                    <span class="product-name">
+                        {{  product?.product_name }}
+
+                        <span v-if="product?.is_on_sale">
+                            - {{ product?.discountApplied }}% {{ $t('general.discount') }}
+                        </span>
+                    </span>
                 </section>
 
                 <section class="section d-flex ion-align-items-start ion-justify-content-between">
