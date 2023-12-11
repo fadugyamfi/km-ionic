@@ -53,7 +53,6 @@ export const VendorModeRoutes = [
             component: () => import("@/views/Vendor/Orders/OrderHistory.vue"),
           },
           {
-            name: "VendorOrderDetails",
             path: ":id",
             component: () => import("@/views/Vendor/Orders/OrderDetails.vue"),
           },
@@ -148,7 +147,8 @@ export const VendorModeRoutes = [
           },
           {
             path: ":id/record-repayment",
-            component: () => import("@/views/Vendor/Credit/RecordRepayment.vue"),
+            component: () =>
+              import("@/views/Vendor/Credit/RecordRepayment.vue"),
           },
         ],
       },

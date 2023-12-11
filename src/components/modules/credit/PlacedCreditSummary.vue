@@ -1,9 +1,9 @@
 <template>
   <IonRow class="ion-padding-horizontal">
     <IonCol size="6">
-      <IonCard class="ion-no-margin total-credit">
+      <IonCard class="ion-no-margin total-amount-overdue">
         <IonCardContent class="d-flex flex-column ion-align-items-center">
-          <IonText color="medium">{{
+          <IonText color="dark">{{
             $t("shopper.credit.totalAmountOverdue")
           }}</IonText>
           <IonText color="dark" class="fw-semibold">
@@ -13,9 +13,9 @@
       </IonCard>
     </IonCol>
     <IonCol size="6">
-      <IonCard class="ion-no-margin total-recovered">
+      <IonCard class="ion-no-margin total-time-overdue">
         <IonCardContent class="d-flex flex-column ion-align-items-center">
-          <IonText color="medium">{{
+          <IonText color="dark">{{
             $t("shopper.credit.totalTimeOverdue")
           }}</IonText>
           <IonText color="dark" class="fw-semibold">
@@ -54,13 +54,21 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.total-credit {
+<style lang="scss" scoped>
+.total-amount-overdue {
   border-radius: 6px;
   background: #f2f7f7;
+
+  ion-text:nth-child(1) {
+    font-size: 12px;
+  }
 }
-.total-recovered {
+.total-time-overdue {
   border-radius: 6px;
   background: #fff9ef;
+
+  ion-text:nth-child(1) {
+    font-size: 12px;
+  }
 }
 </style>

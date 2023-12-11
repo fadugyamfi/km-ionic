@@ -48,8 +48,7 @@
 
         <PlacedCreditHistoryItem
           @click="viewDetails(credit)"
-          @openMenu="openMenu($event, index)"
-          v-for="(credit, index) in credits"
+          v-for="credit in credits"
           :key="credit?.id"
           :credit="credit"
         >
@@ -61,13 +60,6 @@
           @update="onFilterUpdate($event)"
         >
         </FilterCreditSheet>
-        <DeleteModal
-          :title="$t('vendor.credit.deleteCreditFromList')"
-          :description="$t('vendor.orders.youCantUndoThisAction')"
-          :isOpen="showConfirmDeleteModal"
-          @dismiss="showConfirmDeleteModal = false"
-          @confirm="onConfirmDelete()"
-        ></DeleteModal>
       </section>
     </ion-content>
   </ion-page>
@@ -89,23 +81,12 @@ import {
   IonButton,
   IonIcon,
   IonSpinner,
-  IonPopover,
   IonList,
   IonItem,
 } from "@ionic/vue";
 import { defineComponent, ref } from "vue";
 import { useCreditStore } from "@/stores/CreditStore";
-import {
-  search,
-  arrowBack,
-  ellipsisHorizontal,
-  chatbubbleOutline,
-  createOutline,
-  trashOutline,
-  filter,
-  optionsOutline,
-  add,
-} from "ionicons/icons";
+import { arrowBack, optionsOutline } from "ionicons/icons";
 import { mapStores } from "pinia";
 import { formatMySQLDateTime, handleAxiosRequestError } from "@/utilities";
 import filters from "@/utilities/Filters";
@@ -113,24 +94,14 @@ import FilterCreditSheet from "@/components/modules/credit/FilterCreditSheet.vue
 import NoResults from "@/components/layout/NoResults.vue";
 import PlacedCreditHistoryItem from "@/components/modules/credit/PlacedCreditHistoryItem.vue";
 import PlacedCreditSummary from "@/components/modules/credit/PlacedCreditSummary.vue";
-import DeleteModal from "@/components/modals/DeleteModal.vue";
-import router from "@/router";
 import EmptyCredit from "@/components/modules/credit/EmptyCredit.vue";
 import Credit from "@/models/Credit";
 
 export default defineComponent({
   data() {
     return {
-      search,
       arrowBack,
-      ellipsisHorizontal,
-      trashOutline,
-      filter,
       optionsOutline,
-      chatbubbleOutline,
-      createOutline,
-      add,
-      router,
       fetching: false,
       filters,
       showFilterSheet: false,
@@ -139,8 +110,6 @@ export default defineComponent({
         end_dt: "",
       },
       event: null as any,
-      openPopover: -1,
-      showConfirmDeleteModal: false,
       selectedCredit: {} as any | null,
     };
   },
@@ -164,9 +133,7 @@ export default defineComponent({
     IonSpinner,
     PlacedCreditHistoryItem,
     IonList,
-    IonPopover,
     IonItem,
-    DeleteModal,
     EmptyCredit,
     PlacedCreditSummary,
   },
@@ -188,10 +155,6 @@ export default defineComponent({
       } finally {
         this.fetching = false;
       }
-    },
-    recordRepayment(credit: Credit) {
-      this.$router.push(`/shopper/credits/${credit.id}/record-repayment`);
-      this.closeMenu();
     },
     viewDetails(credit: Credit) {
       this.$router.push(`/shopper/credits/${credit.id}/credit-details`);
@@ -227,25 +190,6 @@ export default defineComponent({
         event.end_dt || formatMySQLDateTime(new Date().toISOString());
       this.fetchCredits();
     },
-    openMenu(event: any, index: number) {
-      this.event = event;
-      this.openPopover = index;
-    },
-
-    closeMenu() {
-      this.openPopover = -1;
-      this.event = null;
-    },
-    deleteCredit(credit: any) {
-      this.selectedCredit = credit;
-      this.showConfirmDeleteModal = true;
-      this.closeMenu();
-    },
-
-    async onConfirmDelete() {
-      this.showConfirmDeleteModal = false;
-      await this.creditStore.deleteCredit(this.selectedCredit?.id as number);
-    },
   },
 
   mounted() {
@@ -256,30 +200,11 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.ion-content {
-  --align-items: center;
-  --padding-top: 10px;
-  --padding-bottom: 10px;
-  --padding-left: 10px;
-  --padding-right: 10px;
-  --text-align: justify;
-  --white-space: normal;
-  --border-radius: 10px;
+<style lang="scss" scoped>
+ion-segment {
+  ion-segment-button {
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+  }
 }
-
-.ion-segment-button {
-  --padding-top: 10px;
-  --padding-bottom: 10px;
-  --padding-left: 10px;
-  --padding-right: 10px;
-}
-
-/* ion-segment-button ion-label {
-        font-size: 16px;
-        --align-items: center;
-        text-align: center;
-        overflow: inherit;
-        text-overflow: inherit;
-      } */
 </style>

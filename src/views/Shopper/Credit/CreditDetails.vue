@@ -27,65 +27,31 @@
       >
         <IonSpinner name="crescent"></IonSpinner>
       </section>
-
       <section v-else>
         <CreditImages :sale-items="credit?.sale_items" />
-        <ion-card class="ion-padding">
-          <ionText color="dark" class="fw-bold"> Credit details</ionText>
-          <section
-            class="d-flex ion-justify-content-between ion-align-items-baseline"
-          >
-            <IonText slot="start"  class="font-medium" >
-              Order date:
-              {{
-                filters.date(credit?.order?.due_date as string, "short") ||
-                "N/A"
-              }}
-            </IonText>
-
-            <IonChip
-              v-if="credit?.order?.days_overdue"
-              color="danger"
-              class="font-medium fw-bold"
-              slot="end"
-            >
-              {{ credit?.order?.days_overdue }} days overdue
-            </IonChip>
-          </section>
-           <IonLabel :button="true" lines="none" class="d-flex ion-justify-content-between flex-column ion-align-items-baseline">
-
-          
-            <p>
-              <IonChip color="danger"  class="font-medium" > 12 days overdue </IonChip>
-            </p>
-            <p>
-              <IonText  class="font-medium" >Achimota Golf club, 180a </IonText>
-            </p>
-            <p>
-              <IonText  class="font-medium" >Order delivered on - 2.08.2023</IonText>
-            </p>
-          </IonLabel>
-        </ion-card>
         <section>
-          <ReceivedCreditItems :credit="credit"></ReceivedCreditItems>
+          <PlacedCreditItems :credit="credit"></PlacedCreditItems>
         </section>
-        <section class="ion-padding-horizontal update-button-section">
-          <KolaYellowButton @click="recordRepayment">
-            {{ "Pay credit due" }}
-          </KolaYellowButton>
-          <p class="font-medium d-flex flex-column">
-            <IonText color="dark" class="fw-bold">Payment History</IonText>
-            <IonText color="medium"
-              >An overview of how much repayment you have made so far</IonText
-            >
-          </p>
+        <section>
+          <PlacedCreditDetails :credit="credit"></PlacedCreditDetails>
+          <section class="ion-padding-horizontal update-button-section">
+            <KolaYellowButton @click="recordRepayment">
+              {{ "Pay credit due" }}
+            </KolaYellowButton>
+            <p class="font-medium d-flex flex-column">
+              <IonText color="dark" class="fw-bold">Payment History</IonText>
+              <IonText color="medium"
+                >An overview of how much repayment you have made so far</IonText
+              >
+            </p>
+          </section>
+          <ReceivedRepayment
+            v-for="receivedRepayment in receivedRepayments"
+            :key="receivedRepayment.id"
+            :receivedRepayment="receivedRepayment"
+            :credit="credit"
+          ></ReceivedRepayment>
         </section>
-        <ReceivedRepayment
-          v-for="receivedRepayment in receivedRepayments"
-          :key="receivedRepayment.id"
-          :receivedRepayment="receivedRepayment"
-          :credit="credit"
-        ></ReceivedRepayment>
       </section>
     </ion-content>
   </IonPage>
@@ -122,15 +88,15 @@ import { chatbubbleOutline, shareOutline } from "ionicons/icons";
 import CreditImages from "@/components/modules/credit/CreditImages.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderStatusHistoryView from "@/components/modules/order/OrderStatusHistoryView.vue";
-import ReceivedCreditItems from "@/components/modules/credit/ReceivedCreditItems.vue";
+import PlacedCreditItems from "@/components/modules/credit/PlacedCreditItems.vue";
 import ReceivedRepayment from "@/components/modules/credit/ReceivedRepayment.vue";
 import PlacedCreditHistoryItem from "@/components/modules/credit/PlacedCreditHistoryItem.vue";
-
 import ReceivedCreditStatistics from "@/components/modules/credit/ReceivedCreditStatistics.vue";
 import Credit from "@/models/Credit";
 import { useCreditStore } from "@/stores/CreditStore";
 import filters from "@/utilities/Filters";
 import { SalePayment } from "@/models/SalePayment";
+import PlacedCreditDetails from "@/components/modules/credit/PlacedCreditDetails.vue";
 
 export default defineComponent({
   components: {
@@ -155,10 +121,11 @@ export default defineComponent({
     IonSpinner,
     KolaYellowButton,
     OrderStatusHistoryView,
-    ReceivedCreditItems,
+    PlacedCreditItems,
     ReceivedRepayment,
     ReceivedCreditStatistics,
     PlacedCreditHistoryItem,
+    PlacedCreditDetails,
     IonChip,
     IonText,
     IonLabel,
