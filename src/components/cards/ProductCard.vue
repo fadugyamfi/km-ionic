@@ -37,6 +37,9 @@
         >
           <p class="product-title fw-semibold line-clamp">
             {{ product?.product_name }}
+            <span v-if="product?.is_on_sale">
+              - {{ product?.discountApplied }}% {{ $t('general.discount') }}
+            </span>
           </p>
 
           <IonButton
@@ -57,7 +60,7 @@
         <section class="pricing d-flex flex-column">
           <section>
             <section v-if="product?.is_on_sale && product.sale_price > 0">
-              <span style="margin-right: 5px;">
+              <span class="font-medium" style="margin-right: 5px;">
                 <s>
                   {{ Filters.currency(Number(product?.product_price), String(product?.currency?.symbol || 'GHS') ) }}
                 </s>
