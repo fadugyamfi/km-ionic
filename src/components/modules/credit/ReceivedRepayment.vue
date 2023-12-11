@@ -1,41 +1,40 @@
 <template>
-  <IonItem class="ion-align-items-start ion-margin-bottom">
+  <IonItem :button="true" lines="none">
     <ProfileAvatar
       slot="start"
-      :image="credit.business?.logo"
-      :username="credit.business?.name"
+      :image="receivedRepayment?.business?.logo"
+      :username="receivedRepayment?.business?.name"
       custom-size="40px"
-    ></ProfileAvatar>
-
-    <IonLabel>
-      <p class="ion-no-margin">
-        {{ credit.business?.name }}
-      </p>
-      <IonText
-        style="margin-bottom: 5px !important"
-        color="medium"
-        class="font-medium"
-      >
-        Payment made on {{ credit.payment_date?.split(" ")[0] }}
-      </IonText>
-      <IonText color="medium" class="font-medium d-flex">
-        paid via {{ credit.payment_mode?.name }}
-        <Image class="momo" src="/images/momo.svg"></Image>
-      </IonText>
-      <IonText class="fw-bold">{{
-        Filters.currency(credit.amount)
-      }}</IonText></IonLabel
-    >
-    <IonButton
-      slot="end"
-      fill="clear"
-      color="dark"
       class="ion-align-self-start ion-margin-top"
-      @click.stop="openMenu($event)"
-    >
-      <IonIcon :icon="ellipsisHorizontal"></IonIcon>
-    </IonButton>
-    <slot name="popover"></slot>
+    ></ProfileAvatar>
+    <IonLabel>
+      <p>
+        <IonText color="dark"
+          >{{ receivedRepayment?.business?.name }}
+          {{ credit.isPaid() ? "paid" : "" }} -
+        </IonText>
+        <IonText color="medium"
+          >{{
+            Filters.currency(
+              receivedRepayment?.amount as number,
+              receivedRepayment.currency?.symbol as string
+            )
+          }}
+        </IonText>
+      </p>
+      <p>
+        <IonText color="medium" class="font-medium">
+          Payment made on
+          {{ Filters.date(receivedRepayment?.payment_date as string, "short") }}
+        </IonText>
+      </p>
+
+      <p>
+        <IonText color="medium" class="font-medium d-flex">
+          paid via {{ receivedRepayment.payment_mode?.name }}
+        </IonText>
+      </p>
+    </IonLabel>
   </IonItem>
 </template>
 <script lang="ts" setup>
@@ -49,29 +48,23 @@ import {
   IonLabel,
   IonButton,
 } from "@ionic/vue";
-import { ellipsisHorizontal } from "ionicons/icons";
 import { PropType, ref } from "vue";
-import { useRouter } from "vue-router";
 import Image from "@/components/Image.vue";
-import Customer from "@/models/Customer";
-import { useCustomerStore } from "@/stores/CustomerStore";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import Filters from "@/utilities/Filters";
 import { SalePayment } from "@/models/SalePayment";
+import Credit from "@/models/Credit";
 
 const props = defineProps({
+  receivedRepayment: {
+    type: SalePayment as PropType<SalePayment>,
+    default: () => {},
+  },
   credit: {
-    type: SalePayment,
-    default: () => [],
+    type: Credit,
+    default: () => {},
   },
 });
-
-const emit = defineEmits(["openMenu"]);
-const router = useRouter();
-
-const openMenu = (event: CustomEvent) => {
-  emit("openMenu", event);
-};
 </script>
 
 <style lang="scss" scoped>
@@ -137,6 +130,12 @@ const openMenu = (event: CustomEvent) => {
     color: #111;
     margin-bottom: 5px;
   }
+}
+ion-label {
+  padding-inline-start: 0px;
+}
+.due-date {
+  margin-left: 8px;
 }
 .momo {
   max-width: 20px;

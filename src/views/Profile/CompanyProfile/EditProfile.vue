@@ -30,7 +30,7 @@
       <section v-if="!fetching">
         <section class="banner">
           <img
-            :src="company?.photo || defaultBanner"
+            :src="company?.cover_image || defaultBanner"
             @error="onLoadError($event)"
           />
 
@@ -144,7 +144,6 @@ import {
   arrowBackOutline,
   navigateOutline,
 } from "ionicons/icons";
-import CompanyProfileHeader from "@/components/modules/company/CompanyProfileHeader.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { ref, onMounted, computed } from "vue";
 import { handleAxiosRequestError } from "@/utilities";
@@ -295,6 +294,7 @@ h6 {
   img {
     max-width: 100%;
     width: 100%;
+    max-height: 200px;
   }
 
   aside {

@@ -3,6 +3,7 @@
     <section class="ion-padding">
       <AddressHeader />
     </section>
+<<<<<<< HEAD
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
       <IonItem
         v-for="address in businessLocations"
@@ -12,6 +13,13 @@
     
       >
 
+=======
+    <IonContent class="ion-padding-horizontal">
+      <IonItem v-for="address in businessLocations" :key="address.id" lines="none"
+               class="profile-item ion-margin-top d-flex flex-column ion-align-items-start"
+               :router-link="`/profile/address/business/${address.business_id}/location/${address.id}/edit-address`">
+        <!-- {{ address }} -->
+>>>>>>> develop
         <div class="d-flex flex-column">
           <IonLabel>{{ address?.business?.name }}</IonLabel>
           <IonText class="success">{{ address?.address }}</IonText>
@@ -26,7 +34,7 @@
           Add New Address
         </IonText>
       </IonItem>
-    </ion-content>
+    </IonContent>
   </ion-page>
 </template>
 
@@ -39,6 +47,7 @@ import {
   IonList,
   IonText,
   IonPage,
+IonContent,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useUserStore } from "@/stores/UserStore";
@@ -66,7 +75,8 @@ export default defineComponent({
     IonText,
     IonPage,
     AddressHeader,
-  },
+    IonContent
+},
 
   computed: {
     ...mapStores(useUserStore, useBusinessStore),
@@ -84,7 +94,7 @@ export default defineComponent({
   },
 
   methods: {
-  async  getBusinessLocations() {
+    async getBusinessLocations() {
       this.businessLocations = await this.businessStore.getBusinessLocations(
         Number(this.userStore.activeBusiness?.id)
       );
@@ -102,6 +112,7 @@ ion-badge.badge {
   --color: #344054;
   margin-left: 8px;
 }
+
 .success {
   margin-right: 8px;
 }

@@ -37,6 +37,9 @@
         >
           <p class="product-title fw-semibold line-clamp">
             {{ product?.product_name }}
+            <span v-if="product?.is_on_sale">
+              - {{ product?.discountApplied }}% {{ $t('general.discount') }}
+            </span>
           </p>
 
           <IonButton
@@ -55,14 +58,32 @@
         </section>
 
         <section class="pricing d-flex flex-column">
-          <section class="fw-semibold">
-            {{
-              Filters.currency(
-                Number(product?.product_price),
-                String(product?.currency?.symbol || 'GHS')
-              )
-            }}
+          <section>
+            <section v-if="product?.is_on_sale && product.sale_price > 0">
+              <span class="font-medium" style="margin-right: 5px;">
+                <s>
+                  {{ Filters.currency(Number(product?.product_price), String(product?.currency?.symbol || 'GHS') ) }}
+                </s>
+              </span>
+
+              <span class="fw-semibold">
+                <b>
+                  {{ Filters.currency(Number(product?.sale_price), String(product?.currency?.symbol || 'GHS') ) }}
+                </b>
+
+              </span>
+            </section>
+
+            <section v-else class="fw-semibold">
+              {{
+                Filters.currency(
+                  Number(product?.product_price),
+                  String(product?.currency?.symbol || 'GHS')
+                )
+              }}
+            </section>
           </section>
+
           <section class="font-medium">
             <span v-if="product?.weight_value"
               >{{ product?.weight_value }}kg</span

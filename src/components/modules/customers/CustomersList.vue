@@ -4,7 +4,11 @@
     class="ion-padding-horizontal customers-select-list simple"
   >
     <IonItem v-for="customer in customers" :key="customer.id" :button="true">
-      <ProfileAvatar :image="customer?.logo" :username="customer?.name" customSize="40px"></ProfileAvatar>
+      <ProfileAvatar
+        :image="customer?.logo"
+        :username="customer?.name"
+        customSize="40px"
+      ></ProfileAvatar>
       <IonLabel
         @click="
           $router.push(`/profile/company/customers/${customer.id}/profile`)

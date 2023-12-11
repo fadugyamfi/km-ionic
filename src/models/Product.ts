@@ -25,6 +25,8 @@ export default class Product {
     public _business?: Business | null
     public _tags?: Tag[] | null;
     public favorited?: FavoritedProduct | null;
+    public is_on_sale: number = 0;
+    public sale_price: number = 0;
 
     constructor(data: object) {
         Object.assign(this, data);
@@ -67,5 +69,11 @@ export default class Product {
 
     unfavorite() {
         this.favorited = null;
+    }
+
+    get discountApplied() {
+        const sale_price = Number(this.sale_price);
+        const product_price = Number(this.product_price);
+        return Math.ceil(((product_price - sale_price) / product_price) * 100);
     }
 }

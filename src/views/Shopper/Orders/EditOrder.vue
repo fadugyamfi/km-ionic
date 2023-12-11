@@ -24,7 +24,7 @@
       <section v-if="!fetching">
         <section class="ion-padding">
           <IonText class="fw-bold">
-            {{ order?.business?.name || "No Business" }}
+            {{ order?._business?.name || "No Business" }}
           </IonText>
           <BusinessMinimumOrderReached
             :business="order?.business"
@@ -42,11 +42,12 @@
 
             <ion-row class="item-row">
               <ion-col size="10 ">
-                <h6 class="text-product">{{ item.product?.product_name }}</h6>
+                <h6 class="text-product">{{ item._product?.product_name }}</h6>
                 <p class="price">
                   {{
                     Filters.currency(
-                      (item.quantity || 0) * (item.product?.product_price || 0),
+                      (item.quantity || 0) *
+                        (item._product?.product_price || 0),
                       item.currency_symbol
                     )
                   }}
@@ -56,7 +57,7 @@
               <ion-col size="1" class="remove-button">
                 <ion-button
                   fill="clear"
-                  @click.prevent.stop="removeFromCart(index)"
+                  @click.prevent.stop="removeFromCart(item, index)"
                 >
                   <ion-icon
                     class="remove-icon"
@@ -149,6 +150,7 @@ const fetching = ref(false);
 const order = computed(() => orderStore.editedOrder);
 
 const getOrder = async () => {
+  console.log("getOrder");
   fetching.value = true;
   const order_id = +route.params.id;
   // order.value = orderStore.orders.find((o) => o.id == order_id) as Order;
@@ -168,15 +170,21 @@ const totalCost = computed(() =>
   )
 );
 
-const removeFromCart = (index: number) => {
-  order.value?.order_items.splice(index, 1);
+const removeFromCart = async (item: OrderItem, index: number) => {
   const toastStore = useToastStore();
-  toastStore.showSuccess("Removed Item From Order");
+  try {
+    const response = await orderStore.removeItem(item);
+    order.value?._order_items.splice(index, 1);
+    toastStore.showSuccess("Removed item from order");
+    orderStore.persist();
+  } catch (error) {
+    toastStore.showError("Failed to remove item from order.");
+  }
 };
 
 const updateQuantity = (item: OrderItem, newQuantity: number) => {
   item.quantity = newQuantity;
-  item.total_price = item.quantity * (item.product?.product_price || 0);
+  item.total_price = item.quantity * (item._product?.product_price || 0);
 };
 
 const addNewItem = () => {
@@ -197,9 +205,9 @@ const updateOrder = async () => {
     product_units_id: order.value?.product_units_id,
     payment_modes_id: order.value?.payment_modes_id,
     payment_option_id: order.value?.payment_option_id,
-    total_items: order.value?.order_items.length,
+    total_items: order.value?._order_items.length,
     total_order_amount: totalCost.value,
-    order_items: order.value?.order_items.map((item) => {
+    order_items: order.value?._order_items.map((item) => {
       return {
         products_id: item.products_id,
         quantity: item.quantity,
@@ -212,13 +220,20 @@ const updateOrder = async () => {
       };
     }),
   };
-  const reponse = await orderStore.updateOrder(+route.params.id, updatedOrder);
+  const response = await orderStore.updateOrder(+route.params.id, updatedOrder);
+  if (response) {
+    router.replace("/shopper/orders/history");
+    orderStore.editedOrder = {} as Order;
+    orderStore.persist();
+  }
   toastStore.unblockUI();
 };
 
 const cancel = () => {
   orderStore.editing = false;
-  router.push("/shopper/orders/history");
+  orderStore.editedOrder = {} as Order;
+  orderStore.persist();
+  router.replace("/shopper/orders/history");
 };
 
 onMounted(() => {

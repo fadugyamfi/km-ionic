@@ -228,7 +228,6 @@ export const useCartStore = defineStore("cart", {
       }
 
       this.orders.push(newOrder);
-      console.log(order);
       let orderItems = order.order_items.map((item) => {
         return new OrderItem({
           businesses_id: item.businesses_id,

@@ -1,7 +1,7 @@
 <template>
     <section class="banner">
         <img
-            :src="userStore.activeBusiness?.logo || defaultBanner"
+            :src="userStore.activeBusiness?.cover_image || defaultBanner"
             @error="onLoadError($event)"
         />
 
@@ -58,6 +58,7 @@ export default defineComponent({
     img {
         max-width: 100%;
         width: 100%;
+        max-height: 200px;
     }
 
     aside {

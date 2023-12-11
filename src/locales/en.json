@@ -47,7 +47,8 @@
     "noOfCustomers": "No. of Customers",
     "bestSellingItem": "Best Selling Item",
     "welcome": "Welcome",
-    "leaderboard": "Leaderboard"
+    "leaderboard": "Leaderboard",
+    "discount": "Discount"
   },
   "onboarding": {
     "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -238,6 +239,19 @@
       "messageSupplier": "Message Supplier",
       "deleteOrderFromList": "Delete Order From List",
       "youCantUndoThisAction": "You can't undo this action"
+    },
+    "credit": {
+      "totalCredit": "Total Credit",
+      "totalRecovered": "Total Recovered",
+      "creditHistory": "Credit History",
+      "viewAll": "View All",
+      "deleteCreditFromList": "Delete Credit From List",
+      "creditOrder": "Credit Order",
+      "outstandingCredit": "Outstanding Credit",
+      "paymentTerms": "Payment Terms",
+      "pleaseTryAgain": "Please try again",
+      "noResultsFound": "No results found"
+
     }
   },
   "modules": {

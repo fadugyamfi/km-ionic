@@ -79,7 +79,7 @@ export const useUserStore = defineStore("user", {
         name: "",
         email: "",
         phone_number: "",
-        photo: ""
+        photo: "",
       },
       companyForm: {
         business_types_id: "",
@@ -87,8 +87,8 @@ export const useUserStore = defineStore("user", {
         location: "",
         name: "",
         phone_number: "",
-        photo: "",
-        logo: "",
+        cover_image: "",
+        logo_image: "",
       },
     };
   },
@@ -328,7 +328,18 @@ export const useUserStore = defineStore("user", {
         });
     },
 
-    async fetchUserBusinesses(user_id: number | null = null) {
+    async deleteUser() {
+      return axios.delete(`/v2/users/${this.user?.id}`).then((response) => {
+        if (!response.data) {
+          throw new Error("Failed to delete account. Please try again.");
+        } else {
+          this.clearSessionInfo();
+          return response.data;
+        }
+      });
+    },
+
+    async fetchUserBusinesses(user_id: number|null = null) {
       let user = user_id || this.user?.id;
 
       return axios
