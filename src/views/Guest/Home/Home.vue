@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <ShopperHeader :show-search="true"></ShopperHeader>
+    <GuestHeader :show-search="true"></GuestHeader>
 
     <ion-content :fullscreen="true">
       <CategoryPills></CategoryPills>
@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { IonPage, IonContent } from "@ionic/vue";
 import { onMounted, ref } from "vue";
-import ShopperHeader from "@/components/layout/ShopperHeader.vue";
+import GuestHeader from "@/components/layout/GuestHeader.vue";
 import SuppliersNearYou from "@/views/Guest/Home/SuppliersNearYou.vue";
 import ModeToggleCard from "@/components/cards/ModeToggleCard.vue";
 import Promotions from "./Promotions.vue";
