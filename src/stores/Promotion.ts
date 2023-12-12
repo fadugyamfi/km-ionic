@@ -1,13 +1,8 @@
 import { defineStore } from "pinia";
-import Product from "@/models/Product";
 import axios from "axios";
-import AppStorage from "./AppStorage";
 import { handleAxiosRequestError } from "../utilities";
-import { useToastStore } from "./ToastStore";
 import Promotion from "@/models/Promotion";
 
-const storage = new AppStorage();
-const KOLA_PROMOTIONS = "kola.promotions";
 
 export const usePromotionStore = defineStore("promotion", {
   state: () => {
@@ -17,37 +12,16 @@ export const usePromotionStore = defineStore("promotion", {
   },
 
   actions: {
-    async persist() {
-      storage.set(KOLA_PROMOTIONS, this.promotions);
-    },
-
-    async loadFromStorage(): Promise<Promotion[]> {
-      const promotions = await storage.get(KOLA_PROMOTIONS);
-
-      if (promotions) {
-        this.promotions = promotions.map((el: object) => new Promotion(el));
-      }
-
-      return this.promotions;
-    },
-
     async fetchPromotions() {
-      await this.loadFromStorage();
-
-      if (this.promotions.length > 0) {
-        return this.promotions;
-      }
-
       return axios
         .get("/v2/promotions")
         .then((response) => {
           this.promotions = response.data.data.map(
             (el: object) => new Promotion(el)
           );
-          this.persist();
         })
         .catch((error) => {
-          console.log(error);
+          handleAxiosRequestError(error);
         });
     },
 

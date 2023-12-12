@@ -13,7 +13,6 @@ const meta = (key: string) => {
 const storage = new AppStorage();
 
 type UserStoreState = {
-
   fetechAccountActivities: [];
   onboarded: Boolean;
   user?: User | null;
@@ -177,15 +176,22 @@ export const useUserStore = defineStore("user", {
     isInShoppingMode() {
       return this.appMode == "shopping";
     },
+    isInGuestMode() {
+      return this.appMode == "guest";
+    },
 
+    async setAppModeAsGuest() {
+      this.appMode = "guest";
+      await storage.set("kola.app-mode", this.appMode, 7, "days");
+    },
     async setAppModeAsVendor() {
-      this.appMode = 'vendor';
-      await storage.set('kola.app-mode', this.appMode, 7, 'days');
+      this.appMode = "vendor";
+      await storage.set("kola.app-mode", this.appMode, 7, "days");
     },
 
     async setAppModeAsShopping() {
-      this.appMode = 'shopping';
-      await storage.set('kola.app-mode', this.appMode, 7, 'days');
+      this.appMode = "shopping";
+      await storage.set("kola.app-mode", this.appMode, 7, "days");
     },
 
     async toggleAppMode() {
@@ -339,7 +345,7 @@ export const useUserStore = defineStore("user", {
       });
     },
 
-    async fetchUserBusinesses(user_id: number|null = null) {
+    async fetchUserBusinesses(user_id: number | null = null) {
       let user = user_id || this.user?.id;
 
       return axios
@@ -354,7 +360,12 @@ export const useUserStore = defineStore("user", {
             typeof this.userBusinesses != "undefined" &&
             this.userBusinesses.length > 0
           ) {
-            await storage.set("kola.user-businesses", this.userBusinesses, 1, "month");
+            await storage.set(
+              "kola.user-businesses",
+              this.userBusinesses,
+              1,
+              "month"
+            );
             this.setActiveBusiness(this.userBusinesses[0]);
           }
         });
@@ -385,15 +396,14 @@ export const useUserStore = defineStore("user", {
       ] = `Bearer ${auth?.access_token}`;
     },
 
-
     resetUserForm() {
       this.userForm = {
         id: "",
         name: "",
         email: "",
         phone_number: "",
-        photo: ""
+        photo: "",
       };
-    }
+    },
   },
 });

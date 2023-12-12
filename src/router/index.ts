@@ -5,6 +5,7 @@ import { ShopperModeRoutes } from "./shopper-mode.routes";
 import { VendorModeRoutes } from "./vendor-mode.routes";
 import { ProfileRoutes } from "./profile.routes";
 import { SaleAgentRoutes } from "./sale-agent.routes";
+import { GuestModeRoutes } from "./guest.routes";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -60,7 +61,10 @@ const routes: Array<RouteRecordRaw> = [
   ...ProfileRoutes,
 
   // Sale Agent Routes
-  ...SaleAgentRoutes
+  ...SaleAgentRoutes,
+
+  // Guest Routes
+  ...GuestModeRoutes,
 ];
 
 const router = createRouter({
