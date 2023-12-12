@@ -7,42 +7,63 @@
             <ion-back-button defaultHref="/shopper/home"></ion-back-button>
           </ion-buttons>
 
-          <IonTitle size="small" class="fw-bold">{{ $t('profile.accountActivity.accountActivitys') }}</IonTitle>
+          <IonTitle size="small" class="fw-bold">{{
+            $t("profile.accountActivity.accountActivitys")
+          }}</IonTitle>
         </ion-toolbar>
       </ion-header>
 
       <IonToolbar>
-        <IonSegment value="month" mode="ios" @ionChange="onSegmentChanged($event)">
+        <IonSegment
+          value="today"
+          mode="ios"
+          @ionChange="onSegmentChanged($event)"
+        >
           <IonSegmentButton value="today">
             <IonLabel>
-              {{ $t('general.today') }}
+              {{ $t("general.today") }}
             </IonLabel>
           </IonSegmentButton>
           <IonSegmentButton value="month">
-            <IonLabel>{{ $t('general.month') }}</IonLabel>
+            <IonLabel>
+              {{ $t("general.month") }}
+            </IonLabel>
           </IonSegmentButton>
           <IonSegmentButton value="year">
-            <IonLabel>{{ $t('general.year') }}</IonLabel>
+            <IonLabel>
+              {{ $t("general.year") }}
+            </IonLabel>
           </IonSegmentButton>
         </IonSegment>
       </IonToolbar>
     </IonHeader>
-    <ion-content>
+    <ion-content :fullscreen="true" class="ion-padding-horizontal">
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-
-      <section v-show="!fetching">
-        <NoResults v-if="orderStore.orders?.length == 0"></NoResults>
-
-        <!-- <AccountActivity></AccountActivity> -->
+      <section>
+        <div v-show="selectedOption === 'today'">
+          <IonText>{{ $t("general.today") }} </IonText>
+        </div>
+        <div v-show="selectedOption === 'month'">
+          <IonText>{{ $t("general.month") }}</IonText>
+        </div>
+        <div v-show="selectedOption === 'year'">
+          <IonText>{{ $t("general.year") }}</IonText>
+        </div>
       </section>
 
+      <section v-show="!fetching">
+        <NoResults v-if="accountActivities.length === 0"></NoResults>
+        <AccountActivityList
+          v-for="activity in accountActivities"
+          :key="activity.id"
+          :activity="activity"
+        />
+      </section>
     </ion-content>
-
   </ion-page>
 </template>
-
 <script lang="ts">
 import {
   IonPage,
@@ -58,34 +79,52 @@ import {
   IonTitle,
   IonButton,
   IonIcon,
-  IonSpinner
-} from '@ionic/vue';
-import NotificationButton from '@/components/notifications/NotificationButton.vue';
-import { defineComponent, ref } from 'vue';
-import { useOrderStore } from '@/stores/OrderStore';
-import PlacedOrderList from '@/components/modules/order/PlacedOrderList.vue';
-import { search, arrowBack, ellipsisHorizontal, filter, optionsOutline, add } from 'ionicons/icons';
-import { mapStores } from 'pinia';
-import { formatMySQLDateTime, handleAxiosRequestError } from '@/utilities';
-import filters from '@/utilities/Filters';
-import FilterOrdersSheet from '@/components/modules/order/FilterOrdersSheet.vue';
-import NoResults from '@/components/layout/NoResults.vue';
+  IonSpinner,
+  IonText,
+} from "@ionic/vue";
+
+import { useUserStore } from "@/stores/UserStore";
+import { defineComponent } from "vue";
+import { useOrderStore } from "@/stores/OrderStore";
+import AccountActivityList from "@/components/modules/accountActivity/AccountActivityList.vue";
+import NoResults from "@/components/layout/NoResults.vue";
+import {
+  search,
+  arrowBack,
+  ellipsisHorizontal,
+  filter,
+  optionsOutline,
+  add,
+} from "ionicons/icons";
+import { mapStores } from "pinia";
+import filters from "@/utilities/Filters";
+import { formatMySQLDateTime, handleAxiosRequestError } from "@/utilities";
 
 export default defineComponent({
-
+  props: {
+    accountActivities: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
-      search, arrowBack, ellipsisHorizontal, filter, optionsOutline, add,
+      search,
+      arrowBack,
+      ellipsisHorizontal,
+      filter,
+      optionsOutline,
+      selectedOption: "today",
+      add,
       fetching: false,
       filters,
-      showFilterSheet: false,
       searchFilters: {
-        start_dt: '',
-        end_dt: ''
-      }
-    }
+        start_dt: "",
+        end_dt: "",
+      },
+      accountActivities: [] as any,
+    };
   },
-
   components: {
     IonPage,
     IonHeader,
@@ -98,72 +137,62 @@ export default defineComponent({
     IonBackButton,
     IonBadge,
     IonTitle,
-    PlacedOrderList,
-    NotificationButton,
     IonButton,
     IonIcon,
-    FilterOrdersSheet,
+    IonSpinner,
+    AccountActivityList,
+    IonText,
     NoResults,
-    IonSpinner
   },
-
   computed: {
-    ...mapStores(useOrderStore)
+    ...mapStores(useOrderStore, useUserStore),
   },
-
   methods: {
-    async fetchAccountActivities() {
-      try {
+
+    async fetchUserAccountActivities() {
+      try{
         this.fetching = true;
-        await this.orderStore.fetchPlacedOrders(this.searchFilters);
-      } catch (error) {
+        this.accountActivities = await this.userStore.getUserAccountActivities( this.searchFilters);
+      }catch(error){
         handleAxiosRequestError(error)
-      } finally {
+      }finally {
         this.fetching = false;
       }
-    },
-    async fetchOrders() {
-      try {
-        this.fetching = true;
-        await this.orderStore.fetchPlacedOrders(this.searchFilters);
-      } catch (error) {
-        handleAxiosRequestError(error)
-      } finally {
-        this.fetching = false;
-      }
+     
     },
 
     onSegmentChanged(event: CustomEvent) {
       let start_dt = new Date();
       let end_dt = new Date();
+      this.selectedOption = event.detail.value;
       const option = event.detail.value;
 
       switch (option) {
-        case 'month':
+        case "month":
           start_dt.setMonth(start_dt.getMonth() - 1);
           break;
 
-        case 'today':
+        case "today":
           start_dt.setDate(start_dt.getDate() - 1);
           break;
 
-        case 'year':
-          start_dt.setFullYear( start_dt.getFullYear() - 1 );
+        case "year":
+          start_dt.setFullYear(start_dt.getFullYear() - 1);
           break;
       }
 
       this.searchFilters.start_dt = formatMySQLDateTime(start_dt.toISOString());
       this.searchFilters.end_dt = formatMySQLDateTime(end_dt.toISOString());
 
-      this.fetchOrders();
+      this.fetchUserAccountActivities();
     },
-
   },
-
   mounted() {
-    this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'today' } }));
-  }
-})
+    this.onSegmentChanged(new CustomEvent("load", { detail: { value: "today" } })
+      
+    );
+  },
+});
 </script>
 
 <style scoped>
@@ -184,12 +213,9 @@ export default defineComponent({
   --padding-left: 10px;
   --padding-right: 10px;
 }
+ion-item {
+  padding: 0px 0px 0;
+}
 
-/* ion-segment-button ion-label {
-    font-size: 16px;
-    --align-items: center;
-    text-align: center;
-    overflow: inherit;
-    text-overflow: inherit;
-  } */
+
 </style>
