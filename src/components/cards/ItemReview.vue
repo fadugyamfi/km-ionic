@@ -15,7 +15,7 @@
       class="d-flex ion-justify-content-between ion-align-items-center"
       style="margin-bottom: 8px"
     >
-      <IonText class="fw-semibold">Delivery</IonText>
+      <IonText class="fw-semibold">Delivery Fee</IonText>
       <section class="d-flex ion-align-items-center">
         <IonText class="fw-semibold ion-margin-end">
           {{ Filters.currency(deliveryFee, "GHS") }}

@@ -126,6 +126,7 @@ export const useCartStore = defineStore("cart", {
         (order) => order.businesses_id == product.businesses_id
       );
 
+
       if (!order) {
         order = new Order({
           businesses_id: product.businesses_id,
@@ -161,7 +162,8 @@ export const useCartStore = defineStore("cart", {
 
         toastStore.showSuccess("Added To Cart");
       } else {
-        orderItem.quantity = quantity;
+        orderItem.quantity = orderItem.quantity ? orderItem.quantity + 1 : 1;
+        orderItem.total_price = orderItem.quantity * (orderItem.product_price ? orderItem.product_price : 0)
         toastStore.showInfo("Increased quantity in cart");
       }
       console.log(this.orders);

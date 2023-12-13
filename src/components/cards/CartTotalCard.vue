@@ -17,8 +17,9 @@
         <ion-text class="item-text">Delivery</ion-text>
       </ion-col>
       <ion-col class="ion-text-end">
-        <ion-text class="item-price">TBD</ion-text>
+        <ion-text class="item-price">{{ delivery }}</ion-text>
       </ion-col>
+
     </ion-row>
   </ion-card>
 </template>
@@ -34,6 +35,22 @@ import { Order } from "../../models/Order";
 const route = useRoute();
 
 const cartStore = useCartStore();
+
+
+const delivery = computed(() => {
+  // Assuming method is defined elsewhere in your code
+  let method = "standard"; // Change this to your actual method
+  let daysToAdd = method === "standard" ? 3 : method === "express" ? 1 : 0;
+  let deliveryDate = new Date();
+  deliveryDate.setDate(deliveryDate.getDate() + daysToAdd);
+
+  // Format the date as DD/MM/YY
+  const dd = deliveryDate.getDate().toString().padStart(2, "0");
+  const mm = (deliveryDate.getMonth() + 1).toString().padStart(2, "0");
+  const yy = deliveryDate.getFullYear().toString().slice(-2);
+
+  return `${dd}/${mm}/${yy}`;
+});
 
 const totalCost = computed(() => {
   let total = 0;

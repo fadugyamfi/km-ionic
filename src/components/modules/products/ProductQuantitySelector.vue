@@ -55,7 +55,7 @@ export default defineComponent({
 
   methods: {
     decreaseQuantity() {
-      if (this.quantity == 0) {
+      if (this.quantity == 1) {
         return;
       }
 

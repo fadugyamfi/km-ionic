@@ -116,7 +116,7 @@ const selectDeliveryMethod = (method: string) => {
   form.fields.delivery_method = method;
 
   // Define the number of days to add based on the method
-  let daysToAdd = method === "standard" ? 5 : method === "express" ? 2 : 0;
+  let daysToAdd = method === "standard" ? 3 : method === "express" ? 2 : 0;
 
   if (daysToAdd > 0) {
     const today = new Date();
