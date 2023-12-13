@@ -21,7 +21,7 @@
       </IonBadge>
     </IonTabButton>
 
-    <IonTabButton tab="tab4" href="/shopper/credits">
+    <IonTabButton tab="tab4" href="/shopper/credits" disabled>
       <img src="/images/navigation/credit.svg" />
       <img src="/images/navigation/credit_active.svg" class="active" />
       <IonLabel>{{ $t("general.credit") }}</IonLabel>
