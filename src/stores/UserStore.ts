@@ -179,6 +179,9 @@ export const useUserStore = defineStore("user", {
     isInGuestMode() {
       return this.appMode == "guest";
     },
+    isInVendorMode() {
+      return this.appMode == "vendor";
+    },
 
     async setAppModeAsGuest() {
       this.appMode = "guest";

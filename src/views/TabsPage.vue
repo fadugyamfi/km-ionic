@@ -8,7 +8,7 @@
       ></AgentTabBar>
       <section v-else>
         <ShopperTabBar v-if="userStore.isInShoppingMode()"></ShopperTabBar>
-        <VendorTabBar v-if="!userStore.isInShoppingMode() && !userStore.isInGuestMode"></VendorTabBar>
+        <VendorTabBar v-if="userStore.isInVendorMode()"></VendorTabBar>
         <GuestTabBar v-if="userStore.isInGuestMode()"></GuestTabBar>
       </section>
     </ion-tabs>
