@@ -166,27 +166,27 @@ export const ShopperModeRoutes = [
         ],
       },
 
-      {
-        path: "credits",
-        component: () => import("@/views/Shopper/Credits.vue"),
-        children: [
-          {
-            path: "",
-            component: () =>
-              import("@/views/Shopper/Credit/CreditHistoryList.vue"),
-          },
+      // {
+      //   path: "credits",
+      //   component: () => import("@/views/Shopper/Credits.vue"),
+      //   children: [
+      //     {
+      //       path: "",
+      //       component: () =>
+      //         import("@/views/Shopper/Credit/CreditHistoryList.vue"),
+      //     },
 
-          {
-            path: ":id/credit-details",
-            component: () => import("@/views/Shopper/Credit/CreditDetails.vue"),
-          },
-          {
-            path: ":id/record-repayment",
-            component: () =>
-              import("@/views/Shopper/Credit/RecordRepayment.vue"),
-          },
-        ],
-      },
+      //     {
+      //       path: ":id/credit-details",
+      //       component: () => import("@/views/Shopper/Credit/CreditDetails.vue"),
+      //     },
+      //     {
+      //       path: ":id/record-repayment",
+      //       component: () =>
+      //         import("@/views/Shopper/Credit/RecordRepayment.vue"),
+      //     },
+      //   ],
+      // },
       {
         path: "profile",
         component: () => import("@/views/Shopper/Profile.vue"),
