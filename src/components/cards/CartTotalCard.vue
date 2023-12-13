@@ -17,8 +17,9 @@
         <ion-text class="item-text">Delivery</ion-text>
       </ion-col>
       <ion-col class="ion-text-end">
-        <ion-text class="item-price">TBD</ion-text>
+        <ion-text class="item-price">{{ delivery }}</ion-text>
       </ion-col>
+
     </ion-row>
   </ion-card>
 </template>
@@ -35,25 +36,21 @@ const route = useRoute();
 
 const cartStore = useCartStore();
 
-const deliveryDate = (method: string) => {
- 
 
-  // Define the number of days to add based on the method
-  let daysToAdd = method === "standard" ? 3 : method === "express" ? 2 : 0;
+const delivery = computed(() => {
+  // Assuming method is defined elsewhere in your code
+  let method = "standard"; // Change this to your actual method
+  let daysToAdd = method === "standard" ? 3 : method === "express" ? 1 : 0;
+  let deliveryDate = new Date();
+  deliveryDate.setDate(deliveryDate.getDate() + daysToAdd);
 
-  if (daysToAdd > 0) {
-    const today = new Date();
-    const deliveryDate = new Date(today);
-    deliveryDate.setDate(today.getDate() + daysToAdd);
+  // Format the date as DD/MM/YY
+  const dd = deliveryDate.getDate().toString().padStart(2, "0");
+  const mm = (deliveryDate.getMonth() + 1).toString().padStart(2, "0");
+  const yy = deliveryDate.getFullYear().toString().slice(-2);
 
-    // Format the date as DD/MM/YY
-    const dd = deliveryDate.getDate().toString().padStart(2, "0");
-    const mm = (deliveryDate.getMonth() + 1).toString().padStart(2, "0");
-    const yy = deliveryDate.getFullYear().toString().slice(-2);
-
-    form.fields.delivery_date = `${dd}/${mm}/${yy}`;
-  }
-};
+  return `${dd}/${mm}/${yy}`;
+});
 
 const totalCost = computed(() => {
   let total = 0;
