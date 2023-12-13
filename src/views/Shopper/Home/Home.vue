@@ -15,15 +15,15 @@
 
       <TopCategories></TopCategories>
 
-      <TopBrands></TopBrands>
+      <!-- <TopBrands></TopBrands> -->
 
       <RecentlyViewedProducts></RecentlyViewedProducts>
 
-      <SuppliersNearYou></SuppliersNearYou>
+      <!-- <SuppliersNearYou></SuppliersNearYou> -->
 
-      <section class="shopper-home-section">
+      <!-- <section class="shopper-home-section">
         <ModeToggleCard></ModeToggleCard>
-      </section>
+      </section> -->
     </ion-content>
   </ion-page>
 </template>

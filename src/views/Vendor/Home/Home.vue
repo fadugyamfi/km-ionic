@@ -10,7 +10,7 @@
 
       <GrowYourStoreInfo></GrowYourStoreInfo>
 
-      <ModeToggleCard></ModeToggleCard>
+      <!-- <ModeToggleCard></ModeToggleCard> -->
     </ion-content>
   </ion-page>
 </template>

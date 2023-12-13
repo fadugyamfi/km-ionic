@@ -8,6 +8,7 @@
 <script setup lang="ts">
 import { IonPage } from '@ionic/vue';
 import ProfileManager from '@/components/profile/ProfileManager.vue';
+import ModeToggleCard from '../../components/cards/ModeToggleCard.vue';
 </script>
 
 <style scoped lang="scss">
