@@ -104,6 +104,17 @@ export const useBusinessStore = defineStore("business", {
 
       return this.getBusinesses(searchTerm, params);
     },
+    async getGuestSuppliers(
+      searchTerm = "",
+      options = {}
+    ): Promise<Business[]> {
+      const params = {
+        approved_vendor: 1,
+        ...options,
+      };
+
+      return this.getGuestBusinesses(searchTerm, params);
+    },
 
     async getBusinesses(
       searchQuery = "",
@@ -139,10 +150,59 @@ export const useBusinessStore = defineStore("business", {
         return [];
       }
     },
+    async getGuestBusinesses(
+      searchQuery = "",
+      options = {},
+      append = false
+    ): Promise<Business[]> {
+      try {
+        const response = await axios.get("/v2/guest/businesses", {
+          params: {
+            name_like: searchQuery,
+            ...options,
+          },
+        });
+
+        if (response) {
+          const { data, links } = response.data;
+          const businesses: Business[] = data.map(
+            (el: any) => new Business(el)
+          );
+
+          if (append) {
+            this.businesses = [...(this.businesses || []), ...businesses];
+          } else {
+            this.businesses = businesses;
+          }
+
+          return this.businesses;
+        }
+
+        return [];
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return [];
+      }
+    },
 
     async getBusiness(businessId: number): Promise<Business | null> {
       try {
         const response = await axios.get(`/v2/businesses/${businessId}`);
+
+        if (response) {
+          const { data } = response.data;
+          return new Business(data);
+        }
+
+        return null;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return null;
+      }
+    },
+    async getGuestBusiness(businessId: number): Promise<Business | null> {
+      try {
+        const response = await axios.get(`/v2/guest/businesses/${businessId}`);
 
         if (response) {
           const { data } = response.data;
@@ -244,7 +304,6 @@ export const useBusinessStore = defineStore("business", {
 
       return [];
     },
-
 
     async getBusinessSaleAgents(
       business: Business,
@@ -445,14 +504,17 @@ export const useBusinessStore = defineStore("business", {
         ...options,
       };
 
-      return axios.get('/v2/metrics/top-products', { params })
-        .then(response => response.data.data)
-        .catch(error => handleAxiosRequestError(error));
+      return axios
+        .get("/v2/metrics/top-products", { params })
+        .then((response) => response.data.data)
+        .catch((error) => handleAxiosRequestError(error));
     },
 
     async getBusinessLocations(business_id: number): Promise<Address[] | null> {
       try {
-        const response = await axios.get(`/v2/businesses/${business_id}/locations`);
+        const response = await axios.get(
+          `/v2/businesses/${business_id}/locations`
+        );
         this.businessLocations = response.data.data;
         return this.businessLocations;
       } catch (error) {
@@ -471,7 +533,7 @@ export const useBusinessStore = defineStore("business", {
         .then((response) => {
           if (response.status >= 200 && response.status < 300) {
             const data = response.data.data;
-            this.businessLocations.push( new Address(data) );
+            this.businessLocations.push(new Address(data));
             return data;
           }
         })
@@ -482,20 +544,21 @@ export const useBusinessStore = defineStore("business", {
       postData: Object,
       business_id: number | string,
       location_id: number | string
-
     ): Promise<Address> {
       const userStore = useUserStore();
       return axios
-        .put(
-          `/v2/businesses/${business_id}/locations/${location_id}`,
-          { ...postData, business_id: userStore.activeBusiness?.id }
-        )
+        .put(`/v2/businesses/${business_id}/locations/${location_id}`, {
+          ...postData,
+          business_id: userStore.activeBusiness?.id,
+        })
         .then((response) => {
           if (response.status >= 200 && response.status < 300) {
             const data = response.data.data;
-            const index = this.businessLocations.findIndex(loc => loc.id == location_id);
+            const index = this.businessLocations.findIndex(
+              (loc) => loc.id == location_id
+            );
 
-            if( index > -1 ) {
+            if (index > -1) {
               this.businessLocations[index] = new Address(data);
             }
 
@@ -511,10 +574,7 @@ export const useBusinessStore = defineStore("business", {
     ): Promise<Address | null> {
       const userStore = useUserStore();
       return axios
-        .get(
-          `/v2/businesses/${business_id}/locations/${location_id}`,
-
-        )
+        .get(`/v2/businesses/${business_id}/locations/${location_id}`)
         .then((response) => {
           if (response.status >= 200 && response.status < 300) {
             const data = response.data.data;
@@ -524,10 +584,10 @@ export const useBusinessStore = defineStore("business", {
         .catch((error) => handleAxiosRequestError(error));
     },
 
-
-
-
-    async getAddress(business: Business, address_id: any): Promise<Business | null> {
+    async getAddress(
+      business: Business,
+      address_id: any
+    ): Promise<Business | null> {
       const cacheKey = `kola.business.${business.id}.location`;
 
       try {
@@ -537,7 +597,9 @@ export const useBusinessStore = defineStore("business", {
           if (data) {
             const address = data.map((el: object) => new Business(el));
             // You have duplicated 'address' variable. I assume you want to find a specific customer here.
-            const foundAddress = address.find((c: Address) => c.id === address_id);
+            const foundAddress = address.find(
+              (c: Address) => c.id === address_id
+            );
 
             if (foundAddress) {
               return foundAddress;
@@ -545,7 +607,9 @@ export const useBusinessStore = defineStore("business", {
           }
         }
 
-        const response = await axios.get(`/v2/businesses/${business.id}/locations/${address_id}`);
+        const response = await axios.get(
+          `/v2/businesses/${business.id}/locations/${address_id}`
+        );
         if (response.status >= 200 && response.status < 300) {
           const data = response.data.data;
           const newAddress = new Business(data);
@@ -557,11 +621,6 @@ export const useBusinessStore = defineStore("business", {
         handleAxiosRequestError(error);
         return null;
       }
-    }
-
-  }
-
-
-
-
+    },
+  },
 });

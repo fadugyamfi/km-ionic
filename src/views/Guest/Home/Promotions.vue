@@ -1,5 +1,9 @@
 <template>
-  <section class="shopper-home-section ion-padding-top">
+  <section
+    class="shopper-home-section ion-padding-top"
+    v-for="promotion in promotions"
+    :key="promotion.id"
+  >
     <header class="ion-padding-horizontal ion-padding-bottom">
       <h6>{{ promotion.name }}</h6>
 
@@ -32,20 +36,30 @@ import { mapStores } from "pinia";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { IonText } from "@ionic/vue";
 import GuestProductCard from "@/components/cards/GuestProductCard.vue";
+import { usePromotionStore } from "@/stores/Promotion";
 
 export default defineComponent({
-  props: {
-    promotion: {
-      type: Object,
-      default: true,
-    },
-  },
   components: { Swiper, SwiperSlide, IonText, GuestProductCard },
+  data() {
+    return {
+      promotions: [] as any[],
+    };
+  },
+  computed: {
+    ...mapStores(usePromotionStore),
+  },
 
   methods: {
     viewProduct(product: Product) {
       this.$router.push(`/shopper/home/products/${product.id}`);
     },
+    async fetchPromotions() {
+      this.promotions = await this.promotionStore.getPromotions();
+    },
+  },
+
+  mounted() {
+    this.fetchPromotions();
   },
 });
 </script>

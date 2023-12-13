@@ -7,11 +7,7 @@
 
       <PromoSpace></PromoSpace>
 
-      <Promotions
-        v-for="promotion in promotions"
-        :key="promotion.id"
-        :promotion="promotion"
-      ></Promotions>
+      <Promotions></Promotions>
 
       <TopCategories></TopCategories>
 
@@ -40,19 +36,8 @@ import TopBrands from "./TopBrands.vue";
 import RecentlyViewedProducts from "./RecentlyViewedProducts.vue";
 import CategoryPills from "./CategoryPills.vue";
 import PromoSpace from "./PromoSpace.vue";
-import Promotion from "@/models/Promotion";
-import { usePromotionStore } from "@/stores/Promotion";
 
-const promotions = ref<Promotion[]>([]);
 
-const fetchPromotions = async () => {
-  const promotionStore = usePromotionStore();
-  promotions.value = await promotionStore.getPromotions();
-};
-
-onMounted(() => {
-  fetchPromotions();
-});
 </script>
 
 <style lang="scss">

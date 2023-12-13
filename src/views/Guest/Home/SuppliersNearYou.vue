@@ -87,7 +87,7 @@ export default defineComponent({
       this.slides = [];
 
       try {
-        this.suppliers = await this.businessStore.getSuppliers();
+        this.suppliers = await this.businessStore.getGuestSuppliers();
 
         for (let i = 0; i < this.suppliers.length; i += 2) {
           if (this.suppliers[i + 1]) {

@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { handleAxiosRequestError } from "../utilities";
 import Promotion from "@/models/Promotion";
-
+import { useUserStore } from "./UserStore";
 
 export const usePromotionStore = defineStore("promotion", {
   state: () => {
@@ -24,10 +24,27 @@ export const usePromotionStore = defineStore("promotion", {
           handleAxiosRequestError(error);
         });
     },
+    async fetchGuestPromotions() {
+      return axios
+        .get("/v2/guest/promotions")
+        .then((response) => {
+          this.promotions = response.data.data.map(
+            (el: object) => new Promotion(el)
+          );
+        })
+        .catch((error) => {
+          handleAxiosRequestError(error);
+        });
+    },
 
     async getPromotions(): Promise<Promotion[]> {
+      const userStore = useUserStore();
       if (this.promotions.length == 0) {
-        await this.fetchPromotions();
+        if (!userStore.isInGuestMode) {
+          await this.fetchPromotions();
+        } else {
+          await this.fetchGuestPromotions();
+        }
       }
 
       return this.promotions;

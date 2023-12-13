@@ -80,9 +80,9 @@ async function fetchBusinesses() {
   fetching.value = true;
 
   if (meta.businessType == "supplier") {
-    businesses.value = await businessStore.getSuppliers(search.term);
+    businesses.value = await businessStore.getGuestSuppliers(search.term);
   } else {
-    businesses.value = await businessStore.getBusinesses(search.term);
+    businesses.value = await businessStore.getGuestBusinesses(search.term);
   }
 
   fetching.value = false;

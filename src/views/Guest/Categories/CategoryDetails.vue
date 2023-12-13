@@ -53,7 +53,7 @@ const fetching = ref(false);
 onMounted(async () => {
     fetching.value = true;
     category.value = await productCategoryStore.getCategory( +route.params.id );
-    products.value = await productCategoryStore.fetchCategoryProducts(category.value);
+    products.value = await productCategoryStore.fetchGuestCategoryProducts(category.value);
     fetching.value = false;
 });
 </script>

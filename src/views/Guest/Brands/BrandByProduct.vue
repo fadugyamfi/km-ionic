@@ -53,7 +53,7 @@ const fetching = ref(false);
 onMounted(async () => {
   fetching.value = true;
   brand.value = await brandStore.getBrand(+route.params.id );
-  products.value = await brandStore.fetchBrandProducts(brand.value);
+  products.value = await brandStore.fetchGuestBrandProducts(brand.value);
   fetching.value = false;
 });
 </script>

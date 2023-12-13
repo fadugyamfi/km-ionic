@@ -61,7 +61,7 @@ export default defineComponent({
 
         async fetchBrandProducts() {
             this.fetching = true;
-            this.products = await this.productStore.fetchProducts({
+            this.products = await this.productStore.fetchGuestProducts({
                 brands_id: this.brand?.id,
                 limit: 10,
                 sort: 'latest'

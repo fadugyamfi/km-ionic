@@ -120,7 +120,7 @@ export default defineComponent({
     async fetchBusinessDetails() {
       const businessId = +this.$route.params.id;
       try {
-        this.business = await this.businessStore.getBusiness(businessId);
+        this.business = await this.businessStore.getGuestBusiness(businessId);
       } catch (error) {
         handleAxiosRequestError(error);
       }
