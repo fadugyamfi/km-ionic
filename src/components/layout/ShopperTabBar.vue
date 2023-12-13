@@ -11,6 +11,7 @@
     </IonTabButton>
 
     <IonTabButton tab="tab2" @click="viewOrders()" href="/shopper/orders">
+
       <img src="/images/navigation/orders.svg" />
       <img class="active" src="/images/navigation/orders_active.svg" />
       <IonLabel>{{ $t("general.orders") }}</IonLabel>
@@ -70,12 +71,12 @@ export default defineComponent({
   },
   methods: {
     viewOrders() {
-      if (this.orderStore.editing) {
+      if (this.orderStore.editing && this.orderStore.editedOrder) {
         this.$router.push(
           `/shopper/orders/${this.orderStore.editedOrder.id}/edit-order`
         );
       } else {
-        this.$router.push("/shopper/orders");
+        this.$router.replace("/shopper/orders");
       }
     },
     viewCart() {
