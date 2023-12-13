@@ -9,8 +9,8 @@ export default class Product {
     public businesses_id?: number;
     public product_name?: string;
     public product_description?: string;
-    public product_price?: number = 0;
-    public wholesale_price?: number;
+    public _product_price?: number = 0;
+    public wholesale_price: number = 0;
     public retail_price?: number;
     public single_unit_price?: number;
     public product_banner_image?: string;
@@ -25,6 +25,8 @@ export default class Product {
     public _business?: Business | null
     public _tags?: Tag[] | null;
     public favorited?: FavoritedProduct | null;
+    public is_on_sale: number = 0;
+    public sale_price: number = 0;
 
     constructor(data: object) {
         Object.assign(this, data);
@@ -67,5 +69,23 @@ export default class Product {
 
     unfavorite() {
         this.favorited = null;
+    }
+
+    get discountApplied() {
+        const sale_price = Number(this.sale_price);
+        const product_price = Number(this.product_price);
+        return Math.ceil(((product_price - sale_price) / product_price) * 100);
+    }
+
+    get product_price() {
+        if( this._product_price == 0 && this.wholesale_price > 0 ) {
+            return this.wholesale_price;
+        }
+
+        return this._product_price as number;
+    }
+
+    set product_price(value: number) {
+        this._product_price = value;
     }
 }

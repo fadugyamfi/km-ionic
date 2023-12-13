@@ -13,7 +13,8 @@ const meta = (key: string) => {
 const storage = new AppStorage();
 
 type UserStoreState = {
-  fetechAccountActivities: [];
+
+  getUserAccountActivities: [];
   onboarded: Boolean;
   user?: User | null;
   fetching: Boolean;
@@ -48,7 +49,7 @@ export interface ChangePINRequest {
 export const useUserStore = defineStore("user", {
   state: (): UserStoreState => {
     return {
-      fetechAccountActivities: [],
+      getUserAccountActivities: [],
       onboarded: false,
       appMode: "shopping",
       fetching: false,
@@ -372,6 +373,28 @@ export const useUserStore = defineStore("user", {
             this.setActiveBusiness(this.userBusinesses[0]);
           }
         });
+    },
+
+    async getUserAccountActivities(options = {}) {
+      const userStore = useUserStore();
+      const params = {
+        causer_id: userStore.user?.id,
+        limit: 50,
+        ...options,
+      };
+      try {
+        const response = await axios.get('/v2/activities', { params });
+
+        if (response.status >= 200 && response.status < 300) {
+          const data = response.data.data;
+          return data;
+        }
+      } catch (error) {
+
+        handleAxiosRequestError(error);
+      }
+
+      return null;
     },
 
     async clearSessionInfo() {

@@ -36,10 +36,31 @@
             </header>
 
             <main>
-                <section class="section title-section d-flex ion-align-items-start ion-justify-content-between">
-                    <span class="product-name">{{  product?.product_name }}</span>
-                    <span class="price">{{ product?.currency?.symbol }} {{  product?.product_price }}</span>
+                <section class="section title-section d-flex ion-align-items-start">
+                    <span class="product-name">
+                        {{  product?.product_name }}
+
+                        <span v-if="product?.is_on_sale">
+                            - {{ product?.discountApplied }}% {{ $t('general.discount') }}
+                        </span>
+                    </span>
                 </section>
+
+                <section class="section d-flex ion-align-items-start ion-justify-content-between">
+                    <span class="price fw-semibold" :class="{ 'strikethrough': product.is_on_sale }">
+                        {{ Filters.currency(Number(product?.product_price), String(product?.currency?.symbol)) }}
+                    </span>
+
+                    <IonText class="price fw-semibold" color="primary" v-if="product.is_on_sale">
+                        {{ Filters.currency(Number(product?.sale_price), String(product?.currency?.symbol)) }}
+                    </IonText>
+
+                    <IonText class="price" color="medium" v-if="product?.retail_price as number > 0">
+                        MSRP:
+                        {{ Filters.currency(Number(product?.retail_price), String(product?.currency?.symbol)) }}
+                    </IonText>
+                </section>
+
 
                 <section class="section business-section ">
                     <section class="d-flex ion-align-items-center">
@@ -120,6 +141,7 @@ import CartStatusButton from '@/components/modules/products/CartStatusButton.vue
 import { useCartStore } from '@/stores/CartStore';
 import { handleAxiosRequestError } from '@/utilities';
 import ProfileAvatar from '@/components/ProfileAvatar.vue';
+import Filters from '../../utilities/Filters';
 
 
 export default defineComponent({
@@ -159,7 +181,8 @@ export default defineComponent({
             close, heartOutline, cartOutline, shareOutline, cart, heart,
             product: null as Product | null,
             quantity: 0,
-            defaultBanner: '/images/vendor/banner.png'
+            defaultBanner: '/images/vendor/banner.png',
+            Filters
         }
     },
 
@@ -217,6 +240,10 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+
+.strikethrough {
+    text-decoration: line-through;
+}
 
 main {
     border-radius: 10px;
