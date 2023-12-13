@@ -37,6 +37,12 @@
           @on-complete="handleOnComplete"
         ></v-otp-input>
       </div>
+
+      <div class="ion-margin-top d-flex ion-justify-content-center">
+        <IonText class="font-medium ion-margin-top ion-padding-vertical ion-text-center" @click="resendOTP()">
+          If you did not receive the code, <b>click here to Resend</b>
+        </IonText>
+      </div>
     </IonContent>
 
     <IonFooter class="ion-padding">
@@ -77,6 +83,15 @@ const handleOnComplete = () => {};
 
 const userStore = useUserStore();
 const toastStore = useToastStore();
+
+const resendOTP = async () => {
+  toastStore.blockUI("Resending OTP. Please wait...");
+  userStore.verifyPhoneNumber({
+      phone_number: userStore.verification.phone_number as string
+  }).then(() => {
+    toastStore.unblockUI();
+  })
+}
 
 const onContinue = async () => {
   validating.value = true;
