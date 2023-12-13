@@ -60,7 +60,7 @@
           @ion-input="form.validate && form.validate($event)"
           readonly
         ></IonInput>
-        <section>
+        <!-- <section>
           <h6 class="fw-semibold" style="margin-bottom: 6px">Delivery</h6>
           <IonText color="medium" class="font-medium">
             Select delivery method
@@ -70,7 +70,7 @@
             :delivery-date="form.fields.delivery_date"
             @onSelectDeliveryMethod="selectDeliveryMethod"
           />
-        </section>
+        </section> -->
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">

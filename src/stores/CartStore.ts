@@ -29,6 +29,7 @@ export const useCartStore = defineStore("cart", {
     return {
       items: [] as CartItem[],
       orders: [] as Order[],
+      placedOrder: {} as Order,
     };
   },
 
@@ -39,11 +40,14 @@ export const useCartStore = defineStore("cart", {
         .post(`/v2/orders`, postData)
         .then((response) => {
           if (response.status >= 200 && response.status < 300) {
-            const data = response.data.data;
-            return data;
-          }
+            this.placedOrder = new Order(response.data.data);
+            return this.placedOrder;
+          } else return null;
         })
-        .catch((error) => handleAxiosRequestError(error));
+        .catch((error) => {
+          handleAxiosRequestError(error);
+          return null;
+        });
     },
 
     async loadFromStorage() {
@@ -245,6 +249,11 @@ export const useCartStore = defineStore("cart", {
         });
       });
       newOrder.order_items = orderItems;
+      this.persist();
+    },
+
+    clearCart() {
+      this.orders = [];
       this.persist();
     },
 

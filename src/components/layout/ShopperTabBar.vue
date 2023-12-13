@@ -6,13 +6,13 @@
       <IonLabel>{{ $t("general.home") }}</IonLabel>
     </IonTabButton>
 
-    <IonTabButton tab="tab2" @click="viewOrders()">
+    <IonTabButton tab="tab2" @click="viewOrders()" href="">
       <img src="/images/navigation/orders.svg" />
       <img class="active" src="/images/navigation/orders_active.svg" />
       <IonLabel>{{ $t("general.orders") }}</IonLabel>
     </IonTabButton>
 
-    <IonTabButton tab="tab3" class="cartTab" href="/shopper/cart/business">
+    <IonTabButton tab="tab3" class="cartTab"  @click="viewCart()" href="/shopper/cart/business" >
       <img src="/images/navigation/cart.svg" />
       <img class="active" src="/images/navigation/cart_active.svg" />
       <IonLabel>{{ $t("general.cart") }}</IonLabel>
@@ -61,6 +61,9 @@ export default defineComponent({
         this.$router.push("/shopper/orders");
       }
     },
+    viewCart(){
+      this.$router.push('/shopper/cart/business')
+    }
   },
 });
 </script>
