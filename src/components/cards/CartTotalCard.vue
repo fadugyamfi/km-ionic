@@ -35,6 +35,26 @@ const route = useRoute();
 
 const cartStore = useCartStore();
 
+const deliveryDate = (method: string) => {
+ 
+
+  // Define the number of days to add based on the method
+  let daysToAdd = method === "standard" ? 3 : method === "express" ? 2 : 0;
+
+  if (daysToAdd > 0) {
+    const today = new Date();
+    const deliveryDate = new Date(today);
+    deliveryDate.setDate(today.getDate() + daysToAdd);
+
+    // Format the date as DD/MM/YY
+    const dd = deliveryDate.getDate().toString().padStart(2, "0");
+    const mm = (deliveryDate.getMonth() + 1).toString().padStart(2, "0");
+    const yy = deliveryDate.getFullYear().toString().slice(-2);
+
+    form.fields.delivery_date = `${dd}/${mm}/${yy}`;
+  }
+};
+
 const totalCost = computed(() => {
   let total = 0;
 
