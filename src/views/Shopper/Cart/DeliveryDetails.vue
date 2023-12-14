@@ -60,7 +60,7 @@
           @ion-input="form.validate && form.validate($event)"
           readonly
         ></IonInput>
-        <section>
+        <!-- <section>
           <h6 class="fw-semibold" style="margin-bottom: 6px">Delivery</h6>
           <IonText color="medium" class="font-medium">
             Select delivery method
@@ -70,11 +70,13 @@
             :delivery-date="form.fields.delivery_date"
             @onSelectDeliveryMethod="selectDeliveryMethod"
           />
-        </section>
+        </section> -->
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="storeDeliveryDetails">
+      <KolaYellowButton 
+      :disabled="!formValid"
+      @click="storeDeliveryDetails">
         {{ $t("general.continue") }}
       </KolaYellowButton>
     </IonFooter>
@@ -100,7 +102,7 @@ import { useCartStore } from "@/stores/CartStore";
 import { useForm } from "@/composables/form";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
-import { onMounted } from "vue";
+import { onMounted, computed } from "vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -116,7 +118,7 @@ const selectDeliveryMethod = (method: string) => {
   form.fields.delivery_method = method;
 
   // Define the number of days to add based on the method
-  let daysToAdd = method === "standard" ? 5 : method === "express" ? 2 : 0;
+  let daysToAdd = method === "standard" ? 3 : method === "express" ? 2 : 0;
 
   if (daysToAdd > 0) {
     const today = new Date();
@@ -153,6 +155,12 @@ const storeDeliveryDetails = () => {
     console.error("An error occurred in storeDeliveryDetails:", error);
   }
 };
+
+const formValid = computed(() => {
+  const fields = form.fields;
+
+  return fields.delivery_nearest_landmark || fields.delivery_nearest_landmark;
+});
 
 const getLocation = async () => {
   const toastStore = useToastStore();

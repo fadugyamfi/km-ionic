@@ -6,7 +6,7 @@
       <IonLabel>{{ $t("general.home") }}</IonLabel>
     </IonTabButton>
 
-    <IonTabButton tab="tab2" @click="viewOrders()">
+    <IonTabButton tab="tab2" href="/shopper/orders">
       <img src="/images/navigation/orders.svg" />
       <img class="active" src="/images/navigation/orders_active.svg" />
       <IonLabel>{{ $t("general.orders") }}</IonLabel>
@@ -50,17 +50,6 @@ export default defineComponent({
 
   computed: {
     ...mapStores(useCartStore, useOrderStore),
-  },
-  methods: {
-    viewOrders() {
-      if (this.orderStore.editing) {
-        this.$router.push(
-          `/shopper/orders/${this.orderStore.editedOrder.id}/edit-order`
-        );
-      } else {
-        this.$router.push("/shopper/orders");
-      }
-    },
   },
 });
 </script>

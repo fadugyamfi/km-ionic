@@ -235,7 +235,6 @@ export default defineComponent({
       if (this.business && !this.product.business) {
         this.product.business = this.business;
       }
-
       const cartStore = useCartStore();
       cartStore.addProduct(this.product, 1);
     },
