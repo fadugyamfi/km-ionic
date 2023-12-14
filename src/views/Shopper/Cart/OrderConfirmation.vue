@@ -18,6 +18,9 @@
           <KolaYellowButton @click="toggleFilterSheet">
             {{ $t("shopper.cart.trackOrder") }}
           </KolaYellowButton>
+          <KolaWhiteButton @click="placeNewOrder">
+            {{ $t("shopper.cart.placeNewOrder") }}
+          </KolaWhiteButton>
           <OrderConfirmSheet
             :isOpen="showFilterSheet"
             @didDismiss="showFilterSheet = false"
@@ -42,6 +45,7 @@ import {
 } from "@ionic/vue";
 
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import OrderCloseHeader from "@/components/header/OrderCloseHeader.vue";
 import OrderConfirmSheet from "@/components/modules/carts/OrderConfirmSheet.vue";
 import { useCartStore } from "@/stores/CartStore";
@@ -63,6 +67,7 @@ export default defineComponent({
     IonImg,
     IonLabel,
     KolaYellowButton,
+    KolaWhiteButton,
     OrderCloseHeader,
     OrderConfirmSheet,
   },
@@ -76,11 +81,15 @@ export default defineComponent({
     const toggleFilterSheet = () => {
       showFilterSheet.value = !showFilterSheet.value;
     };
+    const placeNewOrder = () => {
+      router.push("/shopper/cart/business");
+    };
     const order = computed(() => cartStore.placedOrder);
 
     return {
       showFilterSheet,
       toggleFilterSheet,
+      placeNewOrder,
       route,
       router,
       order,
@@ -89,7 +98,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 ion-card {
   box-shadow: none;
   border: none;
