@@ -74,7 +74,9 @@
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="storeDeliveryDetails">
+      <KolaYellowButton 
+      :disabled="!formValid"
+      @click="storeDeliveryDetails">
         {{ $t("general.continue") }}
       </KolaYellowButton>
     </IonFooter>
@@ -100,7 +102,7 @@ import { useCartStore } from "@/stores/CartStore";
 import { useForm } from "@/composables/form";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
-import { onMounted } from "vue";
+import { onMounted, computed } from "vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -153,6 +155,12 @@ const storeDeliveryDetails = () => {
     console.error("An error occurred in storeDeliveryDetails:", error);
   }
 };
+
+const formValid = computed(() => {
+  const fields = form.fields;
+
+  return fields.delivery_nearest_landmark || fields.delivery_nearest_landmark;
+});
 
 const getLocation = async () => {
   const toastStore = useToastStore();
