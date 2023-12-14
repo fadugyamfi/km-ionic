@@ -13,11 +13,6 @@
         started.
       </p>
     </section>
-    <IonFooter class="ion-no-border">
-      <KolaYellowButton @click="startShopping()"
-        >Start Shopping</KolaYellowButton
-      >
-    </IonFooter>
   </div>
 </template>
 

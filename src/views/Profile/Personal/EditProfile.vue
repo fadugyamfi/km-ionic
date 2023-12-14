@@ -48,7 +48,7 @@
           <IonInput
             class="kola-input ion-margin-bottom"
             :class="{ 'ion-invalid ion-touched': form.errors.name }"
-            :label="$t('profile.customers.businessName')"
+            :label="$t('signup.vendor.fullName')"
             labelPlacement="stacked"
             fill="solid"
             v-model="form.fields.name"
