@@ -1,6 +1,6 @@
 <template>
     <IonButton fill="clear" @click.stop="toggleFavorited()">
-        <IonIcon v-if="!Business?.favorited" slot="icon-only" :icon="heartOutline"></IonIcon>
+        <IonIcon v-if="!business?.favorited" slot="icon-only" :icon="heartOutline"></IonIcon>
         <IonIcon v-else slot="icon-only" :icon="heart"></IonIcon>
     </IonButton>
 </template>
@@ -12,20 +12,20 @@ import Business from '@/models/Business';
 import { useBusinessStore } from '@/stores/BusinessStore';
 
 const props = defineProps({
-    Business: Business
+    business: Business
 })
 
 const BusinessStore = useBusinessStore();
 
 const toggleFavorited = () => {
-    if( !props.Business ) {
+    if( !props.business ) {
         return;
     }
 
-    if( props.Business.favorited ) {
-        BusinessStore.removeFromFavorites(props.Business);
+    if( props.business.favorited ) {
+        BusinessStore.removeFromFavorites(props.business);
     } else {
-        BusinessStore.addToFavorites(props.Business);
+        BusinessStore.addToFavorites(props.business);
     }
 }
 </script>
