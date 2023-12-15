@@ -186,11 +186,7 @@ export const useCartStore = defineStore("cart", {
       const businessIndex = this.orders.findIndex(
         (order) => order.businesses_id == business.businesses_id
       );
-      console.log(itemIndex, 'itemindex')
-      console.log(businessIndex, 'busiinesindex')
-      console.log(this.orders, 'beforeOrders')
       this.orders[businessIndex].order_items.splice(itemIndex, 1);
-      console.log(this.orders, 'afterOrders')
       const toastStore = useToastStore();
       toastStore.showSuccess("Removed From Cart");
       this.persist();
