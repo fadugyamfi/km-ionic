@@ -86,15 +86,10 @@
       </section>
     </section>
     <section class="d-flex flex-column">
-      <IonText color="medium" class="font-medium" style="margin-bottom: 8px;">
-  <IonIcon :icon="locationOutline" style="margin-right: 2px"></IonIcon>
-  <span>{{ orderBusiness?.delivery_location }}</span>
-</IonText>
-
-
-      <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
-        Pay on delivery
-      </IonText>
+    <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+      <IonIcon :icon="locationOutline" style="margin-right: 3px; vertical-align: middle;"></IonIcon>
+      <span style="padding-top: 94px; vertical-align: middle;">{{ orderBusiness?.delivery_location }}</span>
+    </IonText>
       <!-- <section class="d-flex ion-align-items-center">
       <IonText class="ion-margin-end date-color" @click="toggleFilterSheet">
         Change address
