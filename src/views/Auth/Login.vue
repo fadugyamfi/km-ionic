@@ -121,9 +121,9 @@ export default defineComponent({
     },
 
     mounted() {
-        if( this.loginDisabled ) {
-            this.$router.push('/signup');
-        }
+        // if( this.loginDisabled ) {
+        //     this.$router.push('/signup');
+        // }
     }
 })
 

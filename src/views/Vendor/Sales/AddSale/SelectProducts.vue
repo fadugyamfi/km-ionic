@@ -173,7 +173,11 @@ export default defineComponent({
                 return;
             }
 
-            this.$router.push('/vendor/sales/add-sale/configure-items')
+            if( this.userStore.user?.isSaleAgent() ) {
+                this.$router.push('/agent/sales/add-sale/configure-items');
+            } else {
+                this.$router.push('/vendor/sales/add-sale/configure-items')
+            }
         },
 
         toggleSearchEnabled() {

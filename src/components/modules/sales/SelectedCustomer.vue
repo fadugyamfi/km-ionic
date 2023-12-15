@@ -65,12 +65,13 @@ export default defineComponent({
 
     methods: {
         async loadSelectedCustomer() {
-            try {
-                const customers = await this.businessStore.getBusinessCustomers(this.userStore.activeBusiness as Business, 300);
-                this.customer = customers.find((c: Business) => c.id == this.saleStore.newSale.customer_id) as Business;
-            } catch (error) {
-                handleAxiosRequestError(error);
-            }
+            this.customer = this.saleStore.selectedCustomer;
+            // try {
+            //     const customers = await this.businessStore.getBusinessCustomers(this.userStore.activeBusiness as Business, 300);
+            //     this.customer = customers.find((c: Business) => c.id == this.saleStore.newSale.customer_id) as Business;
+            // } catch (error) {
+            //     handleAxiosRequestError(error);
+            // }
         }
     },
 

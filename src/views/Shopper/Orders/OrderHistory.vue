@@ -168,6 +168,12 @@ export default defineComponent({
 
   mounted() {
     this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'thisweek' } }));
+
+    if (this.orderStore.editing && this.orderStore.editedOrder) {
+      this.$router.push(
+        `/shopper/orders/${this.orderStore.editedOrder.id}/edit-order`
+      );
+    }
   }
 })
 </script>

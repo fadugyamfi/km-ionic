@@ -87,6 +87,11 @@ export const ShopperModeRoutes = [
             component: () =>
               import("@/views/Shopper/Businesses/BusinessProducts.vue"),
           },
+          {
+            path: "promotions/:id",
+            component: () =>
+              import("@/views/Shopper/Promotions/PromotionItems.vue"),
+          },
         ],
       },
       {

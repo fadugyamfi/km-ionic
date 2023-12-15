@@ -5,8 +5,11 @@
     </section>
     <ion-content>
       <section class="ion-padding">
-        <IonText> {{ order?.business?.name || 'No Business' }} </IonText>
-        <BusinessMinimumOrderReached :business="order?.business" :totalCost="totalCost"></BusinessMinimumOrderReached>
+        <IonText> {{ order?.business?.name || "No Business" }} </IonText>
+        <BusinessMinimumOrderReached
+          :business="order?.business"
+          :totalCost="totalCost"
+        ></BusinessMinimumOrderReached>
         <!-- <p v-if="minOrderAmountReached">
           {{ Filters.currency(order?.business?.min_order_amount as number, order?.currency?.symbol as string) }} minimum reached
         </p>
@@ -14,10 +17,12 @@
           <IonIcon :icon="alertCircleOutline" color="danger"></IonIcon>
           {{ Filters.currency(order?.business?.min_order_amount as number, order?.currency?.symbol as string) }} minimum not reached
         </p> -->
-
       </section>
       <IonList lines="none">
-        <IonItem v-for="(item, index) in orderBusiness?._order_items" :key="item.products_id">
+        <IonItem
+          v-for="(item, index) in orderBusiness?._order_items"
+          :key="item.products_id"
+        >
           <ion-thumbnail slot="start" class="custom-thumbnail">
             <Image :src="item.product_image"></Image>
           </ion-thumbnail>
@@ -25,27 +30,44 @@
           <ion-row class="item-row">
             <ion-col size="10 ">
               <p class="text-product">{{ item.product_name }}</p>
-              <p>{{ $t('general.quantity') }}: {{ item.quantity }}</p>
+              <p>{{ $t("general.quantity") }}: {{ item.quantity }}</p>
               <p class="price">
-                {{ Filters.currency(item.quantity * (item.product_price || 0), item.currency_symbol) }}
+                {{
+                  Filters.currency(
+                    item.quantity * (item.product_price || 0),
+                    item.currency_symbol
+                  )
+                }}
               </p>
             </ion-col>
             <ion-col size="1" class="remove-button">
-              <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
-                <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
+              <ion-button
+                fill="clear"
+                color=""
+                @click.prevent.stop="removeFromCart(index)"
+              >
+                <ion-icon
+                  class="remove-icon"
+                  :icon="closeCircleOutline"
+                ></ion-icon>
               </ion-button>
             </ion-col>
-            <ProductQuantitySelector :initialQuantity="item.quantity" @change="updateQuantity(item, $event)">
+            <ProductQuantitySelector
+              :initialQuantity="item.quantity"
+              @change="updateQuantity(item, $event)"
+            >
             </ProductQuantitySelector>
           </ion-row>
         </IonItem>
       </IonList>
 
-      <ItemReview  :order = "order" />
+      <ItemReview :order="order" />
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="createOrder" :disabled="!minOrderAmountReached"> Place Order </KolaYellowButton>
+      <KolaYellowButton @click="createOrder" :disabled="!minOrderAmountReached">
+        Place Order
+      </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -67,7 +89,11 @@ import {
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
-import { alertCircleOutline, closeCircleOutline, warningOutline } from "ionicons/icons";
+import {
+  alertCircleOutline,
+  closeCircleOutline,
+  warningOutline,
+} from "ionicons/icons";
 import ItemReview from "@/components/cards/ItemReview.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import OrderSummaryHeader from "@/components/header/OrderSummaryHeader.vue";
@@ -77,20 +103,28 @@ import { useRouter } from "vue-router";
 import { Order } from "../../../models/Order";
 import BusinessMinimumOrderReached from "../../../components/modules/business/BusinessMinimumOrderReached.vue";
 import Filters from "@/utilities/Filters";
+import { useToastStore } from "@/stores/ToastStore";
+import { handleAxiosRequestError } from "@/utilities";
 
 const route = useRoute();
 
 const router = useRouter();
+const toastStore = useToastStore();
 
 const orderBusiness = ref<any>(null);
 const orders = computed(() => cartStore.orders);
 const order = computed<Order>(() => {
-  return cartStore.orders.find((order: Order) => order?.businesses_id == +route.params.id) as Order
-})
+  return cartStore.orders.find(
+    (order: Order) => order?.businesses_id == +route.params.id
+  ) as Order;
+});
 
 const minOrderAmountReached = computed(() => {
-  return order.value?.business?.min_order_amount == null || order.value?.business?.min_order_amount as number <= totalCost.value;
-})
+  return (
+    order.value?.business?.min_order_amount == null ||
+    (order.value?.business?.min_order_amount as number) <= totalCost.value
+  );
+});
 
 const updateQuantity = (item: CartItem, newQuantity: number) => {
   item.quantity = newQuantity;
@@ -112,20 +146,41 @@ const getOrderBusiness = () => {
 
 const cartStore = useCartStore(orderBusiness.value);
 
-const createOrder = () => {
-  const response = cartStore.createOrder({
-    ...orderBusiness.value,
-    total_order_amount: totalCost.value,
-    product_units_id: 1,
-    payment_modes_id: orderBusiness.value.payment_option_id,
-    total_items: orderBusiness.value._order_items.length,
-    order_items: orderBusiness.value._order_items,
-
-
-  });
-
-  router.push(`/shopper/cart/business/${route.params.id}/order-confirmation`);
-}
+const createOrder = async () => {
+  try {
+    toastStore.blockUI("Hold On As We Place Your Order");
+    const placedOrder = await cartStore.createOrder({
+      ...orderBusiness.value,
+      total_order_amount: totalCost.value,
+      product_units_id: 1,
+      payment_modes_id: orderBusiness.value.payment_option_id,
+      total_items: orderBusiness.value._order_items.length,
+      order_items: orderBusiness.value._order_items,
+    });
+    if (placedOrder) {
+      router.replace(
+        `/shopper/cart/business/${placedOrder.id}/order-confirmation`
+      );
+      toastStore.unblockUI();
+      await toastStore.showSuccess(
+        "Order has been placed successfully",
+        "",
+        "bottom"
+      );
+      cartStore.clearCart();
+    } else {
+      toastStore.unblockUI();
+      toastStore.showError(
+        "Failed to place order. Please try again",
+        "",
+        "bottom",
+        "footer"
+      );
+    }
+  } catch (error) {
+    handleAxiosRequestError(error);
+  }
+};
 
 cartStore.loadFromStorage();
 const cartOrders = computed(() => cartStore.orders);
@@ -255,4 +310,5 @@ ion-icon.remove-icon {
 
 .text-product {
   color: black;
-}</style>
+}
+</style>

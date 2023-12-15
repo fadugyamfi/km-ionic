@@ -15,15 +15,17 @@
 
       <TopCategories></TopCategories>
 
-      <TopBrands></TopBrands>
+      <!-- <TopBrands></TopBrands> -->
 
       <RecentlyViewedProducts></RecentlyViewedProducts>
 
-      <SuppliersNearYou></SuppliersNearYou>
+      <TrendingProducts></TrendingProducts>
 
-      <section class="shopper-home-section">
+      <!-- <SuppliersNearYou></SuppliersNearYou> -->
+
+      <!-- <section class="shopper-home-section">
         <ModeToggleCard></ModeToggleCard>
-      </section>
+      </section> -->
     </ion-content>
   </ion-page>
 </template>
@@ -41,7 +43,8 @@ import RecentlyViewedProducts from "./RecentlyViewedProducts.vue";
 import CategoryPills from "./CategoryPills.vue";
 import PromoSpace from "./PromoSpace.vue";
 import Promotion from "@/models/Promotion";
-import { usePromotionStore } from "@/stores/Promotion";
+import { usePromotionStore } from "@/stores/PromotionStore";
+import TrendingProducts from "./TrendingProducts.vue";
 
 const promotions = ref<Promotion[]>([]);
 

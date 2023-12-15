@@ -2,8 +2,8 @@
   <IonHeader class="inner-header">
     <IonToolbar class="ion-align-items-center">
       <IonButtons slot="start">
-        <ion-button @click="navigateBack">
-          <img loading="lazy" src="/img/icons/close.svg" class="image" />
+        <ion-button >
+          <!-- <img loading="lazy" src="/img/icons/close.svg" class="image" /> -->
         </ion-button>
       </IonButtons>
       <IonTitle class="fw-bold">Order Confirmation</IonTitle>

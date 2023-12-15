@@ -7,43 +7,49 @@
   "background_color": "#FFFFFF",
   "icons": [
     {
-      "src": "./img/icons/icon-48.webp",
+      "src": "./img/icons/icon-48x48.png",
       "type": "image/png",
       "sizes": "48x48",
       "purpose": "any maskable"
     },
     {
-      "src": "./img/icons/icon-72.webp",
+      "src": "./img/icons/icon-72x72.png",
       "type": "image/png",
       "sizes": "72x72",
       "purpose": "any maskable"
     },
     {
-      "src": "./img/icons/icon-96.webp",
+      "src": "./img/icons/icon-96x96.png",
       "type": "image/png",
       "sizes": "96x96",
       "purpose": "any maskable"
     },
     {
-      "src": "./img/icons/icon-128.webp",
+      "src": "./img/icons/icon-128x128.png",
       "type": "image/png",
       "sizes": "128x128",
       "purpose": "any maskable"
     },
     {
-      "src": "./img/icons/icon-192.webp",
+      "src": "./img/icons/icon-192x192.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any maskable"
     },
     {
-      "src": "./img/icons/icon-256.webp",
+      "src": "./img/icons/icon-256x256.png",
       "type": "image/png",
       "sizes": "256x256",
       "purpose": "any maskable"
     },
     {
-      "src": "./img/icons/icon-512.webp",
+      "src": "./img/icons/icon-384x384.png",
+      "type": "image/png",
+      "sizes": "384x384",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./img/icons/icon-512x512.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any maskable"

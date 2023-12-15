@@ -15,19 +15,21 @@
                 </IonToolbar>
             </IonHeader>
 
-            <IonSegment value="thisweek" mode="ios" @ionChange="onSegmentChanged($event)">
-                <IonSegmentButton value="today">
-                    <IonLabel>
-                        {{ $t('general.today') }}
-                    </IonLabel>
-                </IonSegmentButton>
-                <IonSegmentButton value="thisweek">
-                    <IonLabel>{{ $t('general.thisWeek') }}</IonLabel>
-                </IonSegmentButton>
-                <IonSegmentButton value="pastmonth">
-                    <IonLabel>{{ $t('general.pastMonth') }}</IonLabel>
-                </IonSegmentButton>
-            </IonSegment>
+            <IonToolbar>
+                <IonSegment value="thisweek" mode="ios" @ionChange="onSegmentChanged($event)">
+                    <IonSegmentButton value="today">
+                        <IonLabel>
+                            {{ $t('general.today') }}
+                        </IonLabel>
+                    </IonSegmentButton>
+                    <IonSegmentButton value="thisweek">
+                        <IonLabel>{{ $t('general.thisWeek') }}</IonLabel>
+                    </IonSegmentButton>
+                    <IonSegmentButton value="pastmonth">
+                        <IonLabel>{{ $t('general.pastMonth') }}</IonLabel>
+                    </IonSegmentButton>
+                </IonSegment>
+            </IonToolbar>
         </IonHeader>
 
         <ion-content>
@@ -132,7 +134,7 @@ export default defineComponent({
     methods: {
         onAddSale() {
             this.saleStore.resetForNewSale();
-            this.$router.push('/vendor/sales/add-sale/select-agent')
+            this.$router.push('/agent/sales/add-sale/select-agent')
         },
 
         async fetchSales() {

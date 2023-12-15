@@ -48,7 +48,8 @@
                     </p>
 
                     <div class="kola-input-item">
-                        <IonItem lines="none">
+                        <PinEntryField v-model="businessStore.registration.user.pin" :label="$t('signup.shopper.newPinCode')"></PinEntryField>
+                        <!-- <IonItem lines="none">
                             <IonInput
                                 ref="pin"
                                 :class="{ 'ion-invalid ion-touched': form.errors.pin }"
@@ -64,11 +65,12 @@
                             <IonButton fill="clear" color="medium" @click="pinVisible = !pinVisible">
                                 <IonIcon slot="icon-only" :icon="pinVisible ? eye : eyeOff"></IonIcon>
                             </IonButton>
-                        </IonItem>
+                        </IonItem> -->
                     </div>
 
                     <div class="kola-input-item">
-                        <IonItem lines="none">
+                        <PinEntryField v-model="businessStore.registration.user.pin_confirmation" :label="$t('signup.shopper.confirmPinCode')"></PinEntryField>
+                        <!-- <IonItem lines="none">
                             <IonInput
                                 :class="{ 'ion-invalid ion-touched': form.errors.pin_confirmation }"
                                 :label="$t('signup.shopper.confirmPinCode')"
@@ -83,7 +85,7 @@
                             <IonButton fill="clear" color="medium" @click="confPinVisible = !confPinVisible">
                                 <IonIcon slot="icon-only" :icon="confPinVisible ? eye : eyeOff"></IonIcon>
                             </IonButton>
-                        </IonItem>
+                        </IonItem> -->
                     </div>
                 </main>
             </form>
@@ -106,29 +108,31 @@ import { useBusinessStore } from '@/stores/BusinessStore';
 import { useForm } from '@/composables/form';
 import HeaderArea from './HeaderArea.vue';
 import { eye, eyeOff } from 'ionicons/icons';
+import PinEntryField from '../../Auth/PinEntryField.vue';
 
 export default defineComponent({
 
     components: {
-        IonPage,
-        IonHeader,
-        IonToolbar,
-        IonButtons,
-        IonBackButton,
-        IonTitle,
-        IonContent,
-        IonCard,
-        IonCardContent,
-        IonFooter,
-        FooterNavigation,
-        IonInput,
-        IonSelect,
-        IonSelectOption,
-        IonButton,
-        HeaderArea,
-        IonIcon,
-        IonItem
-    },
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonBackButton,
+    IonTitle,
+    IonContent,
+    IonCard,
+    IonCardContent,
+    IonFooter,
+    FooterNavigation,
+    IonInput,
+    IonSelect,
+    IonSelectOption,
+    IonButton,
+    HeaderArea,
+    IonIcon,
+    IonItem,
+    PinEntryField
+},
 
     data() {
         return {

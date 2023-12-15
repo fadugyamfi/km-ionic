@@ -375,6 +375,24 @@ export const useUserStore = defineStore("user", {
         });
     },
 
+    async fetchAssignedBusinesses(user_id: number|null = null): Promise<Business[]> {
+      let user = user_id || this.user?.id;
+
+      return axios
+        .get(`/v2/users/${user}/businesses`)
+        .then(async (response) => {
+          const businesses = response.data.data.map(
+            (el: any) => new Business(el.business)
+          );
+
+          return businesses;
+        })
+        .catch(error => {
+          handleAxiosRequestError(error);
+          return [];
+        });
+    },
+
     async getUserAccountActivities(options = {}) {
       const userStore = useUserStore();
       const params = {

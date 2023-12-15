@@ -157,7 +157,8 @@
       "viewAll": "View all",
       "suppliersNearYou": "Suppliers Near You",
       "showAll": "Show All",
-      "newArrivals": "New Arrivals"
+      "newArrivals": "New Arrivals",
+      "trending": "Trending"
     },
     "businesses": {
       "noResultsAvailable": "No Results Available",
@@ -176,7 +177,8 @@
     "cart": {
       "proceedToCheckout": "Proceed To Checkout",
       "trackOrder": "Track Order",
-      "confirmTime": "Expect your item to be delivered between 24-72 hours. Our agent will call to confirm"
+      "confirmTime": "Expect your item to be delivered between 24-72 hours. Our agent will call to confirm",
+      "placeNewOrder": "Place New Order"
     },
     "credit":{
       "totalAmountOverdue": "Total amount overdue",

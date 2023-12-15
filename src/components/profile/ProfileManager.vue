@@ -28,6 +28,9 @@
       <PersonalActions v-if="viewing == 'personal'"></PersonalActions>
       <CompanyActions v-if="viewing == 'company'"></CompanyActions>
 
+      <section class="shopper-home-section">
+        <ModeToggleCard style="margin-left: 0px; margin-right: 0px;"></ModeToggleCard>
+      </section>
     </ion-content>
 </template>
 
@@ -38,6 +41,7 @@ import { useUserStore } from '@/stores/UserStore';
 import PersonalActions from '@/components/profile/PersonalActions.vue';
 import CompanyActions from '@/components/profile/CompanyActions.vue';
 import { ref } from 'vue';
+import ModeToggleCard from '../cards/ModeToggleCard.vue';
 
 const userStore = useUserStore();
 const viewing = ref('company');
