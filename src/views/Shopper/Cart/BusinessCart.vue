@@ -79,11 +79,13 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-  <KolaYellowButton v-if="orderBusiness?.order_items?.length > 0" @click="viewDeliveryDetails()">
-    {{ $t("shopper.cart.proceedToCheckout") }}
-  </KolaYellowButton>
-</IonFooter>
-
+      <KolaYellowButton
+        v-if="orderBusiness?.order_items?.length > 0"
+        @click="viewDeliveryDetails()"
+      >
+        {{ $t("shopper.cart.proceedToCheckout") }}
+      </KolaYellowButton>
+    </IonFooter>
   </ion-page>
 </template>
 
@@ -119,13 +121,18 @@ import Image from "@/components/Image.vue";
 import Filters from "@/utilities/Filters";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
+import { Order } from "@/models/Order";
 
 const router = useRouter();
 const route = useRoute();
 
 const cartStore = useCartStore();
 
-const orderBusiness = ref<any>(null);
+const orderBusiness = computed((): Order | any => {
+  return cartStore.orders.find(
+    (order: any) => order?.businesses_id == route.params.id
+  );
+});
 const orders = computed(() => cartStore.orders);
 
 const viewing = ref("cart");
@@ -137,6 +144,7 @@ const updateQuantity = (item: CartItem, newQuantity: number) => {
 };
 
 const removeFromCart = (index: number) => {
+  console.log(index, orderBusiness.value);
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
 
@@ -148,19 +156,19 @@ const viewPaymentMethod = () => {
   router.push(`/shopper/cart/business/${route.params.id}/payment-method`);
 };
 
-const getOrderBusiness = () => {
-  const business = orders.value.find(
-    (order: any) => order?.businesses_id == route.params.id
-  );
-  orderBusiness.value = business;
-  // cartStore.items = orderBusiness.value?.order_items;
-};
+// const getOrderBusiness = () => {
+//   const business = orders.value.find(
+//     (order: any) => order?.businesses_id == route.params.id
+//   );
+//   orderBusiness.value = business;
+//   // cartStore.items = orderBusiness.value?.order_items;
+// };
 
 onMounted(async () => {
   if (cartStore.orders.length == 0) {
     await cartStore.loadFromStorage();
   }
-  getOrderBusiness();
+  // getOrderBusiness();
 });
 </script>
 

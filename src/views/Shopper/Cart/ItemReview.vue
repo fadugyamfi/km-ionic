@@ -110,8 +110,13 @@ const route = useRoute();
 
 const router = useRouter();
 const toastStore = useToastStore();
+const cartStore = useCartStore()
 
-const orderBusiness = ref<any>(null);
+const orderBusiness = computed((): Order => {
+  return cartStore.orders.find(
+    (order: Order) => order?.businesses_id == +route.params.id
+  ) as Order;
+});
 const orders = computed(() => cartStore.orders);
 const order = computed<Order>(() => {
   return cartStore.orders.find(
@@ -135,16 +140,16 @@ const removeFromCart = (index: number) => {
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
 
-const getOrderBusiness = () => {
-  console.log("jello");
-  const business = orders.value.find(
-    (order: any) => order?.businesses_id == route.params.id
-  );
-  console.log("Found business:", business); // Add this line for debugging
-  orderBusiness.value = business;
-};
+// const getOrderBusiness = () => {
+//   console.log("jello");
+//   const business = orders.value.find(
+//     (order: any) => order?.businesses_id == route.params.id
+//   );
+//   console.log("Found business:", business); // Add this line for debugging
+//   orderBusiness.value = business;
+// };
 
-const cartStore = useCartStore(orderBusiness.value);
+// const cartStore = useCartStore(orderBusiness.value);
 
 const createOrder = async () => {
   try {
@@ -198,7 +203,7 @@ onMounted(async () => {
   if (cartStore.orders.length == 0) {
     await cartStore.loadFromStorage();
   }
-  getOrderBusiness();
+  // getOrderBusiness();
 });
 </script>
 
