@@ -13,13 +13,13 @@ export const GuestModeRoutes = [
 
       userStore.setAppModeAsGuest();
 
-        // if (userStore.user) {
-        //   return { name: "ShopperHome" };
-        // }
+      // if (userStore.user) {
+      //   return { name: "ShopperHome" };
+      // }
 
-        // if (userStore.appMode == "vendor") {
-        //   return { name: "VendorHome" };
-        // }
+      // if (userStore.appMode == "vendor") {
+      //   return { name: "VendorHome" };
+      // }
     },
     children: [
       {
@@ -77,6 +77,11 @@ export const GuestModeRoutes = [
             path: "businesses/:id/products",
             component: () =>
               import("@/views/Guest/Businesses/BusinessProducts.vue"),
+          },
+          {
+            path: "promotions/:id",
+            component: () =>
+              import("@/views/Guest/Promotions/PromotionItems.vue"),
           },
         ],
       },

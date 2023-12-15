@@ -7,9 +7,12 @@
     <header class="ion-padding-horizontal ion-padding-bottom">
       <h6>{{ promotion.name }}</h6>
 
-      <!-- <IonText color="primary" router-link="/shopper/home/christmas-exclusives">
+      <IonText
+        color="primary"
+        :router-link="`/guest/home/promotions/${promotion.id}`"
+      >
         View all
-      </IonText> -->
+      </IonText>
     </header>
 
     <Swiper :slides-per-view="2">
@@ -36,13 +39,13 @@ import { mapStores } from "pinia";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { IonText } from "@ionic/vue";
 import GuestProductCard from "@/components/cards/GuestProductCard.vue";
-import { usePromotionStore } from "@/stores/Promotion";
+import { usePromotionStore } from "@/stores/PromotionStore";
 
 export default defineComponent({
   components: { Swiper, SwiperSlide, IonText, GuestProductCard },
   data() {
     return {
-      promotions: [] as any[],
+      promotions: [] as Promotion[],
     };
   },
   computed: {
@@ -50,9 +53,6 @@ export default defineComponent({
   },
 
   methods: {
-    viewProduct(product: Product) {
-      this.$router.push(`/shopper/home/products/${product.id}`);
-    },
     async fetchPromotions() {
       this.promotions = await this.promotionStore.getPromotions();
     },
