@@ -1,11 +1,11 @@
 <template>
   <section class="shopper-home-section ion-padding-top">
-    <header class="ion-padding-horizontal ion-padding-bottom">
-      <h6>{{ promotion.name }}</h6>
+    <header class="ion-padding-bottom">
+      <h6 class="ion-padding-start">{{ promotion.name }}</h6>
 
-      <!-- <IonText color="primary" router-link="/shopper/home/christmas-exclusives">
-        View all
-      </IonText> -->
+      <IonButton fill="clear" color="primary" :router-link="`/shopper/home/promotions/${promotion.id}`">
+        {{ $t("shopper.home.viewAll") }}
+      </IonButton>
     </header>
 
     <Swiper :slides-per-view="2">
@@ -25,7 +25,7 @@ import Promotion from "@/models/Promotion";
 import Product from "@/models/Product";
 import { mapStores } from "pinia";
 import { Swiper, SwiperSlide } from "swiper/vue";
-import { IonText } from "@ionic/vue";
+import { IonText, IonButton } from "@ionic/vue";
 import ProductCard from "@/components/cards/ProductCard.vue";
 
 export default defineComponent({
@@ -35,7 +35,7 @@ export default defineComponent({
       default: true,
     },
   },
-  components: { Swiper, SwiperSlide, IonText, ProductCard },
+  components: { Swiper, SwiperSlide, IonText, ProductCard, IonButton },
 
   methods: {
     viewProduct(product: Product) {
@@ -44,3 +44,10 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped lang="css">
+ion-button {
+  margin: 0px;
+  text-transform: none;
+}
+</style>

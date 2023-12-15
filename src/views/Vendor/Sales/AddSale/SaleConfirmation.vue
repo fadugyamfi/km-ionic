@@ -47,6 +47,7 @@ import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import KolaWhiteButton from '@/components/KolaWhiteButton.vue';
 import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
+import { useUserStore } from '../../../../stores/UserStore';
 
 
 export default defineComponent({
@@ -70,7 +71,7 @@ export default defineComponent({
     },
 
     computed: {
-        ...mapStores( useSaleStore )
+        ...mapStores( useSaleStore, useUserStore )
     },
 
     methods: {
@@ -81,7 +82,12 @@ export default defineComponent({
 
         onDone() {
             this.saleStore.resetForNewSale();
-            this.$router.push('/vendor/sales/history')
+
+            if( this.userStore.user?.isSaleAgent() ) {
+                this.$router.push('/agent/sales')
+            } else {
+                this.$router.push('/vendor/sales/history')
+            }
         }
     }
 })

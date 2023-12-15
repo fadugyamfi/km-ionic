@@ -29,7 +29,8 @@
               {{ saleType.description }}
             </IonText>
           </IonLabel>
-          <IonCheckbox :aria-label="saleType.name" slot="end" mode="ios" :value="saleType.id" :checked="saleStore.newSale.sale_types_id == saleType.id"></IonCheckbox>
+          <IonCheckbox :aria-label="saleType.name" slot="end" mode="ios" :value="saleType.id"
+                       :checked="saleStore.newSale.sale_types_id == saleType.id"></IonCheckbox>
         </IonItem>
       </IonList>
     </IonContent>
@@ -51,6 +52,7 @@ import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
 import { SaleType } from '@/models/SaleType';
 import { useToastStore } from '@/stores/ToastStore';
+import { useUserStore } from '../../../../stores/UserStore';
 
 export default defineComponent({
 
@@ -73,7 +75,7 @@ export default defineComponent({
     IonText,
     IonFooter,
     KolaYellowButton
-},
+  },
 
   data() {
     return {
@@ -86,7 +88,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores( useSaleStore )
+    ...mapStores(useSaleStore, useUserStore)
   },
 
   methods: {
@@ -95,16 +97,21 @@ export default defineComponent({
     },
 
     onContinue() {
-      if( !this.saleStore.newSale.sale_types_id ) {
+      if (!this.saleStore.newSale.sale_types_id) {
         const toastStore = useToastStore();
-        toastStore.showError( this.$t("vendor.sales.selectSaleTypeToContinue"), '', 'bottom', 'sale-type-continue');
+        toastStore.showError(this.$t("vendor.sales.selectSaleTypeToContinue"), '', 'bottom', 'sale-type-continue');
         return;
       }
 
-      this.$router.push('/vendor/sales/add-sale/select-payment-mode')
+      if (this.userStore.user?.isSaleAgent()) {
+        this.$router.push('/agent/sales/add-sale/select-payment-mode');
+      } else{
+        this.$router.push('/vendor/sales/add-sale/select-payment-mode')
+      }
+
     },
 
-    refresh() {}
+    refresh() { }
   },
 
   mounted() {

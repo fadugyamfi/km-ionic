@@ -163,7 +163,11 @@ export default defineComponent({
         return;
       }
 
-      this.$router.push('/vendor/sales/add-sale/select-sale-type')
+      if( this.userStore.user?.isSaleAgent() ) {
+        this.$router.push('/agent/sales/add-sale/select-customer');
+      } else {
+        this.$router.push('/vendor/sales/add-sale/select-sale-type');
+      }
     },
 
     onSearch(event: Event) {
@@ -173,7 +177,12 @@ export default defineComponent({
   },
 
   mounted() {
-    this.fetchSaleAgents();
+    if( this.userStore.user?.isSaleAgent() ) {
+      this.selectAgent(this.userStore.user);
+      this.onContinue();
+    } else {
+      this.fetchSaleAgents();
+    }
   }
 })
 </script>

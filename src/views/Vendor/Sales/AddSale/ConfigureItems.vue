@@ -72,6 +72,7 @@ import { SaleItem } from '@/models/SaleItem';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { useToastStore } from '@/stores/ToastStore';
 import { handleAxiosRequestError } from '../../../../utilities';
+import { useUserStore } from '../../../../stores/UserStore';
 
 
 export default defineComponent({
@@ -108,7 +109,7 @@ export default defineComponent({
     },
 
     computed: {
-        ...mapStores(useSaleStore),
+        ...mapStores(useSaleStore, useUserStore),
 
         cartTotalCost() {
             return this.saleStore.newSale.sale_items?.reduce((acc, saleItem: SaleItem) => acc + (saleItem.total_price || 0), 0);
@@ -134,10 +135,15 @@ export default defineComponent({
             try {
                 const sale = await this.saleStore.recordSale();
 
-                if( sale ) {
-                    this.$router.push('/vendor/sales/add-sale/sale-confirmation')
-                } else {
+                if( !sale ) {
                     toastStore.showError("Failed to record sale", "Error", "bottom", 'configure-continue')
+                    return;
+                }
+
+                if( this.userStore.user?.isSaleAgent() ) {
+                    this.$router.push('/agent/sales/add-sale/sale-confirmation')
+                } else {
+                    this.$router.push('/vendor/sales/add-sale/sale-confirmation')
                 }
             } catch(error) {
                 handleAxiosRequestError(error)

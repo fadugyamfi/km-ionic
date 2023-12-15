@@ -10,6 +10,7 @@ import { SaleItem } from "../models/SaleItem";
 import { useUserStore } from "./UserStore";
 import { formatDateMySQL, formatMySQLDateTime, handleAxiosRequestError } from "../utilities";
 import { SalePayment } from "../models/SalePayment";
+import Business from "../models/Business";
 
 const storage = new AppStorage();
 const KOLA_SALES = 'kola.sales';
@@ -19,7 +20,8 @@ export const useSaleStore = defineStore("sale", {
     state() {
         return {
             newSale: new Sale({}),
-            sales: [] as Sale[]
+            sales: [] as Sale[],
+            selectedCustomer: {} as Business
         }
     },
 
@@ -78,7 +80,12 @@ export const useSaleStore = defineStore("sale", {
                 sale_ended_at: formatMySQLDateTime(new Date().toISOString())
             })
 
-            return axios.post('/v2/sales', this.newSale)
+            // Recreating the object here because JSON.stringify is removing the sale_items property
+            // and keeping only the _sale_items field
+            const sale = Object.assign({}, this.newSale);
+            sale.sale_items = this.newSale.sale_items;
+
+            return axios.post('/v2/sales', sale)
                 .then(response => {
                     const sale = new Sale(response.data.data);
                     this.sales.unshift(sale);

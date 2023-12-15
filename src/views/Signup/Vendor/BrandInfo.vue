@@ -44,7 +44,7 @@
 
                     <div class="kola-input-item">
                         <IonItem lines="none">
-                            <IonIcon :icon="logoInstagram" color="dark"></IonIcon>
+                            <IonIcon slot="start" :icon="logoInstagram" color="dark"></IonIcon>
                             <IonInput
                                 label=""
                                 placeholder="Instagram"
@@ -56,7 +56,7 @@
 
                     <div class="kola-input-item">
                         <IonItem lines="none">
-                            <IonIcon :icon="logoFacebook" color="primary"></IonIcon>
+                            <IonIcon slot="start" :icon="logoFacebook" color="primary"></IonIcon>
                             <IonInput
                                 label=""
                                 placeholder="Facebook"
@@ -68,7 +68,7 @@
 
                     <div class="kola-input-item">
                         <IonItem lines="none">
-                            <IonIcon :icon="globe" color="dark"></IonIcon>
+                            <IonIcon slot="start" :icon="globe" color="dark"></IonIcon>
                             <IonInput
                                 label=""
                                 placeholder="Website"
