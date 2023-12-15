@@ -300,6 +300,7 @@ export default defineComponent({
 
     async buyNow() {
       console.log(this.product);
+      this.cartStore.clearCart()
       await this.cartStore.addProduct(this.product as Product, this.quantity);
       this.$router.push(
         `/shopper/cart/business/${this.product?.businesses_id}/orders`
