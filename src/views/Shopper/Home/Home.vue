@@ -19,6 +19,8 @@
 
       <RecentlyViewedProducts></RecentlyViewedProducts>
 
+      <TrendingProducts></TrendingProducts>
+
       <!-- <SuppliersNearYou></SuppliersNearYou> -->
 
       <!-- <section class="shopper-home-section">
@@ -41,7 +43,8 @@ import RecentlyViewedProducts from "./RecentlyViewedProducts.vue";
 import CategoryPills from "./CategoryPills.vue";
 import PromoSpace from "./PromoSpace.vue";
 import Promotion from "@/models/Promotion";
-import { usePromotionStore } from "@/stores/Promotion";
+import { usePromotionStore } from "@/stores/PromotionStore";
+import TrendingProducts from "./TrendingProducts.vue";
 
 const promotions = ref<Promotion[]>([]);
 

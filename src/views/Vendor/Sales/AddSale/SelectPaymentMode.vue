@@ -51,6 +51,7 @@ import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
 import { PaymentMode } from '@/models/PaymentMode';
 import { useToastStore } from '@/stores/ToastStore';
+import { useUserStore } from '../../../../stores/UserStore';
 
 export default defineComponent({
 
@@ -88,7 +89,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores( useSaleStore )
+    ...mapStores( useSaleStore, useUserStore )
   },
 
   methods: {
@@ -103,7 +104,12 @@ export default defineComponent({
         return;
       }
 
-      this.$router.push('/vendor/sales/add-sale/select-customer')
+      if( this.userStore.user?.isSaleAgent() ) {
+        this.$router.push('/agent/sales/add-sale/select-products');
+      } else {
+        this.$router.push('/vendor/sales/add-sale/select-customer')
+      }
+
     },
 
     refresh() {}

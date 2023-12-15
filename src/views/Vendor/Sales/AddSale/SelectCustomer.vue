@@ -120,7 +120,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useSaleStore)
+    ...mapStores(useSaleStore, useUserStore)
   },
 
   methods: {
@@ -136,13 +136,18 @@ export default defineComponent({
       const userStore = useUserStore();
       const businessStore = useBusinessStore();
 
-      this.customers = await businessStore.getBusinessCustomers(userStore.activeBusiness as Business, 300, options, this.refreshing);
+      if( this.userStore.user?.isSaleAgent() ) {
+        this.customers = await userStore.fetchAssignedBusinesses( userStore.user?.id );
+      } else {
+        this.customers = await businessStore.getBusinessCustomers(userStore.activeBusiness as Business, 300, options, this.refreshing);
+      }
 
       this.fetching = false;
     },
 
     selectCustomer(customer: Business) {
       this.saleStore.newSale.customer_id = customer.id as number;
+      this.saleStore.selectedCustomer = customer;
     },
 
     onContinue() {
@@ -152,7 +157,12 @@ export default defineComponent({
         return;
       }
 
-      this.$router.push('/vendor/sales/add-sale/select-products')
+      if( this.userStore.user?.isSaleAgent() ) {
+        this.$router.push('/agent/sales/add-sale/select-sale-type');
+      } else {
+        this.$router.push('/vendor/sales/add-sale/select-products')
+      }
+
     },
 
     async onSearch(event: Event) {

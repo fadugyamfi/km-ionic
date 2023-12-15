@@ -37,11 +37,11 @@
 
 
     <ion-content>
-      <IonFab slot="fixed" vertical="bottom" horizontal="end">
+      <!-- <IonFab slot="fixed" vertical="bottom" horizontal="end">
         <IonFabButton @click="onRaiseOrder()">
           <IonIcon :icon="add"></IonIcon>
         </IonFabButton>
-      </IonFab>
+      </IonFab> -->
 
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
