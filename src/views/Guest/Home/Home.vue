@@ -15,7 +15,9 @@
 
       <!-- <RecentlyViewedProducts></RecentlyViewedProducts> -->
 
-      <SuppliersNearYou></SuppliersNearYou>
+      <!-- <SuppliersNearYou></SuppliersNearYou> -->
+
+      <TrendingProducts></TrendingProducts>
 
       <!-- <section class="shopper-home-section">
         <ModeToggleCard></ModeToggleCard>
@@ -36,8 +38,7 @@ import TopBrands from "./TopBrands.vue";
 import RecentlyViewedProducts from "./RecentlyViewedProducts.vue";
 import CategoryPills from "./CategoryPills.vue";
 import PromoSpace from "./PromoSpace.vue";
-
-
+import TrendingProducts from "@/views/Guest/Home/TrendingProducts.vue";
 </script>
 
 <style lang="scss">
