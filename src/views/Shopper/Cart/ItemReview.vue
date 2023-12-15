@@ -61,7 +61,61 @@
         </IonItem>
       </IonList>
 
-      <ItemReview :order="order" />
+    
+    <IonCard>
+    <section
+      class="d-flex ion-justify-content-between ion-align-items-center"
+      style="margin-bottom: 8px"
+    >
+      <IonText class="fw-semibold">Items total</IonText>
+      <section class="d-flex ion-align-items-center">
+        <IonText class="fw-semibold ion-margin-end">{{
+          Filters.currency(totalCost as number, "GHS")
+        }}</IonText>
+      </section>
+    </section>
+    <section
+      class="d-flex ion-justify-content-between ion-align-items-center"
+      style="margin-bottom: 8px"
+    >
+      <IonText class="fw-semibold">Delivery Fee</IonText>
+      <section class="d-flex ion-align-items-center">
+        <IonText class="fw-semibold ion-margin-end">
+          {{ Filters.currency(deliveryFee, "GHS") }}
+        </IonText>
+      </section>
+    </section>
+    <section class="d-flex flex-column">
+      <IonText color="medium" class="font-medium" style="margin-bottom: 8px;">
+  <IonIcon :icon="locationOutline" style="margin-right: 2px"></IonIcon>
+  <span>{{ orderBusiness?.delivery_location }}</span>
+</IonText>
+
+
+      <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+        Pay on delivery
+      </IonText>
+      <!-- <section class="d-flex ion-align-items-center">
+      <IonText class="ion-margin-end date-color" @click="toggleFilterSheet">
+        Change address
+      </IonText>
+    </section> -->
+    </section>
+    <section
+      class="d-flex ion-justify-content-between ion-align-items-center"
+      style="margin-bottom: 8px"
+    >
+      <IonText class="fw-semibold">Total Cost</IonText>
+      <section class="d-flex ion-align-items-center">
+        <IonText class="fw-semibold ion-margin-end">{{
+          Filters.currency(totalWithDelivery as number, "GHS")
+        }}</IonText>
+      </section>
+    </section>
+  </IonCard>
+
+    <!-- <ItemReview :order="order" :orderBusiness="orderBusiness" /> -->
+
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
@@ -86,6 +140,7 @@ import {
   IonIcon,
   IonFooter,
   IonText,
+  IonCard
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
@@ -93,6 +148,8 @@ import {
   alertCircleOutline,
   closeCircleOutline,
   warningOutline,
+  timeOutline,
+  locationOutline
 } from "ionicons/icons";
 import ItemReview from "@/components/cards/ItemReview.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
@@ -112,7 +169,7 @@ const router = useRouter();
 const toastStore = useToastStore();
 const cartStore = useCartStore()
 
-const orderBusiness = computed((): Order => {
+const orderBusiness = computed((): Order | any => {
   return cartStore.orders.find(
     (order: Order) => order?.businesses_id == +route.params.id
   ) as Order;
@@ -134,6 +191,8 @@ const minOrderAmountReached = computed(() => {
 const updateQuantity = (item: CartItem, newQuantity: number) => {
   item.quantity = newQuantity;
   item.total_price = item.quantity * item.product_price;
+
+  console.log("updated", item.total_price);
 };
 
 const removeFromCart = (index: number) => {
@@ -191,12 +250,18 @@ cartStore.loadFromStorage();
 const cartOrders = computed(() => cartStore.orders);
 
 const totalCost = computed(() => {
-  const total = order.value?.order_items?.reduce(
+  const total = orderBusiness.value?.order_items?.reduce(
     (total: any, item: any) => total + (item.total_price || 0),
     0
   );
 
   return total;
+});
+
+const deliveryFee = ref(0);
+
+const totalWithDelivery = computed(() => {
+  return totalCost.value + deliveryFee.value;
 });
 
 onMounted(async () => {
@@ -315,5 +380,24 @@ ion-icon.remove-icon {
 
 .text-product {
   color: black;
+}
+
+.date-color {
+  color: #666eed;
+}
+
+ion-card {
+  padding: 9px;
+}
+
+.fw-semibold {
+  flex: 1 0 0;
+  color: var(--text-primary, #000);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  text-transform: capitalize;
 }
 </style>
