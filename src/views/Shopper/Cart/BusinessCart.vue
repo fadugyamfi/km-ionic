@@ -82,6 +82,7 @@
   <KolaYellowButton v-if="orderBusiness?.order_items?.length > 0" @click="viewDeliveryDetails()">
     {{ $t("shopper.cart.proceedToCheckout") }}
   </KolaYellowButton>
+  
 </IonFooter>
 
   </ion-page>

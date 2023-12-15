@@ -1,6 +1,6 @@
 <template>
   <ion-button size="small" slot="end" color="light">
-    <IonTitle size="small"> Save for later </IonTitle>
+    <!-- <IonTitle size="small"> Save for later </IonTitle> -->
   </ion-button>
 </template>
 
