@@ -114,7 +114,7 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="createOrder">
+      <KolaYellowButton @click="createOrder" :disabled="!minOrderAmountReached">
         Place Order
       </KolaYellowButton>
     </IonFooter>
@@ -176,12 +176,17 @@ const order = computed<Order>(() => {
   ) as Order;
 });
 
+
+const defaultMinOrderAmount = 2000; // Set your default value here
+
 const minOrderAmountReached = computed(() => {
+  const minOrderAmount = Number(order.value?.business?.min_order_amount) || defaultMinOrderAmount;
   return (
-    order.value?.business?.min_order_amount === 2000 ||
-    (order.value?.business?.min_order_amount as number) <= totalCost.value
+    !isNaN(minOrderAmount) &&
+    minOrderAmount <= totalCost.value
   );
 });
+
 
 
 const updateQuantity = (item: CartItem, newQuantity: number) => {
@@ -265,6 +270,14 @@ onMounted(async () => {
     await cartStore.loadFromStorage();
   }
   // getOrderBusiness();
+  onMounted(async () => {
+  if (cartStore.orders.length == 0) {
+    await cartStore.loadFromStorage();
+  }
+  // getOrderBusiness();
+  console.log("Total Cost:", totalCost.value);
+  console.log("Is minOrderAmountReached:", minOrderAmountReached.value);
+});
 });
 </script>
 
