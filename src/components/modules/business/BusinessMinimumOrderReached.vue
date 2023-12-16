@@ -33,7 +33,8 @@ import Filters from '@/utilities/Filters';
 export default defineComponent({
   props: {
     business: {
-      type: Object as PropType<Business | null>
+      type: Object as PropType<Business | null>,
+        default: () => ({ min_order_amount: 2000 }) // Set the default value here
     },
     totalCost: {
       type: Number as PropType<number>,
@@ -41,6 +42,7 @@ export default defineComponent({
       default: 0
     }
   },
+
   data() {
     return {
       locationOutline,

@@ -24,7 +24,12 @@
         </IonSegmentButton>
       </IonSegment>
 
+      <BusinessMinimumOrderReached
+          :business="order?.business"
+          :totalCost="totalCost"
+        ></BusinessMinimumOrderReached>
       <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
+  
 
       <section v-else>
         <IonList>
@@ -82,6 +87,7 @@
       <KolaYellowButton
         v-if="orderBusiness?.order_items?.length > 0"
         @click="viewDeliveryDetails()"
+        :disabled="!minOrderAmountReached"
       >
         {{ $t("shopper.cart.proceedToCheckout") }}
       </KolaYellowButton>
@@ -116,6 +122,7 @@ import CartHeader from "@/components/header/CartHeader.vue";
 import EmptyCart from "@/components/cards/EmptyCart.vue";
 import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import BusinessMinimumOrderReached from "../../../components/modules/business/BusinessMinimumOrderReached.vue";
 import { formatAmountWithCommas } from "@/utilities";
 import Image from "@/components/Image.vue";
 import Filters from "@/utilities/Filters";
@@ -148,6 +155,37 @@ const removeFromCart = (index: number) => {
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
 
+const totalCost = computed(() => {
+  let total = 0;
+
+  const order = cartStore.orders.find((o: Order) => o?.businesses_id == +route.params.id);
+
+  if (order) {
+    total = order.order_items?.reduce(
+      (acc, item) => acc + (item.total_price || 0),
+      0
+    );
+  }
+
+  return total;
+});
+const order = computed<Order>(() => {
+  return cartStore.orders.find(
+    (order: Order) => order?.businesses_id == +route.params.id
+  ) as Order;
+});
+
+const defaultMinOrderAmount = 2000; // Set your default value here
+
+const minOrderAmountReached = computed(() => {
+  const minOrderAmount = Number(order.value?.business?.min_order_amount) || defaultMinOrderAmount;
+  return (
+    !isNaN(minOrderAmount) &&
+    minOrderAmount <= totalCost.value
+  );
+});
+
+
 const viewDeliveryDetails = () => {
   router.push(`/shopper/cart/business/${route.params.id}/delivery-details`);
 };
@@ -169,6 +207,8 @@ onMounted(async () => {
     await cartStore.loadFromStorage();
   }
   // getOrderBusiness();
+  console.log("Total Cost:", totalCost.value);
+  console.log("Is minOrderAmountReached:", minOrderAmountReached.value);
 });
 </script>
 

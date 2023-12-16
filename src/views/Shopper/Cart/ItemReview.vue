@@ -114,7 +114,7 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="createOrder" :disabled="!minOrderAmountReached">
+      <KolaYellowButton @click="createOrder" :disabled="minOrderAmountReached">
         Place Order
       </KolaYellowButton>
     </IonFooter>
@@ -178,10 +178,11 @@ const order = computed<Order>(() => {
 
 const minOrderAmountReached = computed(() => {
   return (
-    order.value?.business?.min_order_amount == null ||
+    order.value?.business?.min_order_amount === 2000 ||
     (order.value?.business?.min_order_amount as number) <= totalCost.value
   );
 });
+
 
 const updateQuantity = (item: CartItem, newQuantity: number) => {
   item.quantity = newQuantity;
