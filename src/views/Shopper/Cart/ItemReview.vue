@@ -114,7 +114,7 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="createOrder" :disabled="minOrderAmountReached">
+      <KolaYellowButton @click="createOrder">
         Place Order
       </KolaYellowButton>
     </IonFooter>
