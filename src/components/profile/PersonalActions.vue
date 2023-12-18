@@ -197,7 +197,7 @@ export default defineComponent({
       this.userStore
         .logout()
         .then(() => {
-          this.router.replace("/guest/home");
+          this.router.replace("/guest");
         })
         .catch((error: AxiosError) => {
           handleAxiosRequestError(error);
@@ -205,7 +205,7 @@ export default defineComponent({
           // account not authenticated
           if (error.response?.status == 403 || error.code == "ERR_NETWORK") {
             this.userStore.clearSessionInfo();
-            this.router.replace("/guest/home");
+            this.router.replace("/guest");
           }
         })
         .finally(() => toastStore.unblockUI());

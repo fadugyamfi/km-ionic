@@ -2,9 +2,11 @@
     <IonHeader class="ion-no-border">
       <ion-toolbar>
         <IonTitle>
-          <IonText class="welcome">Welcome 👋</IonText>
+          <IonText class="welcome" style="font-size: 0.75em;">
+            Welcome To Kola Market👋
+          </IonText>
         </IonTitle>
-  
+
         <IonButtons slot="end">
           <FavoritesButton></FavoritesButton>
           <CartStatusButton></CartStatusButton>
@@ -21,7 +23,7 @@
       </IonToolbar>
     </IonHeader>
   </template>
-  
+
   <script lang="ts">
   import { IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonText, modalController, IonSearchbar } from '@ionic/vue';
   import { defineComponent } from 'vue';
@@ -31,16 +33,16 @@
   import FavoritesButton from '@/components/modules/favorites/FavoritesButton.vue';
   import { useProductStore } from '@/stores/ProductStore';
   import CartStatusButton from '../modules/products/CartStatusButton.vue';
-  
+
   export default defineComponent({
-  
+
     props: {
       showSearch: {
         default: false,
         type: Boolean
       }
     },
-  
+
     components: {
       IonHeader,
       IonToolbar,
@@ -54,11 +56,11 @@
       IonSearchbar,
       CartStatusButton
   },
-  
+
     computed: {
       ...mapStores(useUserStore)
     },
-  
+
     methods: {
       onSearch(event: any) {
         const productStore = useProductStore();
@@ -68,11 +70,10 @@
     }
   })
   </script>
-  
+
   <style lang="scss">
   .welcome {
     font-size: 0.8em;
     font-weight: bold;
   }
   </style>
-  

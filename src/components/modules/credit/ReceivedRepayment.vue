@@ -61,7 +61,7 @@ const props = defineProps({
     default: () => {},
   },
   credit: {
-    type: Credit,
+    type: Credit as PropType<Credit>,
     default: () => {},
   },
 });

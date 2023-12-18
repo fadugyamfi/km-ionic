@@ -15,8 +15,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     name: "Onboarding",
     path: "/onboarding",
-    redirect: "/guest/home",
-    // component: () => import("@/views/Onboarding/Onboarding.vue"),
+    component: () => import("@/views/Onboarding/Onboarding.vue"),
   },
   {
     name: "Login",

@@ -74,7 +74,7 @@
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton 
+      <KolaYellowButton
       :disabled="!formValid"
       @click="storeDeliveryDetails">
         {{ $t("general.continue") }}
@@ -103,7 +103,7 @@ import { useForm } from "@/composables/form";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { onMounted, computed } from "vue";
-import { Order } from "../../models/Order";
+import { Order } from "@/models/Order";
 
 const router = useRouter();
 const route = useRoute();

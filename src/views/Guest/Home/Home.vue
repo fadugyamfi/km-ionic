@@ -11,7 +11,7 @@
 
       <TopCategories></TopCategories>
 
-      <TopBrands></TopBrands>
+      <!-- <TopBrands></TopBrands> -->
 
       <!-- <RecentlyViewedProducts></RecentlyViewedProducts> -->
 
