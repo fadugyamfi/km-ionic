@@ -3,9 +3,7 @@
     <IonCol size="6">
       <IonCard class="ion-no-margin total-credit">
         <IonCardContent class="d-flex flex-column ion-align-items-center">
-          <IonText color="medium">{{
-            $t("vendor.credit.totalCredit")
-          }}</IonText>
+          <IonText color="dark">{{ $t("vendor.credit.totalCredit") }}</IonText>
           <IonText color="dark" class="fw-semibold">
             {{ Filters.currency(creditSummary?.total_value) }}
           </IonText>
@@ -15,7 +13,7 @@
     <IonCol size="6">
       <IonCard class="ion-no-margin total-recovered">
         <IonCardContent class="d-flex flex-column ion-align-items-center">
-          <IonText color="medium">{{
+          <IonText color="dark">{{
             $t("vendor.credit.totalRecovered")
           }}</IonText>
           <IonText color="dark" class="fw-semibold">
@@ -54,13 +52,21 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .total-credit {
   border-radius: 6px;
   background: #f2f7f7;
+
+  ion-text:nth-child(1) {
+    font-size: 12px;
+  }
 }
 .total-recovered {
   border-radius: 6px;
   background: #fff9ef;
+
+  ion-text:nth-child(1) {
+    font-size: 12px;
+  }
 }
 </style>

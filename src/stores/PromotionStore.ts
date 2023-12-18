@@ -6,9 +6,11 @@ import { handleAxiosRequestError } from "../utilities";
 import { useToastStore } from "./ToastStore";
 import Promotion from "@/models/Promotion";
 import PromotionItem from "../models/PromotionItem";
+import { useUserStore } from "./UserStore";
 
 const storage = new AppStorage();
 const KOLA_PROMOTIONS = "kola.promotions";
+const userStore = useUserStore();
 
 export const usePromotionStore = defineStore("promotion", {
   state: () => {
@@ -29,9 +31,9 @@ export const usePromotionStore = defineStore("promotion", {
         this.promotions = promotions.map((el: any) => {
           el.promotion_items = el._promotion_items;
           el.promotion_items.forEach((i: any) => {
-            i.product = i._product
+            i.product = i._product;
           });
-          return new Promotion(el)
+          return new Promotion(el);
         });
       }
 
@@ -57,23 +59,45 @@ export const usePromotionStore = defineStore("promotion", {
           console.log(error);
         });
     },
+    async fetchGuestPromotions() {
+      await this.loadFromStorage();
+
+      if (this.promotions.length > 0) {
+        return this.promotions;
+      }
+
+      return axios
+        .get("/v2/guest/promotions")
+        .then((response) => {
+          this.promotions = response.data.data.map(
+            (el: object) => new Promotion(el)
+          );
+          this.persist();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
 
     async getPromotions(): Promise<Promotion[]> {
       if (this.promotions.length == 0) {
-        await this.fetchPromotions();
+        if (!userStore.isInGuestMode) {
+          await this.fetchPromotions();
+        } else {
+          await this.fetchGuestPromotions();
+        }
       }
 
       return this.promotions;
     },
 
-    async getPromotion(promotionId: number): Promise<Promotion|null> {
-      if( this.promotions.length > 0 ) {
-        const promotion = this.promotions.find(p => p.id == promotionId);
-        if( promotion ) {
+    async getPromotion(promotionId: number): Promise<Promotion | null> {
+      if (this.promotions.length > 0) {
+        const promotion = this.promotions.find((p) => p.id == promotionId);
+        if (promotion) {
           return promotion;
         }
       }
-
 
       return axios
         .get(`/v2/promotions/${promotionId}`)
@@ -84,15 +108,37 @@ export const usePromotionStore = defineStore("promotion", {
         })
         .catch((error) => {
           console.log(error);
-          return null
+          return null;
+        });
+    },
+    async getGuestPromotion(promotionId: number): Promise<Promotion | null> {
+      if (this.promotions.length > 0) {
+        const promotion = this.promotions.find((p) => p.id == promotionId);
+        if (promotion) {
+          return promotion;
+        }
+      }
+
+      return axios
+        .get(`/v2/guest/promotions/${promotionId}`)
+        .then((response) => {
+          const promotion = new Promotion(response.data.data);
+
+          return promotion;
+        })
+        .catch((error) => {
+          console.log(error);
+          return null;
         });
     },
 
-    async getPromotionItems(promotionId: number): Promise<PromotionItem[]|null> {
+    async getPromotionItems(
+      promotionId: number
+    ): Promise<PromotionItem[] | null> {
       const params = {
         promotion_id: promotionId,
-        limit: 100
-      }
+        limit: 100,
+      };
       return axios
         .get(`/v2/promotion-items`, { params })
         .then((response) => {
@@ -104,8 +150,29 @@ export const usePromotionStore = defineStore("promotion", {
         })
         .catch((error) => {
           console.log(error);
-          return null
+          return null;
         });
-    }
+    },
+    async getGuestPromotionItems(
+      promotionId: number
+    ): Promise<PromotionItem[] | null> {
+      const params = {
+        promotion_id: promotionId,
+        limit: 100,
+      };
+      return axios
+        .get(`/v2/guest/promotion-items`, { params })
+        .then((response) => {
+          const promotionItems = response.data.data.map(
+            (el: object) => new PromotionItem(el)
+          );
+
+          return promotionItems;
+        })
+        .catch((error) => {
+          console.log(error);
+          return null;
+        });
+    },
   },
 });

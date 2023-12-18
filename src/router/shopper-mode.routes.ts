@@ -11,6 +11,8 @@ export const ShopperModeRoutes = [
       const userStore = useUserStore();
       await userStore.loadStoredData();
 
+      userStore.setAppModeAsShopping();
+
       if (!userStore.user && !userStore.onboarded) {
         return { name: "Onboarding" };
       }
@@ -159,7 +161,8 @@ export const ShopperModeRoutes = [
           },
           {
             path: "business/:id/order-confirmation",
-            component: () => import("@/views/Shopper/Cart/OrderConfirmation.vue"),
+            component: () =>
+              import("@/views/Shopper/Cart/OrderConfirmation.vue"),
           },
           {
             path: "business/:id/payment-method",
@@ -168,10 +171,27 @@ export const ShopperModeRoutes = [
         ],
       },
 
-      {
-        path: "credits",
-        component: () => import("@/views/Shopper/Credits.vue"),
-      },
+      // {
+      //   path: "credits",
+      //   component: () => import("@/views/Shopper/Credits.vue"),
+      //   children: [
+      //     {
+      //       path: "",
+      //       component: () =>
+      //         import("@/views/Shopper/Credit/CreditHistoryList.vue"),
+      //     },
+
+      //     {
+      //       path: ":id/credit-details",
+      //       component: () => import("@/views/Shopper/Credit/CreditDetails.vue"),
+      //     },
+      //     {
+      //       path: ":id/record-repayment",
+      //       component: () =>
+      //         import("@/views/Shopper/Credit/RecordRepayment.vue"),
+      //     },
+      //   ],
+      // },
       {
         path: "profile",
         component: () => import("@/views/Shopper/Profile.vue"),
