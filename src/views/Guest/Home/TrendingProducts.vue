@@ -28,6 +28,9 @@ import { mapStores } from "pinia";
 import GuestProductCard from "../../../components/cards/GuestProductCard.vue";
 import Product from "../../../models/Product";
 import { useProductStore } from "../../../stores/ProductStore";
+import AppStorage from "../../../stores/AppStorage";
+
+const KOLA_TRENDING = "kola.guest-trending";
 
 export default defineComponent({
   data() {
@@ -45,8 +48,20 @@ export default defineComponent({
 
   methods: {
     async fetchTrendingProducts() {
-      this.products = await this.productStore.fetchGuestProducts({ sort: 'top_selling', limit: 100 });
-    }
+      this.fetching = true;
+      const storage = new AppStorage();
+
+      const trendingProducts = await storage.get(KOLA_TRENDING);
+
+      if (trendingProducts) {
+        this.products = trendingProducts.map((el: object) => new Product(el));
+      } else {
+        this.products = await this.productStore.fetchGuestProducts({ sort: 'top_selling', limit: 100 });
+        await storage.set(KOLA_TRENDING, this.products, 1, 'days')
+      }
+
+      this.fetching = false;
+    },
   },
 
   mounted() {
