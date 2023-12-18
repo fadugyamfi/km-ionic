@@ -1,30 +1,14 @@
 <template>
   <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5, 0.75]">
     <IonContent class="ion-padding">
-      <!-- <header class="fw-semibold ion-padding ion-text-center">
-          {{ $t("profile.stock.updateStock") }}
-        </header> -->
+      <header class="ion-padding ion-text-center" style="margin-top: 80px;">
+        <!-- {{ $t("profile.stock.updateStock") }} -->
+        This action requires you to sign up or sign in
+      </header>
       <main class="ion-padding-vertical">
-        <!-- <KolaYellowButton class="ion-margin-bottom">
-          Sign up with Google
-        </KolaYellowButton> -->
-        <KolaGreenButton @click="signUp()"> Sign up </KolaGreenButton>
+        <KolaYellowButton @click="login()" class="ion-margin-bottom"> Sign in </KolaYellowButton>
+        <KolaWhiteButton @click="signUp()"> Sign up </KolaWhiteButton>
       </main>
-      <footer>
-        <IonButton
-          class="ion-margin-top login-prompt"
-          fill="clear"
-          expand="block"
-          @click="login()"
-          color="medium"
-        >
-          Already have an account? &nbsp;<IonText
-            color="warning"
-            class="fw-bold"
-            >Log in</IonText
-          >
-        </IonButton>
-      </footer>
     </IonContent>
   </IonModal>
 </template>
@@ -49,7 +33,7 @@ import {
 } from "@ionic/vue";
 import { defineComponent, PropType } from "vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
-import KolaGreenButton from "@/components/KolaGreenButton.vue";
+import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import { chevronDownOutline, chevronUpOutline } from "ionicons/icons";
 import { useForm } from "@/composables/form";
 import Stock from "@/models/Stock";
@@ -60,7 +44,7 @@ export default defineComponent({
     IonContent,
     IonFooter,
     KolaYellowButton,
-    KolaGreenButton,
+    KolaWhiteButton,
     IonGrid,
     IonRow,
     IonCol,

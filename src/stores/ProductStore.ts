@@ -116,6 +116,18 @@ export const useProductStore = defineStore("product", {
         return null;
       }
     },
+    async fetchGuestProduct(product_id: number): Promise<Product | null> {
+      try {
+        const response = await axios.get(`/v2/guest/products/${product_id}`);
+        const product = new Product(response.data.data);
+
+        return product;
+      } catch (error) {
+        handleAxiosRequestError(error);
+
+        return null;
+      }
+    },
 
     setSelectedProduct(product: Product) {
       this.selectedProduct = product;

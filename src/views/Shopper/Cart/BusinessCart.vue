@@ -23,13 +23,13 @@
           <ion-label>Saved</ion-label>
         </IonSegmentButton>
       </IonSegment>
-
-      <BusinessMinimumOrderReached
+      <section class="ion-margin-top">
+        <BusinessMinimumOrderReached
           :business="order?.business"
           :totalCost="totalCost"
         ></BusinessMinimumOrderReached>
+      </section>
       <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
-  
 
       <section v-else>
         <IonList>
@@ -158,7 +158,9 @@ const removeFromCart = (index: number) => {
 const totalCost = computed(() => {
   let total = 0;
 
-  const order = cartStore.orders.find((o: Order) => o?.businesses_id == +route.params.id);
+  const order = cartStore.orders.find(
+    (o: Order) => o?.businesses_id == +route.params.id
+  );
 
   if (order) {
     total = order.order_items?.reduce(
@@ -178,13 +180,10 @@ const order = computed<Order>(() => {
 const defaultMinOrderAmount = 2000; // Set your default value here
 
 const minOrderAmountReached = computed(() => {
-  const minOrderAmount = Number(order.value?.business?.min_order_amount) || defaultMinOrderAmount;
-  return (
-    !isNaN(minOrderAmount) &&
-    minOrderAmount <= totalCost.value
-  );
+  const minOrderAmount =
+    Number(order.value?.business?.min_order_amount) || defaultMinOrderAmount;
+  return !isNaN(minOrderAmount) && minOrderAmount <= totalCost.value;
 });
-
 
 const viewDeliveryDetails = () => {
   router.push(`/shopper/cart/business/${route.params.id}/delivery-details`);
