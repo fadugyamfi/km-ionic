@@ -103,7 +103,7 @@ import { useForm } from "@/composables/form";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { onMounted, computed } from "vue";
-import { Order } from "../../models/Order";
+import { Order } from "@/models/Order";
 
 const router = useRouter();
 const route = useRoute();
