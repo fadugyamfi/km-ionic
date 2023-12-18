@@ -1,25 +1,25 @@
 <template>
   <section class="minimum-order">
-    <section v-if="business?.min_order_amount as number > totalCost" class="d-flex ion-align-items-center">
+    <section v-if="getEffectiveMinOrderAmount() > totalCost" class="d-flex ion-align-items-center">
       <IonIcon class="danger" color="danger" :icon="alertCircleOutline"></IonIcon>
       <IonText color="medium">
-        {{ Filters.currency(business?.min_order_amount as number) }} minimum not reached
+        {{ Filters.currency(getEffectiveMinOrderAmount()) }} minimum not reached
       </IonText>
     </section>
 
-    <section v-if="business?.min_order_amount != null && business?.min_order_amount as number <= totalCost" class="d-flex ion-align-items-center">
+    <section v-if="getEffectiveMinOrderAmount() <= totalCost" class="d-flex ion-align-items-center">
       <IonIcon class="success" color="success" :icon="checkmarkCircleOutline"></IonIcon>
       <IonText color="medium">
         Minimum order reached
       </IonText>
     </section>
 
-    <section v-if="!business?.min_order_amount" class="d-flex ion-align-items-center">
+    <!-- <section v-if="getEffectiveMinOrderAmount()" class="d-flex ion-align-items-center">
       <IonIcon class="success" color="success" :icon="checkmarkCircleOutline"></IonIcon>
       <IonText color="medium">
         No minimum order required
       </IonText>
-    </section>
+    </section> -->
   </section>
 </template>
 
@@ -33,7 +33,8 @@ import Filters from '@/utilities/Filters';
 export default defineComponent({
   props: {
     business: {
-      type: Object as PropType<Business | null>
+      type: Object as PropType<Business | null>,
+      default: () => ({ min_order_amount: 2000 }) // Set the default value here
     },
     totalCost: {
       type: Number as PropType<number>,
@@ -41,6 +42,7 @@ export default defineComponent({
       default: 0
     }
   },
+
   data() {
     return {
       locationOutline,
@@ -49,7 +51,13 @@ export default defineComponent({
       Filters
     };
   },
-  components: { IonIcon, IonText, IonAvatar }
+  components: { IonIcon, IonText, IonAvatar },
+  methods: {
+    getEffectiveMinOrderAmount(): number {
+      const value = this.business?.min_order_amount;
+      return typeof value === 'number' ? value : 2000;
+    },
+  },
 })
 </script>
 

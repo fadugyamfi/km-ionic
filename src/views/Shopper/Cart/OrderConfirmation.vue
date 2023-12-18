@@ -11,10 +11,15 @@
             <IonImg
               :src="'/images/vendor/sale-confirmation-smiley.svg'"
             ></IonImg>
-            <IonLabel class="fw-bold">
-              {{ $t("shopper.cart.confirmTime") }}
+            <IonLabel class="fw-bolds">
+              Order #{{ order?.id }} <span>confirmed</span>
             </IonLabel>
           </section>
+          <section class="ion-padding ion-text-center" style="margin-top: -27px">
+          <IonLabel class="fw-bold">
+              {{ $t("shopper.cart.confirmTime") }}
+            </IonLabel>
+            </section>
           <KolaYellowButton @click="toggleFilterSheet">
             {{ $t("shopper.cart.trackOrder") }}
           </KolaYellowButton>
@@ -115,4 +120,14 @@ ion-img {
   height: 150px;
   margin-top: 100px;
 }
+
+.fw-bolds{
+  color: #000;
+text-align: center;
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 28px; 
+}
 </style>
+

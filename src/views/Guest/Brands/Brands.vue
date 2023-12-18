@@ -1,0 +1,51 @@
+<template>
+  <ion-page>
+
+    <section class="ion-padding">
+      <IonHeader class="inner-header">
+        <IonToolbar class="ion-align-items-center">
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/guest/home"></IonBackButton>
+          </IonButtons>
+
+          <IonTitle size="small"><b>Brands</b></IonTitle>
+
+          <IonButtons slot="end">
+            <NotificationButton></NotificationButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+    </section>
+
+
+    <ion-content>
+      <IonSpinner v-if="!brands" name="crescent"></IonSpinner>
+
+      <IonGrid v-if="brands">
+          <IonRow>
+              <IonCol size="6" v-for="brand in brands" :key="brand.id">
+                  <GuestBrandCard :brand="brand"></GuestBrandCard>
+              </IonCol>
+          </IonRow>
+      </IonGrid>
+    </ion-content>
+  </ion-page>
+</template>
+
+<script setup lang="ts">
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonGrid, IonRow, IonCol, IonSpinner } from '@ionic/vue';
+import { ref, onMounted } from 'vue';
+import NotificationButton from '@/components/notifications/NotificationButton.vue';
+import GuestBrandCard from '@/components/cards/GuestBrandCard.vue';
+import Brand from '@/models/Brand';
+import { useBrandStore } from '@/stores/BrandStore';
+
+const brandStore = useBrandStore();
+const brands = ref<Brand[]>([]);
+
+async function fetchProductCategories() {
+  brands.value = await brandStore.getBrands();
+}
+
+onMounted(() => fetchProductCategories())
+</script>

@@ -1,5 +1,5 @@
 <template>
-  <ion-page class="">
+  <ion-page>
     <IonHeader class="ion-no-border ion-padding">
       <ion-header class="inner-header">
         <ion-toolbar class="ion-align-items-center">

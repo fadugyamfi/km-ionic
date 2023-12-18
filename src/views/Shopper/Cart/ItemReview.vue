@@ -61,7 +61,56 @@
         </IonItem>
       </IonList>
 
-      <ItemReview :order="order" />
+    
+    <IonCard>
+    <section
+      class="d-flex ion-justify-content-between ion-align-items-center"
+      style="margin-bottom: 8px"
+    >
+      <IonText class="fw-semibold">Items total</IonText>
+      <section class="d-flex ion-align-items-center">
+        <IonText class="fw-semibold ion-margin-end">{{
+          Filters.currency(totalCost as number, "GHS")
+        }}</IonText>
+      </section>
+    </section>
+    <section
+      class="d-flex ion-justify-content-between ion-align-items-center"
+      style="margin-bottom: 8px"
+    >
+      <IonText class="fw-semibold">Delivery Fee</IonText>
+      <section class="d-flex ion-align-items-center">
+        <IonText class="fw-semibold ion-margin-end">
+          {{ Filters.currency(deliveryFee, "GHS") }}
+        </IonText>
+      </section>
+    </section>
+    <section class="d-flex flex-column">
+    <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+      <IonIcon :icon="locationOutline" style="margin-right: 3px; vertical-align: middle;"></IonIcon>
+      <span style="padding-top: 94px; vertical-align: middle;">{{ orderBusiness?.delivery_location }}</span>
+    </IonText>
+      <!-- <section class="d-flex ion-align-items-center">
+      <IonText class="ion-margin-end date-color" @click="toggleFilterSheet">
+        Change address
+      </IonText>
+    </section> -->
+    </section>
+    <section
+      class="d-flex ion-justify-content-between ion-align-items-center"
+      style="margin-bottom: 8px"
+    >
+      <IonText class="fw-semibold">Total Cost</IonText>
+      <section class="d-flex ion-align-items-center">
+        <IonText class="fw-semibold ion-margin-end">{{
+          Filters.currency(totalWithDelivery as number, "GHS")
+        }}</IonText>
+      </section>
+    </section>
+  </IonCard>
+
+    <!-- <ItemReview :order="order" :orderBusiness="orderBusiness" /> -->
+
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
@@ -86,6 +135,7 @@ import {
   IonIcon,
   IonFooter,
   IonText,
+  IonCard
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
@@ -93,6 +143,8 @@ import {
   alertCircleOutline,
   closeCircleOutline,
   warningOutline,
+  timeOutline,
+  locationOutline
 } from "ionicons/icons";
 import ItemReview from "@/components/cards/ItemReview.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
@@ -110,8 +162,13 @@ const route = useRoute();
 
 const router = useRouter();
 const toastStore = useToastStore();
+const cartStore = useCartStore()
 
-const orderBusiness = ref<any>(null);
+const orderBusiness = computed((): Order | any => {
+  return cartStore.orders.find(
+    (order: Order) => order?.businesses_id == +route.params.id
+  ) as Order;
+});
 const orders = computed(() => cartStore.orders);
 const order = computed<Order>(() => {
   return cartStore.orders.find(
@@ -119,32 +176,40 @@ const order = computed<Order>(() => {
   ) as Order;
 });
 
+
+const defaultMinOrderAmount = 2000; // Set your default value here
+
 const minOrderAmountReached = computed(() => {
+  const minOrderAmount = Number(order.value?.business?.min_order_amount) || defaultMinOrderAmount;
   return (
-    order.value?.business?.min_order_amount == null ||
-    (order.value?.business?.min_order_amount as number) <= totalCost.value
+    !isNaN(minOrderAmount) &&
+    minOrderAmount <= totalCost.value
   );
 });
+
+
 
 const updateQuantity = (item: CartItem, newQuantity: number) => {
   item.quantity = newQuantity;
   item.total_price = item.quantity * item.product_price;
+
+  console.log("updated", item.total_price);
 };
 
 const removeFromCart = (index: number) => {
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
 
-const getOrderBusiness = () => {
-  console.log("jello");
-  const business = orders.value.find(
-    (order: any) => order?.businesses_id == route.params.id
-  );
-  console.log("Found business:", business); // Add this line for debugging
-  orderBusiness.value = business;
-};
+// const getOrderBusiness = () => {
+//   console.log("jello");
+//   const business = orders.value.find(
+//     (order: any) => order?.businesses_id == route.params.id
+//   );
+//   console.log("Found business:", business); // Add this line for debugging
+//   orderBusiness.value = business;
+// };
 
-const cartStore = useCartStore(orderBusiness.value);
+// const cartStore = useCartStore(orderBusiness.value);
 
 const createOrder = async () => {
   try {
@@ -186,7 +251,7 @@ cartStore.loadFromStorage();
 const cartOrders = computed(() => cartStore.orders);
 
 const totalCost = computed(() => {
-  const total = order.value?.order_items?.reduce(
+  const total = orderBusiness.value?.order_items?.reduce(
     (total: any, item: any) => total + (item.total_price || 0),
     0
   );
@@ -194,11 +259,25 @@ const totalCost = computed(() => {
   return total;
 });
 
+const deliveryFee = ref(0);
+
+const totalWithDelivery = computed(() => {
+  return totalCost.value + deliveryFee.value;
+});
+
 onMounted(async () => {
   if (cartStore.orders.length == 0) {
     await cartStore.loadFromStorage();
   }
-  getOrderBusiness();
+  // getOrderBusiness();
+  onMounted(async () => {
+  if (cartStore.orders.length == 0) {
+    await cartStore.loadFromStorage();
+  }
+  // getOrderBusiness();
+  console.log("Total Cost:", totalCost.value);
+  console.log("Is minOrderAmountReached:", minOrderAmountReached.value);
+});
 });
 </script>
 
@@ -310,5 +389,24 @@ ion-icon.remove-icon {
 
 .text-product {
   color: black;
+}
+
+.date-color {
+  color: #666eed;
+}
+
+ion-card {
+  padding: 9px;
+}
+
+.fw-semibold {
+  flex: 1 0 0;
+  color: var(--text-primary, #000);
+  font-family: Poppins;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  text-transform: capitalize;
 }
 </style>

@@ -98,6 +98,7 @@ const totalCost = computed(() => {
   return total;
 });
 
+
 const deliveryFee = ref(0);
 
 const totalWithDelivery = computed(() => {

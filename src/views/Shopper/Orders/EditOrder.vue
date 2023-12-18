@@ -47,7 +47,7 @@
                   {{
                     Filters.currency(
                       (item.quantity || 0) *
-                        (item._product?.product_price || 0),
+                        (item._product?._product_price || 0),
                       item.currency_symbol
                     )
                   }}
@@ -67,7 +67,7 @@
                 </ion-button>
               </ion-col>
               <ProductQuantitySelector
-                :initialQuantity="item.quantity"
+                :initialQuantity="item?.quantity"
                 @change="updateQuantity(item, $event)"
               >
               </ProductQuantitySelector>
@@ -184,7 +184,7 @@ const removeFromCart = async (item: OrderItem, index: number) => {
 
 const updateQuantity = (item: OrderItem, newQuantity: number) => {
   item.quantity = newQuantity;
-  item.total_price = item.quantity * (item._product?.product_price || 0);
+  item.total_price = item.quantity * (item._product?._product_price || 0);
 };
 
 const addNewItem = () => {
