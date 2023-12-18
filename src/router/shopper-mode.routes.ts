@@ -11,8 +11,6 @@ export const ShopperModeRoutes = [
       const userStore = useUserStore();
       await userStore.loadStoredData();
 
-      userStore.setAppModeAsShopping();
-
       if (!userStore.user && !userStore.onboarded) {
         return { name: "Onboarding" };
       }
@@ -24,6 +22,8 @@ export const ShopperModeRoutes = [
       if (userStore.appMode == "vendor") {
         return { name: "VendorHome" };
       }
+
+      userStore.setAppModeAsShopping();
     },
     children: [
       {

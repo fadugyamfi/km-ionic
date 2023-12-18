@@ -69,3 +69,17 @@ export default defineComponent({
   },
 });
 </script>
+
+
+<style scoped>
+.skeleton-card {
+    width: 100%;
+    height: 200px;
+    border-radius: 10px;
+}
+
+ion-button {
+  margin: 0px;
+  text-transform: none;
+}
+</style>

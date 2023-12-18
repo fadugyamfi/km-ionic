@@ -97,4 +97,9 @@ export default defineComponent({
     height: 200px;
     border-radius: 10px;
 }
+
+ion-button {
+  margin: 0px;
+  text-transform: none;
+}
 </style>

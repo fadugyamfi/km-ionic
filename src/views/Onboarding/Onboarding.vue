@@ -28,7 +28,7 @@ const userStore = useUserStore();
 
 const getStarted = () => {
     userStore.storeOnboarded(true);
-    router.push("/signup");
+    router.push("/guest");
 }
 </script>
 

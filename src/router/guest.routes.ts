@@ -11,15 +11,23 @@ export const GuestModeRoutes = [
       const userStore = useUserStore();
       await userStore.loadStoredData();
 
+      if(!userStore.onboarded && !userStore.user) {
+        return { name: 'Onboarding' };
+      }
+
+      if(userStore.user && (userStore.user?.isSaleAgent() || userStore.user?.isSalesManager())) {
+        return { name: 'SaleAgentHome' };
+      }
+
+      if(userStore.user && userStore.appMode != "vendor") {
+        return { name: "ShopperHome" };
+      }
+
+      if (userStore.user && userStore.appMode == "vendor") {
+        return { name: "VendorHome" };
+      }
+
       userStore.setAppModeAsGuest();
-
-      // if (userStore.user) {
-      //   return { name: "ShopperHome" };
-      // }
-
-      // if (userStore.appMode == "vendor") {
-      //   return { name: "VendorHome" };
-      // }
     },
     children: [
       {
