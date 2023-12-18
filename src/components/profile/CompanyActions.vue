@@ -8,7 +8,7 @@
         customSize="32px"
       ></ProfileAvatar>
       <IonLabel>{{ userStore.activeBusiness?.name }}</IonLabel>
-      <IonIcon slot="end" :icon="createOutline"></IonIcon>
+      <!-- <IonIcon slot="end" :icon="createOutline"></IonIcon> -->
     </IonItem>
 
     <IonList lines="none">

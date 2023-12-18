@@ -24,7 +24,12 @@
         </IonSegmentButton>
       </IonSegment>
 
+      <BusinessMinimumOrderReached
+          :business="order?.business"
+          :totalCost="totalCost"
+        ></BusinessMinimumOrderReached>
       <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
+  
 
       <section v-else>
         <IonList>
@@ -79,11 +84,14 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-  <KolaYellowButton v-if="orderBusiness?.order_items?.length > 0" @click="viewDeliveryDetails()">
-    {{ $t("shopper.cart.proceedToCheckout") }}
-  </KolaYellowButton>
-</IonFooter>
-
+      <KolaYellowButton
+        v-if="orderBusiness?.order_items?.length > 0"
+        @click="viewDeliveryDetails()"
+        :disabled="!minOrderAmountReached"
+      >
+        {{ $t("shopper.cart.proceedToCheckout") }}
+      </KolaYellowButton>
+    </IonFooter>
   </ion-page>
 </template>
 
@@ -114,18 +122,24 @@ import CartHeader from "@/components/header/CartHeader.vue";
 import EmptyCart from "@/components/cards/EmptyCart.vue";
 import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import BusinessMinimumOrderReached from "../../../components/modules/business/BusinessMinimumOrderReached.vue";
 import { formatAmountWithCommas } from "@/utilities";
 import Image from "@/components/Image.vue";
 import Filters from "@/utilities/Filters";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
+import { Order } from "@/models/Order";
 
 const router = useRouter();
 const route = useRoute();
 
 const cartStore = useCartStore();
 
-const orderBusiness = ref<any>(null);
+const orderBusiness = computed((): Order | any => {
+  return cartStore.orders.find(
+    (order: any) => order?.businesses_id == route.params.id
+  );
+});
 const orders = computed(() => cartStore.orders);
 
 const viewing = ref("cart");
@@ -137,8 +151,40 @@ const updateQuantity = (item: CartItem, newQuantity: number) => {
 };
 
 const removeFromCart = (index: number) => {
+  console.log(index, orderBusiness.value);
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
+
+const totalCost = computed(() => {
+  let total = 0;
+
+  const order = cartStore.orders.find((o: Order) => o?.businesses_id == +route.params.id);
+
+  if (order) {
+    total = order.order_items?.reduce(
+      (acc, item) => acc + (item.total_price || 0),
+      0
+    );
+  }
+
+  return total;
+});
+const order = computed<Order>(() => {
+  return cartStore.orders.find(
+    (order: Order) => order?.businesses_id == +route.params.id
+  ) as Order;
+});
+
+const defaultMinOrderAmount = 2000; // Set your default value here
+
+const minOrderAmountReached = computed(() => {
+  const minOrderAmount = Number(order.value?.business?.min_order_amount) || defaultMinOrderAmount;
+  return (
+    !isNaN(minOrderAmount) &&
+    minOrderAmount <= totalCost.value
+  );
+});
+
 
 const viewDeliveryDetails = () => {
   router.push(`/shopper/cart/business/${route.params.id}/delivery-details`);
@@ -148,19 +194,21 @@ const viewPaymentMethod = () => {
   router.push(`/shopper/cart/business/${route.params.id}/payment-method`);
 };
 
-const getOrderBusiness = () => {
-  const business = orders.value.find(
-    (order: any) => order?.businesses_id == route.params.id
-  );
-  orderBusiness.value = business;
-  // cartStore.items = orderBusiness.value?.order_items;
-};
+// const getOrderBusiness = () => {
+//   const business = orders.value.find(
+//     (order: any) => order?.businesses_id == route.params.id
+//   );
+//   orderBusiness.value = business;
+//   // cartStore.items = orderBusiness.value?.order_items;
+// };
 
 onMounted(async () => {
   if (cartStore.orders.length == 0) {
     await cartStore.loadFromStorage();
   }
-  getOrderBusiness();
+  // getOrderBusiness();
+  console.log("Total Cost:", totalCost.value);
+  console.log("Is minOrderAmountReached:", minOrderAmountReached.value);
 });
 </script>
 
