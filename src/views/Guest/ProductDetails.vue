@@ -232,7 +232,7 @@ export default defineComponent({
     async fetchProductDetails() {
       const productId = +this.$route.params.id;
       try {
-        this.product = await this.productStore.fetchProduct(productId);
+        this.product = await this.productStore.fetchGuestProduct(productId);
 
         if (this.cartHasProduct) {
           this.quantity = this.cartStore.getProductItem(this.product as Product)
