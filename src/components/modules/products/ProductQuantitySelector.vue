@@ -77,6 +77,11 @@ export default defineComponent({
       this.$emit("change", +this.quantity);
     },
   },
+  watch: {
+    initialQuantity(newQuantity) {
+      this.quantity = newQuantity;
+    },
+  },
 });
 </script>
 

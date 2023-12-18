@@ -103,6 +103,7 @@ import { useForm } from "@/composables/form";
 import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { onMounted, computed } from "vue";
+import { Order } from "../../models/Order";
 
 const router = useRouter();
 const route = useRoute();
@@ -114,6 +115,14 @@ const form = useForm({
   delivery_method: "",
   payment_option_id: "2",
 });
+const props = defineProps({
+  order: {
+    type: Object as () => Order,
+    required: true,
+  },
+});
+
+
 const selectDeliveryMethod = (method: string) => {
   form.fields.delivery_method = method;
 
