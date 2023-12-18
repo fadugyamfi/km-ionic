@@ -2,7 +2,9 @@
     <IonHeader class="ion-no-border">
       <ion-toolbar>
         <IonTitle>
-          <IonText class="welcome">Welcome To Kola Market👋</IonText>
+          <IonText class="welcome" style="font-size: 0.75em;">
+            Welcome To Kola Market👋
+          </IonText>
         </IonTitle>
 
         <IonButtons slot="end">
