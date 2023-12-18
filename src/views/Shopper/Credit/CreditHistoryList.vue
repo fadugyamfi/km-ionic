@@ -37,9 +37,7 @@
     </IonHeader>
 
     <ion-content>
-      <PlacedCreditSummary
-        :placedCreditSummary="placedCreditSummary"
-      ></PlacedCreditSummary>
+      <PlacedCreditSummary></PlacedCreditSummary>
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
