@@ -105,7 +105,7 @@
     ></IonSkeletonText>
 
     <IonFooter class="ion-padding ion-no-border" v-if="!hideCartFunctions">
-      <KolaYellowButton class="ion-margin-bottom">
+      <KolaYellowButton @click="buyNow()" class="ion-margin-bottom">
         {{ $t("shopper.productDetails.buyNow") }}
       </KolaYellowButton>
       <KolaWhiteButton @click="addToCart()" :disabled="cartHasProduct">
@@ -232,7 +232,7 @@ export default defineComponent({
     async fetchProductDetails() {
       const productId = +this.$route.params.id;
       try {
-        this.product = await this.productStore.fetchProduct(productId);
+        this.product = await this.productStore.fetchGuestProduct(productId);
 
         if (this.cartHasProduct) {
           this.quantity = this.cartStore.getProductItem(this.product as Product)
@@ -253,12 +253,11 @@ export default defineComponent({
       this.cartStore.updateQuantity(this.product as Product, this.quantity);
     },
 
-    async addToCart() {
-      if (this.userStore.isInGuestMode()) {
-        this.showFilterSheet = true;
-        return;
-      }
-      await this.cartStore.addProduct(this.product as Product, this.quantity);
+    addToCart() {
+      this.showFilterSheet = true;
+    },
+    buyNow() {
+      this.showFilterSheet = true;
     },
   },
 

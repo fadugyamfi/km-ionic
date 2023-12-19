@@ -220,7 +220,7 @@ export default defineComponent({
         toastStore.blockUI("Deleting Account...");
         const response = await this.userStore.deleteUser();
         if (response) {
-          this.$router.push("/auth/login");
+          this.$router.push("/guest/home");
         }
       } catch (error) {
         handleAxiosRequestError(error);
