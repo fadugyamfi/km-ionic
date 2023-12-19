@@ -74,7 +74,7 @@
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton 
+      <KolaYellowButton
       :disabled="!formValid"
       @click="storeDeliveryDetails">
         {{ $t("general.continue") }}

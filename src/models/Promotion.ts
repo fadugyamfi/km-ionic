@@ -10,7 +10,7 @@ export default class Promotion {
     Object.assign(this, data);
   }
 
-  get promotion_items() {
+  get promotion_items(): PromotionItem[] | undefined {
     return this._promotion_items;
   }
 

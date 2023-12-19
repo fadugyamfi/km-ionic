@@ -36,12 +36,6 @@ export default defineComponent({
     },
   },
   components: { Swiper, SwiperSlide, IonText, ProductCard, IonButton },
-
-  methods: {
-    viewProduct(product: Product) {
-      this.$router.push(`/shopper/home/products/${product.id}`);
-    },
-  },
 });
 </script>
 

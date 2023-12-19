@@ -48,7 +48,8 @@
     "bestSellingItem": "Best Selling Item",
     "welcome": "Welcome",
     "leaderboard": "Leaderboard",
-    "discount": "Discount"
+    "discount": "Discount",
+    "refresh": "Refresh"
   },
   "onboarding": {
     "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
@@ -179,6 +180,10 @@
       "trackOrder": "Track Order",
       "confirmTime": "Expect your item to be delivered between 24-72 hours. Our agent will call to confirm",
       "placeNewOrder": "Place New Order"
+    },
+    "credit":{
+      "totalAmountOverdue": "Total amount overdue",
+      "totalTimeOverdue": "Total time overdue"
     }
   },
   "vendor": {
