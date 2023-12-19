@@ -4,36 +4,36 @@
             <IonList lines="none">
                 <IonItem>
                     <IonLabel class="font-medium">{{ $t('shopper.orders.delivery') }}</IonLabel>
-                    <IonLabel slot="end" class="font-medium">
+                    <IonText slot="end" class="font-medium">
                         GHS 0.00
-                    </IonLabel>
+                    </IonText>
                 </IonItem>
 
                 <IonItem>
                     <IonLabel color="medium" class="font-medium">
                         {{ order?.delivery_location || 'Unknown' }}
                     </IonLabel>
-                    <IonLabel v-if="showChangeAddress" color="primary" slot="end" class="font-medium">
+                    <!-- <IonText v-if="showChangeAddress" color="primary" slot="end" class="font-medium">
                         Change Address
-                    </IonLabel>
+                    </IonText> -->
                 </IonItem>
 
                 <IonItem lines="full" class="ion-padding-bottom">
                     <IonLabel color="medium" class="font-medium">
                         {{ order?.delivery_date ? Filters.date(order?.delivery_date as string, 'short') : 'TBD' }}
                     </IonLabel>
-                    <IonLabel v-if="showChangeDate" color="primary" slot="end" class="font-medium">
+                    <!-- <IonText v-if="showChangeDate" color="primary" slot="end" class="font-medium">
                         Change Date
-                    </IonLabel>
+                    </IonText> -->
                 </IonItem>
 
                 <IonItem>
                     <IonLabel color="dark" class="font-medium">
                         {{ 'Total Cost' }}
                     </IonLabel>
-                    <IonLabel color="dark" slot="end" class="font-medium fw-bold">
+                    <IonText color="dark" slot="end" class="font-medium fw-bold">
                         {{ Filters.currency(order?.getTotal() as number, order?.currency?.symbol as string) }}
-                    </IonLabel>
+                    </IonText>
                 </IonItem>
             </IonList>
         </IonCardContent>
@@ -44,7 +44,7 @@
 import { PropType, defineComponent } from 'vue';
 import { Order } from '@/models/Order';
 import Filters from '../../../utilities/Filters';
-import { IonCard, IonCardContent, IonItem, IonLabel, IonList } from '@ionic/vue';
+import { IonCard, IonCardContent, IonItem, IonLabel, IonList, IonText } from '@ionic/vue';
 
 
 export default defineComponent({
@@ -64,7 +64,7 @@ export default defineComponent({
             Filters
         };
     },
-    components: { IonCard, IonCardContent, IonList, IonItem, IonLabel }
+    components: { IonCard, IonCardContent, IonList, IonItem, IonLabel, IonText }
 })
 </script>
 

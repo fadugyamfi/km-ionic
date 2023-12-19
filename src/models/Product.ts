@@ -80,7 +80,7 @@ export default class Product {
     }
 
     get product_price() {
-        if( this._product_price == 0 && this.wholesale_price > 0 ) {
+        if( this.wholesale_price > 0 ) {
             return this.wholesale_price;
         }
 

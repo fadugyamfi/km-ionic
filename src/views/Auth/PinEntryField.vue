@@ -16,7 +16,7 @@
         @ion-input="onInput($event)"
         required
       ></IonInput>
-      <IonButton slot="end" fill="clear" color="medium" @click="pinVisible = !pinVisible">
+      <IonButton slot="end" fill="clear" class="ion-no-margin" color="medium" @click="pinVisible = !pinVisible">
         <IonIcon slot="icon-only" :icon="pinVisible ? eye : eyeOff"></IonIcon>
       </IonButton>
     </IonItem>
