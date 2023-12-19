@@ -11,5 +11,31 @@
       "type": "image/png",
       "sizes": "any"
     }
+  ],
+  "screenshots" : [
+    {
+      "src": "./img/screenshots/home.png",
+      "sizes": "713x1550",
+      "type": "image/png",
+      "label": "Shopping Home Screen"
+    },
+    {
+      "src": "./img/screenshots/signup.png",
+      "sizes": "695x1518",
+      "type": "image/png",
+      "label": "Options for Signing Up"
+    },
+    {
+      "src": "./img/screenshots/vendor.png",
+      "sizes": "713x1552",
+      "type": "image/png",
+      "label": "Vendor Signing Up"
+    },
+    {
+      "src": "./img/screenshots/profile.png",
+      "sizes": "711x1552",
+      "type": "image/png",
+      "label": "Profile Management"
+    }
   ]
 }
