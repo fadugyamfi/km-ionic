@@ -76,10 +76,6 @@ export const useCartStore = defineStore("cart", {
     },
 
     hasProduct(product: Product): boolean {
-      // if (!product || !this.orders) {
-      //   return false;
-      // }
-
       // let exists = false;
       const order = this.orders.find(
         (o) => o.businesses_id == product?.businesses_id
@@ -94,18 +90,6 @@ export const useCartStore = defineStore("cart", {
           (oi) => oi.products_id == product.id
         ) as number) > -1
       );
-
-      // this.orders.forEach((order: Order) => {
-      //   const index = order.order_items.findIndex(
-      //     (el) => (el.products_id = product.id)
-      //   );
-      //   if (index > -1) {
-      //     exists = true;
-      //     return false;
-      //   }
-      // });
-
-      // return exists;
     },
 
     getTotalCost() {
@@ -142,17 +126,19 @@ export const useCartStore = defineStore("cart", {
         (item: OrderItem) => item.products_id == product.id
       );
 
+      const productPrice = product.is_on_sale ? product.sale_price : product.product_price;
+
       if (!orderItem) {
         orderItem = new OrderItem({
           businesses_id: product.businesses_id,
           products_id: product.id,
-          product_price: product.product_price,
+          product_price: productPrice,
           currency_symbol: product.currency?.symbol,
           product_image: product.image,
           product_name: product.product_name,
-          unit_price: product.product_price,
+          unit_price: productPrice,
           quantity: quantity,
-          total_price: quantity * (product.product_price || 0),
+          total_price: quantity * (productPrice || 0),
           currencies_id: 1, // GHS
           product_units_id: 1, // GHS
           cms_users_id: userStore.user?.id,
@@ -163,7 +149,7 @@ export const useCartStore = defineStore("cart", {
         toastStore.showSuccess("Added To Cart");
       } else {
         orderItem.quantity = orderItem.quantity ? orderItem.quantity + 1 : 1;
-        orderItem.total_price = orderItem.quantity * (orderItem.product_price ? orderItem.product_price : 0)
+        orderItem.total_price = orderItem.quantity * (productPrice ? productPrice : 0)
         toastStore.showInfo("Increased quantity in cart");
       }
       console.log(this.orders);
@@ -235,16 +221,18 @@ export const useCartStore = defineStore("cart", {
 
       this.orders.push(newOrder);
       let orderItems = order.order_items.map((item) => {
+        const productPrice = item?.product?.is_on_sale ? item?.product?.sale_price : item?.product?.product_price;
+
         return new OrderItem({
           businesses_id: item.businesses_id,
           products_id: item.id,
-          product_price: item?.product?.product_price,
+          product_price: productPrice,
           currency_symbol: item.currency?.symbol,
           product_image: item?.product?.image,
           product_name: item?.product?.product_name,
-          unit_price: item?.product?.product_price,
+          unit_price: productPrice,
           quantity: item.quantity,
-          total_price: item.total_price,
+          total_price: Number(productPrice) * Number(item.quantity),
           currencies_id: 1, // GHS
           product_units_id: 1, // GHS
           cms_users_id: userStore.user?.id,
