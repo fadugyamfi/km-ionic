@@ -4,10 +4,7 @@
       <IonHeader class="inner-header">
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton
-              defaultHref="/guest/home"
-              :icon="close"
-            ></IonBackButton>
+            <IonBackButton defaultHref="/guest/home" :icon="close"></IonBackButton>
           </IonButtons>
 
           <IonTitle size="small">
@@ -17,9 +14,7 @@
           <IonButtons slot="end">
             <FavoriteButton :product="product || undefined"></FavoriteButton>
 
-            <CartStatusButton
-              :product="product || undefined"
-            ></CartStatusButton>
+            <CartStatusButton :product="product || undefined"></CartStatusButton>
 
             <IonButton slot="icon-only">
               <IonIcon :icon="shareOutline"></IonIcon>
@@ -41,68 +36,81 @@
       </header>
 
       <main>
-        <section
-          class="section title-section d-flex ion-align-items-start ion-justify-content-between"
-        >
-          <span class="product-name">{{ product?.product_name }}</span>
-          <span class="price"
-            >{{ product?.currency?.symbol }} {{ product?.product_price }}</span
-          >
+        <section class="section title-section d-flex ion-align-items-start">
+          <span class="product-name">
+            {{ product?.product_name }}
+
+            <span v-if="product?.is_on_sale">
+              - {{ product?.discountApplied }}% {{ $t("general.discount") }}
+            </span>
+          </span>
+        </section>
+
+        <section class="section d-flex ion-align-items-start ion-justify-content-between">
+          <span class="price fw-semibold" :class="{ strikethrough: product.is_on_sale }">
+            {{
+              Filters.currency(
+                Number(product?.product_price),
+                String(product?.currency?.symbol)
+              )
+            }}
+          </span>
+
+          <IonText class="price fw-semibold" color="primary" v-if="product.is_on_sale">
+            {{
+              Filters.currency(
+                Number(product?.sale_price),
+                String(product?.currency?.symbol)
+              )
+            }}
+          </IonText>
+
+          <IonText class="price" color="medium" v-if="product?.retail_price as number > 0">
+            MSRP:
+            {{
+              Filters.currency(
+                Number(product?.retail_price),
+                String(product?.currency?.symbol)
+              )
+            }}
+          </IonText>
         </section>
 
         <section class="section business-section">
           <section class="d-flex ion-align-items-center">
-            <ProfileAvatar
-              :image="product?.business?.logo"
-              class="ion-no-margin"
-              :username="product?.business?.name"
-              customSize="30px"
-            ></ProfileAvatar>
+            <ProfileAvatar :image="product?.business?.logo" class="ion-no-margin" :username="product?.business?.name"
+                           customSize="30px"></ProfileAvatar>
 
             <IonLabel>{{ product?.business?.name }}</IonLabel>
           </section>
-          <BusinessRatingAndReviews
+          <!-- <BusinessRatingAndReviews
             :business="product?.business"
-          ></BusinessRatingAndReviews>
+          ></BusinessRatingAndReviews> -->
         </section>
 
         <section class="section description-section">
-          <IonText color="medium">{{
-            product?.product_description || "No Description Available"
-          }}</IonText>
+          <IonText color="medium">
+            {{ product?.product_description || "No Description Available" }}
+          </IonText>
         </section>
 
         <section class="section min-order-section">
-          <BusinessMinimumOrder
-            :business="product?.business"
-          ></BusinessMinimumOrder>
+          <BusinessMinimumOrder :business="product?.business"></BusinessMinimumOrder>
         </section>
 
-        <section
-          v-if="!hideCartFunctions"
-          class="section product-quantity-selection"
-        >
-          <ProductQuantitySelector
-            @change="updateQuantity($event)"
-          ></ProductQuantitySelector>
+        <section v-if="!hideCartFunctions" class="section product-quantity-selection">
+          <ProductQuantitySelector @change="updateQuantity($event)"></ProductQuantitySelector>
         </section>
 
         <section class="section tags">
           <ProductTags :product="product"></ProductTags>
         </section>
       </main>
-      <LoginRequiredSheet
-        :isOpen="showFilterSheet"
-        @didDismiss="showFilterSheet = false"
-      >
+      <LoginRequiredSheet :isOpen="showFilterSheet" @didDismiss="showFilterSheet = false">
       </LoginRequiredSheet>
     </IonContent>
 
-    <IonSkeletonText
-      v-if="!product"
-      style="height: 300px"
-      :animated="true"
-    ></IonSkeletonText>
+    <IonSkeletonText v-if="!product" style="height: 300px" :animated="true"></IonSkeletonText>
 
     <IonFooter class="ion-padding ion-no-border" v-if="!hideCartFunctions">
       <KolaYellowButton @click="buyNow()" class="ion-margin-bottom">
@@ -160,6 +168,7 @@ import { useCartStore } from "@/stores/CartStore";
 import { handleAxiosRequestError } from "@/utilities";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import LoginRequiredSheet from "@/components/modules/LoginRequiredSheet.vue";
+import Filters from "../../utilities/Filters";
 
 export default defineComponent({
   components: {
@@ -204,6 +213,7 @@ export default defineComponent({
       quantity: 0,
       defaultBanner: "/images/vendor/banner.png",
       showFilterSheet: false,
+      Filters
     };
   },
 
@@ -279,6 +289,7 @@ main {
     padding: 4px 5px;
     font-size: 0.8em;
   }
+
   .title-section {
     font-weight: bold;
     font-size: 1em;

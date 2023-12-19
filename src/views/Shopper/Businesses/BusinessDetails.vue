@@ -32,9 +32,9 @@
           <span class="product-name"> {{ business?.name }} </span>
           <FollowButton :business="business"></FollowButton>
         </section>
-        <section class="section review">
+        <!-- <section class="section review">
           <BusinessRatingAndReviews :business="business"></BusinessRatingAndReviews>
-        </section>
+        </section> -->
         <section class="section">
           <BusinessLocation :business=business></BusinessLocation>
         </section>

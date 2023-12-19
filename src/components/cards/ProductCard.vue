@@ -85,13 +85,13 @@
           </section>
 
           <section class="font-medium">
-            <span v-if="product?.weight_value"
-              >{{ product?.weight_value }}kg</span
-            >
+            <span v-if="product?.weight_value">
+              {{ product?.weight_value }}{{ product?.weight_unit?.symbol || 'g' }}
+            </span>
             <span v-if="product?.weight_value && product?.group_quantity">/</span>
-            <span v-if="product?.group_quantity"
-              >{{ product?.group_quantity }}pcs</span
-            >
+            <span v-if="product?.group_quantity">
+              {{ product?.group_quantity }}pcs
+            </span>
           </section>
         </section>
 

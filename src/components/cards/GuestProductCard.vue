@@ -55,7 +55,21 @@
         </section>
 
         <section class="pricing d-flex flex-column">
-          <section class="fw-semibold">
+          <section class="font-medium" v-if="product?.is_on_sale && product.sale_price > 0">
+            <span style="margin-right: 5px;">
+              <s>
+                {{ Filters.currency(Number(product?.product_price), String(product?.currency?.symbol || 'GHS') ) }}
+              </s>
+            </span>
+
+            <span class="fw-semibold">
+              <b>
+                {{ Filters.currency(Number(product?.sale_price), String(product?.currency?.symbol || 'GHS') ) }}
+              </b>
+
+            </span>
+          </section>
+          <section v-else class="fw-semibold">
             {{
               Filters.currency(
                 Number(product?.product_price),
@@ -64,15 +78,13 @@
             }}
           </section>
           <section class="font-medium">
-            <span v-if="product?.weight_value"
-              >{{ product?.weight_value }}kg</span
-            >
-            <span v-if="product?.weight_value && product?.group_quantity"
-              >/</span
-            >
-            <span v-if="product?.group_quantity"
-              >{{ product?.group_quantity }}pcs</span
-            >
+            <span v-if="product?.weight_value">
+              {{ product?.weight_value }}{{ product?.weight_unit?.symbol || 'g' }}
+            </span>
+            <span v-if="product?.weight_value && product?.group_quantity">/</span>
+            <span v-if="product?.group_quantity">
+              {{ product?.group_quantity }}pcs
+            </span>
           </section>
         </section>
 
@@ -222,12 +234,6 @@ export default defineComponent({
 
     addToCart() {
       this.showFilterSheet = true;
-      // if (this.business && !this.product.business) {
-      //   this.product.business = this.business;
-      // }
-
-      // const cartStore = useCartStore();
-      // cartStore.addProduct(this.product, 1);
     },
   },
 
