@@ -2,24 +2,30 @@
   <IonCard>
     <IonCardContent class="ion-no-padding">
       <IonList lines="none">
-        <IonItem>
-          <IonLabel class="font-medium">Frytol Geisha</IonLabel>
-          <IonLabel slot="end" class="font-medium"> GHS 0.00 </IonLabel>
+        <IonItem v-for="item in order?.order_items" :key="item.id">
+          <IonLabel class="font-medium">
+            {{ item.product?.product_name }}
+          </IonLabel>
+          <IonText slot="end" class="font-medium">
+            {{ Filters.currency(item.total_price as number) }}
+          </IonText>
         </IonItem>
 
-        <IonItem>
+        <!-- <IonItem>
           <IonLabel class="font-medium">Tax/Vat</IonLabel>
-          <IonLabel slot="end" class="font-medium"> GHS 0.00 </IonLabel>
-        </IonItem>
+          <IonText slot="end" class="font-medium"> GHS 0.00 </IonText>
+        </IonItem> -->
 
-        <IonItem>
-          <IonLabel class="font-medium">Delivery free</IonLabel>
-          <IonLabel slot="end" class="font-medium"> GHS 0.00 </IonLabel>
+        <IonItem class="ion-margin-top">
+          <IonLabel class="font-medium">Delivery Fee</IonLabel>
+          <IonText slot="end" class="font-medium"> GHS 0.00 </IonText>
         </IonItem>
 
         <IonItem>
           <IonLabel class="font-medium">Total Cost</IonLabel>
-          <IonLabel slot="end" class="font-medium"> GHS 0.00 </IonLabel>
+          <IonText slot="end" class="font-medium">
+            {{ Filters.currency(order?.total_order_amount as number) }}
+          </IonText>
         </IonItem>
       </IonList>
     </IonCardContent>
@@ -37,6 +43,7 @@ import {
   IonItem,
   IonLabel,
   IonList,
+IonText,
 } from "@ionic/vue";
 
 export default defineComponent({
@@ -56,7 +63,7 @@ export default defineComponent({
       Filters,
     };
   },
-  components: { IonCard, IonCardContent, IonList, IonItem, IonLabel },
+  components: { IonCard, IonCardContent, IonList, IonItem, IonLabel, IonText },
 });
 </script>
 
