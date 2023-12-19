@@ -105,9 +105,9 @@
 
             <IonLabel>{{ product?.business?.name }}</IonLabel>
           </section>
-          <BusinessRatingAndReviews
+          <!-- <BusinessRatingAndReviews
             :business="product?.business"
-          ></BusinessRatingAndReviews>
+          ></BusinessRatingAndReviews> -->
         </section>
 
         <section class="section description-section">
