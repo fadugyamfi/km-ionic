@@ -52,7 +52,7 @@ async function addAvailableUpdateListener() {
               setTimeout(() => window.location.reload(), 3000);
             } else {
               console.log('serviceWorker activate listener');
-              toastStore.showError("Install Failed. We'll retry again later", "Install Failed", "top");
+              // toastStore.showError("Install Failed. We'll retry again later", "Install Failed", "top");
             }
         });
       }, 1000)
