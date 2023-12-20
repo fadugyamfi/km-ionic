@@ -24,13 +24,13 @@ async function configureAxios() {
   await storage.init();
   const auth = await storage.get('kola.auth');
 
-  if( auth ) {
+  if (auth) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;
   }
 }
 
 async function addAvailableUpdateListener() {
-  if( !("serviceWorker" in navigator) ) {
+  if (!("serviceWorker" in navigator)) {
     return;
   }
 
@@ -46,14 +46,15 @@ async function addAvailableUpdateListener() {
       // let's wait until it changes its state
       setTimeout(() => {
         registration.installing?.addEventListener('statechange', () => {
-            if (registration.waiting) {
-              console.log('serviceWorker activate listener');
-              toastStore.showSuccess("Update Installed. Application will refresh shortly", "Update Installed", "top");
-              setTimeout(() => window.location.reload(), 3000);
-            } else {
-              console.log('serviceWorker activate listener');
-              // toastStore.showError("Install Failed. We'll retry again later", "Install Failed", "top");
-            }
+          console.log("registration statechanged event fired", registration);
+          if (registration.waiting) {
+            console.log('serviceWorker activate listener');
+            toastStore.showSuccess("Update Installed. Application will refresh shortly", "Update Installed", "top");
+            setTimeout(() => window.location.reload(), 3000);
+          } else {
+            console.log('serviceWorker activate listener');
+            // toastStore.showError("Install Failed. We'll retry again later", "Install Failed", "top");
+          }
         });
       }, 1000)
 
@@ -61,10 +62,11 @@ async function addAvailableUpdateListener() {
 
     // detect controller change and refresh the page
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!refreshing) {
-          refreshing = true
-          window.location.reload()
-        }
+      console.log("controllerchange event fired");
+      if (!refreshing) {
+        refreshing = true
+        window.location.reload()
+      }
     })
   } else {
     setTimeout(() => addAvailableUpdateListener(), 5000);
