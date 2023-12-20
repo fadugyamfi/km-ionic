@@ -54,7 +54,7 @@ export const useToastStore = defineStore('toast', {
             const toast = await toastController.create({
                 header: title,
                 message: message,
-                duration: 2500,
+                duration: 3500,
                 position: position,
                 animated: true,
                 cssClass: `app-toast toast-${type}`,

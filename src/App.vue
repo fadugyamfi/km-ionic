@@ -34,23 +34,38 @@ async function addAvailableUpdateListener() {
     return;
   }
 
+  let refreshing = false;
   const toastStore = useToastStore();
   const registration = await navigator.serviceWorker.getRegistration();
 
   if (registration) {
     registration.addEventListener("updatefound", () => {
-      toastStore.showInfo("Install New Updates In The Background", "Update Available", "top");
+      toastStore.showInfo("Installing New Updates In The Background", "Update Available", "top");
+
+      // our new instance is visible under installing property, because it is in 'installing' state
+      // let's wait until it changes its state
+      setTimeout(() => {
+        registration.installing?.addEventListener('statechange', () => {
+            if (registration.waiting) {
+              console.log('serviceWorker activate listener');
+              toastStore.showSuccess("Update Installed. Application will refresh shortly", "Update Installed", "top");
+              setTimeout(() => window.location.reload(), 3000);
+            } else {
+              console.log('serviceWorker activate listener');
+              toastStore.showError("Install Failed. We'll retry again later", "Install Failed", "top");
+            }
+        });
+      }, 1000)
+
     });
 
-    navigator.serviceWorker.addEventListener("activate", () => {
-      console.log('serviceWorker activate listener');
-      toastStore.showSuccess("Update Installed. Please restart application", "Update Installed", "top");
-    });
-
-    registration.addEventListener("activate", () => {
-      console.log('registration activate listener');
-      toastStore.showSuccess("Update Installed. Please restart application", "Update Installed", "top");
-    });
+    // detect controller change and refresh the page
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true
+          window.location.reload()
+        }
+    })
   } else {
     setTimeout(() => addAvailableUpdateListener(), 5000);
     console.log("no service worker registration found")
