@@ -66,12 +66,9 @@
                 </s>
               </span>
 
-              <span class="fw-semibold">
-                <b>
+              <IonText class="fw-semibold" color="danger">
                   {{ Filters.currency(Number(product?.sale_price), String(product?.currency?.symbol || 'GHS') ) }}
-                </b>
-
-              </span>
+              </IonText>
             </section>
 
             <section v-else class="fw-semibold">
@@ -85,13 +82,13 @@
           </section>
 
           <section class="font-medium">
-            <span v-if="product?.weight_value"
-              >{{ product?.weight_value }}kg</span
-            >
+            <span v-if="product?.weight_value">
+              {{ product?.weight_value }}{{ product?.weight_unit?.symbol || 'g' }}
+            </span>
             <span v-if="product?.weight_value && product?.group_quantity">/</span>
-            <span v-if="product?.group_quantity"
-              >{{ product?.group_quantity }}pcs</span
-            >
+            <span v-if="product?.group_quantity">
+              {{ product?.group_quantity }}pcs
+            </span>
           </section>
         </section>
 
@@ -117,6 +114,7 @@ import {
   IonCheckbox,
   IonIcon,
   IonSkeletonText,
+IonText,
 } from "@ionic/vue";
 import { PropType, defineComponent } from "vue";
 import { locationOutline } from "ionicons/icons";
@@ -206,7 +204,8 @@ export default defineComponent({
     IonSkeletonText,
     FavoriteButton,
     IonCheckbox,
-  },
+    IonText
+},
 
   methods: {
     doAction() {

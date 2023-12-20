@@ -1,5 +1,5 @@
 <template>
-  <div class="kola-input-item">
+  <div class="kola-input-item kola-pin-entry-field">
     <IonItem
       lines="none"
       :class="{ 'ion-invalid ion-touched': form.errors[name] }"
@@ -16,7 +16,7 @@
         @ion-input="onInput($event)"
         required
       ></IonInput>
-      <IonButton slot="end" fill="clear" color="medium" @click="pinVisible = !pinVisible">
+      <IonButton slot="end" fill="clear" class="ion-no-margin" color="medium" @click="pinVisible = !pinVisible">
         <IonIcon slot="icon-only" :icon="pinVisible ? eye : eyeOff"></IonIcon>
       </IonButton>
     </IonItem>
@@ -63,3 +63,14 @@ export default defineComponent({
   },
 });
 </script>
+
+<style>
+/*
+  Note: Intentionally removed scoping for this style block to globally target any
+  kola-pin-entry-field since scoping was limiting the CSS. Cautiously change the scoping
+  if necessary
+ */
+.kola-pin-entry-field .input-wrapper {
+  max-width: 75%;
+}
+</style>

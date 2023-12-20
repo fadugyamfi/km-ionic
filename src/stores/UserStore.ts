@@ -185,15 +185,21 @@ export const useUserStore = defineStore("user", {
     },
 
     async setAppModeAsGuest() {
+      if( this.appMode == 'guest' ) return;
+
       this.appMode = "guest";
       await storage.set("kola.app-mode", this.appMode, 7, "days");
     },
     async setAppModeAsVendor() {
+      if( this.appMode == 'vendor' ) return;
+
       this.appMode = "vendor";
       await storage.set("kola.app-mode", this.appMode, 7, "days");
     },
 
     async setAppModeAsShopping() {
+      if( this.appMode == 'shopping' ) return;
+
       this.appMode = "shopping";
       await storage.set("kola.app-mode", this.appMode, 7, "days");
     },

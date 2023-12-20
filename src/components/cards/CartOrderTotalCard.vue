@@ -6,28 +6,28 @@
           <IonItem>
             <IonText> {{ order?.business?.name || "No Business" }} </IonText>
           </IonItem>
-          <IonItem v-for="(item, index) in order._order_items" :key="index">
-            <IonLabel class="font">{{ item.product_name }}</IonLabel>
-            <IonLabel slot="end" class="font-medium">
-              {{ Filters.currency(item.product_price || 0) }}
-            </IonLabel>
+          <IonItem v-for="(item, index) in order.order_items" :key="index">
+            <IonLabel class="font">{{ item.product?.product_name }}</IonLabel>
+            <IonText slot="end" class="font-medium">
+              {{ Filters.currency(item.total_price || 0) }}
+            </IonText>
           </IonItem>
 
-          <IonItem>
+          <!-- <IonItem>
             <IonLabel class="font">Tax/Vat</IonLabel>
-            <IonLabel slot="end" class="font-medium"> GHS 0.00 </IonLabel>
-          </IonItem>
+            <IonText slot="end" class="font-medium"> GHS 0.00 </IonText>
+          </IonItem> -->
 
-          <IonItem>
-            <IonLabel class="font">Delivery free</IonLabel>
-            <IonLabel slot="end" class="font-medium"> GHS 0.00 </IonLabel>
+          <IonItem class="ion-margin-top">
+            <IonLabel class="font">Delivery fee</IonLabel>
+            <IonText slot="end" class="font-medium"> GHS 0.00 </IonText>
           </IonItem>
 
           <IonItem>
             <IonLabel class="font">Total Cost</IonLabel>
-            <IonLabel slot="end" class="font-medium">
-              {{ Filters.currency(totalCost || 0) }}
-            </IonLabel>
+            <IonText slot="end" class="font-medium">
+              {{ Filters.currency(order?.total_order_amount as number || 0) }}
+            </IonText>
           </IonItem>
           <IonItem>
             <IonText color="medium" class="font-medium" style="margin-bottom: 8px">

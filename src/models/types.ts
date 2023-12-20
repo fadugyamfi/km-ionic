@@ -42,3 +42,21 @@ export type ChangeStatusRequest = {
     order_status_id: number,
     comment: string
 }
+
+export type WeightUnit = {
+    id?: number;
+    name: string;
+    symbol: string;
+    created_at?: string | null;
+    updated_at?: string | null;
+    deleted_at?: string | null;
+}
+
+export type VolumeUnit = {
+    id?: number;
+    name: string;
+    symbol: string;
+    created_at?: string | null;
+    updated_at?: string | null;
+    deleted_at?: string | null;
+}

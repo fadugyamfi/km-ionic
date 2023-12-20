@@ -1,7 +1,7 @@
 import Business from './Business';
 import Currency from './Currency';
 import Tag from './Tag';
-import { FavoritedProduct } from './types';
+import { FavoritedProduct, VolumeUnit, WeightUnit } from './types';
 
 export default class Product {
 
@@ -20,6 +20,8 @@ export default class Product {
     public image?: string;
     public weight_value?: string | number;
     public volume_value?: string | number;
+    public weight_unit?: WeightUnit;
+    public volume_unit?: VolumeUnit;
     public group_quantity?: number;
     private _currency?: Currency | null;
     public _business?: Business | null
@@ -78,7 +80,7 @@ export default class Product {
     }
 
     get product_price() {
-        if( this._product_price == 0 && this.wholesale_price > 0 ) {
+        if( this.wholesale_price > 0 ) {
             return this.wholesale_price;
         }
 

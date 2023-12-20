@@ -68,7 +68,7 @@
 
           <IonText
             class="price fw-semibold"
-            color="primary"
+            color="danger"
             v-if="product.is_on_sale"
           >
             {{
@@ -105,9 +105,9 @@
 
             <IonLabel>{{ product?.business?.name }}</IonLabel>
           </section>
-          <BusinessRatingAndReviews
+          <!-- <BusinessRatingAndReviews
             :business="product?.business"
-          ></BusinessRatingAndReviews>
+          ></BusinessRatingAndReviews> -->
         </section>
 
         <section class="section description-section">

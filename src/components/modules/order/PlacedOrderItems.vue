@@ -21,9 +21,9 @@
                 </IonText>
               </section>
             </IonLabel>
-            <IonLabel slot="end" class="font-medium text-end ion-align-self-start">
+            <IonText slot="end" class="font-medium text-end ion-align-self-start">
               {{ Filters.currency(item.total_price as number, item.currency?.symbol as string) }}
-            </IonLabel>
+            </IonText>
           </IonItem>
         </IonList>
       </IonCardContent>
