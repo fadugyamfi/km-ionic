@@ -62,12 +62,9 @@
               </s>
             </span>
 
-            <span class="fw-semibold">
-              <b>
+            <IonText class="fw-semibold" color="danger">
                 {{ Filters.currency(Number(product?.sale_price), String(product?.currency?.symbol || 'GHS') ) }}
-              </b>
-
-            </span>
+            </IonText>
           </section>
           <section v-else class="fw-semibold">
             {{
@@ -115,6 +112,7 @@ import {
   IonCheckbox,
   IonIcon,
   IonSkeletonText,
+IonText,
 } from "@ionic/vue";
 import { PropType, defineComponent } from "vue";
 import { locationOutline } from "ionicons/icons";
@@ -206,8 +204,9 @@ export default defineComponent({
     IonSkeletonText,
     FavoriteButton,
     IonCheckbox,
-    LoginRequiredSheet
-  },
+    LoginRequiredSheet,
+    IonText
+},
 
   methods: {
     doAction() {
