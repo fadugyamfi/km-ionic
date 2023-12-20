@@ -65,6 +65,7 @@ export const useBusinessStore = defineStore("business", {
     searchQuery: "",
     SearchResults: [] as Business[],
     businessSummary: null as any | null,
+    business:  null as any | null,
   }),
 
   actions: {
@@ -191,6 +192,7 @@ export const useBusinessStore = defineStore("business", {
 
         if (response) {
           const { data } = response.data;
+          this.business = data
           return new Business(data);
         }
 
@@ -228,6 +230,7 @@ export const useBusinessStore = defineStore("business", {
 
         if (response) {
           const { data } = response.data;
+          this.business = data
           const business = new Business(data);
 
           userStore.setActiveBusiness(business);

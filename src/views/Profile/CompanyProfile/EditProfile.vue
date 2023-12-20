@@ -30,16 +30,24 @@
       <section v-if="!fetching">
         <section class="banner">
           <img
+            style="object-fit: cover"
             :src="company?.cover_image || defaultBanner"
             @error="onLoadError($event)"
+            @click="viewCoverPhoto(company?.cover_image)"
+            id="view-cover-image"
           />
-
+          <ProfilePhotoModal
+            :isOpen="showPhoto"
+            @dismiss="showPhoto = false"
+            :image="image"
+          />
           <aside class="d-flex">
             <ProfileAvatar
               font-size="40px"
               custom-size="90px"
               :image="company?.logo"
               :username="company?.name"
+              @click="viewCoverPhoto(company?.logo)"
             ></ProfileAvatar>
             <IonButton
               fill="clear"
@@ -138,6 +146,7 @@ import {
   IonInput,
   IonFooter,
   IonAvatar,
+  IonModal,
 } from "@ionic/vue";
 import {
   chatbubbleOutline,
@@ -155,8 +164,14 @@ import { useRoute, useRouter } from "vue-router";
 import Business from "@/models/Business";
 import { useForm } from "@/composables/form";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
+import ProfilePhotoModal from "@/components/profile/ProfilePhotoModal.vue";
 
 const toastStore = useToastStore();
+const businessStore = useBusinessStore();
+
+const image = ref(null);
+const showPhoto = ref(false);
+
 const route = useRoute();
 const router = useRouter();
 
@@ -164,7 +179,7 @@ const defaultBanner = ref("/images/vendor/banner.png");
 
 const fetching = ref(false);
 
-const company = ref<Business | null>();
+const company = computed(() => businessStore.business);
 const form = useForm({
   name: "",
   location: "",
@@ -172,6 +187,11 @@ const form = useForm({
   phone_number: "",
   business_types_id: 1,
 });
+
+const viewCoverPhoto = (imageUrl: any) => {
+  image.value = imageUrl;
+  showPhoto.value = true;
+};
 
 const defaultBackRoute = computed(() => {
   const userStore = useUserStore();
@@ -204,9 +224,7 @@ const fetchCompany = async () => {
   fetching.value = true;
   const userStore = useUserStore();
   const businessStore = useBusinessStore();
-  company.value = await businessStore.getBusiness(
-    Number(userStore.activeBusiness?.id)
-  );
+  await businessStore.getBusiness(Number(userStore.activeBusiness?.id));
   Object.assign(form.fields, {
     name: company.value?.name,
     location: company.value?.location,
@@ -222,6 +240,7 @@ const getLocation = async () => {
 
   try {
     const coordinates = await getCurrentLocation();
+    console.log(coordinates);
 
     if (coordinates) {
       form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
@@ -235,7 +254,7 @@ const updateProfile = async () => {
     toastStore.blockUI("Hold On As We Update Company Profile");
     const userStore = useUserStore();
     const businessStore = useBusinessStore();
-    company.value = await businessStore.updateBusiness(
+    await businessStore.updateBusiness(
       Number(userStore.activeBusiness?.id),
       form.fields
     );
