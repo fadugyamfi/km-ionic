@@ -68,7 +68,7 @@
 
           <IonText
             class="price fw-semibold"
-            color="primary"
+            color="danger"
             v-if="product.is_on_sale"
           >
             {{

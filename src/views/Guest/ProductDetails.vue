@@ -56,7 +56,7 @@
             }}
           </span>
 
-          <IonText class="price fw-semibold" color="primary" v-if="product.is_on_sale">
+          <IonText class="price fw-semibold" color="danger" v-if="product.is_on_sale">
             {{
               Filters.currency(
                 Number(product?.sale_price),
