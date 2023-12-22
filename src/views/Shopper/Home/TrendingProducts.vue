@@ -33,6 +33,7 @@ import { useProductStore } from "../../../stores/ProductStore";
 import AppStorage from "../../../stores/AppStorage";
 import ProductsLoadingSkeletons from "../../../components/layout/ProductsLoadingSkeletons.vue";
 
+const storage = new AppStorage();
 const KOLA_TRENDING = "kola.trending";
 
 export default defineComponent({
@@ -52,7 +53,6 @@ export default defineComponent({
   methods: {
     async fetchTrendingProducts() {
       this.fetching = true;
-      const storage = new AppStorage();
 
       const trendingProducts = await storage.get(KOLA_TRENDING);
 

@@ -59,6 +59,7 @@ export default class AppStorage {
 
       try {
         result = await this._storage?.get(key);
+        console.log(key, result);
         // result = JSON.parse(data);
 
         if (result && this.isResultExpired(result)) {
