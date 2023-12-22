@@ -241,8 +241,13 @@ export default defineComponent({
   methods: {
     async fetchProductDetails() {
       const productId = +this.$route.params.id;
+
       try {
-        this.product = await this.productStore.fetchGuestProduct(productId);
+        if( this.productStore.selectedProduct ) {
+          this.product = this.productStore.selectedProduct;
+        } else {
+          this.product = await this.productStore.fetchGuestProduct(productId);
+        }
 
         if (this.cartHasProduct) {
           this.quantity = this.cartStore.getProductItem(this.product as Product)
@@ -271,7 +276,7 @@ export default defineComponent({
     },
   },
 
-  mounted() {
+  ionViewWillEnter() {
     this.fetchProductDetails();
   },
 });

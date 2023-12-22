@@ -85,6 +85,7 @@ import Image from '@/components/Image.vue';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import Business from '@/models/Business';
 import ProfileAvatar from '../../../../components/ProfileAvatar.vue';
+import { useGeolocation } from '../../../../composables/useGeolocation';
 
 export default defineComponent({
 
@@ -176,7 +177,7 @@ export default defineComponent({
     }
   },
 
-  mounted() {
+  ionViewDidEnter() {
     if( this.userStore.user?.isSaleAgent() ) {
       this.selectAgent(this.userStore.user);
       this.onContinue();

@@ -2,8 +2,8 @@
     <IonImg
         :src="imageData || noImgSrc"
         @ion-error="onLoadError($event)"
-        @ion-img-did-load="onLoaded()"
-    ></IonImg>
+        @ion-img-did-load="onLoaded($event)"
+    />
 </template>
 
 <script lang="ts">
@@ -44,7 +44,7 @@ export default defineComponent({
             (event.target as HTMLImageElement).src = this.noImgSrc;
         },
 
-        onLoaded() {
+        async onLoaded(event: CustomEvent) {
             this.loaded = true;
             this.$emit('loaded');
         },
@@ -84,31 +84,42 @@ export default defineComponent({
                 });
 
                 if( file ) {
-                    this.imageData = `${file.data}`; // `data:image/${imageType || 'jpeg'};base64,${file.data}`;
+                    this.imageData = `data:image/${imageType || 'jpeg'};base64,${file.data}`;
                     return;
                 }
             }
 
-            const response = await this.saveImage(url, imageName);
 
-            this.imageData = `${response.base64Data}`; // `data:image/${imageType || 'jpeg'};base64,${response.base64Data}`;
+            try {
+                const response = await this.saveImage(url, imageName);
 
-            storage.set(`image:${url}`, { filepath: response.filepath, webviewPath: response.webviewPath }, 1, 'year');
+                this.imageData = `${response.base64Data}`; // `data:image/${imageType || 'jpeg'};base64,${response.base64Data}`;
+
+                storage.set(`image:${url}`, { filepath: response.filepath, webviewPath: response.webviewPath }, 1, 'year');
+            } catch(error) {
+                console.log(error);
+                this.imageData = this.src;
+            }
         },
 
         async saveImage(url: string, fileName: string) {
             // Fetch the photo, read as a blob, then convert to base64 format
-            const response = await fetch(url)
+            const rand = Math.random();
+            const response = await fetch(url + `?v=${rand}`);
 
             const blob = await response.blob();
 
+            // const base64Data = await this.fetchImageData(url);
             const base64Data = (await this.convertBlobToBase64(blob)) as string;
 
             const savedFile = await Filesystem.writeFile({
                 path: fileName,
-                data: base64Data,
+                data: base64Data as string,
                 directory: Directory.Cache,
             });
+
+
+
 
             // Use webPath to display the new image instead of base64 since it's
             // already loaded into memory
@@ -117,12 +128,23 @@ export default defineComponent({
                 webviewPath: url,
                 base64Data
             };
+        },
+
+        convertImageToBase64(image: HTMLImageElement) {
+            const canvas = document.createElement('canvas') as HTMLCanvasElement;
+            const ctx = canvas.getContext('2d');
+
+            canvas.height = image.naturalHeight;
+            canvas.width = image.naturalWidth;
+            ctx?.drawImage(image, 0, 0);
+
+            return canvas.toDataURL();
         }
     },
 
     mounted() {
-        this.imageData = this.src as string;
-        // this.loadImage();
+        // this.imageData = this.src as string;
+        this.loadImage();
         // setTimeout(() => {
         // }, 200);
     }
