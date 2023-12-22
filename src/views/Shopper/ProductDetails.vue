@@ -308,7 +308,11 @@ export default defineComponent({
     },
   },
 
-  mounted() {
+  ionViewWillEnter() {
+    this.product = this.productStore.selectedProduct;
+  },
+
+  ionViewDidEnter() {
     this.fetchProductDetails();
   },
 });

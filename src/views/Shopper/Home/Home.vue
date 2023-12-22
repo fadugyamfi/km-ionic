@@ -7,11 +7,11 @@
 
       <PromoSpace></PromoSpace>
 
-      <!-- <Promotions
+      <Promotions
         v-for="promotion in promotions"
         :key="promotion.id"
         :promotion="promotion"
-      ></Promotions> -->
+      ></Promotions>
 
       <TopCategories v-show="viewLoaded"></TopCategories>
 

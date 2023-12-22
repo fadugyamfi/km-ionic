@@ -121,10 +121,10 @@ export default defineComponent({
     },
 
     mounted() {
-        //this.loadImage();
-        setTimeout(() => {
-            this.imageData = this.src as string;
-        }, 200);
+        this.imageData = this.src as string;
+        // this.loadImage();
+        // setTimeout(() => {
+        // }, 200);
     }
 });
 </script>

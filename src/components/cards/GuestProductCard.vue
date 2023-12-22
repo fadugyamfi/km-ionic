@@ -124,6 +124,7 @@ import FavoriteButton from "../modules/products/FavoriteButton.vue";
 import Business from "../../models/Business";
 import Filters from "../../utilities/Filters";
 import LoginRequiredSheet from "../modules/LoginRequiredSheet.vue";
+import { useProductStore } from "../../stores/ProductStore";
 
 export type ProductSelection = {
   selected: Boolean;
@@ -220,6 +221,8 @@ export default defineComponent({
     },
 
     viewProduct() {
+      const productStore = useProductStore();
+      productStore.setSelectedProduct(this.product);
       this.$router.push(`/guest/products/${this.product.id}`);
     },
 
