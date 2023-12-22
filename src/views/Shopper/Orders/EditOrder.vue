@@ -26,28 +26,22 @@
           <IonText class="fw-bold">
             {{ order?._business?.name || "No Business" }}
           </IonText>
-          <BusinessMinimumOrderReached
-            :business="order?.business"
-            :totalCost="totalCost"
-          ></BusinessMinimumOrderReached>
+          <BusinessMinimumOrderReached :business="order?.business" :totalCost="totalCost"></BusinessMinimumOrderReached>
         </section>
         <IonList lines="none">
-          <IonItem
-            v-for="(item, index) in order?._order_items"
-            :key="item.products_id"
-          >
+          <IonItem v-for="(item, index) in order?._order_items" :key="item.products_id">
             <ion-thumbnail slot="start" class="custom-thumbnail">
               <Image :src="item.product_image"></Image>
             </ion-thumbnail>
 
             <ion-row class="item-row">
               <ion-col size="10 ">
-                <h6 class="text-product">{{ item._product?.product_name }}</h6>
+                <h6 class="text-product">{{ item.product?.product_name }}</h6>
                 <p class="price">
                   {{
                     Filters.currency(
                       (item.quantity || 0) *
-                        (item._product?._product_price || 0),
+                      (item.unit_price || 0),
                       item.currency_symbol
                     )
                   }}
@@ -55,35 +49,17 @@
                 <p>{{ $t("general.quantity") }}: {{ item.quantity }}</p>
               </ion-col>
               <ion-col size="1" class="remove-button">
-                <ion-button
-                  fill="clear"
-                  @click.prevent.stop="removeFromCart(item, index)"
-                >
-                  <ion-icon
-                    class="remove-icon"
-                    color="medium"
-                    :icon="closeCircleOutline"
-                  ></ion-icon>
+                <ion-button fill="clear" @click.prevent.stop="removeFromCart(item, index)">
+                  <ion-icon class="remove-icon" color="medium" :icon="closeCircleOutline"></ion-icon>
                 </ion-button>
               </ion-col>
-              <ProductQuantitySelector
-                :initialQuantity="item?.quantity"
-                @change="updateQuantity(item, $event)"
-              >
+              <ProductQuantitySelector :initialQuantity="item?.quantity" @change="updateQuantity(item, $event)">
               </ProductQuantitySelector>
             </ion-row>
           </IonItem>
-          <IonButton
-            fill="clear"
-            size="small"
-            style="text-transform: none"
-            class="ion-text-start add-new-item"
-            @click="addNewItem"
-          >
-            <IonIcon
-              :icon="addCircleOutline"
-              style="margin-right: 5px"
-            ></IonIcon>
+          <IonButton fill="clear" size="small" style="text-transform: none" class="ion-text-start add-new-item"
+                     @click="addNewItem">
+            <IonIcon :icon="addCircleOutline" style="margin-right: 5px"></IonIcon>
             Add new item
           </IonButton>
         </IonList>
@@ -115,6 +91,7 @@ import {
   IonRow,
   IonFooter,
   IonText,
+  onIonViewWillEnter,
 } from "@ionic/vue";
 import {
   alertCircleOutline,
@@ -236,8 +213,12 @@ const cancel = () => {
   router.replace("/shopper/orders/history");
 };
 
-onMounted(() => {
-  getOrder();
+onIonViewWillEnter(() => {
+  orderStore.editedOrder = orderStore.selectedOrder as Order;
+
+  if (!orderStore.editedOrder) {
+    getOrder();
+  }
 });
 </script>
 
@@ -330,9 +311,11 @@ ion-icon.remove-icon {
   color: black;
   font-size: 14px;
 }
+
 .price {
   color: #000;
 }
+
 .add-new-item {
   --color: #666eed;
 }

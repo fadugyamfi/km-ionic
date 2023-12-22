@@ -119,6 +119,7 @@
 
           <IonFooter class="ion-padding-top ion-no-border">
             <KolaYellowButton
+              id="edit-profile-save-btn"
               :disabled="!formValid"
               @click.prevent="updateProfile"
               >{{ $t("profile.customers.save") }}</KolaYellowButton
@@ -147,6 +148,8 @@ import {
   IonFooter,
   IonAvatar,
   IonModal,
+onIonViewDidEnter,
+onIonViewWillEnter,
 } from "@ionic/vue";
 import {
   chatbubbleOutline,
@@ -168,6 +171,7 @@ import ProfilePhotoModal from "@/components/profile/ProfilePhotoModal.vue";
 
 const toastStore = useToastStore();
 const businessStore = useBusinessStore();
+const userStore = useUserStore();
 
 const image = ref(null);
 const showPhoto = ref(false);
@@ -179,7 +183,7 @@ const defaultBanner = ref("/images/vendor/banner.png");
 
 const fetching = ref(false);
 
-const company = computed(() => businessStore.business);
+const company = computed(() => userStore.activeBusiness);
 const form = useForm({
   name: "",
   location: "",
@@ -194,7 +198,6 @@ const viewCoverPhoto = (imageUrl: any) => {
 };
 
 const defaultBackRoute = computed(() => {
-  const userStore = useUserStore();
   if (userStore.appMode == "vendor") {
     return "/vendor/profile";
   } else {
@@ -215,16 +218,13 @@ const onLoadError = (event: Event) => {
   (event.target as HTMLImageElement).src = defaultBanner.value;
 };
 const changePhoto = () => {
-  const userStore = useUserStore();
   Object.assign(userStore.companyForm, form.fields);
   router.push("/profile/company/change-photo");
 };
 
 const fetchCompany = async () => {
   fetching.value = true;
-  const userStore = useUserStore();
-  const businessStore = useBusinessStore();
-  await businessStore.getBusiness(Number(userStore.activeBusiness?.id));
+
   Object.assign(form.fields, {
     name: company.value?.name,
     location: company.value?.location,
@@ -232,10 +232,11 @@ const fetchCompany = async () => {
     email: company.value?.email,
     business_types_id: 1,
   });
+
   fetching.value = false;
 };
+
 const getLocation = async () => {
-  const toastStore = useToastStore();
   const { getCurrentLocation } = useGeolocation();
 
   try {
@@ -249,18 +250,19 @@ const getLocation = async () => {
     toastStore.showError("Cannot retrieve location info");
   }
 };
+
 const updateProfile = async () => {
   try {
     toastStore.blockUI("Hold On As We Update Company Profile");
-    const userStore = useUserStore();
-    const businessStore = useBusinessStore();
+
     await businessStore.updateBusiness(
       Number(userStore.activeBusiness?.id),
       form.fields
     );
+
     if (company.value) {
       toastStore.unblockUI();
-      toastStore.showSuccess("Company profile has been updated successfully");
+      toastStore.showSuccess("Company profile has been updated successfully", "", "bottom", "edit-profile-save-btn");
       Object.assign(form.fields, {
         name: company.value?.name,
         location: company.value?.location,
@@ -273,7 +275,7 @@ const updateProfile = async () => {
         "Failed to update Company profile. Please try again",
         "",
         "bottom",
-        "footer"
+        "edit-profile-save-btn"
       );
     }
   } catch (error) {
@@ -281,10 +283,11 @@ const updateProfile = async () => {
     toastStore.unblockUI();
   }
 };
-onMounted(() => {
-  fetchCompany();
-});
+
+onIonViewWillEnter(() => fetchCompany());
 </script>
+
+
 <style lang="scss" scoped>
 ion-badge.badge {
   --background: rgba(245, 170, 41, 0.38);

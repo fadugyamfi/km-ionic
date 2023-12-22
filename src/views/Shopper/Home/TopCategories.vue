@@ -3,9 +3,9 @@
     <header class="ion-padding-horizontal">
       <h6>Top Categories</h6>
 
-      <IonText color="primary" router-link="/shopper/home/categories">
+      <IonButton fill="clear" color="primary" router-link="/shopper/home/categories">
         View all
-      </IonText>
+      </IonButton>
     </header>
 
     <ProductCategoryList
@@ -20,7 +20,7 @@ import { defineComponent } from "vue";
 import ProductCategoryList from "@/components/lists/ProductCategoryList.vue";
 import ProductCategory from "@/models/ProductCategory";
 import axios from "axios";
-import { IonText } from "@ionic/vue";
+import { IonButton, IonText } from "@ionic/vue";
 import { mapStores } from "pinia";
 import { useProductCategoryStore } from "@/stores/ProductCategoryStore";
 
@@ -35,7 +35,7 @@ export default defineComponent({
     ...mapStores(useProductCategoryStore),
   },
 
-  components: { ProductCategoryList, IonText },
+  components: { ProductCategoryList, IonText, IonButton },
 
   methods: {
     async fetchTopCategories() {
@@ -49,3 +49,10 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+ion-button {
+  margin: 0px;
+  text-transform: none;
+}
+</style>

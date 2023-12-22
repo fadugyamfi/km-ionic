@@ -1,42 +1,35 @@
 <template>
   <ion-page>
     <section class="ion-padding">
-      <CartHeader />
+      <CartHeader>
+        <template v-slot:toolbars>
+          <section style="padding-top: 10px;">
+            <IonSegment value="personal" mode="ios" v-model="viewing" class="segment-margin">
+              <IonSegmentButton value="cart">
+                <div class="segment-button">
+                  <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
+                  <IonBadge>{{ orderBusiness?.order_items?.length }}</IonBadge>
+                </div>
+              </IonSegmentButton>
+              <IonSegmentButton value="saved">
+                <ion-label>Saved</ion-label>
+              </IonSegmentButton>
+            </IonSegment>
+          </section>
+        </template>
+      </CartHeader>
     </section>
 
     <ion-content class="ion-padding-horizontal">
-      <IonSegment
-        value="personal"
-        mode="ios"
-        v-model="viewing"
-        class="segment-margin"
-      >
-        <IonSegmentButton value="cart">
-          <div class="segment-button">
-            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }"
-              >Cart</IonLabel
-            >
-            <IonBadge>{{ orderBusiness?.order_items?.length }}</IonBadge>
-          </div>
-        </IonSegmentButton>
-        <IonSegmentButton value="saved">
-          <ion-label>Saved</ion-label>
-        </IonSegmentButton>
-      </IonSegment>
+
       <section class="ion-margin-top">
-        <BusinessMinimumOrderReached
-          :business="order?.business"
-          :totalCost="totalCost"
-        ></BusinessMinimumOrderReached>
+        <BusinessMinimumOrderReached :business="order?.business" :totalCost="totalCost"></BusinessMinimumOrderReached>
       </section>
       <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
 
       <section v-else>
         <IonList>
-          <IonItem
-            v-for="(item, index) in orderBusiness?.order_items"
-            :key="item.product?.id"
-          >
+          <IonItem v-for="(item, index) in orderBusiness?.order_items" :key="item.product?.id">
             <ion-thumbnail slot="start" class="custom-thumbnail">
               <Image :src="item.product_image"></Image>
             </ion-thumbnail>
@@ -59,21 +52,11 @@
                 </p>
               </ion-col>
               <ion-col size="2" class="d-flex ion-align-items-start">
-                <ion-button
-                  fill="clear"
-                  color=""
-                  @click.prevent.stop="removeFromCart(index)"
-                >
-                  <ion-icon
-                    class="remove-icon"
-                    :icon="closeCircleOutline"
-                  ></ion-icon>
+                <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
+                  <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
                 </ion-button>
               </ion-col>
-              <ProductQuantitySelector
-                :initial-quantity="item.quantity"
-                @change="updateQuantity(item, $event)"
-              >
+              <ProductQuantitySelector :initial-quantity="item.quantity" @change="updateQuantity(item, $event)">
               </ProductQuantitySelector>
             </ion-row>
           </IonItem>
@@ -84,11 +67,8 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton
-        v-if="orderBusiness?.order_items?.length > 0"
-        @click="viewDeliveryDetails()"
-        :disabled="!minOrderAmountReached"
-      >
+      <KolaYellowButton v-if="orderBusiness?.order_items?.length > 0" @click="viewDeliveryDetails()"
+                        :disabled="!minOrderAmountReached">
         {{ $t("shopper.cart.proceedToCheckout") }}
       </KolaYellowButton>
     </IonFooter>
@@ -113,6 +93,7 @@ import {
   IonButton,
   IonIcon,
   IonFooter,
+  onIonViewDidEnter,
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
@@ -193,21 +174,10 @@ const viewPaymentMethod = () => {
   router.push(`/shopper/cart/business/${route.params.id}/payment-method`);
 };
 
-// const getOrderBusiness = () => {
-//   const business = orders.value.find(
-//     (order: any) => order?.businesses_id == route.params.id
-//   );
-//   orderBusiness.value = business;
-//   // cartStore.items = orderBusiness.value?.order_items;
-// };
-
-onMounted(async () => {
+onIonViewDidEnter(async () => {
   if (cartStore.orders.length == 0) {
     await cartStore.loadFromStorage();
   }
-  // getOrderBusiness();
-  console.log("Total Cost:", totalCost.value);
-  console.log("Is minOrderAmountReached:", minOrderAmountReached.value);
 });
 </script>
 
@@ -255,6 +225,7 @@ ion-footer {
   width: 94px;
   height: 120px;
 }
+
 .segment-button {
   display: flex;
   align-items: center;

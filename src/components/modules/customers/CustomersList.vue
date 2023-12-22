@@ -9,11 +9,7 @@
         :username="customer?.name"
         customSize="40px"
       ></ProfileAvatar>
-      <IonLabel
-        @click="
-          $router.push(`/profile/company/customers/${customer.id}/profile`)
-        "
-      >
+      <IonLabel @click="viewCustomer(customer)">
         <p class="ion-no-margin">{{ customer.name }}</p>
         <IonText color="medium" class="font-medium">
           {{ customer.location || $t("profile.customers.locationUnknown") }}
@@ -137,6 +133,11 @@ const onConfirmDelete = async () => {
 const updateCustomer = (customer: Customer) => {
   router.push(`/profile/company/customers/${customer.id}/update-customer`);
 };
+
+const viewCustomer = (customer: Customer) => {
+  customerStore.selectedCustomer = customer;
+  router.push(`/profile/company/customers/${customer.id}/profile`)
+}
 </script>
 
 <style lang="scss" scoped>

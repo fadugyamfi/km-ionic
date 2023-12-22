@@ -28,15 +28,15 @@
       </ion-header>
     </IonHeader>
     <IonContent>
+      <CustomerProfileHeader :customer="customer" />
+      <ProfileSubHeader :customer="customer" />
+
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-      <section v-if="!fetching">
-        <CustomerProfileHeader :customer="customer" />
-        <ProfileSubHeader :customer="customer" />
-        <CustomerOrderHistory :orders="orders" />
-        <CustomerCredit :credits="credits" />
-      </section>
+
+      <CustomerOrderHistory :orders="orders" />
+      <CustomerCredit :credits="credits" />
     </IonContent>
   </ion-page>
 </template>
@@ -71,24 +71,30 @@ import { useRoute } from "vue-router";
 
 const order = ref([]);
 const customer = ref<Customer>();
-// const orders = ref<Order[]>();
+const userStore = useUserStore();
+const customerStore = useCustomerStore();
 
 const route = useRoute();
 
 const fetching = ref(false);
 
-const orders = computed(() => useCustomerStore().orders.splice(0, 3));
-const credits = computed(() => useCustomerStore().creditPayments.splice(0, 3));
+const orders = computed(() => customerStore.orders.splice(0, 3));
+const credits = computed(() => customerStore.creditPayments.splice(0, 3));
 
 const fetchCustomer = async () => {
   fetching.value = true;
-  const userStore = useUserStore();
-  const customerStore = useCustomerStore();
 
-  customer.value = await customerStore.getCustomer(
-    userStore.activeBusiness as Business,
-    route.params.id
-  ) as Customer;
+  if( customerStore.selectedCustomer ) {
+    customer.value = customerStore.selectedCustomer;
+  }
+
+  else {
+    customer.value = await customerStore.getCustomer(
+      userStore.activeBusiness as Business,
+      route.params.id
+    ) as Customer;
+  }
+
   fetching.value = false;
 };
 
@@ -96,7 +102,6 @@ const fetchCustomerOrders = async () => {
   try {
     fetching.value = true;
     const customer_id = route.params.id;
-    const customerStore = useCustomerStore();
     await customerStore.receivedOrders(customer_id);
   } catch (error) {
     handleAxiosRequestError(error);
@@ -109,7 +114,6 @@ const fetchCustomerCredits = async () => {
   try {
     fetching.value = true;
     const customer_id = route.params.id;
-    const customerStore = useCustomerStore();
     await customerStore.fetchCustomerCredits(customer_id);
   } catch (error) {
     handleAxiosRequestError(error);

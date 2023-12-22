@@ -61,7 +61,7 @@
         </IonItem>
       </IonList>
 
-    
+
     <IonCard>
     <section
       class="d-flex ion-justify-content-between ion-align-items-center"
@@ -135,7 +135,8 @@ import {
   IonIcon,
   IonFooter,
   IonText,
-  IonCard
+  IonCard,
+onIonViewDidEnter
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
@@ -265,19 +266,10 @@ const totalWithDelivery = computed(() => {
   return totalCost.value + deliveryFee.value;
 });
 
-onMounted(async () => {
+onIonViewDidEnter(async () => {
   if (cartStore.orders.length == 0) {
     await cartStore.loadFromStorage();
   }
-  // getOrderBusiness();
-  onMounted(async () => {
-  if (cartStore.orders.length == 0) {
-    await cartStore.loadFromStorage();
-  }
-  // getOrderBusiness();
-  console.log("Total Cost:", totalCost.value);
-  console.log("Is minOrderAmountReached:", minOrderAmountReached.value);
-});
 });
 </script>
 

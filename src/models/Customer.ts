@@ -5,8 +5,10 @@ import {
 } from "@/utilities/Types";
 import Currency from "./Currency";
 import Tag from "./Tag";
+import User from "./User";
 
 export default class Customer {
+
   public id?: number | string;
   public name?: string;
   public location: NullableString = null;
@@ -27,6 +29,7 @@ export default class Customer {
   public deliveryTime?: string;
   public business_types_id?: number | string;
   public tags?: Tag[];
+  public _business_owner?: User;
 
   constructor(data: object | null) {
     Object.assign(this, data);
@@ -38,6 +41,14 @@ export default class Customer {
 
   set currency(value: any) {
     this._currency = new Currency(value);
+  }
+
+  get business_owner(): User | undefined {
+    return this._business_owner;
+  }
+
+  set business_owner(value: any) {
+    this._business_owner = new User(value);
   }
 
   getInitials(length: number = 3) {

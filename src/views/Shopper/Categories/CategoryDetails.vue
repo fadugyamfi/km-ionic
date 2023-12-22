@@ -23,7 +23,7 @@
             <section v-if="fetching" class="ion-text-center d-flex ion-justify-content-center ion-padding">
                 <IonSpinner name="crescent" ></IonSpinner>
             </section>
-            <IonGrid v-if="!fetching">
+            <IonGrid v-else>
                 <IonRow>
                     <IonCol size="6" v-for="product in products" :key="product.id">
                         <ProductCard :product="product" :showDescription="false"></ProductCard>
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonList, IonItem, IonLabel, IonSpinner, IonGrid, IonCol, IonRow } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonList, IonItem, IonLabel, IonSpinner, IonGrid, IonCol, IonRow, onIonViewDidEnter, onIonViewWillEnter } from '@ionic/vue';
 import NotificationButton from '@/components/notifications/NotificationButton.vue';
 import ProductCategory from '@/models/ProductCategory';
 import Product from '@/models/Product';
@@ -50,10 +50,13 @@ const category = ref<ProductCategory|null>();
 const products = ref<Product[]>([]);
 const fetching = ref(false);
 
-onMounted(async () => {
-    fetching.value = true;
+onIonViewWillEnter(async () => {
     category.value = await productCategoryStore.getCategory( +route.params.id );
-    products.value = await productCategoryStore.fetchCategoryProducts(category.value);
+})
+
+onIonViewDidEnter(async () => {
+    fetching.value = true;
+    products.value = await productCategoryStore.fetchCategoryProducts(category.value as ProductCategory);
     fetching.value = false;
 });
 </script>

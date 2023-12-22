@@ -2,24 +2,24 @@
   <ion-page>
     <ShopperHeader :show-search="true"></ShopperHeader>
 
-    <ion-content :fullscreen="true">
+    <ion-content>
       <CategoryPills></CategoryPills>
 
       <PromoSpace></PromoSpace>
 
-      <Promotions
+      <!-- <Promotions
         v-for="promotion in promotions"
         :key="promotion.id"
         :promotion="promotion"
-      ></Promotions>
+      ></Promotions> -->
 
-      <TopCategories></TopCategories>
+      <TopCategories v-show="viewLoaded"></TopCategories>
 
       <!-- <TopBrands></TopBrands> -->
 
-      <RecentlyViewedProducts></RecentlyViewedProducts>
+      <RecentlyViewedProducts v-show="viewLoaded"></RecentlyViewedProducts>
 
-      <TrendingProducts></TrendingProducts>
+      <TrendingProducts v-show="viewLoaded"></TrendingProducts>
 
       <!-- <SuppliersNearYou></SuppliersNearYou> -->
 
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent } from "@ionic/vue";
+import { IonPage, IonContent, onIonViewDidEnter } from "@ionic/vue";
 import { onMounted, ref } from "vue";
 import ShopperHeader from "@/components/layout/ShopperHeader.vue";
 import SuppliersNearYou from "@/views/Shopper/Home/SuppliersNearYou.vue";
@@ -47,15 +47,18 @@ import { usePromotionStore } from "@/stores/PromotionStore";
 import TrendingProducts from "./TrendingProducts.vue";
 
 const promotions = ref<Promotion[]>([]);
+const viewLoaded = ref(false);
 
 const fetchPromotions = async () => {
   const promotionStore = usePromotionStore();
   promotions.value = await promotionStore.getPromotions();
 };
 
-onMounted(() => {
+onIonViewDidEnter(() => {
+  viewLoaded.value = true;
   fetchPromotions();
-});
+})
+
 </script>
 
 <style lang="scss">

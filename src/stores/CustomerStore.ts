@@ -17,6 +17,7 @@ export const useCustomerStore = defineStore("customer", {
     orders: [] as Order[],
     creditPayments: [] as any,
     meta: {},
+    selectedCustomer: null as Customer | null
   }),
   actions: {
     async getBusinessCustomers(

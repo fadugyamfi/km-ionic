@@ -261,6 +261,8 @@ export default defineComponent({
     },
 
     async fetchRecentSales() {
+      if( this.recentSales.length > 0 ) return;
+
       this.fetchingHistory = true;
       this.recentSales = await this.saleStore.fetchSales({
         limit: 5,
@@ -271,6 +273,10 @@ export default defineComponent({
     },
 
     async fetchBusinessSummary() {
+      if( this.businessStore.businessSummary && this.businessStore.businessSummary.business?.id == this.userStore.activeBusiness?.id ) {
+        return;
+      }
+
       this.fetchingSummary = true;
       await this.businessStore.getBusinessSummary(
         this.userStore.activeBusiness as Business,
@@ -299,7 +305,7 @@ export default defineComponent({
     },
   },
 
-  mounted() {
+  ionViewDidEnter() {
     this.fetchRecentSales();
     this.fetchBusinessSummary();
   },

@@ -8,7 +8,11 @@
             </IonText> -->
         </header>
 
-        <Swiper :slides-per-view="2">
+        <section v-if="fetching">
+            <ProductsLoadingSkeletons></ProductsLoadingSkeletons>
+        </section>
+
+        <Swiper v-else :slides-per-view="2">
             <SwiperSlide v-for="product of products" :key="product.id">
                 <ProductCard :product="product" :show-description="false"></ProductCard>
             </SwiperSlide>
@@ -25,6 +29,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import { IonText } from '@ionic/vue';
 import ProductCard from '@/components/cards/ProductCard.vue';
 import AppStorage from '@/stores/AppStorage';
+import ProductsLoadingSkeletons from '../../../components/layout/ProductsLoadingSkeletons.vue';
 
 const storage = new AppStorage();
 const RECENTLY_VIEWED = 'kola.recently-viewed';
@@ -32,10 +37,11 @@ const RECENTLY_VIEWED = 'kola.recently-viewed';
 export default defineComponent({
     data() {
         return {
-            products: [] as Product[]
+            products: [] as Product[],
+            fetching: false
         };
     },
-    components: { Swiper, SwiperSlide, IonText, ProductCard },
+    components: { Swiper, SwiperSlide, IonText, ProductCard, ProductsLoadingSkeletons },
 
     computed: {
         ...mapStores( useProductStore )
@@ -47,15 +53,19 @@ export default defineComponent({
         },
 
         async fetchRecentlyViewedProducts() {
+            this.fetching = true;
             const products = await storage.get(RECENTLY_VIEWED);
 
             if( products ) {
                 this.products = products.map((el: object) => new Product(el));
+                this.fetching = false;
                 return;
             }
 
             this.products = await this.productStore.fetchRecentlyViewedProducts({ limit: 6 });
             storage.set(RECENTLY_VIEWED, this.products, 5, 'minutes');
+
+            this.fetching = false;
         }
     },
 

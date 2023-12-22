@@ -20,6 +20,7 @@ export const useOrderStore = defineStore("order", {
       editing: false,
       approving: false,
       cancelling: false,
+      selectedOrder: null as Order | null
     };
   },
 
@@ -36,7 +37,7 @@ export const useOrderStore = defineStore("order", {
       try {
         const params = {
           customer_id: userStore.activeBusiness?.id,
-          limit: 50,
+          limit: 25,
           ...options,
         };
         const response = await axios.get("/v2/orders", { params });
