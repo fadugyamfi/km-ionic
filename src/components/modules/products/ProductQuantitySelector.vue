@@ -96,7 +96,7 @@ export default defineComponent({
   ion-input {
     text-align: center;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 500;
     width: 30%;
     min-height: 32px !important;
     height: 32px;

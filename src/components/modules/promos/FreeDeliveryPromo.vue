@@ -40,7 +40,7 @@ export default defineComponent({
 <style scoped lang="scss">
 h4 {
     font-size: 1.1em;
-    font-weight: bold;
+    font-weight: 500;
     color: #000;
 }
 

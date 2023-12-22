@@ -233,7 +233,7 @@ export default defineComponent({
 
         .content {
             h6 {
-                font-weight: bold;
+                font-weight: 500;
                 font-size: 0.85em;
                 margin-bottom: 5px;
                 margin-top: 5px;
@@ -255,7 +255,7 @@ export default defineComponent({
 
         h6 {
             font-size: 0.8em;
-            font-weight: bold;
+            font-weight: 500;
             margin-bottom: 20px;
             margin-top: 0px;
             text-align: center;
@@ -266,7 +266,7 @@ export default defineComponent({
             --border-radius: 10px;
             --border-width: 1px;
             text-transform: none;
-            font-weight: bold;
+            font-weight: 500;
         }
     }
 }

@@ -6,9 +6,9 @@
         style="width: 120x; height: 150px"
       />
     </div>
-    <section class="ion-text-center" style="margin-bottom: 24px">
-      <h5><b>Your cart is empty</b></h5>
-      <p class="ion-margin-top" style="font-size: 0.88em; color: #74787c">
+    <section class="ion-text-center">
+      <h5 class="ion-no-margin fw-bold">Your cart is empty</h5>
+      <p class="description">
         Looks like you haven’t added anything to your cart yet. Add items to get
         started.
       </p>
@@ -42,4 +42,11 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.description {
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: 6px;
+  color: #74787c;
+}
+</style>

@@ -122,7 +122,7 @@ main {
     }
 
     .title-section {
-        font-weight: bold;
+        font-weight: 500;
 
         .price {
             text-align: right;

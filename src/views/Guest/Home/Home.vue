@@ -54,7 +54,7 @@ import TrendingProducts from "@/views/Guest/Home/TrendingProducts.vue";
     padding-bottom: 10px;
 
     h6 {
-      font-weight: bold;
+      font-weight: 500;
       font-size: 1em;
       margin: 0px;
     }

@@ -331,7 +331,7 @@ main {
     font-size: 0.8em;
   }
   .title-section {
-    font-weight: bold;
+    font-weight: 500;
     font-size: 1em;
 
     .price {

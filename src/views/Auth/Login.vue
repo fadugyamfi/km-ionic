@@ -147,7 +147,7 @@ export default defineComponent({
     padding-top: 5px;
 
     .forgot-pin-link {
-        font-weight: bold;
+        font-weight: 500;
         font-size: 0.9em;
     }
 }
@@ -159,7 +159,7 @@ export default defineComponent({
 }
 
 .login-prompt .trigger {
-    font-weight: bold;
+    font-weight: 500;
     color: #333;
 }
 
@@ -176,7 +176,7 @@ export default defineComponent({
     .otp-input-field {
         text-align: center;
         font-size: 1em;
-        font-weight: bold;
+        font-weight: 500;
         border-radius: 5px;
         border: solid 1px #d7d7d7;
         vertical-align: middle;
