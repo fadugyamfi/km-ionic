@@ -8,7 +8,11 @@
       </IonText> -->
     </header>
 
-    <IonGrid v-if="!fetching">
+    <section v-if="fetching">
+        <ProductsLoadingSkeletons></ProductsLoadingSkeletons>
+    </section>
+
+    <IonGrid v-else="!fetching">
       <IonRow>
         <IonCol size="6" v-for="product in products" :key="product?.id">
           <GuestProductCard
@@ -29,8 +33,10 @@ import GuestProductCard from "../../../components/cards/GuestProductCard.vue";
 import Product from "../../../models/Product";
 import { useProductStore } from "../../../stores/ProductStore";
 import AppStorage from "../../../stores/AppStorage";
+import ProductsLoadingSkeletons from "../../../components/layout/ProductsLoadingSkeletons.vue";
 
-const KOLA_TRENDING = "kola.guest-trending";
+const storage = new AppStorage();
+const KOLA_TRENDING = "kola.trending";
 
 export default defineComponent({
   data() {
@@ -44,12 +50,11 @@ export default defineComponent({
     ...mapStores(useProductStore ),
   },
 
-  components: {IonText, IonGrid, IonRow, IonCol, GuestProductCard },
+  components: { IonText, IonGrid, IonRow, IonCol, GuestProductCard, ProductsLoadingSkeletons },
 
   methods: {
     async fetchTrendingProducts() {
       this.fetching = true;
-      const storage = new AppStorage();
 
       const trendingProducts = await storage.get(KOLA_TRENDING);
 

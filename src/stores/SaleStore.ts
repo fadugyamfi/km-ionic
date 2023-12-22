@@ -11,6 +11,7 @@ import { useUserStore } from "./UserStore";
 import { formatDateMySQL, formatMySQLDateTime, handleAxiosRequestError } from "../utilities";
 import { SalePayment } from "../models/SalePayment";
 import Business from "../models/Business";
+import { useGeolocation } from "../composables/useGeolocation";
 
 const storage = new AppStorage();
 const KOLA_SALES = 'kola.sales';
@@ -76,8 +77,11 @@ export const useSaleStore = defineStore("sale", {
         },
 
         async recordSale(): Promise<Sale | null> {
+            const location = useGeolocation();
+
             this.newSale.update({
-                sale_ended_at: formatMySQLDateTime(new Date().toISOString())
+                sale_ended_at: formatMySQLDateTime(new Date().toISOString()),
+                gps_location: location.getCurrentLocation()
             })
 
             // Recreating the object here because JSON.stringify is removing the sale_items property

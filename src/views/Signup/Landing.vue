@@ -45,7 +45,7 @@
                 </IonCardContent>
             </IonCard>
 
-            <IonButton v-if="!loginDisabled" fill="clear" color="dark" expand="block" router-link="/auth/login" class="login-prompt">
+            <IonButton fill="clear" color="dark" expand="block" router-link="/auth/login" class="login-prompt">
                 {{ $t("signup.landing.alreadyHaveAnAccount") }}&nbsp;
                 <IonText color="primary" class="trigger">
                     {{ $t("signup.landing.logIn") }}
@@ -81,10 +81,11 @@ import { Ref, computed, ref } from 'vue';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/UserStore';
+import { useGeolocation } from '../../composables/useGeolocation';
 
 const userStore = useUserStore();
 const router = useRouter();
-let selectedOption: Ref<string | null> = ref(null);
+const selectedOption: Ref<string | null> = ref(null);
 const isOptionSelected = computed(() => selectedOption.value != null);
 const selectOption = (option: string) => selectedOption.value = option;
 
@@ -98,9 +99,11 @@ const redirectToSignup = () => {
     }
 }
 
-const loginDisabled = computed(() => {
-    return import.meta.env.VITE_LOGIN_DISABLED == 'true';
-})
+const geoLocation = useGeolocation();
+
+if( !geoLocation.hasPermission() ) {
+  geoLocation.requestPermissions();
+}
 </script>
 
 <style scoped lang="css">
