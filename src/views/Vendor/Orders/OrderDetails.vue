@@ -107,8 +107,14 @@ export default defineComponent({
     }
   },
 
-  async mounted() {
-    await this.loadOrder();
+  ionViewWillEnter() {
+    this.order = this.orderStore.selectedOrder;
+  },
+
+  async ionViewDidEnter() {
+    if( !this.order ) {
+      await this.loadOrder();
+    }
   },
 
   computed: {
@@ -119,9 +125,6 @@ export default defineComponent({
     async loadOrder() {
       this.loading = true;
       const order_id = +this.$route.params.id;
-
-      // retrieve the currently loaded order info from the history if available
-      this.order = this.orderStore.orders.find((o) => o.id == order_id) as Order;
 
       // fetch full order info from backend to overwrite the basic data
       try {

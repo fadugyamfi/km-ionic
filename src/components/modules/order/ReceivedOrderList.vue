@@ -160,6 +160,7 @@ export default defineComponent({
     },
 
     viewDetails(order: Order) {
+      this.orderStore.selectedOrder = order;
       this.closeMenu();
       this.$emit('view-details', order);
       this.$router.push(`/vendor/orders/${order.id}`);

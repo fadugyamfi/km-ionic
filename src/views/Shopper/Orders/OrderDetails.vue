@@ -88,8 +88,13 @@ export default defineComponent({
     }
   },
 
-  async mounted() {
-    await this.loadOrder();
+  ionViewWillEnter() {
+    // retrieve the currently loaded order info from the history if available
+    this.order = this.orderStore.selectedOrder;
+  },
+
+  async ionViewDidEnter() {
+    // await this.loadFullOrderDetails();
   },
 
   computed: {
@@ -105,12 +110,9 @@ export default defineComponent({
   },
 
   methods: {
-    async loadOrder() {
-      this.loading = true;
+    async loadFullOrderDetails() {
+      // this.loading = true;
       const order_id = +this.$route.params.id;
-
-      // retrieve the currently loaded order info from the history if available
-      this.order = this.orderStore.orders.find((o) => o.id == order_id) as Order;
 
       // fetch full order info from backend to overwrite the basic data
       try {
@@ -118,7 +120,7 @@ export default defineComponent({
       } catch (error) {
         handleAxiosRequestError(error);
       } finally {
-        this.loading = false;
+        // this.loading = false;
       }
     }
   }

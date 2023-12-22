@@ -169,9 +169,11 @@ export default defineComponent({
     },
 
     viewDetails(order: Order) {
+      this.orderStore.selectedOrder = order;
       this.$emit("view-details", order);
       this.$router.push(`/shopper/orders/${order.id}`);
     },
+
     async reOrder(order: Order) {
       this.closeMenu();
       const toastStore = useToastStore();
@@ -194,23 +196,19 @@ export default defineComponent({
         toastStore.unblockUI();
       }
     },
+
     editOrder(order: Order) {
+      this.orderStore.selectedOrder = order;
       this.$router.push(`/shopper/orders/${order.id}/edit-order`);
       this.closeMenu();
     },
+
     canUpdate(order: Order): Boolean {
-      if (order.order_status_id == 1 || order.order_status_id == 2) {
-        return true;
-      } else {
-        return false;
-      }
+      return order.order_status_id == 1 || order.order_status_id == 2;
     },
+
     canReorder(order: Order): Boolean {
-      if (order.order_status_id && order.order_status_id >= 7) {
-        return true;
-      } else {
-        return false;
-      }
+      return order.order_status_id as number >= 7;
     },
   },
 });
