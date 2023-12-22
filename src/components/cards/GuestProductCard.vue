@@ -91,7 +91,9 @@
         >
           <p class="ion-no-margin">{{ product?.product_description }}</p>
         </section>
+        <IonRippleEffect></IonRippleEffect>
       </IonCardHeader>
+
     </ion-card>
     <LoginRequiredSheet
       :isOpen="showFilterSheet"
@@ -111,6 +113,7 @@ import {
   IonCardTitle,
   IonCheckbox,
   IonIcon,
+  IonRippleEffect,
   IonSkeletonText,
 IonText,
 } from "@ionic/vue";
@@ -206,7 +209,8 @@ export default defineComponent({
     FavoriteButton,
     IonCheckbox,
     LoginRequiredSheet,
-    IonText
+    IonText,
+    IonRippleEffect
 },
 
   methods: {
@@ -258,6 +262,8 @@ export default defineComponent({
     width: 96%;
     min-width: 148px;
     margin: 0px auto;
+    position: relative;
+    overflow: hidden;
 
     .product-image {
       height: 100px;

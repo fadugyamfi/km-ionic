@@ -7,7 +7,7 @@
             <IonBackButton defaultHref="/guest/home" :icon="close"></IonBackButton>
           </IonButtons>
 
-          <IonTitle size="small">
+          <IonTitle size="small" class="font-medium">
             {{ $t("shopper.productDetails.productDetails") }}
           </IonTitle>
 
@@ -51,7 +51,7 @@
             {{
               Filters.currency(
                 Number(product?.product_price),
-                String(product?.currency?.symbol)
+                String(product?.currency?.symbol || 'GHS')
               )
             }}
           </span>
@@ -60,7 +60,7 @@
             {{
               Filters.currency(
                 Number(product?.sale_price),
-                String(product?.currency?.symbol)
+                String(product?.currency?.symbol || 'GHS')
               )
             }}
           </IonText>
@@ -70,7 +70,7 @@
             {{
               Filters.currency(
                 Number(product?.retail_price),
-                String(product?.currency?.symbol)
+                String(product?.currency?.symbol || 'GHS')
               )
             }}
           </IonText>

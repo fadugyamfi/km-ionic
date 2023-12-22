@@ -119,6 +119,7 @@ export const useProductCategoryStore = defineStore("productCategory", {
     },
     async fetchGuestCategoryProducts(
       category: ProductCategory,
+      options: { [key:string]: unknown } = {},
       page = 1,
       limit = 50
     ): Promise<Product[]> {
@@ -128,6 +129,7 @@ export const useProductCategoryStore = defineStore("productCategory", {
           limit,
           page,
           sort: "latest",
+          ...options
         };
 
         const response = await axios.get("/v2/guest/products", { params });

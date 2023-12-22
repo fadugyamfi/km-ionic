@@ -1,6 +1,8 @@
 <template>
   <section class="product-card">
     <ion-card @click="doAction()">
+      <IonRippleEffect></IonRippleEffect>
+
       <FavoriteButton
         v-if="showAddToFavorites"
         class="favorite-button"
@@ -113,6 +115,7 @@ import {
   IonCardTitle,
   IonCheckbox,
   IonIcon,
+  IonRippleEffect,
   IonSkeletonText,
 IonText,
 } from "@ionic/vue";
@@ -205,7 +208,8 @@ export default defineComponent({
     IonSkeletonText,
     FavoriteButton,
     IonCheckbox,
-    IonText
+    IonText,
+    IonRippleEffect
 },
 
   methods: {
@@ -261,6 +265,8 @@ export default defineComponent({
     width: 96%;
     min-width: 148px;
     margin: 0px auto;
+    position: relative;
+    overflow: hidden;
 
     .product-image {
       height: 100px;

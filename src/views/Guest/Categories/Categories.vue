@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonLabel, IonTitle } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonLabel, IonTitle, onIonViewDidEnter } from '@ionic/vue';
 import GuestProductCategoryList from '@/components/lists/GuestProductCategoryList.vue';
 import { ref, onMounted } from 'vue';
 import ProductCategory from '@/models/ProductCategory';
@@ -39,6 +39,5 @@ async function fetchProductCategories() {
   categories.value = await productCategoryStore.getCategories();
 }
 
-onMounted(() => fetchProductCategories())
+onIonViewDidEnter(() => fetchProductCategories())
 </script>
-@/stores/ProductCategoryStore
