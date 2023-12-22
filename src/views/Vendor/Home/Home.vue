@@ -33,7 +33,7 @@ import GrowYourStoreInfo from './GrowYourStoreInfo.vue';
     font-size: 0.9em;
 
     h6 {
-      font-weight: bold;
+      font-weight: 500;
       font-size: 0.9em;
       margin: 0px;
     }

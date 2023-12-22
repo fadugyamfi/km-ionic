@@ -149,7 +149,7 @@ main {
 
     .title-section {
         font-size: 0.8em;
-        font-weight: bold;
+        font-weight: 500;
 
         .price {
             text-align: right;

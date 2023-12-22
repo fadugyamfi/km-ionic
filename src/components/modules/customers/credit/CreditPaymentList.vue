@@ -249,7 +249,7 @@ export default defineComponent({
   }
 
   ion-item ion-label p {
-    font-weight: bold;
+    font-weight: 500;
     color: #111;
     margin-bottom: 5px;
   }

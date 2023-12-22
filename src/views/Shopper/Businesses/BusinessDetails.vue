@@ -153,7 +153,7 @@ main {
   }
 
   .title-section {
-    font-weight: bold;
+    font-weight: 500;
 
     .price {
       text-align: right;
@@ -217,7 +217,7 @@ main {
 
       .initials {
         font-size: 48px;
-        font-weight: bold;
+        font-weight: 500;
       }
     }
   }

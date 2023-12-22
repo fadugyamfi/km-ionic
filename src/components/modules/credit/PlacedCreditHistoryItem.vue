@@ -88,7 +88,7 @@ const openMenu = (event: CustomEvent) => {
     padding-bottom: 10px;
 
     h6 {
-      font-weight: bold;
+      font-weight: 500;
       font-size: 1em;
       margin: 0px;
     }
@@ -134,7 +134,7 @@ const openMenu = (event: CustomEvent) => {
   }
 
   ion-item ion-label p {
-    font-weight: bold;
+    font-weight: 500;
     color: #111;
     margin-bottom: 5px;
   }

@@ -35,7 +35,7 @@
         <section
           class="d-flex ion-align-items-center ion-justify-content-between"
         >
-          <p class="product-title fw-semibold line-clamp">
+          <p class="product-title fw-bold line-clamp">
             {{ product?.product_name }}
             <span v-if="product?.is_on_sale">
               - {{ product?.discountApplied }}% {{ $t('general.discount') }}
@@ -66,12 +66,12 @@
                 </s>
               </span>
 
-              <IonText class="fw-semibold" color="danger">
+              <IonText class="fw-bold" color="danger">
                   {{ Filters.currency(Number(product?.sale_price), String(product?.currency?.symbol || 'GHS') ) }}
               </IonText>
             </section>
 
-            <section v-else class="fw-semibold">
+            <section v-else class="fw-bold">
               {{
                 Filters.currency(
                   Number(product?.product_price),
@@ -276,7 +276,7 @@ export default defineComponent({
 
       .product-title {
         font-size: 0.95em;
-        font-weight: 600;
+        font-weight: 500;
         margin-top: 0px;
         margin-bottom: 5px;
         text-overflow: ellipsis;
