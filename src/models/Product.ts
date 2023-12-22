@@ -30,7 +30,19 @@ export default class Product {
     public is_on_sale: number = 0;
     public sale_price: number = 0;
 
-    constructor(data: object) {
+    constructor(data: any) {
+        if( data._business ) {
+            data.business = data._business;
+        }
+
+        if( data._tags ) {
+            data.tags = data._tags;
+        }
+
+        if( data._currency ) {
+            data.currency = data._currency;
+        }
+
         Object.assign(this, data);
     }
 

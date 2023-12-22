@@ -1,31 +1,33 @@
 <template>
   <ion-page>
     <section class="ion-padding">
-      <CartBusinessHeader />
+      <CartBusinessHeader>
+        <template v-slot:toolbars>
+          <section style="padding-top: 10px;">
+            <IonSegment value="personal" mode="ios" v-model="viewing">
+              <IonSegmentButton value="cart">
+                <div class="segment-button">
+                  <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">
+                    Cart
+                  </IonLabel>
+                  <IonBadge>{{ cartStore.orders.length }}</IonBadge>
+                </div>
+              </IonSegmentButton>
+              <IonSegmentButton value="saved">
+                <ion-label>Saved</ion-label>
+              </IonSegmentButton>
+            </IonSegment>
+          </section>
+        </template>
+      </CartBusinessHeader>
     </section>
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
-      <IonSegment value="personal" mode="ios" v-model="viewing">
-        <IonSegmentButton value="cart">
-          <div class="segment-button">
-            <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }"
-              >Cart</IonLabel
-            >
-            <IonBadge>{{ cartStore.orders.length }}</IonBadge>
-          </div>
-        </IonSegmentButton>
-        <IonSegmentButton value="saved">
-          <ion-label>Saved</ion-label>
-        </IonSegmentButton>
-      </IonSegment>
+
 
       <EmptyCart v-if="cartStore.orders.length === 0"></EmptyCart>
       <IonList v-else>
-        <OrderView
-          v-for="order in cartStore.orders"
-          :order="order"
-          :key="order.businesses_id"
-        ></OrderView>
+        <OrderView v-for="order in cartStore.orders" :order="order" :key="order.businesses_id"></OrderView>
       </IonList>
     </ion-content>
   </ion-page>
@@ -41,6 +43,7 @@ import {
   IonSegment,
   IonPage,
   IonContent,
+  onIonViewWillEnter,
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import CartBusinessHeader from "@/components/header/CartBusinessHeader.vue";
@@ -60,11 +63,10 @@ const removeFromCart = (item: CartItem, index: number) => {
   cartStore.removeAtIndex(index);
 };
 
-onMounted(() => {
+onIonViewWillEnter(() => {
   if ((cartStore.orders.length == 0)) {
     cartStore.loadFromStorage();
   }
-  console.log('busness')
 });
 </script>
 
@@ -76,6 +78,7 @@ ion-text.space {
 ion-segment {
   margin-bottom: 20px;
 }
+
 .item-row {
   align-items: center;
 }
@@ -113,6 +116,7 @@ p {
   display: flex;
   align-items: center;
 }
+
 ion-badge {
   --background: rgba(245, 170, 41, 0.38);
   --color: #344054;

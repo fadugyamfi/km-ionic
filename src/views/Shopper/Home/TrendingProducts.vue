@@ -9,19 +9,10 @@
     </header>
 
     <section v-if="fetching">
-        <IonGrid>
-            <IonRow>
-                <IonCol>
-                    <IonSkeletonText class="skeleton-card" :animated="true"></IonSkeletonText>
-                </IonCol>
-                <IonCol>
-                    <IonSkeletonText class="skeleton-card" :animated="true"></IonSkeletonText>
-                </IonCol>
-            </IonRow>
-        </IonGrid>
+        <ProductsLoadingSkeletons></ProductsLoadingSkeletons>
     </section>
 
-    <IonGrid v-if="!fetching">
+    <IonGrid v-else>
         <IonRow>
             <IonCol size="6" v-for="product in products" :key="product?.id">
                 <ProductCard :product="product" :showDescription="false"></ProductCard>
@@ -40,6 +31,7 @@ import ProductCard from "../../../components/cards/ProductCard.vue";
 import Product from "../../../models/Product";
 import { useProductStore } from "../../../stores/ProductStore";
 import AppStorage from "../../../stores/AppStorage";
+import ProductsLoadingSkeletons from "../../../components/layout/ProductsLoadingSkeletons.vue";
 
 const KOLA_TRENDING = "kola.trending";
 
@@ -55,7 +47,7 @@ export default defineComponent({
     ...mapStores(useProductStore ),
   },
 
-  components: { ProductCategoryList, IonText, IonGrid, IonRow, IonCol, ProductCard, IonSkeletonText, IonButton },
+  components: { ProductCategoryList, IonText, IonGrid, IonRow, IonCol, ProductCard, IonSkeletonText, IonButton, ProductsLoadingSkeletons },
 
   methods: {
     async fetchTrendingProducts() {
@@ -92,12 +84,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.skeleton-card {
-    width: 100%;
-    height: 200px;
-    border-radius: 10px;
-}
-
 ion-button {
   margin: 0px;
   text-transform: none;

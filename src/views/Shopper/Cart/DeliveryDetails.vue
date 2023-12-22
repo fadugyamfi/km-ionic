@@ -92,6 +92,7 @@ import {
   IonPage,
   IonText,
   IonInput,
+onIonViewDidEnter,
 } from "@ionic/vue";
 import { navigateOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
@@ -187,7 +188,7 @@ const getLocation = async () => {
   }
 };
 
-onMounted(async () => {
+onIonViewDidEnter(async () => {
   const cartStore = useCartStore();
   if (cartStore.orders.length == 0) {
     await cartStore.loadFromStorage();

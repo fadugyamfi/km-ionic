@@ -129,8 +129,8 @@
           name="payment-method"
           @ion-change="form.validateSelectInput($event)"
         >
-          <IonSelectOption value="1"> Cash </IonSelectOption>
-          <IonSelectOption value="2"> Credit </IonSelectOption>
+          <IonSelectOption :value="1"> Cash </IonSelectOption>
+          <IonSelectOption :value="2"> Credit </IonSelectOption>
         </IonSelect>
         <IonFooter class="ion-padding-top ion-no-border">
           <KolaYellowButton
@@ -189,6 +189,8 @@ import Business from "@/models/Business";
 
 const toastStore = useToastStore();
 const businessStore = useBusinessStore();
+const customerStore = useCustomerStore();
+const userStore = useUserStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -225,7 +227,7 @@ const formValid = computed(() => {
 const updateCustomer = async () => {
   try {
     toastStore.blockUI("Hold On As We Update Your Customer");
-    const customerStore = useCustomerStore();
+
     const customer = await customerStore.updateCustomer(
       form.fields,
       route.params.id
@@ -265,19 +267,23 @@ const getLocation = async () => {
 };
 const fetchCustomer = async () => {
   fetching.value = true;
-  const userStore = useUserStore();
 
-  const customerStore = useCustomerStore();
-  customer.value = (await customerStore.getCustomer(
-    userStore.activeBusiness as Business,
-    route.params.id
-  )) as Customer;
+  if( customerStore.selectedCustomer ) {
+    customer.value = customerStore.selectedCustomer;
+  } else {
+    customer.value = (await customerStore.getCustomer(
+      userStore.activeBusiness as Business,
+      route.params.id
+    )) as Customer;
+  }
+
   fetching.value = false;
   form.fields.name = customer.value?.name;
   form.fields.location = customer.value?.location;
   form.fields.phone_number = customer.value?.phone_number;
   form.fields.business_types_id = customer.value?.business_types_id;
-  form.fields.business_owner_phone = customer.value?.business_owner_phone;
+  form.fields.business_owner_phone = customer.value?.business_owner?.phone_number;
+  form.fields.business_owner_name = customer.value?.business_owner?.name;
 };
 const getPaymentModes = async () => {
   try {
