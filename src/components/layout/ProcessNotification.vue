@@ -43,7 +43,7 @@ ion-backdrop {
     margin-top: -80px;
     font-size: 0.9em;
     color: #fff;
-    font-weight: bold;
+    font-weight: 500;
     text-align: center;
     display: flex;
     flex-direction: column;

@@ -119,7 +119,7 @@ ion-card ion-card-content {
 }
 
 .content h6 {
-  font-weight: bold;
+  font-weight: 500;
   font-size: 1em;
   margin-bottom: 5px;
   margin-top: 5px;
@@ -136,7 +136,7 @@ ion-card ion-card-content {
 
 .intro-btn {
   text-transform: none;
-  font-weight: bold;
+  font-weight: 500;
   font-size: 0.85em;
 }
 

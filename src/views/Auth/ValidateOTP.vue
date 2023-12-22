@@ -152,7 +152,7 @@ const updateUserInfo = async () => {
 .otp-input-field {
   text-align: center;
   font-size: 1em;
-  font-weight: bold;
+  font-weight: 500;
   border-radius: 10px;
   border: solid 1px #d7d7d7;
   vertical-align: middle;

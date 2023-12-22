@@ -35,7 +35,7 @@ section {
 
     h4 {
         font-size: 1em;
-        font-weight: bold;
+        font-weight: 500;
     }
 
     p {

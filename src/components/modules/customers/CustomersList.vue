@@ -168,7 +168,7 @@ const updateCustomer = (customer: Customer) => {
   }
 
   ion-item ion-label p {
-    font-weight: bold;
+    font-weight: 500;
     color: #111;
   }
 

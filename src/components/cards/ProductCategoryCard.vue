@@ -63,7 +63,7 @@ export default defineComponent({
 
             ion-card-title {
                 font-size: 0.9em;
-                font-weight: bold;
+                font-weight: 500;
                 margin-bottom: 0px;
                 text-wrap: nowrap;
                 text-overflow: ellipsis;

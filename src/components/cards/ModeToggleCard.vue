@@ -72,7 +72,7 @@ ion-card {
 
         ion-card-title {
             font-size: 1em;
-            font-weight: bold;
+            font-weight: 500;
             border-bottom: solid 1px #F1F1F1;
             padding-top: 5px;
             padding-bottom: 10px;
