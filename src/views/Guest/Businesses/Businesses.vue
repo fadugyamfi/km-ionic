@@ -93,7 +93,7 @@ onMounted(() => fetchBusinesses());
 
 <style scoped>
 .no-result {
-  font-weight: bold;
+  font-weight: 500;
   text-align: center;
   font-size: 16px;
   padding: 50px;

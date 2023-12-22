@@ -127,7 +127,7 @@ export default defineComponent({
             }
 
             h6 {
-                font-weight: bold;
+                font-weight: 500;
                 font-size: 1em;
                 margin-bottom: 5px;
             }

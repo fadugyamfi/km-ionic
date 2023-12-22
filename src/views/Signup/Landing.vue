@@ -142,7 +142,7 @@ h4 {
 }
 
 .login-prompt .trigger {
-    font-weight: bold;
+    font-weight: 500;
     color: #333;
 }
 </style>
