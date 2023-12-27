@@ -5,6 +5,11 @@ import { useToastStore } from "./ToastStore";
 import { handleAxiosRequestError } from "../utilities";
 import { FavoritedProduct } from "../models/types";
 import { useUserStore } from "./UserStore";
+import AppStorage from "./AppStorage";
+
+const storage = new AppStorage();
+const KOLA_TRENDING = 'kola.trending';
+const RECENTLY_VIEWED = 'kola.recently-viewed';
 
 export const useProductStore = defineStore("product", {
   state: () => {
@@ -13,6 +18,7 @@ export const useProductStore = defineStore("product", {
       selectedProduct: null as Product | null,
       recentlyViewedProducts: [] as Product[],
       searchTerm: "",
+      trendingProducts: [] as Product[]
     };
   },
 
@@ -74,6 +80,12 @@ export const useProductStore = defineStore("product", {
     },
 
     async fetchRecentlyViewedProducts(options = {}): Promise<Product[]> {
+      const products = await storage.get(RECENTLY_VIEWED);
+
+      if( products ) {
+          return products.map((el: object) => new Product(el));
+      }
+
       const params = {
         ...options,
       };
@@ -85,6 +97,8 @@ export const useProductStore = defineStore("product", {
         this.recentlyViewedProducts = response.data.data.map(
           (el: { product: any }) => new Product(el.product)
         );
+
+        storage.set(RECENTLY_VIEWED, this.products, 15, 'minutes');
       } catch (error) {
         handleAxiosRequestError(error);
       }
@@ -167,6 +181,24 @@ export const useProductStore = defineStore("product", {
         handleAxiosRequestError(error);
         product.addToFavorites();
       }
+    },
+
+    async fetchTrendingProducts(): Promise<Product[]> {
+      const userStore = useUserStore();
+      const trendingProducts = await storage.get(KOLA_TRENDING);
+
+      if (trendingProducts) {
+        this.trendingProducts = trendingProducts.map((el: object) => new Product(el));
+      } else {
+        if( userStore.isInGuestMode() ) {
+          this.trendingProducts = await this.fetchGuestProducts({ sort: 'top_selling', limit: 100 })
+        } else {
+          this.trendingProducts = await this.fetchProducts({ sort: 'top_selling', limit: 100 });
+        }
+        await storage.set(KOLA_TRENDING, this.products, 3, 'days')
+      }
+
+      return this.trendingProducts;
     },
   },
 });

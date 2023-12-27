@@ -31,13 +31,8 @@
             <section v-if="fetching" class="ion-text-center d-flex ion-justify-content-center ion-padding">
                 <IonSpinner name="crescent"></IonSpinner>
             </section>
-            <IonGrid v-else>
-                <IonRow>
-                    <IonCol size="6" v-for="product in products" :key="product.id">
-                        <ProductCard :product="product" :showDescription="false"></ProductCard>
-                    </IonCol>
-                </IonRow>
-            </IonGrid>
+
+            <ProductGridList v-else :products="products"></ProductGridList>
         </ion-content>
     </ion-page>
 </template>
@@ -51,6 +46,7 @@ import { ref, onMounted } from 'vue';
 import { useProductCategoryStore } from '@/stores/ProductCategoryStore';
 import { useRoute } from 'vue-router';
 import ProductCard from '@/components/cards/ProductCard.vue';
+import ProductGridList from '../../../components/modules/products/ProductGridList.vue';
 
 const productCategoryStore = useProductCategoryStore();
 const route = useRoute();

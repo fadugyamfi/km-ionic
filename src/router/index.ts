@@ -10,12 +10,17 @@ import { GuestModeRoutes } from "./guest.routes";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    redirect: "/guest/home",
+    redirect: "/preloading",
   },
   {
     name: "Onboarding",
     path: "/onboarding",
     component: () => import("@/views/Onboarding/Onboarding.vue"),
+  },
+  {
+    name: "Preloading",
+    path: "/preloading",
+    component: () => import("@/views/Onboarding/Loading.vue"),
   },
   {
     name: "Login",

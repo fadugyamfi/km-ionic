@@ -68,12 +68,10 @@ export const useProductCategoryStore = defineStore("productCategory", {
 
     async getCategories(): Promise<ProductCategory[]> {
       const userStore = useUserStore();
-      if (this.categories.length == 0) {
-        if (!userStore.isInGuestMode) {
-          await this.fetchCategories();
-        } else {
-          await this.fetchGuestCategories();
-        }
+      if (!userStore.isInGuestMode) {
+        await this.fetchCategories();
+      } else {
+        await this.fetchGuestCategories();
       }
 
       return this.categories;

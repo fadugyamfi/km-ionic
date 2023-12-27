@@ -10,6 +10,7 @@ import { useUserStore } from "./UserStore";
 
 const storage = new AppStorage();
 const KOLA_PROMOTIONS = "kola.promotions";
+const KOLA_PROMOTION_ITEMS = "kola.promotion-items";
 const userStore = useUserStore();
 
 export const usePromotionStore = defineStore("promotion", {
@@ -135,6 +136,12 @@ export const usePromotionStore = defineStore("promotion", {
     async getPromotionItems(
       promotionId: number
     ): Promise<PromotionItem[] | null> {
+      const storedItems = await this.loadItemsFromStorage(promotionId);
+
+      if( storedItems && storedItems.length > 0 ) {
+        return storedItems;
+      }
+
       const params = {
         promotion_id: promotionId,
         limit: 100,
@@ -153,9 +160,16 @@ export const usePromotionStore = defineStore("promotion", {
           return null;
         });
     },
+
     async getGuestPromotionItems(
       promotionId: number
     ): Promise<PromotionItem[] | null> {
+      const storedItems = await this.loadItemsFromStorage(promotionId);
+
+      if( storedItems && storedItems.length > 0 ) {
+        return storedItems;
+      }
+
       const params = {
         promotion_id: promotionId,
         limit: 100,
@@ -174,5 +188,27 @@ export const usePromotionStore = defineStore("promotion", {
           return null;
         });
     },
+
+    mapAndStorePromotionItems(promotionId: number, response: any) {
+      const promotionItems = response.data.data.map(
+        (el: object) => new PromotionItem(el)
+      );
+
+      storage.set(`${KOLA_PROMOTION_ITEMS}.${promotionId}`, promotionItems, 3, 'days');
+
+      return promotionItems;
+    },
+
+    async loadItemsFromStorage(promotionId: number): Promise<PromotionItem[] | null> {
+      const response = await storage.get(`${KOLA_PROMOTION_ITEMS}.${promotionId}`);
+
+      if( response ) {
+        return response.data.data.map(
+          (el: object) => new PromotionItem(el)
+        );
+      }
+
+      return null;
+    }
   },
 });

@@ -19,7 +19,9 @@
 
 
     <ion-content>
-      <GuestProductCategoryList :categories="categories"></GuestProductCategoryList>
+      <section v-if="categories.length > 0">
+        <GuestProductCategoryList :categories="categories"></GuestProductCategoryList>
+      </section>
     </ion-content>
   </ion-page>
 </template>
@@ -37,6 +39,7 @@ const categories = ref<ProductCategory[]>([]);
 
 async function fetchProductCategories() {
   categories.value = await productCategoryStore.getCategories();
+  console.log(categories.value);
 }
 
 onIonViewDidEnter(() => fetchProductCategories())

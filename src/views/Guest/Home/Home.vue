@@ -7,9 +7,9 @@
 
       <PromoSpace></PromoSpace>
 
-      <Promotions v-if="viewLoaded"></Promotions>
+      <Promotions></Promotions>
 
-      <TopCategories v-show="viewLoaded"></TopCategories>
+      <TopCategories></TopCategories>
 
       <!-- <TopBrands></TopBrands> -->
 
@@ -17,7 +17,7 @@
 
       <!-- <SuppliersNearYou></SuppliersNearYou> -->
 
-      <TrendingProducts v-if="viewLoaded"></TrendingProducts>
+      <TrendingProducts></TrendingProducts>
 
       <!-- <section class="shopper-home-section">
         <ModeToggleCard></ModeToggleCard>
@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent, onIonViewDidEnter } from "@ionic/vue";
+import { IonPage, IonContent, onIonViewDidEnter, onIonViewDidLeave } from "@ionic/vue";
 import { onMounted, ref } from "vue";
 import GuestHeader from "@/components/layout/GuestHeader.vue";
 import SuppliersNearYou from "@/views/Guest/Home/SuppliersNearYou.vue";
@@ -43,6 +43,8 @@ import TrendingProducts from "@/views/Guest/Home/TrendingProducts.vue";
 const viewLoaded = ref(false);
 
 onIonViewDidEnter(() => viewLoaded.value = true);
+
+onIonViewDidLeave(() => viewLoaded.value = false)
 </script>
 
 <style lang="scss">
