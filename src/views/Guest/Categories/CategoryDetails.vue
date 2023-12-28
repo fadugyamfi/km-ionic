@@ -59,7 +59,7 @@ const fetching = ref(false);
 const onSearch = async (event: any) => {
     fetching.value = true;
     products.value = await productCategoryStore.fetchGuestCategoryProducts(category.value as ProductCategory, {
-        product_name_like: event.target?.value
+        product_name_has: event.target?.value
     });
     fetching.value = false;
 }
