@@ -34,7 +34,7 @@
         <Swiper>
           <SwiperSlide>
             <section style="height: 200px; border-radius: 10px">
-              <Image :src="product?.image" style="height: 200px"></Image>
+              <Image :src="product?.image" :path="product?.product_banner_image" :no-img-src="noImage" style="height: 200px"></Image>
             </section>
           </SwiperSlide>
         </Swiper>
@@ -245,6 +245,7 @@ export default defineComponent({
       quantity: 1,
       defaultBanner: "/images/vendor/banner.png",
       Filters,
+      noImage: "/images/product-placeholder.png",
     };
   },
 
@@ -315,6 +316,14 @@ export default defineComponent({
   ionViewDidEnter() {
     this.fetchProductDetails();
   },
+
+  mounted() {
+      setTimeout(() => {
+        if( !this.product ) {
+          this.fetchProductDetails();
+        }
+      }, 100);
+  }
 });
 </script>
 

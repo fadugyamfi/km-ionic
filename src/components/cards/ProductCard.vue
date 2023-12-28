@@ -23,6 +23,7 @@
         :class="{ float: !imgLoaded }"
         :alt="product?.product_name"
         :src="product?.image"
+        :path="product?.product_banner_image"
         :no-img-src="noImage"
         @loaded="imgLoaded = true"
       />

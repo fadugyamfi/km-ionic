@@ -24,6 +24,10 @@ export default defineComponent({
             type: String as PropType<string | undefined>
         },
 
+        path: {
+            type: String as PropType<string | undefined>
+        },
+
         noImgSrc: {
             default: '/images/no-image.png',
             type: String as PropType<string>
@@ -89,17 +93,56 @@ export default defineComponent({
                 }
             }
 
+            if( this.path ) {
+                try {
+                    const response = await this.fetchImageViaProxy(this.path, url, imageName);
 
-            try {
-                const response = await this.saveImage(url, imageName);
+                    this.imageData = `data:image/${imageType || 'jpeg'};base64,${response.base64Data}`;
 
-                this.imageData = `${response.base64Data}`; // `data:image/${imageType || 'jpeg'};base64,${response.base64Data}`;
+                    storage.set(`image:${url}`, { filepath: response.filepath, webviewPath: response.webviewPath }, 1, 'year');
+                } catch(error) {
+                    console.log(error);
+                    this.imageData = this.src;
+                }
+            } else {
+                // try {
+                //     const response = await this.saveImage(url, imageName);
 
-                storage.set(`image:${url}`, { filepath: response.filepath, webviewPath: response.webviewPath }, 1, 'year');
-            } catch(error) {
-                console.log(error);
+                //     this.imageData = `data:image/${imageType || 'jpeg'};base64,${response.base64Data}`;
+
+                //     storage.set(`image:${url}`, { filepath: response.filepath, webviewPath: response.webviewPath }, 1, 'year');
+                // } catch(error) {
+                //     console.log(error);
+                //     this.imageData = this.src;
+                // }
                 this.imageData = this.src;
             }
+        },
+
+        async fetchImageViaProxy(path: string, url: string, fileName: string) {
+            // Fetch the photo, read as a blob, then convert to base64 format
+            const rand = Math.random();
+            const params = { path };
+            const response = await axios.get(`/image/proxy`, { params, responseType: 'blob' });
+
+            const blob = await response.data;
+
+            // const base64Data = await this.fetchImageData(url);
+            const base64Data = (await this.convertBlobToBase64(blob)) as string;
+
+            const savedFile = await Filesystem.writeFile({
+                path: fileName,
+                data: base64Data as string,
+                directory: Directory.Cache,
+            });
+
+            // Use webPath to display the new image instead of base64 since it's
+            // already loaded into memory
+            return {
+                filepath: fileName,
+                webviewPath: url,
+                base64Data
+            };
         },
 
         async saveImage(url: string, fileName: string) {
@@ -117,9 +160,6 @@ export default defineComponent({
                 data: base64Data as string,
                 directory: Directory.Cache,
             });
-
-
-
 
             // Use webPath to display the new image instead of base64 since it's
             // already loaded into memory
@@ -143,10 +183,12 @@ export default defineComponent({
     },
 
     mounted() {
-        // this.imageData = this.src as string;
-        this.loadImage();
-        // setTimeout(() => {
-        // }, 200);
+        this.imageData = this.src as string;
+
+        // fetch and cache image behind the scenes
+        if( this.path && this.src ) {
+            this.loadImage();
+        }
     }
 });
 </script>
