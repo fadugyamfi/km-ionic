@@ -1,6 +1,6 @@
 <template>
     <section class="grid">
-        <div v-for="product in products" :key="product.id">
+        <div v-for="product in products" :key="product?.id">
             <GuestProductCard v-if="userStore.isInGuestMode()" :product="product" :showDescription="false"></GuestProductCard>
             <ProductCard v-else :product="product" :showDescription="false"></ProductCard>
         </div>

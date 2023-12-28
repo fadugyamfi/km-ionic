@@ -27,20 +27,6 @@
       </section>
 
       <ProductGridList :products="products"></ProductGridList>
-      <!-- <IonGrid v-if="!fetching">
-        <IonRow>
-          <IonCol
-            size="6"
-            v-for="promotionItem in promotionItems"
-            :key="promotionItem.product?.id"
-          >
-            <GuestProductCard
-              :product="(promotionItem.product as Product)"
-              :showDescription="false"
-            ></GuestProductCard>
-          </IonCol>
-        </IonRow>
-      </IonGrid> -->
     </ion-content>
   </ion-page>
 </template>
@@ -81,7 +67,8 @@ const promotionItems = ref<PromotionItem[] | null>();
 const fetching = ref(false);
 
 const products = computed(() => {
-  return promotionItems.value?.map(item => item.product as Product);
+  return promotionItems.value?.filter((item: PromotionItem) => item.product != null)
+    .map((item: PromotionItem) => item.product as Product);
 })
 
 onIonViewDidEnter(async () => {
