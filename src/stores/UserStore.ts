@@ -168,7 +168,7 @@ export const useUserStore = defineStore("user", {
         this.auth = authResult;
       }
 
-      this.appMode = appModeResult || "shopping";
+      this.appMode = appModeResult || "guest";
       this.userBusinesses = userBusinesses || [];
       this.activeBusiness = activeBusiness || null;
       this.registering = userRegistering || false;

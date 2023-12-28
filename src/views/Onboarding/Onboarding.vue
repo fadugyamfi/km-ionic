@@ -28,7 +28,7 @@ const userStore = useUserStore();
 
 const getStarted = () => {
     userStore.storeOnboarded(true);
-    router.push("/guest");
+    router.push("/preloading");
 }
 </script>
 

@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent } from "@ionic/vue";
+import { IonPage, IonContent, onIonViewDidEnter, onIonViewDidLeave } from "@ionic/vue";
 import { onMounted, ref } from "vue";
 import GuestHeader from "@/components/layout/GuestHeader.vue";
 import SuppliersNearYou from "@/views/Guest/Home/SuppliersNearYou.vue";
@@ -39,6 +39,12 @@ import RecentlyViewedProducts from "./RecentlyViewedProducts.vue";
 import CategoryPills from "./CategoryPills.vue";
 import PromoSpace from "./PromoSpace.vue";
 import TrendingProducts from "@/views/Guest/Home/TrendingProducts.vue";
+
+const viewLoaded = ref(false);
+
+onIonViewDidEnter(() => viewLoaded.value = true);
+
+onIonViewDidLeave(() => viewLoaded.value = false)
 </script>
 
 <style lang="scss">

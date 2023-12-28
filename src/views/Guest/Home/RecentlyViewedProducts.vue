@@ -47,15 +47,8 @@ export default defineComponent({
         },
 
         async fetchRecentlyViewedProducts() {
-            const products = await storage.get(RECENTLY_VIEWED);
-
-            if( products ) {
-                this.products = products.map((el: object) => new Product(el));
-                return;
-            }
-
             this.products = await this.productStore.fetchRecentlyViewedProducts({ limit: 6 });
-            storage.set(RECENTLY_VIEWED, this.products, 5, 'minutes');
+
         }
     },
 

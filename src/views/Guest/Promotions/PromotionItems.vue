@@ -25,7 +25,9 @@
       >
         <IonSpinner name="crescent"></IonSpinner>
       </section>
-      <IonGrid v-if="!fetching">
+
+      <ProductGridList :products="products"></ProductGridList>
+      <!-- <IonGrid v-if="!fetching">
         <IonRow>
           <IonCol
             size="6"
@@ -38,7 +40,7 @@
             ></GuestProductCard>
           </IonCol>
         </IonRow>
-      </IonGrid>
+      </IonGrid> -->
     </ion-content>
   </ion-page>
 </template>
@@ -59,6 +61,7 @@ import {
   IonGrid,
   IonCol,
   IonRow,
+onIonViewDidEnter,
 } from "@ionic/vue";
 import NotificationButton from "@/components/notifications/NotificationButton.vue";
 import Product from "@/models/Product";
@@ -68,20 +71,27 @@ import Promotion from "../../../models/Promotion";
 import { usePromotionStore } from "../../../stores/PromotionStore";
 import PromotionItem from "../../../models/PromotionItem";
 import GuestProductCard from "@/components/cards/GuestProductCard.vue";
+import { computed } from "vue";
+import ProductGridList from "../../../components/modules/products/ProductGridList.vue";
 
 const promotionStore = usePromotionStore();
 const route = useRoute();
 const promotion = ref<Promotion | null>();
 const promotionItems = ref<PromotionItem[] | null>();
-const products = ref<Product[]>([]);
 const fetching = ref(false);
 
-onMounted(async () => {
-  fetching.value = true;
+const products = computed(() => {
+  return promotionItems.value?.map(item => item.product as Product);
+})
+
+onIonViewDidEnter(async () => {
   promotion.value = await promotionStore.getGuestPromotion(+route.params.id);
-  promotionItems.value = await promotionStore.getGuestPromotionItems(
-    +route.params.id
-  );
+  promotionItems.value = promotion.value?.promotion_items;
+
+  fetching.value = true;
+  setTimeout(async () => {
+    promotionItems.value = await promotionStore.getGuestPromotionItems(+route.params.id);
+  }, 100)
   fetching.value = false;
 });
 </script>

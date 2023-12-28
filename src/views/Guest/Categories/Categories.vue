@@ -19,13 +19,15 @@
 
 
     <ion-content>
-      <GuestProductCategoryList :categories="categories"></GuestProductCategoryList>
+      <section v-if="categories.length > 0">
+        <GuestProductCategoryList :categories="categories"></GuestProductCategoryList>
+      </section>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonLabel, IonTitle } from '@ionic/vue';
+import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonLabel, IonTitle, onIonViewDidEnter } from '@ionic/vue';
 import GuestProductCategoryList from '@/components/lists/GuestProductCategoryList.vue';
 import { ref, onMounted } from 'vue';
 import ProductCategory from '@/models/ProductCategory';
@@ -37,8 +39,8 @@ const categories = ref<ProductCategory[]>([]);
 
 async function fetchProductCategories() {
   categories.value = await productCategoryStore.getCategories();
+  console.log(categories.value);
 }
 
-onMounted(() => fetchProductCategories())
+onIonViewDidEnter(() => fetchProductCategories())
 </script>
-@/stores/ProductCategoryStore

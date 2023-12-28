@@ -54,7 +54,8 @@
   "onboarding": {
     "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
     "weHelpYouBuyAndSell": "We help you to buy and sell wholesale, manage your customers and inventory, simply and securely in one app!",
-    "getStarted": "Get Started"
+    "getStarted": "Get Started",
+    "loadingText": "Hold on as we set things up"
   },
   "signup": {
     "landing": {

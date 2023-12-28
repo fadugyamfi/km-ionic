@@ -12,7 +12,7 @@
           :data-index="index"
         ></ProductCategoryCard>
       </section>
-  
+
       <section
         v-if="rightColumnItems.length > 0"
         class="d-flex flex-column ion-align-items-stretch"
@@ -28,13 +28,13 @@
       </section>
     </section>
   </template>
-  
+
   <script lang="ts">
   import { defineComponent, PropType } from "vue";
   import ProductCategory from "@/models/ProductCategory";
   import ProductCategoryCard from "@/components/cards/ProductCategoryCard.vue";
   import { logIn } from "ionicons/icons";
-  
+
   export default defineComponent({
     props: {
       categories: {
@@ -42,32 +42,32 @@
         type: Array as PropType<Array<ProductCategory>>,
       },
     },
-  
+
     data() {
       return {
         leftColumnItems: [] as Array<ProductCategory>,
         rightColumnItems: [] as Array<ProductCategory>,
       };
     },
-  
+
     components: { ProductCategoryCard },
-  
+
     methods: {
       fillColumns() {
         this.leftColumnItems = this.categories.filter((category, index) => {
           return index % 2 == 0;
         });
-  
+
         this.rightColumnItems = this.categories.filter((category, index) => {
           return index % 2 != 0;
         });
       },
-  
+
       onCategorySelected(category: ProductCategory) {
         this.$router.push(`/guest/home/categories/${category.id}`);
       },
     },
-  
+
     mounted() {
       setTimeout(() => {
         this.fillColumns();
@@ -75,7 +75,7 @@
     },
   });
   </script>
-  
+
   <style lang="scss">
   .product-category-list {
     width: 100%;
@@ -83,10 +83,9 @@
     justify-content: space-around;
     padding-left: 10px;
     padding-right: 10px;
-  
+
     .flex-column {
       width: 48%;
     }
   }
   </style>
-  

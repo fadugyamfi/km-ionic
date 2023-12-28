@@ -10,7 +10,7 @@
             ></IonBackButton>
           </IonButtons>
 
-          <IonTitle size="small">
+          <IonTitle size="small" class="font-medium">
             {{ $t("shopper.productDetails.productDetails") }}
           </IonTitle>
 
@@ -34,7 +34,7 @@
         <Swiper>
           <SwiperSlide>
             <section style="height: 200px; border-radius: 10px">
-              <Image :src="product?.image" style="height: 200px"></Image>
+              <Image :src="product?.image" :path="product?.product_banner_image" :no-img-src="noImage" style="height: 200px"></Image>
             </section>
           </SwiperSlide>
         </Swiper>
@@ -61,7 +61,7 @@
             {{
               Filters.currency(
                 Number(product?.product_price),
-                String(product?.currency?.symbol)
+                String(product?.currency?.symbol || 'GHS')
               )
             }}
           </span>
@@ -74,7 +74,7 @@
             {{
               Filters.currency(
                 Number(product?.sale_price),
-                String(product?.currency?.symbol)
+                String(product?.currency?.symbol || 'GHS')
               )
             }}
           </IonText>
@@ -88,7 +88,7 @@
             {{
               Filters.currency(
                 Number(product?.retail_price),
-                String(product?.currency?.symbol)
+                String(product?.currency?.symbol || 'GHS')
               )
             }}
           </IonText>
@@ -245,6 +245,7 @@ export default defineComponent({
       quantity: 1,
       defaultBanner: "/images/vendor/banner.png",
       Filters,
+      noImage: "/images/product-placeholder.png",
     };
   },
 
@@ -315,6 +316,14 @@ export default defineComponent({
   ionViewDidEnter() {
     this.fetchProductDetails();
   },
+
+  mounted() {
+      setTimeout(() => {
+        if( !this.product ) {
+          this.fetchProductDetails();
+        }
+      }, 100);
+  }
 });
 </script>
 

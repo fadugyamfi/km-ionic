@@ -12,13 +12,15 @@
         <ProductsLoadingSkeletons></ProductsLoadingSkeletons>
     </section>
 
-    <IonGrid v-else>
+    <ProductGridList v-else :products="products"></ProductGridList>
+
+    <!-- <IonGrid v-else>
         <IonRow>
             <IonCol size="6" v-for="product in products" :key="product?.id">
                 <ProductCard :product="product" :showDescription="false"></ProductCard>
             </IonCol>
         </IonRow>
-    </IonGrid>
+    </IonGrid> -->
   </section>
 </template>
 
@@ -32,6 +34,7 @@ import Product from "../../../models/Product";
 import { useProductStore } from "../../../stores/ProductStore";
 import AppStorage from "../../../stores/AppStorage";
 import ProductsLoadingSkeletons from "../../../components/layout/ProductsLoadingSkeletons.vue";
+import ProductGridList from "../../../components/modules/products/ProductGridList.vue";
 
 const storage = new AppStorage();
 const KOLA_TRENDING = "kola.trending";
@@ -48,7 +51,7 @@ export default defineComponent({
     ...mapStores(useProductStore ),
   },
 
-  components: { ProductCategoryList, IonText, IonGrid, IonRow, IonCol, ProductCard, IonSkeletonText, IonButton, ProductsLoadingSkeletons },
+  components: { ProductCategoryList, IonText, IonGrid, IonRow, IonCol, ProductCard, IonSkeletonText, IonButton, ProductsLoadingSkeletons, ProductGridList },
 
   methods: {
     async fetchTrendingProducts() {

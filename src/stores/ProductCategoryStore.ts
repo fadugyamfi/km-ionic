@@ -68,12 +68,10 @@ export const useProductCategoryStore = defineStore("productCategory", {
 
     async getCategories(): Promise<ProductCategory[]> {
       const userStore = useUserStore();
-      if (this.categories.length == 0) {
-        if (!userStore.isInGuestMode) {
-          await this.fetchCategories();
-        } else {
-          await this.fetchGuestCategories();
-        }
+      if (!userStore.isInGuestMode) {
+        await this.fetchCategories();
+      } else {
+        await this.fetchGuestCategories();
       }
 
       return this.categories;
@@ -119,6 +117,7 @@ export const useProductCategoryStore = defineStore("productCategory", {
     },
     async fetchGuestCategoryProducts(
       category: ProductCategory,
+      options: { [key:string]: unknown } = {},
       page = 1,
       limit = 50
     ): Promise<Product[]> {
@@ -128,6 +127,7 @@ export const useProductCategoryStore = defineStore("productCategory", {
           limit,
           page,
           sort: "latest",
+          ...options
         };
 
         const response = await axios.get("/v2/guest/products", { params });
