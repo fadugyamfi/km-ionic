@@ -78,10 +78,11 @@ export const useSaleStore = defineStore("sale", {
 
         async recordSale(): Promise<Sale | null> {
             const location = useGeolocation();
+            const coordinates = await location.getCurrentLocation();
 
             this.newSale.update({
                 sale_ended_at: formatMySQLDateTime(new Date().toISOString()),
-                gps_location: location.getCurrentLocation()
+                gps_location: coordinates ? `${coordinates.coords.latitude}, ${coordinates.coords.longitude}` : '-'
             })
 
             // Recreating the object here because JSON.stringify is removing the sale_items property
