@@ -7,9 +7,16 @@
   "background_color": "#FFFFFF",
   "icons": [
     {
+      "src": "./img/icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "any",
+      "purpose": "maskable"
+    },
+    {
       "src": "./img/icons/icon-512x512.png",
       "type": "image/png",
-      "sizes": "any"
+      "sizes": "any",
+      "purpose": "maskable"
     }
   ],
   "screenshots" : [

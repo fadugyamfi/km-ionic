@@ -1,18 +1,22 @@
 <template>
-    <section class="grid">
-        <div v-for="product in products" :key="product?.id">
-            <GuestProductCard v-if="userStore.isInGuestMode()" :product="product" :showDescription="false"></GuestProductCard>
-            <ProductCard v-else :product="product" :showDescription="false"></ProductCard>
-        </div>
-    </section>
+    <RecycleScroller class="scroller" :items="products" :grid-items="2" :item-size="210" :item-secondary-size="cardWidth"
+                     :item-class="'product-card-item'" key-field="id" v-slot="{ item }">
+
+        <GuestProductCard v-if="userStore.isInGuestMode()" :product="item" :showDescription="false">
+        </GuestProductCard>
+        <ProductCard v-else :product="item" :showDescription="false"></ProductCard>
+
+    </RecycleScroller>
 </template>
 
 <style scoped>
-.grid {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  gap: 5px;
-  margin: 0px 5px;
+.product-card-item {
+    margin-bottom: 10px;
+    padding-bottom: 15px;
+}
+
+.scroller {
+    height: 100%;
 }
 </style>
 
@@ -23,6 +27,7 @@ import Product from '@/models/Product';
 import { useUserStore } from '@/stores/UserStore';
 import GuestProductCard from '@/components/cards/GuestProductCard.vue';
 import ProductCard from '@/components/cards/ProductCard.vue';
+import { computed } from 'vue';
 
 
 const props = defineProps({
@@ -34,5 +39,8 @@ const props = defineProps({
 
 const userStore = useUserStore();
 
+const cardWidth = computed(() => {
+    return (window.document.documentElement.clientWidth / 2);
+});
 
 </script>
