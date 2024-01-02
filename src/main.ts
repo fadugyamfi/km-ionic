@@ -4,6 +4,7 @@ import router from "./router";
 
 // Added by the CLI
 // import './registerServiceWorker';
+import "./setupPushNotification"
 
 import { IonicVue } from "@ionic/vue";
 
