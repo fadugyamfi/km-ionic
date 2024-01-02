@@ -31,6 +31,7 @@
     "@ionic/vue": "^7.6.2",
     "@ionic/vue-router": "^7.6.2",
     "@types/intl-tel-input": "18.1.4",
+    "@types/vue-virtual-scroller": "npm:@earltp/vue-virtual-scroller@^1.0.1",
     "axios": "1.6.2",
     "braces": "^3.0.2",
     "intl-tel-input": "^17.0.16",
