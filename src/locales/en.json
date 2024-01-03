@@ -275,6 +275,11 @@
     }
   },
   "profile": {
+    "profile": "Profile",
+    "personal": "Personal",
+    "company": "company",
+    "installingUpdates": "Installing Updates In The Background",
+
     "customers": {
       "customers": "Customers",
       "youHaveNoCustomer": "You Have No Customers",

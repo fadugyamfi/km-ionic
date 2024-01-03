@@ -13,6 +13,7 @@ import ProcessNotification from './components/layout/ProcessNotification.vue';
 import axios from 'axios';
 import AppStorage from './stores/AppStorage';
 import { useToastStore } from './stores/ToastStore';
+import { useAppStore } from './stores/AppStore';
 
 const storage = new AppStorage();
 
@@ -29,54 +30,12 @@ async function configureAxios() {
   }
 }
 
-async function addAvailableUpdateListener() {
-  if (!("serviceWorker" in navigator)) {
-    return;
-  }
-
-  let refreshing = false;
-  const toastStore = useToastStore();
-  const registration = await navigator.serviceWorker.getRegistration();
-
-  if (registration) {
-    registration.addEventListener("updatefound", () => {
-      toastStore.showInfo("Installing New Updates In The Background", "Update Available", "top");
-
-      // our new instance is visible under installing property, because it is in 'installing' state
-      // let's wait until it changes its state
-      setTimeout(() => {
-        registration.installing?.addEventListener('statechange', () => {
-          console.log("registration statechanged event fired", registration);
-          if (registration.waiting) {
-            console.log('serviceWorker activate listener');
-            toastStore.showSuccess("Update Installed. Application will refresh shortly", "Update Installed", "top");
-            setTimeout(() => window.location.reload(), 3000);
-          } else {
-            console.log('serviceWorker activate listener');
-            // toastStore.showError("Install Failed. We'll retry again later", "Install Failed", "top");
-          }
-        });
-      }, 1000)
-
-    });
-
-    // detect controller change and refresh the page
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      console.log("controllerchange event fired");
-      if (!refreshing) {
-        refreshing = true
-        window.location.reload()
-      }
-    })
-  } else {
-    setTimeout(() => addAvailableUpdateListener(), 5000);
-    console.log("no service worker registration found")
-  }
-}
-
 
 onBeforeMount(async () => {
-  addAvailableUpdateListener();
+  const appStore = useAppStore();
+  appStore.loadCachedSettings();
+  appStore.registerUpdateListeners();
+
   await configureAxios();
 
   const userStore = useUserStore();

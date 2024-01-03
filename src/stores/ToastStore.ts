@@ -39,8 +39,9 @@ export const useToastStore = defineStore('toast', {
             message: string,
             title?: string,
             position: 'top' | 'bottom' | 'middle' = 'top',
-            type: 'success' | 'error' | 'warning' | 'info' = 'info',
-            anchor?: string
+            type: 'success' | 'error' | 'warning' | 'info' | 'default' = 'info',
+            anchor?: string,
+            duration: number = 3500
         ) {
 
             const userStore = useUserStore();
@@ -54,31 +55,36 @@ export const useToastStore = defineStore('toast', {
             const toast = await toastController.create({
                 header: title,
                 message: message,
-                duration: 3500,
+                duration: duration,
                 position: position,
                 animated: true,
                 cssClass: `app-toast toast-${type}`,
                 icon: this.getIcon(type),
-                positionAnchor: anchor
+                positionAnchor: anchor,
+                swipeGesture: "vertical"
             });
 
             await toast.present();
         },
 
-        async showSuccess(message: string, title?: string, position: any = 'bottom', anchor?: string) {
-            return this.showToast(message, title, position, 'success', anchor);
+        async showSuccess(message: string, title?: string, position: any = 'bottom', anchor?: string, duration = 3500) {
+            return this.showToast(message, title, position, 'success', anchor, duration);
         },
 
-        async showError(message: string, title?: string, position: any = 'bottom', anchor?: string) {
-            return this.showToast(message, title, position, 'error', anchor);
+        async showError(message: string, title?: string, position: any = 'bottom', anchor?: string, duration = 3500) {
+            return this.showToast(message, title, position, 'error', anchor, duration);
         },
 
-        async showWarning(message: string, title?: string, position: any = 'bottom', anchor?: string) {
-            return this.showToast(message, title, position, 'warning', anchor);
+        async showWarning(message: string, title?: string, position: any = 'bottom', anchor?: string, duration = 3500) {
+            return this.showToast(message, title, position, 'warning', anchor, duration);
         },
 
-        async showInfo(message: string, title?: string, position: any = 'bottom', anchor?: string) {
-            return this.showToast(message, title, position, 'info', anchor);
+        async showInfo(message: string, title?: string, position: any = 'bottom', anchor?: string, duration = 3500) {
+            return this.showToast(message, title, position, 'info', anchor, duration);
+        },
+
+        async show(message: string, title?: string, position: any = 'bottom', anchor?: string, duration = 3500) {
+            return this.showToast(message, title, position, 'default', anchor, duration);
         },
     }
 })
