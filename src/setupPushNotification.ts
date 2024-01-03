@@ -4,8 +4,18 @@ import {
   PushNotifications,
   Token,
 } from "@capacitor/push-notifications";
+import { useDeviceStore } from "./stores/DeviceStore";
+import { Capacitor } from "@capacitor/core";
 
-async function setupPushNotifications() {
+const FCMToken = localStorage.getItem('FCMToken')
+
+export async function setupPushNotifications() {
+//   if (!Capacitor.isNativePlatform() || FCMToken) {
+//     return;
+//   }
+  if (!Capacitor.isNativePlatform()) {
+    return;
+  }
   // Request notification permission
   PushNotifications.requestPermissions().then((result) => {
     if (result.receive === "granted") {
@@ -18,7 +28,8 @@ async function setupPushNotifications() {
 
   // On success, we should be able to receive notifications
   PushNotifications.addListener("registration", (token: Token) => {
-    console.log('token', token.value)
+    useDeviceStore().registerDevice(token.value);
+    localStorage.setItem("FCMToken", token.value);
     // alert("Push registration success, token: " + token.value);
   });
 
@@ -31,7 +42,7 @@ async function setupPushNotifications() {
   PushNotifications.addListener(
     "pushNotificationReceived",
     (notification: PushNotificationSchema) => {
-    //   alert("Push received: " + JSON.stringify(notification));
+      //   alert("Push received: " + JSON.stringify(notification));
     }
   );
 
@@ -39,9 +50,9 @@ async function setupPushNotifications() {
   PushNotifications.addListener(
     "pushNotificationActionPerformed",
     (notification: ActionPerformed) => {
-    //   alert("Push action performed: " + JSON.stringify(notification));
+      //   alert("Push action performed: " + JSON.stringify(notification));
     }
   );
 }
 
-setupPushNotifications();
+// setupPushNotifications()

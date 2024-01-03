@@ -6,26 +6,34 @@
 </template>
 
 <script setup lang="ts">
-import { IonApp, IonRouterOutlet } from '@ionic/vue';
-import { useUserStore } from './stores/UserStore';
-import { onMounted, onBeforeMount } from 'vue';
-import ProcessNotification from './components/layout/ProcessNotification.vue';
-import axios from 'axios';
-import AppStorage from './stores/AppStorage';
-import { useToastStore } from './stores/ToastStore';
+import { IonApp, IonRouterOutlet } from "@ionic/vue";
+import { useUserStore } from "./stores/UserStore";
+import { onMounted, onBeforeMount } from "vue";
+import ProcessNotification from "./components/layout/ProcessNotification.vue";
+import axios from "axios";
+import AppStorage from "./stores/AppStorage";
+import { useToastStore } from "./stores/ToastStore";
+import { useRoute } from "vue-router";
+import { requestPermission } from "@/messaging_init_in_sw";
+import { setupPushNotifications } from "@/setupPushNotification";
 
 const storage = new AppStorage();
 
+const route = useRoute();
+
 async function configureAxios() {
-  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'https://api-staging.kola.market/api';
-  axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-  axios.defaults.headers.common['Content-Type'] = 'application/json';
+  axios.defaults.baseURL =
+    import.meta.env.VITE_API_BASE_URL || "https://api-staging.kola.market/api";
+  axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+  axios.defaults.headers.common["Content-Type"] = "application/json";
 
   await storage.init();
-  const auth = await storage.get('kola.auth');
+  const auth = await storage.get("kola.auth");
 
   if (auth) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${auth?.access_token}`;
   }
 }
 
@@ -40,40 +48,53 @@ async function addAvailableUpdateListener() {
 
   if (registration) {
     registration.addEventListener("updatefound", () => {
-      toastStore.showInfo("Installing New Updates In The Background", "Update Available", "top");
+      toastStore.showInfo(
+        "Installing New Updates In The Background",
+        "Update Available",
+        "top"
+      );
 
       // our new instance is visible under installing property, because it is in 'installing' state
       // let's wait until it changes its state
       setTimeout(() => {
-        registration.installing?.addEventListener('statechange', () => {
+        registration.installing?.addEventListener("statechange", () => {
           console.log("registration statechanged event fired", registration);
           if (registration.waiting) {
-            console.log('serviceWorker activate listener');
-            toastStore.showSuccess("Update Installed. Application will refresh shortly", "Update Installed", "top");
+            console.log("serviceWorker activate listener");
+            toastStore.showSuccess(
+              "Update Installed. Application will refresh shortly",
+              "Update Installed",
+              "top"
+            );
             setTimeout(() => window.location.reload(), 3000);
           } else {
-            console.log('serviceWorker activate listener');
+            console.log("serviceWorker activate listener");
             // toastStore.showError("Install Failed. We'll retry again later", "Install Failed", "top");
           }
         });
-      }, 1000)
-
+      }, 1000);
     });
 
     // detect controller change and refresh the page
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
       console.log("controllerchange event fired");
       if (!refreshing) {
-        refreshing = true
-        window.location.reload()
+        refreshing = true;
+        window.location.reload();
       }
-    })
+    });
   } else {
     setTimeout(() => addAvailableUpdateListener(), 5000);
-    console.log("no service worker registration found")
+    console.log("no service worker registration found");
   }
 }
-
+onMounted(() => {
+  if (route.fullPath.includes("guest")) {
+    return;
+  }
+  setupPushNotifications();
+  requestPermission();
+});
 
 onBeforeMount(async () => {
   addAvailableUpdateListener();
@@ -81,5 +102,5 @@ onBeforeMount(async () => {
 
   const userStore = useUserStore();
   await userStore.loadStoredData();
-})
+});
 </script>
