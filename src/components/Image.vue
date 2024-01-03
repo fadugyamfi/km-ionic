@@ -186,9 +186,9 @@ export default defineComponent({
         this.imageData = this.src as string;
 
         // fetch and cache image behind the scenes
-        if( this.path && this.src && isPlatform("pwa") ) {
-            this.loadImage();
-        }
+        // if( this.path && this.src && isPlatform("pwa") ) {
+        //     this.loadImage();
+        // }
     }
 });
 </script>
