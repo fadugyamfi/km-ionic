@@ -57,7 +57,9 @@ const promotionItems = ref<PromotionItem[] | null>();
 const fetching = ref(false);
 
 const products = computed(() => {
-  return promotionItems.value?.map(item => item.product as Product);
+  return promotionItems.value?.
+        filter((item: PromotionItem) => item.product != null)
+        .map((item: PromotionItem) => item.product as Product);
 })
 
 onIonViewDidEnter(async () => {
