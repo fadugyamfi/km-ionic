@@ -24,20 +24,26 @@
       <IonLabel>{{ $t('general.credit') }}</IonLabel>
     </IonTabButton>
 
-    <IonTabButton tab="tab5" href="/vendor/profile">
+    <IonTabButton tab="tab5" href="/vendor/profile" class="has-badge small">
       <img src="/images/navigation/profile.svg" />
       <img src="/images/navigation/profile_active.svg" class="active" />
       <IonLabel>{{ $t('general.profile') }}</IonLabel>
+      <IonBadge color="danger" v-if="appStore.installingUpdate"></IonBadge>
     </IonTabButton>
   </IonTabBar>
 </template>
 
 <script lang="ts">
-import { IonLabel, IonTabBar, IonTabButton } from '@ionic/vue';
+import { IonBadge, IonLabel, IonTabBar, IonTabButton } from '@ionic/vue';
 import { defineComponent } from 'vue';
-
+import { useAppStore } from '../../stores/AppStore';
+import { mapStores } from "pinia";
 
 export default defineComponent({
-    components: { IonTabBar, IonTabButton, IonLabel }
+    components: { IonTabBar, IonTabButton, IonLabel, IonBadge },
+
+    computed: {
+      ...mapStores( useAppStore )
+    }
 })
 </script>

@@ -1,11 +1,19 @@
 <template>
     <ion-content class="ion-padding" :fullscreen="true">
-      <ion-header class="inner-header ion-margin-bottom">
+
+      <IonCard v-if="appStore.installingUpdate" color="primary" class="ion-no-margin ion-margin-bottom">
+        <IonCardContent class="d-flex ion-align-items-center">
+          <IonSpinner name="crescent" class="ion-margin-end" color="light"></IonSpinner>
+          <IonText>{{ $t("profile.installingUpdates") }}</IonText>
+        </IonCardContent>
+      </IonCard>
+
+      <ion-header id="profile-header" class="inner-header ion-margin-bottom">
         <ion-toolbar>
           <IonButtons slot="start">
             <IonBackButton></IonBackButton>
           </IonButtons>
-          <ion-title>Profile</ion-title>
+          <ion-title>{{ $t("profile.profile") }}</ion-title>
           <IonButtons slot="end">
             <IonButton>
               <IonIcon :icon="search"></IonIcon>
@@ -16,10 +24,10 @@
 
       <IonSegment value="company" mode="ios" v-model="viewing">
         <IonSegmentButton value="company">
-          <ion-label>Company</ion-label>
+          <ion-label>{{ $t("profile.company") }}</ion-label>
         </IonSegmentButton>
         <IonSegmentButton value="personal">
-          <IonLabel>Personal</IonLabel>
+          <IonLabel>{{ $t("profile.personal") }}</IonLabel>
         </IonSegmentButton>
       </IonSegment>
 
@@ -35,15 +43,17 @@
 </template>
 
 <script setup lang="ts">
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonIcon, IonButton, IonSegment, IonSegmentButton, IonLabel } from '@ionic/vue';
-import { search } from 'ionicons/icons';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonIcon, IonButton, IonSegment, IonSegmentButton, IonLabel, IonToast, IonCard, IonCardContent, IonText, IonSpinner } from '@ionic/vue';
+import { informationCircleOutline, search } from 'ionicons/icons';
 import { useUserStore } from '@/stores/UserStore';
 import PersonalActions from '@/components/profile/PersonalActions.vue';
 import CompanyActions from '@/components/profile/CompanyActions.vue';
 import { ref } from 'vue';
 import ModeToggleCard from '../cards/ModeToggleCard.vue';
+import { useAppStore } from '../../stores/AppStore';
 
 const userStore = useUserStore();
+const appStore = useAppStore();
 const viewing = ref('company');
 </script>
 

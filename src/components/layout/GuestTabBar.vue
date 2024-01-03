@@ -27,10 +27,11 @@
       <IonLabel>{{ $t("general.credit") }}</IonLabel>
     </IonTabButton>
 
-    <IonTabButton tab="tab5" @click="showFilterSheet = true">
+    <IonTabButton tab="tab5" @click="showFilterSheet = true" class="has-badge small">
       <img src="/images/navigation/profile.svg" />
       <img src="/images/navigation/profile_active.svg" class="active" />
       <IonLabel>{{ $t("general.profile") }}</IonLabel>
+      <IonBadge color="danger" v-if="appStore.installingUpdate"></IonBadge>
     </IonTabButton>
   </IonTabBar>
   <LoginRequiredSheet
@@ -47,6 +48,7 @@ import { useOrderStore } from "@/stores/OrderStore";
 import { mapStores } from "pinia";
 import { useCartStore } from "@/stores/CartStore";
 import LoginRequiredSheet from "../modules/LoginRequiredSheet.vue";
+import { useAppStore } from "@/stores/AppStore";
 
 export default defineComponent({
   data() {
@@ -63,22 +65,8 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useCartStore, useOrderStore),
+    ...mapStores(useCartStore, useOrderStore, useAppStore),
   },
   methods: {},
 });
 </script>
-
-<style scoped lang="scss">
-.cartTab {
-  position: relative;
-
-  ion-badge {
-    --background: #003366;
-    position: absolute;
-    font-size: 0.7em;
-    top: 5px;
-    right: 5px;
-  }
-}
-</style>
