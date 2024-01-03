@@ -289,7 +289,7 @@
       "location": {
         "useCurrentLocation": "Use Current Location"
       },
-      "fullName": "Full Name",
+      "fullName": "Owner's Full Name",
       "businessOwnerPhone": "Business Owner Phone Number",
       "businessName": "Business Name",
       "businessLocation": "Business Location",
