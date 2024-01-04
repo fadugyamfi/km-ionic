@@ -44,19 +44,25 @@
                 <IonSpinner name="crescent"></IonSpinner>
             </div>
 
-            <RecycleScroller class="scroller" :items="products" :grid-items="2" :item-size="210" :item-secondary-size="cardWidth"
-                     :item-class="'product-card-item'" key-field="id" v-slot="{ item }">
-                <ProductCard
-                    :product="item"
-                    :showDescription="false"
-                    :showAddToCart="false"
-                    :showAddToFavorites="false"
-                    :showAddToSelected="true"
-                    :action="'toggleSelect'"
-                    :initially-selected="isSelected(item)"
-                    @toggleSelect="selectProduct($event)"
-                ></ProductCard>
-            </RecycleScroller>
+            <section v-else>
+                <NoResults v-if="products?.length == 0" title="No Products Available" description="Add products to your inventory to populate this list"></NoResults>
+
+                <RecycleScroller v-else class="scroller" :items="products" :grid-items="2" :item-size="210" :item-secondary-size="cardWidth"
+                        :item-class="'product-card-item'" key-field="id" v-slot="{ item }">
+                    <ProductCard
+                        :product="item"
+                        :showDescription="false"
+                        :showAddToCart="false"
+                        :showAddToFavorites="false"
+                        :showAddToSelected="true"
+                        :action="'toggleSelect'"
+                        :initially-selected="isSelected(item)"
+                        @toggleSelect="selectProduct($event)"
+                    ></ProductCard>
+                </RecycleScroller>
+            </section>
+
+
         </IonContent>
 
         <IonFooter class="ion-padding ion-no-border">
@@ -83,6 +89,8 @@ import ProductCard, { ProductSelection } from '@/components/cards/ProductCard.vu
 import { handleAxiosRequestError } from '@/utilities';
 import { useProductStore } from '@/stores/ProductStore';
 import { useUserStore } from '@/stores/UserStore';
+import NoResults from '@/components/layout/NoResults.vue';
+import { RecycleScroller } from 'vue-virtual-scroller';
 
 
 export default defineComponent({
@@ -125,6 +133,8 @@ export default defineComponent({
         ProductCard,
         IonSearchbar,
         IonSpinner,
+        NoResults,
+        RecycleScroller
     },
 
     computed: {

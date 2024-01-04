@@ -5,22 +5,26 @@
                            :username="sale.customer?.name" customSize="45px"></ProfileAvatar>
 
             <IonLabel>
-                <p>
+                <p class="fw-semibold">
                     <IonText color="dark">{{ sale.customer?.name }}</IonText>
                 </p>
-                <p>
+                <p class="font-medium">
+                    <IonText color="dark">
+                        {{ filters.currency(sale.total_sales_price as number) }}
+                    </IonText>
+
+                    <span style="margin: 0px 0.7em;">|</span>
+                    <IonText color="dark">
+                        {{ $tc('general.products', sale.sale_items_count as number, { count: sale.sale_items_count }) }}
+                    </IonText>
+                </p>
+
+                <p class="font-medium">
                     <IonText color="medium">
                         {{ filters.date(sale.created_at as string, 'short') }}
                     </IonText>
-                    <!-- <span class="ion-margin-horizontal">|</span>
-                    <IonText color="medium">
-                        {{ $tc('general.products', sale.sale_items_count as number, { count: sale.sale_items_count }) }}
-                    </IonText> -->
-                    <span class="ion-margin-horizontal">|</span>
-                    <IonText color="medium">
-                        {{ filters.currency(sale.total_sales_price as number) }}
-                    </IonText>
                 </p>
+
                 <p v-if="sale.isCreditSale()">
                     <IonChip color="primary" class="font-medium">
                         {{ sale.sale_type?.name }}
