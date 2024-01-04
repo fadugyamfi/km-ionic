@@ -21,49 +21,57 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
-
+// let messaging;
 function requestPermission() {
-  // if (Capacitor.isNativePlatform() || FCMToken) {
-  //   return;
-  // }
-  if (Capacitor.isNativePlatform()) {
-    return;
-  }
-  console.log("Requesting permission...");
-  Notification.requestPermission().then((permission) => {
-    if (permission === "granted") {
-      console.log("Notification permission granted.");
+  try {
+    const messaging = getMessaging(app);
+    const FCMToken = localStorage.getItem("FCMToken");
 
-      getToken(messaging, {
-        vapidKey:
-          "BNtJKjrduSWdDWdtgRZlxpurRzk75440-AP_uB5Ou-hWE9LOq6JTS82wi0K_qgZSu9ZFomlSzwu2mTVOuBPjx7g",
-      })
-        .then((currentToken) => {
-          if (currentToken) {
-            console.log("my token my token", currentToken);
-            // Send the token to your server and update the UI if necessary
-            useDeviceStore().registerDevice(currentToken);
-            localStorage.setItem("FCMToken", currentToken);
-          } else {
-            // Show permission request UI
-            console.log(
-              "No registration token available. Request permission to generate one."
-            );
-            // ...
-          }
-        })
-        .catch((err) => {
-          console.log("An error occurred while retrieving token. ", err);
-          // ...
-        });
+    if (Capacitor.isNativePlatform()) {
+      return;
     }
-  });
+  
+    if (FCMToken && Notification.permission == "granted") {
+      return;
+    }
+    localStorage.removeItem("FCMToken");
+
+    console.log("Requesting permission...");
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        console.log("Notification permission granted.");
+
+        getToken(messaging, {
+          vapidKey:
+            "BNtJKjrduSWdDWdtgRZlxpurRzk75440-AP_uB5Ou-hWE9LOq6JTS82wi0K_qgZSu9ZFomlSzwu2mTVOuBPjx7g",
+        })
+          .then((currentToken) => {
+            if (currentToken) {
+              console.log("my token my token", currentToken);
+              // Send the token to your server and update the UI if necessary
+              useDeviceStore().registerDevice(currentToken);
+            } else {
+              // Show permission request UI
+              console.log(
+                "No registration token available. Request permission to generate one."
+              );
+              // ...
+            }
+          })
+          .catch((err) => {
+            console.log("An error occurred while retrieving token. ", err);
+            // ...
+          });
+      }
+    });
+
+    onMessage(messaging, (payload) => {
+      console.log("Message received. ", payload);
+      // ...
+    });
+  } catch (err) {
+    console.error("failed to initialize firebase messaging", err);
+  }
 }
 
-onMessage(messaging, (payload) => {
-  console.log("Message received. ", payload);
-  // ...
-});
-
-export { requestPermission };
+export default requestPermission;

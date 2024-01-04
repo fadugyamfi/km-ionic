@@ -7,15 +7,18 @@ import {
 import { useDeviceStore } from "./stores/DeviceStore";
 import { Capacitor } from "@capacitor/core";
 
-const FCMToken = localStorage.getItem('FCMToken')
+const FCMToken = localStorage.getItem("FCMToken");
 
 export async function setupPushNotifications() {
-//   if (!Capacitor.isNativePlatform() || FCMToken) {
-//     return;
-//   }
   if (!Capacitor.isNativePlatform()) {
     return;
   }
+  const status = await PushNotifications.checkPermissions();
+  if (FCMToken && status.receive == "granted") {
+    return;
+  }
+  console.log("did not return");
+  localStorage.removeItem("FCMToken");
   // Request notification permission
   PushNotifications.requestPermissions().then((result) => {
     if (result.receive === "granted") {
