@@ -29,6 +29,9 @@ import "intl-tel-input/build/css/intlTelInput.css";
 import "swiper/scss";
 import "@ionic/vue/css/ionic-swiper.css";
 
+/* Virtual Scrolling */
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+
 /* Theme variables */
 // import './theme/variables.css';
 import "./theme/app.scss";
@@ -38,6 +41,7 @@ import messages from "./locales";
 import { createPinia } from "pinia";
 import { createI18n } from "vue-i18n";
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
+import { RecycleScroller } from 'vue-virtual-scroller';
 
 // Above the createApp() line
 defineCustomElements(window);
@@ -56,6 +60,7 @@ const pinia = createPinia();
 // initialize the app
 const app = createApp(App)
   .component("v-otp-input", VOtpInput)
+  .component('RecycleScroller', RecycleScroller)
   .use(IonicVue, {
     rippleEffect: true,
     mode: "md",

@@ -145,6 +145,8 @@ export default defineComponent({
 
       try {
         this.agents = await this.businessStore.getBusinessSaleAgents(this.userStore.activeBusiness as Business, 200, this.refreshing)
+        this.agents.unshift( this.userStore.user as User );
+
         this.filteredAgents = this.agents;
       } catch(error) {
         handleAxiosRequestError(error);

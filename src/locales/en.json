@@ -275,6 +275,11 @@
     }
   },
   "profile": {
+    "profile": "Profile",
+    "personal": "Personal",
+    "company": "company",
+    "installingUpdates": "Installing Updates In The Background",
+
     "customers": {
       "customers": "Customers",
       "youHaveNoCustomer": "You Have No Customers",
@@ -284,7 +289,7 @@
       "location": {
         "useCurrentLocation": "Use Current Location"
       },
-      "fullName": "Full Name",
+      "fullName": "Owner's Full Name",
       "businessOwnerPhone": "Business Owner Phone Number",
       "businessName": "Business Name",
       "businessLocation": "Business Location",

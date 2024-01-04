@@ -44,22 +44,19 @@
                 <IonSpinner name="crescent"></IonSpinner>
             </div>
 
-            <IonGrid v-if="!fetching">
-                <IonRow>
-                    <IonCol size="6" v-for="product in products" :key="product.id">
-                        <ProductCard
-                            :product="product"
-                            :showDescription="false"
-                            :showAddToCart="false"
-                            :showAddToFavorites="false"
-                            :showAddToSelected="true"
-                            :action="'toggleSelect'"
-                            :initially-selected="isSelected(product)"
-                            @toggleSelect="selectProduct($event)"
-                        ></ProductCard>
-                    </IonCol>
-                </IonRow>
-            </IonGrid>
+            <RecycleScroller class="scroller" :items="products" :grid-items="2" :item-size="210" :item-secondary-size="cardWidth"
+                     :item-class="'product-card-item'" key-field="id" v-slot="{ item }">
+                <ProductCard
+                    :product="item"
+                    :showDescription="false"
+                    :showAddToCart="false"
+                    :showAddToFavorites="false"
+                    :showAddToSelected="true"
+                    :action="'toggleSelect'"
+                    :initially-selected="isSelected(item)"
+                    @toggleSelect="selectProduct($event)"
+                ></ProductCard>
+            </RecycleScroller>
         </IonContent>
 
         <IonFooter class="ion-padding ion-no-border">
@@ -127,11 +124,15 @@ export default defineComponent({
         IonCol,
         ProductCard,
         IonSearchbar,
-        IonSpinner
+        IonSpinner,
     },
 
     computed: {
-        ...mapStores(useSaleStore, useProductStore, useUserStore)
+        ...mapStores(useSaleStore, useProductStore, useUserStore),
+
+        cardWidth() {
+            return window.document.documentElement.clientWidth / 2;
+        }
     },
 
     methods: {

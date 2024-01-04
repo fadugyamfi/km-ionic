@@ -32,7 +32,11 @@
                 <IonSpinner name="crescent"></IonSpinner>
             </section>
 
-            <ProductGridList v-else :products="products"></ProductGridList>
+            <section v-else>
+                <NoResults v-if="products.length == 0"></NoResults>
+                <ProductGridList v-else :products="products"></ProductGridList>
+            </section>
+
         </ion-content>
     </ion-page>
 </template>
@@ -47,36 +51,31 @@ import { useProductCategoryStore } from '@/stores/ProductCategoryStore';
 import { useRoute } from 'vue-router';
 import ProductCard from '@/components/cards/ProductCard.vue';
 import ProductGridList from '../../../components/modules/products/ProductGridList.vue';
+import NoResults from '../../../components/layout/NoResults.vue';
 
 const productCategoryStore = useProductCategoryStore();
 const route = useRoute();
 const category = ref<ProductCategory | null>();
 const products = ref<Product[]>([]);
-const productPrecaches = ref<Product[]>([]);
 const fetching = ref(false);
 
 const onSearch = async (event: any) => {
     fetching.value = true;
-    productPrecaches.value = await productCategoryStore.fetchCategoryProducts(category.value as ProductCategory, {
+    products.value = await productCategoryStore.fetchCategoryProducts(category.value as ProductCategory, {
         product_name_has: event.target?.value
     });
     fetching.value = false;
-
-    renderProducts();
 }
 
-const renderProducts = () => {
-    products.value = [];
+const fetchProducts = async () => {
+    if( !category.value ) {
+        setTimeout(() => fetchProducts(), 100);
+        return;
+    }
 
-    let i = 0;
-    const int = setInterval(() => {
-        if( i >= productPrecaches.value.length) {
-            clearInterval(int);
-            return;
-        }
-
-        products.value.push( productPrecaches.value[i] );
-    }, 2)
+    fetching.value = true;
+    products.value = await productCategoryStore.fetchCategoryProducts(category.value as ProductCategory);
+    fetching.value = false;
 }
 
 onIonViewWillEnter(async () => {
@@ -86,10 +85,6 @@ onIonViewWillEnter(async () => {
 onIonViewDidEnter(async () => {
     if (products.value.length > 0) return;
 
-    fetching.value = true;
-    productPrecaches.value = await productCategoryStore.fetchCategoryProducts(category.value as ProductCategory);
-    fetching.value = false;
-
-    renderProducts();
+    fetchProducts();
 });
 </script>

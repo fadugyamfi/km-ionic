@@ -12,7 +12,7 @@
       <IonLabel>{{ $t("general.orders") }}</IonLabel>
     </IonTabButton>
 
-    <IonTabButton tab="tab3" class="cartTab" href="/shopper/cart/business">
+    <IonTabButton tab="tab3" class="cartTab has-badge" href="/shopper/cart/business">
       <img src="/images/navigation/cart.svg" />
       <img class="active" src="/images/navigation/cart_active.svg" />
       <IonLabel>{{ $t("general.cart") }}</IonLabel>
@@ -27,10 +27,11 @@
       <IonLabel>{{ $t("general.credit") }}</IonLabel>
     </IonTabButton>
 
-    <IonTabButton tab="tab5" href="/shopper/profile">
+    <IonTabButton tab="tab5" href="/shopper/profile" class="has-badge small">
       <img src="/images/navigation/profile.svg" />
       <img src="/images/navigation/profile_active.svg" class="active" />
       <IonLabel>{{ $t("general.profile") }}</IonLabel>
+      <IonBadge color="danger" v-if="appStore.installingUpdate"></IonBadge>
     </IonTabButton>
   </IonTabBar>
 </template>
@@ -41,6 +42,7 @@ import { IonBadge, IonLabel, IonTabBar, IonTabButton } from "@ionic/vue";
 import { useOrderStore } from "@/stores/OrderStore";
 import { mapStores } from "pinia";
 import { useCartStore } from "@/stores/CartStore";
+import { useAppStore } from "@/stores/AppStore";
 
 export default defineComponent({
   data() {
@@ -49,21 +51,7 @@ export default defineComponent({
   components: { IonTabBar, IonTabButton, IonLabel, IonBadge },
 
   computed: {
-    ...mapStores(useCartStore, useOrderStore),
+    ...mapStores(useCartStore, useOrderStore, useAppStore),
   },
 });
 </script>
-
-<style scoped lang="scss">
-.cartTab {
-  position: relative;
-
-  ion-badge {
-    --background: #003366;
-    position: absolute;
-    font-size: 0.7em;
-    top: 5px;
-    right: 5px;
-  }
-}
-</style>
