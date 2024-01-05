@@ -12,9 +12,11 @@ import { formatDateMySQL, formatMySQLDateTime, handleAxiosRequestError } from ".
 import { SalePayment } from "../models/SalePayment";
 import Business from "../models/Business";
 import { useGeolocation } from "../composables/useGeolocation";
+import { useProductStore } from "./ProductStore";
 
 const storage = new AppStorage();
 const KOLA_SALES = 'kola.sales';
+const KOLA_INVENTORY = 'kola.sales.inventory';
 
 export const useSaleStore = defineStore("sale", {
 
@@ -102,6 +104,33 @@ export const useSaleStore = defineStore("sale", {
 
                     return null;
                 });
+        },
+
+        async fetchInventory(options = {}) {
+            const userStore = useUserStore();
+            const productStore = useProductStore();
+
+            const CACHE_KEY = `${KOLA_INVENTORY}.${userStore.activeBusiness?.id}`;
+
+            if( await storage.has(CACHE_KEY) ) {
+                const data = await storage.get(CACHE_KEY);
+                return data.map((p: object) => new Product(p));
+            }
+
+            const params = {
+                businesses_id: userStore.activeBusiness?.id,
+                limit: 500,
+                sort: 'latest',
+                ...options
+            }
+
+            const products = await productStore.fetchProducts(params);
+
+            if( products ) {
+                storage.set(CACHE_KEY, products, 7, 'days');
+            }
+
+            return products;
         },
 
         async fetchSales(options = {}): Promise<Sale[]> {

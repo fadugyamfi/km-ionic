@@ -134,19 +134,25 @@ const ionInfinite = async (ev: InfiniteScrollCustomEvent) => {
   ev.target.complete();
 };
 
-const fetchCustomers = async (options = {}) => {
+const fetchCustomers = async (options: any = {}) => {
   if (customers.value?.length == 0) {
     fetching.value = true;
   }
   const userStore = useUserStore();
   const customerStore = useCustomerStore();
 
-  customers.value = await customerStore.getBusinessCustomers(
-    userStore.activeBusiness as Business,
-    100,
-    options,
-    refreshing.value
-  );
+  if( userStore.user?.isSaleAgent() ) {
+    options = Object.assign(options, { limit: 100 });
+    customers.value = await userStore.fetchAssignedBusinesses( userStore.user?.id, options );
+  } else {
+    customers.value = await customerStore.getBusinessCustomers(
+      userStore.activeBusiness as Business,
+      100,
+      options,
+      refreshing.value
+    );
+  }
+
 
   fetching.value = false;
 };

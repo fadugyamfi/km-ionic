@@ -59,6 +59,8 @@ export default defineComponent({
         max-width: 100%;
         width: 100%;
         max-height: 200px;
+        object-fit: cover;
+        object-position: center;
     }
 
     aside {

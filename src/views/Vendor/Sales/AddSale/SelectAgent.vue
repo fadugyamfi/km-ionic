@@ -167,7 +167,7 @@ export default defineComponent({
       }
 
       if( this.userStore.user?.isSaleAgent() ) {
-        this.$router.push('/agent/sales/add-sale/select-customer');
+        this.$router.replace('/agent/sales/add-sale/select-customer');
       } else {
         this.$router.push('/vendor/sales/add-sale/select-sale-type');
       }
