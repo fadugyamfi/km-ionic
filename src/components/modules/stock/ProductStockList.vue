@@ -65,8 +65,8 @@ export default defineComponent({
       });
     },
 
-    onCategorySelected(category: ProductCategory) {
-      this.$router.push(`/profile/company/stocks/${category.id}/stock-details`);
+    onCategorySelected(stock: Stock) {
+      this.$router.push(`/profile/company/stocks/${stock.id}/stock-details`);
     },
   },
 

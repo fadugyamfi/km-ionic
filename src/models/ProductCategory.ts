@@ -14,7 +14,7 @@ export default class ProductCategory {
         Object.assign(this, data);
     }
 
-    get image(): string | undefined {
+    get image(): string {
         const parts = this._image?.split('/');
         const filename = parts ? parts[parts?.length - 1] : null;
 
@@ -22,7 +22,7 @@ export default class ProductCategory {
             return `/img/product_categories/${filename}`;
         }
 
-        return this._image;
+        return this._image as string;
     }
 
     set image(value: string) {
