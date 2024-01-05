@@ -1,74 +1,8 @@
 <template>
-  <section style="width: 100%;" class="font-medium">
-    <IonItem
-      lines="none"
-      class="profile-item ion-margin-top"
-      router-link="/profile/personal/edit-profile"
-      :button="true"
-    >
-      <ProfileAvatar
-        slot="start"
-        :image="userStore.user?.photo"
-        :username="userStore.user?.name"
-        customSize="32px"
-      ></ProfileAvatar>
-
-      <IonLabel>{{ userStore.user?.name }}</IonLabel>
-      <IonIcon slot="end" :icon="createOutline"></IonIcon>
-    </IonItem>
+  <section>
 
     <IonList lines="none">
       <IonItem
-        :detail="true"
-        :button="true"
-        class="profile-item"
-        :disabled="false"
-        router-link="/profile/address"
-      >
-        <IonAvatar slot="start">
-          <img src="/images/ic_location.svg" class="action-img" />
-        </IonAvatar>
-        <IonLabel>Address</IonLabel>
-      </IonItem>
-
-      <IonItem
-        :detail="true"
-        :button="true"
-        class="profile-item"
-        router-link="/profile/personal/reset-pin"
-      >
-        <IonAvatar slot="start">
-          <img src="/images/ic_password.svg" class="action-img" />
-        </IonAvatar>
-        <IonLabel>Reset Pin</IonLabel>
-      </IonItem>
-
-      <IonItem
-        :detail="true"
-        :button="true"
-        class="profile-item"
-        @click="showNotifications()"
-      >
-        <IonAvatar slot="start">
-          <img src="/images/ic_notification.svg" class="action-img" />
-        </IonAvatar>
-        <IonLabel>Notifications</IonLabel>
-      </IonItem>
-
-      <IonItem
-        :detail="true"
-        :button="true"
-        class="profile-item"
-        :disabled="false"
-        router-link="/profile/account-activity"
-      >
-        <IonAvatar slot="start">
-          <img src="/images/ic_user.svg" class="action-img" />
-        </IonAvatar>
-        <IonLabel>Account Activity</IonLabel>
-      </IonItem>
-
-      <!-- <IonItem
         :detail="true"
         :button="true"
         class="profile-item"
@@ -121,15 +55,15 @@
           ></IonIcon>
         </IonAvatar>
         <IonLabel color="danger">Delete Account</IonLabel>
-      </IonItem> -->
+      </IonItem>
     </IonList>
-    <!-- <DeleteModal
+    <DeleteModal
       title="Delete Account"
       description="You can't undo this action"
       :isOpen="showConfirmDeleteModal"
       @dismiss="showConfirmDeleteModal = false"
       @confirm="onConfirmDelete()"
-    ></DeleteModal> -->
+    ></DeleteModal>
   </section>
 </template>
 
