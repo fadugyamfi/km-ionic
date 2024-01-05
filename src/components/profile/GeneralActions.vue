@@ -2,6 +2,8 @@
   <section>
 
     <IonList lines="none">
+      <hr />
+
       <IonItem
         :detail="true"
         :button="true"
@@ -14,7 +16,7 @@
         <IonLabel>Help & Support</IonLabel>
       </IonItem>
 
-      <hr />
+
 
       <IonItem
         :detail="true"
