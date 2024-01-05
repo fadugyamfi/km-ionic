@@ -14,11 +14,11 @@
           <IonBackButton></IonBackButton>
         </IonButtons>
         <ion-title>{{ $t("profile.profile") }}</ion-title>
-        <IonButtons slot="end">
+        <!-- <IonButtons slot="end">
           <IonButton>
             <IonIcon :icon="search"></IonIcon>
           </IonButton>
-        </IonButtons>
+        </IonButtons> -->
       </ion-toolbar>
     </ion-header>
 
