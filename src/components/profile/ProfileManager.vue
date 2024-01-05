@@ -40,12 +40,6 @@
         <PersonalActions ></PersonalActions>
       </SwiperSlide>
     </Swiper>
-
-    <section class="shopper-home-section">
-      <ModeToggleCard style="margin-left: 0px; margin-right: 0px;"></ModeToggleCard>
-    </section>
-
-    <GeneralActions></GeneralActions>
   </ion-content>
 </template>
 
@@ -61,10 +55,15 @@ import { useAppStore } from '../../stores/AppStore';
 import GeneralActions from './GeneralActions.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Ref } from 'vue';
+import { computed } from 'vue';
 
 const userStore = useUserStore();
 const appStore = useAppStore();
 const viewing = ref('company');
+
+const canToggleModes = computed(() => {
+  return !userStore.user?.isSaleAgent() && !userStore.user?.isSalesManager();
+})
 
 let swiperEl: Ref<any> = ref(null);
 

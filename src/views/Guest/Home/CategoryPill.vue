@@ -1,7 +1,7 @@
 <template>
     <section class="category-pill">
         <IonAvatar>
-            <Image alt="category name" :src="category.image" />
+            <img alt="category name" :src="category.image" />
         </IonAvatar>
         <p>{{ category.name }}</p>
     </section>

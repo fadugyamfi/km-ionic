@@ -83,6 +83,13 @@
         <IonLabel>Switch Business</IonLabel>
       </IonItem>
     </IonList>
+
+    <section class="shopper-home-section" v-if="canToggleModes">
+      <ModeToggleCard style="margin-left: 0px; margin-right: 0px;"></ModeToggleCard>
+    </section>
+
+    <GeneralActions></GeneralActions>
+
     <SwitchBusinessSheet
       :isOpen="showFilterSheet"
       @didDismiss="showFilterSheet = false"
@@ -99,6 +106,8 @@ import { mapStores } from "pinia";
 import { search, createOutline } from "ionicons/icons";
 import ProfileAvatar from "../ProfileAvatar.vue";
 import SwitchBusinessSheet from "@/components/modules/SwitchBusinessSheet.vue";
+import ModeToggleCard from "../cards/ModeToggleCard.vue";
+import GeneralActions from "./GeneralActions.vue";
 
 export default defineComponent({
   components: {
@@ -109,10 +118,16 @@ export default defineComponent({
     IonIcon,
     ProfileAvatar,
     SwitchBusinessSheet,
-  },
+    ModeToggleCard,
+    GeneralActions
+},
 
   computed: {
     ...mapStores(useUserStore),
+
+    canToggleModes() {
+      return !this.userStore.user?.isSaleAgent() && !this.userStore.user?.isSalesManager();
+    }
   },
 
   data() {
