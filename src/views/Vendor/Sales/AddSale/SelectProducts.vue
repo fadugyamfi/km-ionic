@@ -92,7 +92,6 @@ import { useUserStore } from '@/stores/UserStore';
 import NoResults from '@/components/layout/NoResults.vue';
 import { RecycleScroller } from 'vue-virtual-scroller';
 
-
 export default defineComponent({
     data() {
         return {
@@ -104,8 +103,8 @@ export default defineComponent({
         };
     },
 
-    mounted() {
-        this.fetchProducts();
+    ionViewDidEnter() {
+        this.loadCachedInventory();
     },
 
     components: {
@@ -146,6 +145,14 @@ export default defineComponent({
     },
 
     methods: {
+        async loadCachedInventory() {
+            this.products = await this.saleStore.fetchInventory();
+
+            if( !this.products || this.products.length == 0 ) {
+                this.fetchProducts();
+            }
+        },
+
         async fetchProducts(options = {}) {
             this.fetching = true;
             try {
@@ -168,13 +175,11 @@ export default defineComponent({
         },
 
         selectProduct(selection: ProductSelection) {
-            console.log(selection);
             if( selection.selected ) {
                 this.saleStore.addProductToSale(selection.product);
             } else {
                 this.saleStore.removeProductFromSale(selection.product);
             }
-            console.log(this.saleStore.newSale);
         },
 
         onContinue() {
