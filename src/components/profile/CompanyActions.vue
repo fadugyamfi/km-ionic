@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section style="width: 100%;" class="font-medium">
     <IonItem lines="none" class="profile-item ion-margin-top">
       <ProfileAvatar
         slot="start"
