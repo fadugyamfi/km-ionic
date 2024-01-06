@@ -19,10 +19,7 @@
     </section>
 
     <ion-content>
-      <section
-        v-if="fetching"
-        class="ion-text-center d-flex ion-justify-content-center ion-padding"
-      >
+      <section v-if="fetching" class="ion-text-center d-flex ion-justify-content-center ion-padding">
         <IonSpinner name="crescent"></IonSpinner>
       </section>
 
@@ -40,45 +37,57 @@ import {
   IonButtons,
   IonBackButton,
   IonTitle,
-  IonList,
-  IonItem,
-  IonLabel,
   IonSpinner,
-  IonGrid,
-  IonCol,
-  IonRow,
-onIonViewDidEnter,
+  onIonViewDidEnter,
 } from "@ionic/vue";
 import NotificationButton from "@/components/notifications/NotificationButton.vue";
 import Product from "@/models/Product";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import Promotion from "../../../models/Promotion";
-import { usePromotionStore } from "../../../stores/PromotionStore";
-import PromotionItem from "../../../models/PromotionItem";
-import GuestProductCard from "@/components/cards/GuestProductCard.vue";
+import Promotion from "@/models/Promotion";
+import { usePromotionStore } from "@/stores/PromotionStore";
+import PromotionItem from "@/models/PromotionItem";
 import { computed } from "vue";
-import ProductGridList from "../../../components/modules/products/ProductGridList.vue";
+import ProductGridList from "@/components/modules/products/ProductGridList.vue";
+import AppStorage from "@/stores/AppStorage";
 
 const promotionStore = usePromotionStore();
 const route = useRoute();
 const promotion = ref<Promotion | null>();
 const promotionItems = ref<PromotionItem[] | null>();
 const fetching = ref(false);
+const storage = new AppStorage();
+const cacheKey = "kola.promotion-items";
 
 const products = computed(() => {
   return promotionItems.value?.filter((item: PromotionItem) => item.product != null)
     .map((item: PromotionItem) => item.product as Product);
 })
 
-onIonViewDidEnter(async () => {
+const loadPromotionAndItems = async () => {
+  const promotionCacheKey = `${cacheKey}.${+route.params.id}`;
   promotion.value = await promotionStore.getGuestPromotion(+route.params.id);
+
+  const items = await storage.get(promotionCacheKey);
+  if (items) {
+    promotionItems.value = items.map((p: any) => new PromotionItem(p));
+    return;
+  }
+
   promotionItems.value = promotion.value?.promotion_items;
 
-  fetching.value = true;
   setTimeout(async () => {
-    promotionItems.value = await promotionStore.getGuestPromotionItems(+route.params.id);
+    fetching.value = true;
+    try {
+      promotionItems.value = await promotionStore.getGuestPromotionItems(+route.params.id);
+      storage.set(promotionCacheKey, promotionItems.value, 7, 'days');
+    } catch (error) {
+      console.log(error);
+    } finally {
+      fetching.value = false;
+    }
   }, 100)
-  fetching.value = false;
-});
+};
+
+onIonViewDidEnter(() => loadPromotionAndItems());
 </script>

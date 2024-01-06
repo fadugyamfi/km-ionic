@@ -19,7 +19,7 @@
 
       <RecentlyViewedProducts v-show="viewLoaded"></RecentlyViewedProducts>
 
-      <TrendingProducts v-show="viewLoaded"></TrendingProducts>
+      <TrendingProducts v-show="showTrending"></TrendingProducts>
 
       <!-- <SuppliersNearYou></SuppliersNearYou> -->
 
@@ -48,6 +48,11 @@ import TrendingProducts from "./TrendingProducts.vue";
 
 const promotions = ref<Promotion[]>([]);
 const viewLoaded = ref(false);
+const showTrending = ref(false);
+
+onMounted(() => {
+  setTimeout(() => showTrending.value = true, 2000);
+})
 
 const fetchPromotions = async () => {
   const promotionStore = usePromotionStore();

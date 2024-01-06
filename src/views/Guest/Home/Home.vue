@@ -17,7 +17,7 @@
 
       <!-- <SuppliersNearYou></SuppliersNearYou> -->
 
-      <TrendingProducts></TrendingProducts>
+      <TrendingProducts v-if="showTrending"></TrendingProducts>
 
       <!-- <section class="shopper-home-section">
         <ModeToggleCard></ModeToggleCard>
@@ -41,8 +41,15 @@ import PromoSpace from "./PromoSpace.vue";
 import TrendingProducts from "@/views/Guest/Home/TrendingProducts.vue";
 
 const viewLoaded = ref(false);
+const showTrending = ref(false);
 
-onIonViewDidEnter(() => viewLoaded.value = true);
+onMounted(() => {
+  setTimeout(() => showTrending.value = true, 2000);
+})
+
+onIonViewDidEnter(() => {
+  viewLoaded.value = true;
+});
 
 onIonViewDidLeave(() => viewLoaded.value = false)
 </script>

@@ -10,13 +10,13 @@
       "src": "./img/icons/icon-192x192.png",
       "type": "image/png",
       "sizes": "any",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "./img/icons/icon-512x512.png",
       "type": "image/png",
       "sizes": "any",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
   "screenshots" : [
