@@ -4,7 +4,7 @@ export default class PromotionItem {
   public promo_price?: number;
   public _product?: Product | null;
 
-  constructor(data: {[key:string]: unknown}) {
+  constructor(data: any) {
     if( data._product ) {
       data.product = data._product;
     }
