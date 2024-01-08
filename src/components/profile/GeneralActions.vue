@@ -1,44 +1,10 @@
 <template>
-  <section style="width: 100%;" class="font-medium">
-    <IonItem lines="none" class="profile-item ion-margin-top" router-link="/profile/personal/edit-profile" :button="true">
-      <ProfileAvatar slot="start" :image="userStore.user?.photo" :username="userStore.user?.name" customSize="32px">
-      </ProfileAvatar>
-
-      <IonLabel>{{ userStore.user?.name }}</IonLabel>
-      <IonIcon slot="end" :icon="createOutline"></IonIcon>
-    </IonItem>
+  <section>
 
     <IonList lines="none">
-      <IonItem :detail="true" :button="true" class="profile-item" :disabled="false" router-link="/profile/address">
-        <IonAvatar slot="start">
-          <img src="/images/ic_location.svg" class="action-img" />
-        </IonAvatar>
-        <IonLabel>Address</IonLabel>
-      </IonItem>
+      <hr />
 
-      <IonItem :detail="true" :button="true" class="profile-item" router-link="/profile/personal/reset-pin">
-        <IonAvatar slot="start">
-          <img src="/images/ic_password.svg" class="action-img" />
-        </IonAvatar>
-        <IonLabel>Reset Pin</IonLabel>
-      </IonItem>
-
-      <IonItem :detail="true" :button="true" class="profile-item" @click="showNotifications()">
-        <IonAvatar slot="start">
-          <img src="/images/ic_notification.svg" class="action-img" />
-        </IonAvatar>
-        <IonLabel>Notifications</IonLabel>
-      </IonItem>
-
-      <IonItem :detail="true" :button="true" class="profile-item" :disabled="false"
-               router-link="/profile/account-activity">
-        <IonAvatar slot="start">
-          <img src="/images/ic_user.svg" class="action-img" />
-        </IonAvatar>
-        <IonLabel>Account Activity</IonLabel>
-      </IonItem>
-
-      <!-- <IonItem
+      <IonItem
         :detail="true"
         :button="true"
         class="profile-item"
@@ -50,7 +16,7 @@
         <IonLabel>Help & Support</IonLabel>
       </IonItem>
 
-      <hr />
+
 
       <IonItem
         :detail="true"
@@ -91,22 +57,15 @@
           ></IonIcon>
         </IonAvatar>
         <IonLabel color="danger">Delete Account</IonLabel>
-      </IonItem> -->
+      </IonItem>
     </IonList>
-
-    <section class="shopper-home-section" v-if="canToggleModes">
-      <ModeToggleCard style="margin-left: 0px; margin-right: 0px;"></ModeToggleCard>
-    </section>
-
-    <GeneralActions></GeneralActions>
-
-    <!-- <DeleteModal
+    <DeleteModal
       title="Delete Account"
       description="You can't undo this action"
       :isOpen="showConfirmDeleteModal"
       @dismiss="showConfirmDeleteModal = false"
       @confirm="onConfirmDelete()"
-    ></DeleteModal> -->
+    ></DeleteModal>
   </section>
 </template>
 
@@ -137,8 +96,6 @@ import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import NotificationsModal from "@/components/notifications/NotificationsModal.vue";
 import SettingsModal from "@/components/modules/settings/SettingsModal.vue";
 import DeleteModal from "../modals/DeleteModal.vue";
-import ModeToggleCard from "../cards/ModeToggleCard.vue";
-import GeneralActions from "./GeneralActions.vue";
 
 export default defineComponent({
   components: {
@@ -149,16 +106,10 @@ export default defineComponent({
     IonIcon,
     ProfileAvatar,
     DeleteModal,
-    ModeToggleCard,
-    GeneralActions
   },
 
   computed: {
     ...mapStores(useUserStore),
-
-    canToggleModes() {
-      return !this.userStore.user?.isSaleAgent() && !this.userStore.user?.isSalesManager();
-    }
   },
 
   data() {

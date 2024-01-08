@@ -9,7 +9,7 @@
         :key="stock.id"
         :stock="stock"
         :tall="index % 2 == 0"
-        @click="onCategorySelected(stock)"
+        @click="onStockSelected(stock)"
         :data-index="index"
       ></ProductStockCard>
     </section>
@@ -23,7 +23,7 @@
         :key="stock.id"
         :stock="stock"
         :tall="index % 2 != 0"
-        @click="onCategorySelected(stock)"
+        @click="onStockSelected(stock)"
         :data-index="index"
       ></ProductStockCard>
     </section>
@@ -65,8 +65,8 @@ export default defineComponent({
       });
     },
 
-    onCategorySelected(category: ProductCategory) {
-      this.$router.push(`/profile/company/stocks/${category.id}/stock-details`);
+    onStockSelected(stock: Stock) {
+      this.$router.push(`/profile/company/stocks/${stock.id}/stock-details`);
     },
   },
 

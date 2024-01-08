@@ -11,12 +11,17 @@
         <IonText color="medium" class="" style="font-weight: normal;">
           {{ description }}
         </IonText>
+
+        <KolaYellowButton v-if="showActionButton" class="ion-margin-top" @click="doAction()">
+            {{ actionButtonText }}
+        </KolaYellowButton>
       </div>
 </template>
 
 <script lang="ts">
 import { IonText } from '@ionic/vue';
 import { defineComponent } from 'vue';
+import KolaYellowButton from '../KolaYellowButton.vue';
 
 
 export default defineComponent({
@@ -29,9 +34,24 @@ export default defineComponent({
         description: {
             default: "Please try again",
             type: String
+        },
+        showActionButton: {
+            default: false
+        },
+        actionButtonText: {
+            default: "Refresh",
+            type: String
         }
     },
 
-    components: { IonText }
+    components: { IonText, KolaYellowButton },
+
+    emits: ['action'],
+
+    methods: {
+        doAction() {
+            this.$emit('action');
+        }
+    }
 });
 </script>

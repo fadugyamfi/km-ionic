@@ -39,10 +39,10 @@ const fetchCategories = async () => {
   }
 
   categories.value = response.map((cat) => {
-    return {
+    return new ProductCategory({
       ...cat,
       name: cat.name?.split(" ")[0],
-    };
+    });
   });
 };
 const filterCategory = (category: any) => {

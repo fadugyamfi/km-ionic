@@ -381,11 +381,15 @@ export const useUserStore = defineStore("user", {
         });
     },
 
-    async fetchAssignedBusinesses(user_id: number|null = null): Promise<Business[]> {
+    async fetchAssignedBusinesses(user_id: number|null = null, options: any = {}): Promise<Business[]> {
       let user = user_id || this.user?.id;
 
+      const params = {
+        ...options
+      }
+
       return axios
-        .get(`/v2/users/${user}/businesses`)
+        .get(`/v2/users/${user}/businesses`, { params })
         .then(async (response) => {
           const businesses = response.data.data.map(
             (el: any) => new Business(el.business)

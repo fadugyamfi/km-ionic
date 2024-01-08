@@ -19,6 +19,10 @@ export const useProductCategoryStore = defineStore("productCategory", {
 
   actions: {
     async loadFromStorage(): Promise<ProductCategory[]> {
+      if( this.categories.length > 0 ) {
+        return this.categories;
+      }
+
       const categories = await storage.get(KOLA_CATEGORIES);
 
       if (categories) {

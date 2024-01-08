@@ -1,7 +1,7 @@
 <template>
     <IonCard>
         <IonCardContent>
-            <section v-if="userStore.appMode == 'shopping'">
+            <section v-if="userStore.appMode == 'shopping'" class="ion-text-start">
                 <IonCardTitle>Shopping Mode</IonCardTitle>
                 <IonCardSubtitle>
                     You are currently in shopping mode.
@@ -9,7 +9,7 @@
                 </IonCardSubtitle>
             </section>
 
-            <section v-if="userStore.appMode == 'vendor'">
+            <section v-if="userStore.appMode == 'vendor'" class="ion-text-start">
                 <IonCardTitle>Vendor Mode</IonCardTitle>
                 <IonCardSubtitle>
                     You are currently in Vendor mode.

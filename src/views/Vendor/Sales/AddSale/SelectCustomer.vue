@@ -37,24 +37,30 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
 
-      <IonList v-if="!fetching" lines="none" class="ion-padding-horizontal sales-select-list simple">
-        <IonListHeader>
-          <IonLabel class="fw-bold">{{ $t("vendor.sales.selectCustomer") }}</IonLabel>
-        </IonListHeader>
+      <section v-else>
+        <NoResults v-if="customers.length == 0" title="No Customers Assigned" description="Please create / assign customers to populate this list"></NoResults>
 
-        <IonItem v-for="customer in customers" :key="customer.id" @click="selectCustomer(customer)">
-          <ProfileAvatar slot="start" :image="customer?.logo"
-                           :username="customer?.name" customSize="40px"></ProfileAvatar>
-          <IonLabel>
-            <p class="ion-no-margin">{{ customer.name }}</p>
-            <IonText color="medium" class="font-medium">
-              {{ customer.location || 'Location Unknown' }}
-            </IonText>
-          </IonLabel>
-          <IonCheckbox :aria-label="customer.name" slot="end" mode="ios" :value="customer.id"
-                       :checked="saleStore.newSale.customer_id == customer.id"></IonCheckbox>
-        </IonItem>
-      </IonList>
+        <IonList v-else lines="none" class="ion-padding-horizontal sales-select-list simple">
+          <IonListHeader>
+            <IonLabel class="fw-bold">{{ $t("vendor.sales.selectCustomer") }}</IonLabel>
+          </IonListHeader>
+
+          <IonItem v-for="customer in customers" :key="customer.id" @click="selectCustomer(customer)">
+            <ProfileAvatar slot="start" :image="customer?.logo"
+                            :username="customer?.name" customSize="40px"></ProfileAvatar>
+            <IonLabel>
+              <p class="ion-no-margin">{{ customer.name }}</p>
+              <IonText color="medium" class="font-medium">
+                {{ customer.location || 'Location Unknown' }}
+              </IonText>
+            </IonLabel>
+            <IonCheckbox :aria-label="customer.name" slot="end" mode="ios" :value="customer.id"
+                        :checked="saleStore.newSale.customer_id == customer.id"></IonCheckbox>
+          </IonItem>
+        </IonList>
+      </section>
+
+
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
@@ -77,7 +83,8 @@ import { useToastStore } from '@/stores/ToastStore';
 import KolaYellowButton from '@/components/KolaYellowButton.vue';
 import Image from '@/components/Image.vue';
 import Business from '@/models/Business';
-import ProfileAvatar from '../../../../components/ProfileAvatar.vue';
+import ProfileAvatar from '@/components/ProfileAvatar.vue';
+import NoResults from '@/components/layout/NoResults.vue';
 
 export default defineComponent({
 
@@ -106,7 +113,8 @@ export default defineComponent({
     IonRefresher,
     IonRefresherContent,
     IonSearchbar,
-    ProfileAvatar
+    ProfileAvatar,
+    NoResults
 },
 
   data() {

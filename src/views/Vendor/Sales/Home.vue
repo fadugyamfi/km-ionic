@@ -308,6 +308,8 @@ export default defineComponent({
   ionViewDidEnter() {
     this.fetchRecentSales();
     this.fetchBusinessSummary();
+
+    setTimeout(() => this.saleStore.fetchInventory(), 200);
   },
 });
 </script>
