@@ -4,7 +4,11 @@ export default class PromotionItem {
   public promo_price?: number;
   public _product?: Product | null;
 
-  constructor(data: object) {
+  constructor(data: any) {
+    if( data._product ) {
+      data.product = data._product;
+    }
+
     Object.assign(this, data);
   }
 

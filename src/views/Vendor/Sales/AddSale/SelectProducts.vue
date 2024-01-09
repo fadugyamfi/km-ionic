@@ -44,22 +44,25 @@
                 <IonSpinner name="crescent"></IonSpinner>
             </div>
 
-            <IonGrid v-if="!fetching">
-                <IonRow>
-                    <IonCol size="6" v-for="product in products" :key="product.id">
-                        <ProductCard
-                            :product="product"
-                            :showDescription="false"
-                            :showAddToCart="false"
-                            :showAddToFavorites="false"
-                            :showAddToSelected="true"
-                            :action="'toggleSelect'"
-                            :initially-selected="isSelected(product)"
-                            @toggleSelect="selectProduct($event)"
-                        ></ProductCard>
-                    </IonCol>
-                </IonRow>
-            </IonGrid>
+            <section v-else>
+                <NoResults v-if="products?.length == 0" title="No Products Available" description="Add products to your inventory to populate this list"></NoResults>
+
+                <RecycleScroller v-else class="scroller" :items="products" :grid-items="2" :item-size="210" :item-secondary-size="cardWidth"
+                        :item-class="'product-card-item'" key-field="id" v-slot="{ item }">
+                    <ProductCard
+                        :product="item"
+                        :showDescription="false"
+                        :showAddToCart="false"
+                        :showAddToFavorites="false"
+                        :showAddToSelected="true"
+                        :action="'toggleSelect'"
+                        :initially-selected="isSelected(item)"
+                        @toggleSelect="selectProduct($event)"
+                    ></ProductCard>
+                </RecycleScroller>
+            </section>
+
+
         </IonContent>
 
         <IonFooter class="ion-padding ion-no-border">
@@ -86,7 +89,8 @@ import ProductCard, { ProductSelection } from '@/components/cards/ProductCard.vu
 import { handleAxiosRequestError } from '@/utilities';
 import { useProductStore } from '@/stores/ProductStore';
 import { useUserStore } from '@/stores/UserStore';
-
+import NoResults from '@/components/layout/NoResults.vue';
+import { RecycleScroller } from 'vue-virtual-scroller';
 
 export default defineComponent({
     data() {
@@ -99,8 +103,8 @@ export default defineComponent({
         };
     },
 
-    mounted() {
-        this.fetchProducts();
+    ionViewDidEnter() {
+        this.loadCachedInventory();
     },
 
     components: {
@@ -127,14 +131,28 @@ export default defineComponent({
         IonCol,
         ProductCard,
         IonSearchbar,
-        IonSpinner
+        IonSpinner,
+        NoResults,
+        RecycleScroller
     },
 
     computed: {
-        ...mapStores(useSaleStore, useProductStore, useUserStore)
+        ...mapStores(useSaleStore, useProductStore, useUserStore),
+
+        cardWidth() {
+            return window.document.documentElement.clientWidth / 2;
+        }
     },
 
     methods: {
+        async loadCachedInventory() {
+            this.products = await this.saleStore.fetchInventory();
+
+            if( !this.products || this.products.length == 0 ) {
+                this.fetchProducts();
+            }
+        },
+
         async fetchProducts(options = {}) {
             this.fetching = true;
             try {
@@ -157,13 +175,11 @@ export default defineComponent({
         },
 
         selectProduct(selection: ProductSelection) {
-            console.log(selection);
             if( selection.selected ) {
                 this.saleStore.addProductToSale(selection.product);
             } else {
                 this.saleStore.removeProductFromSale(selection.product);
             }
-            console.log(this.saleStore.newSale);
         },
 
         onContinue() {

@@ -3,10 +3,12 @@
     <IonItem
       lines="none"
       :class="{ 'ion-invalid ion-touched': form.errors[name] }"
+      class="ion-text-nowrap"
     >
       <IonInput
         ref="pin"
         :class="{ 'ion-invalid ion-touched': form.errors[name] }"
+        class="ion-text-nowrap"
         :label="label"
         labelPlacement="stacked"
         v-model="form.fields[name]"
@@ -71,6 +73,10 @@ export default defineComponent({
   if necessary
  */
 .kola-pin-entry-field .input-wrapper {
-  max-width: 75%;
+  min-width: 90%;
+}
+
+.kola-pin-entry-field ion-item::part(native) {
+  min-width: 275px;
 }
 </style>

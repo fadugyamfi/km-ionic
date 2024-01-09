@@ -12,9 +12,13 @@
               defaultHref="/profile/company/customers"
             ></ion-back-button>
           </ion-buttons>
-          <IonTitle size="small" class="fw-bold">{{
-            $t("profile.customers.addCustomer")
-          }}</IonTitle>
+          <IonTitle size="small" class="fw-bold">
+            {{ $t("profile.customers.addCustomer") }}
+          </IonTitle>
+
+          <IonButtons slot="end">
+            <IonButton></IonButton>
+          </IonButtons>
         </ion-toolbar>
       </ion-header>
     </IonHeader>
@@ -24,19 +28,7 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <form v-show="!fetching" @submit.prevent="createCustomer()">
-        <IonInput
-          class="kola-input ion-margin-bottom"
-          :class="{
-            'ion-invalid ion-touched': form.errors.business_owner_name,
-          }"
-          :label="$t('profile.customers.fullName')"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.business_owner_name"
-          name="business_owner_name"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
+
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.name }"
@@ -48,31 +40,11 @@
           @ion-input="form.validate($event)"
           required
         ></IonInput>
-        <IonInput
-          class="kola-input"
-          :class="{ 'ion-invalid ion-touched': form.errors.location }"
-          :label="$t('profile.customers.businessLocation')"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.location"
-          name="business_location"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-        <IonButton
-          fill="clear"
-          size="small"
-          style="text-transform: none"
-          class="ion-margin-bottom use-location ion-text-start"
-          @click="getLocation()"
-        >
-          <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
-          {{ $t("profile.customers.location.useCurrentLocation") }}
-        </IonButton>
+
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.phone_number }"
-          label="Phone Number"
+          label="Business Phone Number"
           labelPlacement="stacked"
           fill="solid"
           v-model="form.fields.phone_number"
@@ -80,64 +52,110 @@
           @ion-input="form.validate($event)"
           required
         ></IonInput>
-        <IonInput
-          class="kola-input ion-margin-bottom"
-          :class="{
-            'ion-invalid ion-touched': form.errors.business_owner_phone,
-          }"
-          label="Business owner phone number"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.business_owner_phone"
-          name="business_owner_phone"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-        <h6>{{ $t("profile.customers.assignToSalesAgentOrManager") }}</h6>
-        <IonSelect
-          class="kola-input ion-margin-bottom"
-          :label="$t('profile.customers.selectSaleAgent')"
-          :class="{
-            'ion-invalid ion-touched': form.errors.cms_users_id,
-          }"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.cms_users_id"
-          required
-          name="sales-agent"
-          :toggle-icon="chevronDownOutline"
-          @ion-change="form.validateSelectInput($event)"
-        >
-          <IonSelectOption
-            v-for="agent in salesAgents"
-            :key="agent.id"
-            :value="agent.id"
+
+        <section>
+          <IonInput
+            class="kola-input"
+            :class="{ 'ion-invalid ion-touched': form.errors.location }"
+            :label="$t('profile.customers.businessLocation')"
+            labelPlacement="stacked"
+            fill="solid"
+            v-model="form.fields.location"
+            name="business_location"
+            @ion-input="form.validate($event)"
+            required
+          ></IonInput>
+          <IonButton
+            fill="clear"
+            size="small"
+            style="text-transform: none"
+            class="ion-margin-bottom use-location ion-text-start"
+            @click="getLocation()"
           >
-            {{ agent.name }}
-          </IonSelectOption>
-        </IonSelect>
-        <h6>{{ $t("profile.customers.howDoTheyUsuallyPay") }}</h6>
-        <IonSelect
-          class="kola-input ion-margin-bottom"
-          :label="$t('profile.customers.selectPaymentMethod')"
-          :class="{
-            'ion-invalid ion-touched': form.errors.business_types_id,
-          }"
-          labelPlacement="stacked"
-          :toggle-icon="chevronDownOutline"
-          fill="solid"
-          v-model="form.fields.business_types_id"
-          required
-          name="payment-method"
-          @ion-change="form.validateSelectInput($event)"
-        >
-          <IonSelectOption
-            v-for="mode in paymentModes"
-            :key="mode.id"
-            :value="mode.id"
-            >{{ mode.name }}</IonSelectOption
+            <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
+            {{ $t("profile.customers.location.useCurrentLocation") }}
+          </IonButton>
+        </section>
+
+        <section class="ion-margin-vertical">
+          <IonInput
+            class="kola-input ion-margin-bottom"
+            :class="{
+              'ion-invalid ion-touched': form.errors.business_owner_name,
+            }"
+            :label="$t('profile.customers.fullName')"
+            labelPlacement="stacked"
+            fill="solid"
+            v-model="form.fields.business_owner_name"
+            name="business_owner_name"
+            @ion-input="form.validate($event)"
+            required
+          ></IonInput>
+
+          <IonInput
+            class="kola-input ion-margin-bottom"
+            :class="{
+              'ion-invalid ion-touched': form.errors.business_owner_phone,
+            }"
+            label="Owner's Phone Number"
+            labelPlacement="stacked"
+            fill="solid"
+            v-model="form.fields.business_owner_phone"
+            name="business_owner_phone"
+            @ion-input="form.validate($event)"
+            required
+          ></IonInput>
+        </section>
+
+
+        <section class="ion-padding-vertical">
+          <h6>{{ $t("profile.customers.assignToSalesAgentOrManager") }}</h6>
+          <IonSelect
+            class="kola-input ion-margin-bottom"
+            :label="$t('profile.customers.selectSaleAgent')"
+            :class="{
+              'ion-invalid ion-touched': form.errors.cms_users_id,
+            }"
+            labelPlacement="stacked"
+            fill="solid"
+            v-model="form.fields.cms_users_id"
+            required
+            name="sales-agent"
+            :toggle-icon="chevronDownOutline"
+            @ion-change="form.validateSelectInput($event)"
           >
-        </IonSelect>
+            <IonSelectOption
+              v-for="agent in salesAgents"
+              :key="agent.id"
+              :value="agent.id"
+            >
+              {{ agent.name }}
+            </IonSelectOption>
+          </IonSelect>
+          <h6>{{ $t("profile.customers.howDoTheyUsuallyPay") }}</h6>
+          <IonSelect
+            class="kola-input ion-margin-bottom"
+            :label="$t('profile.customers.selectPaymentMethod')"
+            :class="{
+              'ion-invalid ion-touched': form.errors.business_types_id,
+            }"
+            labelPlacement="stacked"
+            :toggle-icon="chevronDownOutline"
+            fill="solid"
+            v-model="form.fields.business_types_id"
+            required
+            name="payment-method"
+            @ion-change="form.validateSelectInput($event)"
+          >
+            <IonSelectOption
+              v-for="mode in paymentModes"
+              :key="mode.id"
+              :value="mode.id"
+              >{{ mode.name }}</IonSelectOption
+            >
+          </IonSelect>
+        </section>
+
         <IonFooter class="ion-padding-top ion-no-border">
           <KolaYellowButton
             :disabled="!formValid"
@@ -272,6 +290,9 @@ const fetchBusinessSalesAgent = async () => {
     userStore.activeBusiness as Business,
     50
   );
+
+  salesAgents.value.unshift( userStore.user as User );
+
   fetching.value = false;
 };
 const getLocation = async () => {

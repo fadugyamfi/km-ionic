@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { IonImg, IonSkeletonText } from '@ionic/vue';
+import { IonImg, IonSkeletonText, getPlatforms, isPlatform } from '@ionic/vue';
 import { defineComponent, PropType } from 'vue';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import AppStorage from '@/stores/AppStorage';
@@ -186,9 +186,9 @@ export default defineComponent({
         this.imageData = this.src as string;
 
         // fetch and cache image behind the scenes
-        if( this.path && this.src ) {
-            this.loadImage();
-        }
+        // if( this.path && this.src && isPlatform("pwa") ) {
+        //     this.loadImage();
+        // }
     }
 });
 </script>

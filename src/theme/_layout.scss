@@ -26,6 +26,7 @@ ion-page,
 .fw-semibold {
   font-weight: 600;
 }
+
 .justify-content-between {
   justify-content: space-between;
 }
@@ -93,6 +94,12 @@ ion-card {
   }
 }
 
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
 ion-tabs {
   ion-tab-bar {
     background-color: #ffffff;
@@ -100,6 +107,7 @@ ion-tabs {
     box-shadow: -4px 0px 8px rgba(0, 0, 0, 0.12);
 
     ion-tab-button {
+
       img.active,
       ion-icon.active {
         display: none;
@@ -110,6 +118,7 @@ ion-tabs {
       }
 
       &.tab-selected {
+
         img.active,
         ion-icon.active {
           display: block;
@@ -123,6 +132,29 @@ ion-tabs {
 
         ion-label {
           font-weight: 500;
+        }
+      }
+
+      &.has-badge {
+        position: relative;
+
+        ion-badge {
+          --background: #003366;
+          position: absolute;
+          font-size: 0.7em;
+          top: 5px;
+          right: 5px;
+        }
+
+        &.small {
+          ion-badge {
+            font-size: 0.2em;
+            top: 8px;
+            right: 10px;
+            width: 6px;
+            height: 7px;
+            animation: pulse 1.5s infinite;
+          }
         }
       }
     }

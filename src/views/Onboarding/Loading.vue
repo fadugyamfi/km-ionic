@@ -21,6 +21,11 @@
                 <div v-for="brand in brandStore.brands" class="">
                     <Image :src="brand.logo" />
                 </div>
+
+                <!-- Image preloading -->
+                <div>
+                    <Image src="http://api.kolamarket.local/uploads/1/2022-03/product-placeholder.png" />
+                </div>
             </div>
         </IonContent>
     </IonPage>

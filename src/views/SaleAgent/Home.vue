@@ -75,6 +75,7 @@ import {
   IonButton,
   IonButtons,
   IonIcon,
+onIonViewDidEnter,
 } from "@ionic/vue";
 import { onMounted, ref } from "vue";
 import { useUserStore } from "@/stores/UserStore";
@@ -160,6 +161,11 @@ onMounted(() => {
   onSegmentChanged(new CustomEvent("load", { detail: { value: "thisweek" } }));
   fetchRecentSales();
 });
+
+onIonViewDidEnter(() => {
+  const saleStore = useSaleStore();
+  setTimeout(() => saleStore.fetchInventory(), 200);
+})
 
 const onViewSales = () => {
   router.push("/agent/sales");
