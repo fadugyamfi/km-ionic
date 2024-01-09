@@ -2,7 +2,7 @@
     <IonHeader class="ion-no-border">
       <ion-toolbar>
         <IonTitle>
-          <IonText class="welcome" style="font-size: 0.75em;">
+          <IonText class="welcome">
             Welcome To Kola Market👋
           </IonText>
         </IonTitle>
@@ -73,7 +73,7 @@
 
   <style lang="scss">
   .welcome {
-    font-size: 0.8em;
+    font-size: 0.75em;
     font-weight: 500;
   }
   </style>
