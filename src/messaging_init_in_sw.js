@@ -30,7 +30,7 @@ function requestPermission() {
     if (Capacitor.isNativePlatform()) {
       return;
     }
-  
+
     if (FCMToken && Notification.permission == "granted") {
       return;
     }
@@ -67,7 +67,16 @@ function requestPermission() {
 
     onMessage(messaging, (payload) => {
       console.log("Message received. ", payload);
-      // ...
+
+      const notificationTitle = payload.notification?.title;
+      const notificationOptions = {
+        body: payload.notification?.body,
+        icon: payload.notification?.icon,
+      };
+      var notification = new Notification(
+        notificationTitle,
+        notificationOptions
+      );
     });
   } catch (err) {
     console.error("failed to initialize firebase messaging", err);
