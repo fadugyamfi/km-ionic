@@ -38,6 +38,14 @@
         <IonLabel>Account Activity</IonLabel>
       </IonItem>
 
+      <IonItem :detail="true" :button="true" class="profile-item" :disabled="false"
+               @click="showFavorites()">
+        <IonAvatar slot="start">
+          <IonIcon :icon="heartOutline" style="font-size: 21px"></IonIcon>
+        </IonAvatar>
+        <IonLabel>Your Favorites</IonLabel>
+      </IonItem>
+
       <!-- <IonItem
         :detail="true"
         :button="true"
@@ -128,6 +136,7 @@ import {
   powerOutline,
   settingsOutline,
   trashOutline,
+  heartOutline,
 } from "ionicons/icons";
 import { useRouter } from "vue-router";
 import { useToastStore } from "../../stores/ToastStore";
@@ -139,6 +148,7 @@ import SettingsModal from "@/components/modules/settings/SettingsModal.vue";
 import DeleteModal from "../modals/DeleteModal.vue";
 import ModeToggleCard from "../cards/ModeToggleCard.vue";
 import GeneralActions from "./GeneralActions.vue";
+import FavoritesModal from "@/components/modules/favorites/FavoritesModal.vue";
 
 export default defineComponent({
   components: {
@@ -171,6 +181,7 @@ export default defineComponent({
       router,
       settingsOutline,
       trashOutline,
+      heartOutline,
       showConfirmDeleteModal: false,
     };
   },
@@ -228,6 +239,21 @@ export default defineComponent({
         // message.value = `Hello, ${data}!`;
       }
     },
+
+    async showFavorites() {
+      const modal = await modalController.create({
+        component: FavoritesModal,
+      });
+
+      modal.present();
+
+      const { data, role } = await modal.onWillDismiss();
+
+      if (role === "confirm") {
+        // message.value = `Hello, ${data}!`;
+      }
+    },
+
 
     async openSettings() {
       const modal = await modalController.create({
