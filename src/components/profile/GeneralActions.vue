@@ -38,9 +38,9 @@
         @click="logout()"
       >
         <IonAvatar slot="start">
-          <IonIcon :icon="powerOutline" style="font-size: 21px"></IonIcon>
+          <IonIcon color="danger" :icon="powerOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
-        <IonLabel>Log Out</IonLabel>
+        <IonLabel color="danger">Log Out</IonLabel>
       </IonItem>
 
       <IonItem
@@ -51,14 +51,22 @@
       >
         <IonAvatar slot="start">
           <IonIcon
-            color="danger"
             :icon="trashOutline"
             style="font-size: 21px"
           ></IonIcon>
         </IonAvatar>
-        <IonLabel color="danger">Delete Account</IonLabel>
+        <IonLabel>Delete Account</IonLabel>
       </IonItem>
     </IonList>
+    <ConfirmModal
+      title="Confirm Logout"
+      description="You can log back in with your Phone Number and PIN"
+      :isOpen="showConfirmLogoutModal"
+      @dismiss="showConfirmLogoutModal = false"
+      @confirm="onConfirmLogout()"
+    >
+
+    </ConfirmModal>
     <DeleteModal
       title="Delete Account"
       description="You can't undo this action"
@@ -96,6 +104,7 @@ import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import NotificationsModal from "@/components/notifications/NotificationsModal.vue";
 import SettingsModal from "@/components/modules/settings/SettingsModal.vue";
 import DeleteModal from "../modals/DeleteModal.vue";
+import ConfirmModal from "../modals/ConfirmModal.vue";
 
 export default defineComponent({
   components: {
@@ -106,7 +115,8 @@ export default defineComponent({
     IonIcon,
     ProfileAvatar,
     DeleteModal,
-  },
+    ConfirmModal
+},
 
   computed: {
     ...mapStores(useUserStore),
@@ -123,11 +133,17 @@ export default defineComponent({
       settingsOutline,
       trashOutline,
       showConfirmDeleteModal: false,
+      showConfirmLogoutModal: false
     };
   },
 
   methods: {
     logout() {
+      this.showConfirmLogoutModal = true;
+    },
+
+    onConfirmLogout() {
+      this.showConfirmLogoutModal = false;
       const toastStore = useToastStore();
       toastStore.blockUI("Logging Out...");
 
@@ -151,9 +167,10 @@ export default defineComponent({
       this.showConfirmDeleteModal = true;
     },
     async onConfirmDelete() {
+      this.showConfirmDeleteModal = false;
+
       const toastStore = useToastStore();
       try {
-        this.showConfirmDeleteModal = false;
         toastStore.blockUI("Deleting Account...");
         const response = await this.userStore.deleteUser();
         if (response) {

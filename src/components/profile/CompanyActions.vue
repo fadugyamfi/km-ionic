@@ -57,14 +57,14 @@
         router-link="/profile/company/sale-agents"
       >
         <IonAvatar slot="start">
-          <img src="/images/ic_help_support.svg" class="action-img" />
+          <IonIcon :icon="personAddOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
         <IonLabel>Agents</IonLabel>
       </IonItem>
 
       <IonItem :detail="true" :button="true" class="profile-item" @click="onAddSale()">
         <IonAvatar slot="start">
-          <img src="/images/ic_help_support.svg" class="action-img" />
+          <IonIcon :icon="addCircleOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
         <IonLabel>Add Sale</IonLabel>
       </IonItem>
@@ -78,7 +78,7 @@
         @click="showFilterSheet = true"
       >
         <IonAvatar slot="start">
-          <img src="/images/ic_help_support.svg" class="action-img" />
+          <IonIcon :icon="swapHorizontalOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
         <IonLabel>Switch Business</IonLabel>
       </IonItem>
@@ -103,7 +103,7 @@ import { IonIcon, IonLabel, IonItem, IonAvatar, IonList } from "@ionic/vue";
 import { computed, defineComponent } from "vue";
 import { useUserStore } from "@/stores/UserStore";
 import { mapStores } from "pinia";
-import { search, createOutline } from "ionicons/icons";
+import { search, createOutline, repeatOutline, swapHorizontalOutline, addCircleOutline, personAddOutline } from "ionicons/icons";
 import ProfileAvatar from "../ProfileAvatar.vue";
 import SwitchBusinessSheet from "@/components/modules/SwitchBusinessSheet.vue";
 import ModeToggleCard from "../cards/ModeToggleCard.vue";
@@ -133,6 +133,10 @@ export default defineComponent({
   data() {
     return {
       createOutline,
+      repeatOutline,
+      addCircleOutline,
+      swapHorizontalOutline,
+      personAddOutline,
       search,
       showFilterSheet: false,
       fetching: false,
