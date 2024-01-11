@@ -11,7 +11,7 @@
           class="d-flex ion-justify-content-between"
         >
           <section class="d-flex flex-column business-description">
-            <IonText class="fw-semibold ellipsis font-medium">
+            <IonText class="fw-bold ellipsis font-medium">
               {{ order?.business?.name || "Unknown" }}
             </IonText>
 
