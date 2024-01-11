@@ -1,5 +1,5 @@
 <template>
-  <IonTabBar slot="bottom" id="shopperTabs">
+  <IonTabBar slot="bottom" id="guestTabs">
     <IonTabButton tab="tab1" href="/guest/home">
       <img src="/images/navigation/home.svg" width="25" height="25" />
       <img class="active" src="/images/navigation/home_active.svg" loading="lazy" width="25" height="25" />

@@ -40,6 +40,7 @@ onBeforeMount(async () => {
   const appStore = useAppStore();
   appStore.loadCachedSettings();
   appStore.registerUpdateListeners();
+  appStore.registerNetworkStatusListener();
 
   await configureAxios();
 

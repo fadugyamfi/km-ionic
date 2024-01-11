@@ -13,13 +13,13 @@
         :promotion="promotion"
       ></Promotions>
 
-      <TopCategories v-show="viewLoaded"></TopCategories>
+      <TopCategories></TopCategories>
 
       <!-- <TopBrands></TopBrands> -->
 
-      <RecentlyViewedProducts v-show="viewLoaded"></RecentlyViewedProducts>
+      <RecentlyViewedProducts ></RecentlyViewedProducts>
 
-      <TrendingProducts v-show="showTrending"></TrendingProducts>
+      <TrendingProducts ></TrendingProducts>
 
       <!-- <SuppliersNearYou></SuppliersNearYou> -->
 

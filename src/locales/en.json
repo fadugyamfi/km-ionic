@@ -49,7 +49,9 @@
     "welcome": "Welcome",
     "leaderboard": "Leaderboard",
     "discount": "Discount",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "offlineMessage": "You are currently offline",
+    "onlineMessage": "You internet connection is restored"
   },
   "onboarding": {
     "welcomeToKolaMarket": "Welcome To Kola Wholesale Market",
