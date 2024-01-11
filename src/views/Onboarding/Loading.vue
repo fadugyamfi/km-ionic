@@ -53,21 +53,20 @@ const businessStore = useBusinessStore();
 const promotionStore = usePromotionStore();
 
 const fetchGuestContent = async () => {
+    await productCategoryStore.fetchGuestCategories();
+    productStore.fetchTrendingProducts();
     brandStore.fetchGuestBrands();
     businessStore.getGuestSuppliers()
     promotionStore.fetchGuestPromotions();
-    await productCategoryStore.fetchGuestCategories();
-    await productStore.fetchTrendingProducts();
-
 }
 
 const fetchUserContent = async () => {
+    await productCategoryStore.fetchCategories();
+    productStore.fetchTrendingProducts();
     brandStore.fetchBrands();
     businessStore.getSuppliers()
     productStore.fetchRecentlyViewedProducts();
     promotionStore.fetchPromotions();
-    await productCategoryStore.fetchCategories();
-    await productStore.fetchTrendingProducts();
 }
 
 const routeToNext = () => {
