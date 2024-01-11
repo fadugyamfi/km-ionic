@@ -37,7 +37,7 @@ function requestPermission() {
     localStorage.removeItem("FCMToken");
 
     console.log("Requesting permission...");
-    Notification.requestPermission().then((permission) => {
+    const result = Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
         console.log("Notification permission granted.");
 
@@ -50,19 +50,23 @@ function requestPermission() {
               console.log("my token my token", currentToken);
               // Send the token to your server and update the UI if necessary
               useDeviceStore().registerDevice(currentToken);
+              return true;
             } else {
               // Show permission request UI
               console.log(
                 "No registration token available. Request permission to generate one."
               );
+              return false;
               // ...
             }
           })
           .catch((err) => {
             console.log("An error occurred while retrieving token. ", err);
             // ...
+            return false;
           });
       }
+      return true;
     });
 
     onMessage(messaging, (payload) => {
@@ -79,6 +83,7 @@ function requestPermission() {
         notificationOptions
       );
     });
+    return result;
   } catch (err) {
     console.error("failed to initialize firebase messaging", err);
   }

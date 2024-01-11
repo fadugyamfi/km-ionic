@@ -17,13 +17,13 @@ export async function setupPushNotifications() {
   if (FCMToken && status.receive == "granted") {
     return;
   }
-  console.log("did not return");
   localStorage.removeItem("FCMToken");
   // Request notification permission
-  PushNotifications.requestPermissions().then((result) => {
+  const result = PushNotifications.requestPermissions().then((result) => {
     if (result.receive === "granted") {
       // Register with Apple / Google to receive push via APNS/FCM
       PushNotifications.register();
+      return true;
     } else {
       // Show some error
     }
@@ -56,6 +56,8 @@ export async function setupPushNotifications() {
       //   alert("Push action performed: " + JSON.stringify(notification));
     }
   );
+
+  return result;
 }
 
 // setupPushNotifications()
