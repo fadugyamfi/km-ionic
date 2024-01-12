@@ -14,7 +14,6 @@
         </span>
       </p>
     </div>
-
     <KolaYellowButton
       v-if="status != 'granted'"
       style="margin-top: 30px"
@@ -31,6 +30,7 @@ import KolaYellowButton from "../KolaYellowButton.vue";
 import { notification } from "@/composables/notification";
 import { setupPushNotifications } from "@/setupPushNotification";
 import requestPermission from "@/setupPWAPushNotifications";
+import { Capacitor } from "@capacitor/core";
 
 export default defineComponent({
   components: {
@@ -52,10 +52,13 @@ export default defineComponent({
     },
     async enableNotification() {
       let result;
-      result = await setupPushNotifications();
-      result = await requestPermission();
+      if (Capacitor.isNativePlatform()) {
+        result = await setupPushNotifications();
+      } else {
+        result = await requestPermission();
+      }
       if (result) {
-       this.$emit('refresh')
+        this.$emit("refresh");
       }
     },
   },
