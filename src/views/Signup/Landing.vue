@@ -11,7 +11,7 @@
 
 
         <ion-content :fullscreen="true" class="ion-padding" :scroll-y="false">
-            <h3>{{ $t("signup.landing.theBestWayToGrowYourSales") }}</h3>
+            <h3 class="fw-normal">{{ $t("signup.landing.theBestWayToGrowYourSales") }}</h3>
             <p>
                 {{ $t("signup.landing.weHelpYouToSell") }}
             </p>

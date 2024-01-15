@@ -10,7 +10,7 @@
     </IonHeader>
 
     <IonContent class="ion-padding">
-      <h3>{{ $t("auth.resetPin.resettingYourPIN") }}</h3>
+      <h3 class="fw-normal">{{ $t("auth.resetPin.resettingYourPIN") }}</h3>
       <p style="font-size: 14px">
         {{ $t("auth.resetPin.pleaseEnterAndConfirmYourNewPin") }}
       </p>

@@ -37,7 +37,7 @@
 
       <IonList v-if="!fetching" lines="none" class="ion-padding-horizontal sales-select-list simple">
         <IonListHeader>
-          <IonLabel class="fw-bold">{{ $t("vendor.sales.selectSaleAgent") }}</IonLabel>
+          <IonLabel class="fw-semibold">{{ $t("vendor.sales.selectSaleAgent") }}</IonLabel>
         </IonListHeader>
 
         <IonItem v-for="agent in filteredAgents" :key="agent.id" @click="selectAgent(agent)">

@@ -7,12 +7,12 @@
             <IonSegment value="personal" mode="ios" v-model="viewing" class="segment-margin">
               <IonSegmentButton value="cart">
                 <div class="segment-button">
-                  <IonLabel :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
+                  <IonLabel color="dark" :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
                   <IonBadge>{{ orderBusiness?.order_items?.length }}</IonBadge>
                 </div>
               </IonSegmentButton>
               <IonSegmentButton value="saved">
-                <ion-label>Saved</ion-label>
+                <ion-label color="dark">Saved</ion-label>
               </IonSegmentButton>
             </IonSegment>
           </section>

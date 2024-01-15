@@ -69,12 +69,12 @@
                 </s>
               </span>
 
-              <IonText class="fw-bold" color="danger">
+              <IonText class="fw-semibold" color="danger">
                   {{ Filters.currency(Number(product?.sale_price), String(product?.currency?.symbol || 'GHS') ) }}
               </IonText>
             </section>
 
-            <section v-else class="fw-bold">
+            <section v-else class="fw-semibold">
               {{
                 Filters.currency(
                   Number(product?.product_price),
