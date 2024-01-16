@@ -6,6 +6,7 @@ import {
 } from "@capacitor/push-notifications";
 import { useDeviceStore } from "./stores/DeviceStore";
 import { Capacitor } from "@capacitor/core";
+import { useNotificationStore } from "./stores/NotificationStore";
 
 const FCMToken = localStorage.getItem("FCMToken");
 
@@ -20,6 +21,7 @@ export async function setupPushNotifications() {
   localStorage.removeItem("FCMToken");
   // Request notification permission
   const response = PushNotifications.requestPermissions().then((result) => {
+    useNotificationStore().cacheNotificationStatus(result.receive);
     if (result.receive === "granted") {
       console.log("granted");
       // Register with Apple / Google to receive push via APNS/FCM

@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { useDeviceStore } from "@/stores/DeviceStore";
 import { Capacitor } from "@capacitor/core";
+import { useNotificationStore } from "./stores/NotificationStore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -38,9 +39,9 @@ function requestPermission() {
 
     console.log("Requesting permission...");
     const result = Notification.requestPermission().then((permission) => {
+      useNotificationStore().cacheNotificationStatus(permission);
       if (permission === "granted") {
         console.log("Notification permission granted.");
-
         const token = getToken(messaging, {
           vapidKey:
             "BNtJKjrduSWdDWdtgRZlxpurRzk75440-AP_uB5Ou-hWE9LOq6JTS82wi0K_qgZSu9ZFomlSzwu2mTVOuBPjx7g",

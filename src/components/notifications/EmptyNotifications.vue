@@ -6,16 +6,21 @@
 
     <div class="ion-text-center ion-margin-bottom">
       <h5 class="ion-margin-bottom"><b>No Notifications</b></h5>
-      <p class="ion-margin-top" style="font-size: 0.88em">
+      <p v-if="status !== 'denied'" class="ion-margin-top">
         When you have new notifications they will appear here.
-        <span v-if="status != 'granted'">
-          To get push notifications from Kola, open your phone settings and
-          allow notifications
-        </span>
+      </p>
+      <p v-if="status == 'denied' && Capacitor.isNativePlatform()">
+        Notifications are blocked. To get push notifications from Kola, open your phone settings and allow
+        notifications
+      </p>
+      <p v-if="status == 'denied' && !Capacitor.isNativePlatform()">
+        Notifications are blocked. To get push notifications from Kola, open
+        your browser preferences or click the lock near the address bar to
+        change your notification preferences.
       </p>
     </div>
     <KolaYellowButton
-      v-if="status != 'granted'"
+      v-if="status == 'default'"
       style="margin-top: 30px"
       @click="enableNotification"
       >Enable Notifications</KolaYellowButton
@@ -43,6 +48,7 @@ export default defineComponent({
     return {
       notification: notification(),
       status: null as any,
+      Capacitor,
     };
   },
   methods: {
@@ -67,3 +73,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+p {
+  font-size: 0.88em;
+}
+</style>
