@@ -323,6 +323,8 @@
       "groupQuantity": "Group quantity",
       "stockQuantity": "Stock quantity",
       "price": "Price",
+      "weight": "Weight (kg)",
+      "volume": "Volume (liters)",
       "selectExpiryDate": "Select expiry date",
       "saveChanges": "Save Changes",
       "numberOfItems": "Number of items",

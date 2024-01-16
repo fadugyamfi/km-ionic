@@ -218,6 +218,30 @@
           @ion-input="form.validate($event)"
           required
         ></IonInput>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.weight_value }"
+          :label="$t('profile.stock.weight')"
+          type="number"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.weight_value"
+          name="weight"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.volume_value }"
+          :label="$t('profile.stock.volume')"
+          type="number"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.volume_value"
+          name="volume"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
 
         <ion-input
           :label="$t('profile.stock.selectExpiryDate')"
