@@ -32,7 +32,7 @@
     </IonSegment>
 
 
-    <Swiper :slides-per-view="1" @swiper="onSwiperInit($event)">
+    <Swiper :slides-per-view="1" @swiper="onSwiperInit($event)" @slide-change="onSlideChange($event)">
       <SwiperSlide>
         <CompanyActions ></CompanyActions>
       </SwiperSlide>
@@ -69,7 +69,14 @@ let swiperEl: Ref<any> = ref(null);
 
 const onSwiperInit = (event: any) => {
   swiperEl.value = event;
-  console.log(swiperEl);
+}
+
+const onSlideChange = (event: any) => {
+  if( event.activeIndex == 1 ) {
+    viewing.value = 'personal';
+  } else {
+    viewing.value = 'company';
+  }
 }
 </script>
 
