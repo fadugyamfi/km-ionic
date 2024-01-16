@@ -7,7 +7,7 @@
       />
     </div>
     <section class="ion-text-center">
-      <h5 class="ion-no-margin fw-bold">Your cart is empty</h5>
+      <h5 class="ion-no-margin fw-semibold">Your cart is empty</h5>
       <p class="description">
         Looks like you haven’t added anything to your cart yet. Add items to get
         started.

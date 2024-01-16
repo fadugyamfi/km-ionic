@@ -6,6 +6,7 @@ import {
 } from "@capacitor/push-notifications";
 import { useDeviceStore } from "./stores/DeviceStore";
 import { Capacitor } from "@capacitor/core";
+import { useNotificationStore } from "./stores/NotificationStore";
 
 const FCMToken = localStorage.getItem("FCMToken");
 
@@ -17,15 +18,19 @@ export async function setupPushNotifications() {
   if (FCMToken && status.receive == "granted") {
     return;
   }
-  console.log("did not return");
   localStorage.removeItem("FCMToken");
   // Request notification permission
-  PushNotifications.requestPermissions().then((result) => {
+  const response = PushNotifications.requestPermissions().then((result) => {
+    useNotificationStore().cacheNotificationStatus(result.receive);
     if (result.receive === "granted") {
+      console.log("granted");
       // Register with Apple / Google to receive push via APNS/FCM
       PushNotifications.register();
+      return true;
     } else {
+      console.log("not granted");
       // Show some error
+      return false;
     }
   });
 
@@ -33,6 +38,7 @@ export async function setupPushNotifications() {
   PushNotifications.addListener("registration", (token: Token) => {
     useDeviceStore().registerDevice(token.value);
     localStorage.setItem("FCMToken", token.value);
+    console.log("got here");
     // alert("Push registration success, token: " + token.value);
   });
 
@@ -56,6 +62,7 @@ export async function setupPushNotifications() {
       //   alert("Push action performed: " + JSON.stringify(notification));
     }
   );
+  return response;
 }
 
 // setupPushNotifications()

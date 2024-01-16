@@ -8,11 +8,11 @@
 
         <IonContent class="ion-padding">
 
-            <h3 v-if="userStore.resettingPIN == true">
+            <h3 class="fw-normal" v-if="userStore.resettingPIN == true">
                 {{ $t("auth.resetPin.resettingYourPIN") }}
             </h3>
             <!-- Being explicit here due a funny rendering bug. Flag is not being rechecked -->
-            <h3 v-if="userStore.resettingPIN != true">{{ $t("general.phoneNumber") }}</h3>
+            <h3 class="fw-normal" v-if="userStore.resettingPIN != true">{{ $t("general.phoneNumber") }}</h3>
 
             <p style="font-size: 14px;">
                 {{ $t("auth.verifyNumber.pleaseEnterYourPhoneNumberToProceed") }}

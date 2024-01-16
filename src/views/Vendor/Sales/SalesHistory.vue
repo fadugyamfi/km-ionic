@@ -17,15 +17,15 @@
 
             <IonSegment value="thisweek" mode="ios" @ionChange="onSegmentChanged($event)">
                 <IonSegmentButton value="today">
-                    <IonLabel>
+                    <IonLabel color="dark">
                         {{ $t('general.today') }}
                     </IonLabel>
                 </IonSegmentButton>
                 <IonSegmentButton value="thisweek">
-                    <IonLabel>{{ $t('general.thisWeek') }}</IonLabel>
+                    <IonLabel color="dark">{{ $t('general.thisWeek') }}</IonLabel>
                 </IonSegmentButton>
                 <IonSegmentButton value="pastmonth">
-                    <IonLabel>{{ $t('general.pastMonth') }}</IonLabel>
+                    <IonLabel color="dark">{{ $t('general.pastMonth') }}</IonLabel>
                 </IonSegmentButton>
             </IonSegment>
         </IonHeader>
