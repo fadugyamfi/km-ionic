@@ -36,7 +36,7 @@
         <section
           class="d-flex ion-align-items-center ion-justify-content-between"
         >
-          <p class="product-title fw-semibold line-clamp">
+          <p class="product-title line-clamp">
             {{ product?.product_name }}
           </p>
 
@@ -283,7 +283,6 @@ export default defineComponent({
 
       .product-title {
         font-size: 0.95em;
-        font-weight: 600;
         margin-top: 0px;
         margin-bottom: 5px;
         text-overflow: ellipsis;

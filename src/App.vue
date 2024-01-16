@@ -17,16 +17,21 @@ import { useAppStore } from './stores/AppStore';
 
 const storage = new AppStorage();
 
+// const route = useRoute();
+
 async function configureAxios() {
-  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'https://api-staging.kola.market/api';
-  axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-  axios.defaults.headers.common['Content-Type'] = 'application/json';
+  axios.defaults.baseURL =
+    import.meta.env.VITE_API_BASE_URL || "https://api-staging.kola.market/api";
+  axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+  axios.defaults.headers.common["Content-Type"] = "application/json";
 
   await storage.init();
-  const auth = await storage.get('kola.auth');
+  const auth = await storage.get("kola.auth");
 
   if (auth) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${auth?.access_token}`;
+    axios.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${auth?.access_token}`;
   }
 }
 
@@ -35,10 +40,11 @@ onBeforeMount(async () => {
   const appStore = useAppStore();
   appStore.loadCachedSettings();
   appStore.registerUpdateListeners();
+  appStore.registerNetworkStatusListener();
 
   await configureAxios();
 
   const userStore = useUserStore();
   await userStore.loadStoredData();
-})
+});
 </script>

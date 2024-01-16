@@ -22,6 +22,17 @@ import ShopperTabBar from "../components/layout/ShopperTabBar.vue";
 import VendorTabBar from "../components/layout/VendorTabBar.vue";
 import AgentTabBar from "../components/layout/AgentTabBar.vue";
 import GuestTabBar from "../components/layout/GuestTabBar.vue";
+import { setupPushNotifications } from "@/setupPushNotification";
+import requestPermission from "@/setupPWAPushNotifications";
+
+import { onMounted } from "vue";
 
 const userStore = useUserStore();
+
+onMounted(() => {
+  if (userStore.user != null) {
+    setupPushNotifications();
+    requestPermission();
+  }
+});
 </script>

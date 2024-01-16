@@ -38,7 +38,7 @@
         <section
           class="d-flex ion-align-items-center ion-justify-content-between"
         >
-          <p class="product-title fw-bold line-clamp">
+          <p class="product-title line-clamp">
             {{ product?.product_name }}
             <span v-if="product?.is_on_sale">
               - {{ product?.discountApplied }}% {{ $t('general.discount') }}
@@ -286,7 +286,6 @@ export default defineComponent({
 
       .product-title {
         font-size: 0.95em;
-        font-weight: 500;
         margin-top: 0px;
         margin-bottom: 5px;
         text-overflow: ellipsis;

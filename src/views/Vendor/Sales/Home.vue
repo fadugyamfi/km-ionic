@@ -21,7 +21,7 @@
 
     <ion-content>
       <IonFab slot="fixed" vertical="bottom" horizontal="end">
-        <IonFabButton size="small" @click="onAddSale()">
+        <IonFabButton @click="onAddSale()">
           <IonIcon :icon="add"></IonIcon>
         </IonFabButton>
       </IonFab>

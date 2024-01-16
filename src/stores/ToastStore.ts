@@ -48,7 +48,8 @@ export const useToastStore = defineStore('toast', {
 
             if( !anchor ) {
                 if( position == 'bottom' ) {
-                    anchor = userStore.appMode == 'shopping' ? 'shopperTabs' : 'vendorTabs';
+                    anchor = userStore.isInGuestMode() ? 'guestTabs' :
+                        (userStore.appMode == 'shopping' ? 'shopperTabs' : 'vendorTabs');
                 }
             }
 
