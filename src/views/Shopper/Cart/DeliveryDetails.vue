@@ -8,9 +8,7 @@
     <!-- Main Content -->
     <ion-content class="ion-padding">
       <form>
-        <h6 class="fw-semibold" style="margin-top: 0px">
-          Add Delivery Address
-        </h6>
+        <h6 style="margin-top: 0px">Add Delivery Address</h6>
         <IonInput
           class="kola-input delivery-details-input"
           :class="{ 'ion-invalid ion-touched': form.errors.delivery_location }"
@@ -48,7 +46,7 @@
           required
         >
         </IonInput>
-        <h6 class="fw-semibold">Delivery Date</h6>
+        <h6>Delivery Date</h6>
         <IonInput
           class="kola-input delivery-details-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.delivery_date }"
@@ -74,9 +72,7 @@
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton
-      :disabled="!formValid"
-      @click="storeDeliveryDetails">
+      <KolaYellowButton :disabled="!formValid" @click="storeDeliveryDetails">
         {{ $t("general.continue") }}
       </KolaYellowButton>
     </IonFooter>
@@ -92,7 +88,7 @@ import {
   IonPage,
   IonText,
   IonInput,
-onIonViewDidEnter,
+  onIonViewDidEnter,
 } from "@ionic/vue";
 import { navigateOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
@@ -122,7 +118,6 @@ const props = defineProps({
     required: true,
   },
 });
-
 
 const selectDeliveryMethod = (method: string) => {
   form.fields.delivery_method = method;
@@ -171,23 +166,20 @@ const formValid = computed(() => {
 
   return fields.delivery_nearest_landmark || fields.delivery_nearest_landmark;
 });
-
 const getLocation = async () => {
-  const toastStore = useToastStore();
+  const { getCurrentLocation } = useGeolocation();
 
   try {
-    const { getCurrentLocation } = useGeolocation();
     const coordinates = await getCurrentLocation();
+    console.log(coordinates);
 
     if (coordinates) {
       form.fields.delivery_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
     }
   } catch (error) {
     toastStore.showError("Cannot retrieve location info");
-    console.log(error);
   }
 };
-
 onIonViewDidEnter(async () => {
   const cartStore = useCartStore();
   if (cartStore.orders.length == 0) {

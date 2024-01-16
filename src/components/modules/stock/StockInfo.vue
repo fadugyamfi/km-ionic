@@ -1,31 +1,37 @@
 <template>
   <section class="ion-margin-top">
+    <IonText class="d-flex ion-align-items-center stock-availabilty">
+      <IonIcon class="warning" :icon="alertCircleOutline"></IonIcon
+      >{{ $t("profile.stock.productOutOfStock") }}</IonText
+    >
     <IonCard>
-      <IonCardHeader class="ion-no-padding" v-if="product?.stock_quantity == 0">
-          <IonText class="d-flex ion-align-items-center stock-availabilty">
-            <IonIcon class="warning" :icon="alertCircleOutline"></IonIcon
-            >{{ $t("profile.stock.productOutOfStock") }}</IonText
-          >
-      </IonCardHeader>
-
       <IonCardContent>
         <section
           class="details ion-margin-vertical d-flex ion-align-items-start ion-justify-content-between"
         >
           <section class="product-info ion-margin-end">
-            <h6 class="fw-bold d-flex ion-justify-content-between">
+            <h6 class="d-flex ion-justify-content-between">
               <span>{{ product?.product_name }}</span>
-              <span>{{ Filters.currency(product?.product_price || 0, product?.currency?.symbol as string) }}</span>
+              <span>{{
+                Filters.currency(
+                  product?.product_price || 0,
+                  product?.currency?.symbol as string
+                )
+              }}</span>
             </h6>
             <IonText style="color: #787486">
-              <span v-if="product?.weight_value">{{ product?.weight_value }}kg</span>
-              <span v-if="product?.weight_value && product?.group_quantity">/</span>
-              <span v-if="product?.group_quantity">{{ product?.group_quantity }}pcs</span>
+              <span v-if="product?.weight_value"
+                >{{ product?.weight_value }}kg</span
+              >
+              <span v-if="product?.weight_value && product?.group_quantity"
+                >/</span
+              >
+              <span v-if="product?.group_quantity"
+                >{{ product?.group_quantity }}pcs</span
+              >
             </IonText>
             <p>
-              <IonText>
-                {{ product?.stock_quantity }} in stock
-              </IonText>
+              <IonText> {{ product?.stock_quantity }} in stock </IonText>
             </p>
             <IonText
               v-if="product?.min_order_amount"
@@ -126,7 +132,7 @@ export default defineComponent({
       trashOutline,
       selectedStock: null as Stock | null,
       showConfirmDeleteModal: false,
-      Filters
+      Filters,
     };
   },
   computed: {
@@ -181,7 +187,7 @@ ion-icon {
 h6 {
   color: #000;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   margin-bottom: 10px;
 }
 
@@ -192,6 +198,7 @@ h6 {
   background: #fdf0ed;
   box-shadow: 0px 2px 16px 0px rgba(101, 93, 93, 0.1);
   padding: 8px 40px;
+  margin-bottom: 10px;
   font-size: 12px;
 }
 .details ion-text {

@@ -1,7 +1,7 @@
 <template>
   <IonButton fill="clear" @click="goToCart()">
     <IonIcon slot="icon-only" :icon="cartOutline"></IonIcon>
-    <IonBadge>
+    <IonBadge v-if="!isInGuestMode">
       {{ cartStore.orders?.length }}
     </IonBadge>
 
@@ -28,7 +28,7 @@ import { useRouter } from "vue-router";
 import { useCartStore } from "@/stores/CartStore";
 import { useUserStore } from "@/stores/UserStore";
 import ConfirmModal from "../../modals/ConfirmModal.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import LoginRequiredSheet from "../LoginRequiredSheet.vue";
 
 const props = defineProps({
@@ -41,6 +41,7 @@ const showFilterSheet = ref(false);
 const router = useRouter();
 const cartStore = useCartStore();
 const userStore = useUserStore();
+
 cartStore.loadFromStorage();
 
 const goToCart = () => {
@@ -60,6 +61,8 @@ const switchAndGoToCart = () => {
   userStore.setAppModeAsShopping();
   goToCart();
 };
+
+const isInGuestMode = computed(() => userStore.isInGuestMode());
 </script>
 
 <style scoped lang="scss">

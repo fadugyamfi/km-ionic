@@ -7,7 +7,7 @@
         </IonHeader>
 
         <IonContent class="ion-padding">
-            <h3 class="header">{{ $t("auth.login.goodToSeeYouAgain") }}</h3>
+            <h3 class="header fw-normal">{{ $t("auth.login.goodToSeeYouAgain") }}</h3>
             <p class="subtext">{{ $t("auth.login.enterDetailsBelowToLogin") }}</p>
 
             <div class="ion-margin-top">
