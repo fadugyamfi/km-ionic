@@ -49,6 +49,7 @@ export const useProductStore = defineStore("product", {
 
     async fetchProducts(options = {}): Promise<Product[]> {
       const params = {
+        approved_only: 1,
         ...options,
       };
 
