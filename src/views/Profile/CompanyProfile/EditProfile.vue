@@ -342,7 +342,7 @@ h6 {
     ion-button {
       margin-top: 30px;
       --color: #666eed;
-      font-weight: 600;
+      font-weight: 500;
     }
   }
 }

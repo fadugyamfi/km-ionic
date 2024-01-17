@@ -19,11 +19,14 @@ ion-page,
   flex-direction: row;
 }
 
-.fw-bold {
+.fw-normal {
+  font-weight: 400;
+}
+.fw-semibold {
   font-weight: 500;
 }
 
-.fw-semibold {
+.fw-bold {
   font-weight: 600;
 }
 
@@ -97,9 +100,15 @@ ion-card {
 }
 
 @keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.4; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 ion-tabs {
@@ -109,7 +118,6 @@ ion-tabs {
     box-shadow: -4px 0px 8px rgba(0, 0, 0, 0.12);
 
     ion-tab-button {
-
       img.active,
       ion-icon.active {
         display: none;
@@ -120,7 +128,6 @@ ion-tabs {
       }
 
       &.tab-selected {
-
         img.active,
         ion-icon.active {
           display: block;

@@ -1,7 +1,7 @@
 <template>
   <section>
     <section class="main-header">
-      <p class="ion-no-margin fw-bold">{{ customer?.name }}</p>
+      <p class="ion-no-margin fw-semibold">{{ customer?.name }}</p>
       <ion-buttons slot="end">
         <IonButton @click="updateCustomer()" color="dark" fill="clear"
           ><ion-icon :icon="createOutline"></ion-icon

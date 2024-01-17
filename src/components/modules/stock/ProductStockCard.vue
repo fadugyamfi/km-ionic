@@ -174,7 +174,7 @@ export default defineComponent({
       padding: 0px 5px 5px 5px;
       .product-title {
         font-size: 0.95em;
-        font-weight: 600;
+        font-weight: 500;
         margin-top: 0px;
         margin-bottom: 0px;
         text-overflow: ellipsis;

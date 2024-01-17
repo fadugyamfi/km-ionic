@@ -33,6 +33,7 @@ export const usePromotionStore = defineStore("promotion", {
           el.promotion_items = el._promotion_items;
           el.promotion_items.forEach((i: any) => {
             i.product = i._product;
+            i.product = new Product(i._product)
           });
           return new Promotion(el);
         });
