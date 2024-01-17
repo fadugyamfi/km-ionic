@@ -1,7 +1,7 @@
 <template>
   <section class="product-card">
     <ion-card @click="doAction()">
-      <IonRippleEffect></IonRippleEffect>
+      <!-- <IonRippleEffect></IonRippleEffect> -->
 
       <FavoriteButton
         v-if="showAddToFavorites"
@@ -28,11 +28,11 @@
         @loaded="imgLoaded = true"
       />
 
-      <IonSkeletonText
+      <!-- <IonSkeletonText
         v-if="!imgLoaded"
-        :animated="true"
+        :animated="false"
         class="product-image"
-      ></IonSkeletonText>
+      ></IonSkeletonText> -->
 
       <IonCardHeader>
         <section
@@ -271,12 +271,17 @@ export default defineComponent({
 
     .product-image {
       height: 100px;
+      width: 100%;
       object-fit: contain;
       padding: 5px;
+      display: block;
+      opacity: 1;
 
       &.float {
-        position: absolute;
-        height: 1px;
+        // position: absolute;
+        // display: none;
+        // height: 1px;
+        opacity: 0.1;
       }
     }
 
