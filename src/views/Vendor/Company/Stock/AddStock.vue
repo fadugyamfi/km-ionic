@@ -332,6 +332,8 @@ const form = useForm({
   product_sku: "",
   currencies_id: 1,
   stock_quantity: "",
+  weight_value: "",
+  volume_value: "",
   date: "",
 });
 
@@ -351,7 +353,9 @@ const formValid = computed(() => {
     fields.brands_id &&
     fields.product_units_id &&
     fields.group_quantity &&
-    fields.stock_quantity
+    fields.stock_quantity &&
+    fields.volume_value &&
+    fields.weight_value
   );
 });
 
@@ -436,7 +440,6 @@ onMounted(() => {
   fetchProductVariations();
   fetchBrands();
   fetchProductUnits();
-  console.log("hello");
 });
 
 const cancel = () => {
