@@ -116,6 +116,8 @@
       </section>
 
       <section>
+        <SaleSyncStatus></SaleSyncStatus>
+
         <IonList style="margin-bottom: 0px; padding-bottom: 0px">
           <IonListHeader>
             <IonLabel color="dark" class="fw-semibold">Sales History</IonLabel>
@@ -181,6 +183,7 @@ import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import NotificationButton from "@/components/notifications/NotificationButton.vue";
 import FilterSalesSheet from "@/components/modules/sales/FilterSalesSheet.vue";
 import SalesStatistics from "@/components/modules/SalesStatistics.vue";
+import SaleSyncStatus from "../../../components/modules/sales/SaleSyncStatus.vue";
 
 export default defineComponent({
   components: {
@@ -215,7 +218,8 @@ export default defineComponent({
     NotificationButton,
     FilterSalesSheet,
     SalesStatistics,
-  },
+    SaleSyncStatus
+},
 
   data() {
     return {
@@ -309,7 +313,10 @@ export default defineComponent({
     this.fetchRecentSales();
     this.fetchBusinessSummary();
 
-    setTimeout(() => this.saleStore.fetchInventory(), 200);
+    setTimeout(() => {
+      this.saleStore.loadCachedRecordedSales();
+      this.saleStore.fetchInventory();
+    }, 200);
   },
 });
 </script>

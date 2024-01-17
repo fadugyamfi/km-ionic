@@ -136,6 +136,7 @@ export default defineComponent({
                 const sale = await this.saleStore.recordSale();
 
                 if( !sale ) {
+                    toastStore.unblockUI();
                     toastStore.showError("Failed to record sale", "Error", "bottom", 'configure-continue')
                     return;
                 }

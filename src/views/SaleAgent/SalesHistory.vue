@@ -4,7 +4,9 @@
             <IonHeader class="inner-header ion-margin-bottom">
                 <IonToolbar>
                     <IonButtons slot="start">
-                        <IonBackButton defaultHref="/agent/home" :icon="arrowBack" mode="md"></IonBackButton>
+                        <IonButton router-link="/agent/sales">
+                            <IonIcon :icon="arrowBack"></IonIcon>
+                        </IonButton>
                     </IonButtons>
                     <IonTitle size="small"><b>{{ $t("vendor.sales.salesHistory") }}</b></IonTitle>
                     <IonButtons slot="end">
@@ -184,7 +186,9 @@ export default defineComponent({
     },
 
     mounted() {
-        this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'thisweek' } }));
+        if( this.saleStore.sales.length == 0 ) {
+            this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'thisweek' } }));
+        }
     }
 })
 </script>
