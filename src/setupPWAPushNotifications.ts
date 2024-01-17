@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { useDeviceStore } from "@/stores/DeviceStore";
 import { Capacitor } from "@capacitor/core";
+import { useNotificationStore } from "./stores/NotificationStore";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -37,11 +38,11 @@ function requestPermission() {
     localStorage.removeItem("FCMToken");
 
     console.log("Requesting permission...");
-    Notification.requestPermission().then((permission) => {
+    const result = Notification.requestPermission().then((permission) => {
+      useNotificationStore().cacheNotificationStatus(permission);
       if (permission === "granted") {
         console.log("Notification permission granted.");
-
-        getToken(messaging, {
+        const token = getToken(messaging, {
           vapidKey:
             "BNtJKjrduSWdDWdtgRZlxpurRzk75440-AP_uB5Ou-hWE9LOq6JTS82wi0K_qgZSu9ZFomlSzwu2mTVOuBPjx7g",
         })
@@ -50,18 +51,23 @@ function requestPermission() {
               console.log("my token my token", currentToken);
               // Send the token to your server and update the UI if necessary
               useDeviceStore().registerDevice(currentToken);
+              localStorage.setItem("FCMToken", currentToken);
+              return currentToken;
             } else {
               // Show permission request UI
               console.log(
                 "No registration token available. Request permission to generate one."
               );
+              return null;
               // ...
             }
           })
           .catch((err) => {
             console.log("An error occurred while retrieving token. ", err);
+            return null;
             // ...
           });
+        return token;
       }
     });
 
@@ -74,13 +80,12 @@ function requestPermission() {
         icon: payload.notification?.icon,
       };
 
-      const notification = new Notification(
-        notificationTitle,
-        notificationOptions
-      );
+      new Notification(notificationTitle, notificationOptions);
     });
+    return result;
   } catch (err) {
     console.error("failed to initialize firebase messaging", err);
+    return false;
   }
 }
 

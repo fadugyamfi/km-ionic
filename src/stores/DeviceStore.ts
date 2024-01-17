@@ -2,6 +2,7 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import { Device } from "@capacitor/device";
 import { useUserStore } from "./UserStore";
+import { handleAxiosRequestError } from "@/utilities";
 import appPackage from "../../package.json";
 
 type useDeviceState = {
@@ -54,7 +55,7 @@ export const useDeviceStore = defineStore("device", {
         if (response) {
         }
       } catch (error) {
-        console.log("error2", error);
+        handleAxiosRequestError(error);
       }
     },
   },
