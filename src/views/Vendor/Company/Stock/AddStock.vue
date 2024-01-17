@@ -148,7 +148,7 @@
           @ion-input="form.validate($event)"
           required
         ></IonInput>
-    
+
         <IonSelect
           class="kola-input ion-margin-bottom"
           label="Product unit"
@@ -187,75 +187,86 @@
             </div>
           </ion-radio-group>
         </section>
-
-        <IonGrid>
-          <IonRow>
-            <IonCol>
-              <IonInput
-                class="kola-input"
-                :class="{ 'ion-invalid ion-touched': form.errors.weight_value }"
-                :label="$t('profile.stock.weight')"
-                type="number"
-                labelPlacement="stacked"
-                fill="solid"
-                v-model="form.fields.weight_value"
-                name="weight"
-                @ion-input="form.validate($event)"
-                required
-              ></IonInput>
-            </IonCol>
-            <IonCol>
-              <IonSelect
-                class="kola-input ion-margin-bottom"
-                :label="$t('profile.stock.weightUnit')"
-                :class="{ 'ion-invalid ion-touched': form.errors.weight_unit }"
-                labelPlacement="stacked"
-                fill="solid"
-                v-model="form.fields.weight_unit"
-                required
-                name="weight_unit"
-                :toggle-icon="chevronDownOutline"
-                @ion-change="form.validateSelectInput($event)"
-              >
-                <IonSelectOption> kilograms (kg) </IonSelectOption>
-              </IonSelect>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
-        <IonGrid>
-          <IonRow>
-            <IonCol>
-              <IonInput
-                class="kola-input"
-                :class="{ 'ion-invalid ion-touched': form.errors.volume_value }"
-                :label="$t('profile.stock.volume')"
-                type="number"
-                labelPlacement="stacked"
-                fill="solid"
-                v-model="form.fields.volume_value"
-                name="volume"
-                @ion-input="form.validate($event)"
-                required
-              ></IonInput>
-            </IonCol>
-            <IonCol>
-              <IonSelect
-                class="kola-input ion-margin-bottom"
-                :label="$t('profile.stock.volumeUnit')"
-                :class="{ 'ion-invalid ion-touched': form.errors.volume_unit }"
-                labelPlacement="stacked"
-                fill="solid"
-                v-model="form.fields.volume_unit"
-                required
-                name="volume_unit"
-                :toggle-icon="chevronDownOutline"
-                @ion-change="form.validateSelectInput($event)"
-              >
-                <IonSelectOption> liters (L) </IonSelectOption>
-              </IonSelect>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
+        <section>
+          <IonGrid>
+            <IonRow>
+              <IonCol>
+                <IonInput
+                  class="kola-input"
+                  :class="{
+                    'ion-invalid ion-touched': form.errors.weight_value,
+                  }"
+                  :label="$t('profile.stock.weight')"
+                  type="number"
+                  labelPlacement="stacked"
+                  fill="solid"
+                  v-model="form.fields.weight_value"
+                  name="weight"
+                  @ion-input="form.validate($event)"
+                  required
+                ></IonInput>
+              </IonCol>
+              <IonCol>
+                <IonSelect
+                  class="kola-input ion-margin-bottom"
+                  :label="$t('profile.stock.weightUnit')"
+                  :class="{
+                    'ion-invalid ion-touched': form.errors.weight_unit,
+                  }"
+                  labelPlacement="stacked"
+                  fill="solid"
+                  v-model="form.fields.weight_unit"
+                  required
+                  name="weight_unit"
+                  :toggle-icon="chevronDownOutline"
+                  @ion-change="form.validateSelectInput($event)"
+                >
+                  <IonSelectOption>kilograms (kg)</IonSelectOption>
+                </IonSelect>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+        </section>
+        <section>
+          <IonGrid>
+            <IonRow>
+              <IonCol>
+                <IonInput
+                  class="kola-input"
+                  :class="{
+                    'ion-invalid ion-touched': form.errors.volume_value,
+                  }"
+                  :label="$t('profile.stock.volume')"
+                  type="number"
+                  labelPlacement="stacked"
+                  fill="solid"
+                  v-model="form.fields.volume_value"
+                  name="volume"
+                  @ion-input="form.validate($event)"
+                  required
+                ></IonInput>
+              </IonCol>
+              <IonCol>
+                <IonSelect
+                  class="kola-input ion-margin-bottom"
+                  :label="$t('profile.stock.volumeUnit')"
+                  :class="{
+                    'ion-invalid ion-touched': form.errors.volume_unit,
+                  }"
+                  labelPlacement="stacked"
+                  fill="solid"
+                  v-model="form.fields.volume_unit"
+                  required
+                  name="volume_unit"
+                  :toggle-icon="chevronDownOutline"
+                  @ion-change="form.validateSelectInput($event)"
+                >
+                  <IonSelectOption>liters (L)</IonSelectOption>
+                </IonSelect>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+        </section>
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.min_order_amount }"
