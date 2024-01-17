@@ -77,16 +77,16 @@ export default defineComponent({
     methods: {
         onAddNewSale() {
             this.saleStore.resetForNewSale();
-            this.$router.push('/vendor/sales/add-sale/select-agent')
+            this.$router.replace('/vendor/sales/add-sale/select-agent')
         },
 
         onDone() {
             this.saleStore.resetForNewSale();
 
             if( this.userStore.user?.isSaleAgent() ) {
-                this.$router.push('/agent/sales')
+                this.$router.replace('/agent/sales')
             } else {
-                this.$router.push('/vendor/sales/history')
+                this.$router.replace('/vendor/sales/history')
             }
         }
     }

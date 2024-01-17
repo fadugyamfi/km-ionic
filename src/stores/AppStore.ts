@@ -65,7 +65,6 @@ export const useAppStore = defineStore("app", {
 
                 // detect controller change and refresh the page
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
-                    console.log("controllerchange event fired");
                     if (!refreshing) {
                         refreshing = true
                         window.location.reload()
@@ -73,7 +72,6 @@ export const useAppStore = defineStore("app", {
                 })
             } else {
                 setTimeout(() => this.registerUpdateListeners(), 5000);
-                console.log("no service worker registration found")
             }
         },
 
@@ -94,7 +92,7 @@ export const useAppStore = defineStore("app", {
 
                 const toast = await toastController.create({
                     message: message,
-                    duration: 4000,
+                    duration: 5000,
                     position: 'bottom',
                     animated: true,
                     cssClass: `app-toast`,

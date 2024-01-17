@@ -13,10 +13,13 @@ import { SalePayment } from "../models/SalePayment";
 import Business from "../models/Business";
 import { useGeolocation } from "../composables/useGeolocation";
 import { useProductStore } from "./ProductStore";
+import {v4 as uuidv4} from 'uuid';
+import { useAppStore } from "./AppStore";
 
 const storage = new AppStorage();
 const KOLA_SALES = 'kola.sales';
 const KOLA_INVENTORY = 'kola.sales.inventory';
+const KOLA_RECORDED_SALES = 'kola.recorded-sales';
 
 export const useSaleStore = defineStore("sale", {
 
@@ -24,15 +27,69 @@ export const useSaleStore = defineStore("sale", {
         return {
             newSale: new Sale({}),
             sales: [] as Sale[],
-            selectedCustomer: {} as Business
+            recordedSales: [] as Sale[],
+            selectedCustomer: {} as Business,
+            saleSyncTimer: null as any,
+            inventory: [] as Product[]
         }
     },
 
     actions: {
+        async loadCachedRecordedSales() {
+            if( this.recordedSales.length > 0 ) {
+                return;
+            }
+
+            const userStore = useUserStore();
+            const CACHE_KEY = `${KOLA_RECORDED_SALES}.${userStore.activeBusiness?.id}`;
+
+            const records = await storage.get(CACHE_KEY);
+
+            if( records ) {
+                this.recordedSales = records.map((record: object) => new Sale(record)) as Sale[];
+            }
+
+            this.startSaleDataSync();
+        },
+
+        async startSaleDataSync() {
+            if( this.saleSyncTimer != null ) {
+                return;
+            }
+
+            console.log("Starting sale data sync");
+
+            const appStore = useAppStore();
+
+            this.saleSyncTimer = setInterval(async () => {
+                if( this.recordedSales.length == 0 || !appStore.networkConnected ) {
+                    return;
+                }
+
+                const sale = this.recordedSales.shift() as Sale;
+
+                try {
+                    const synced = await this.recordSaleOnline(sale);
+                    if( synced ) {
+                        this.persistRecordedSales(); // save new cache without synced sale
+                    } else {
+                        this.recordedSales.push(sale);
+                    }
+                } catch(error: any) {
+                    if( !error.message.includes('duplicate') ) {
+                        this.recordedSales.push(sale);
+                    } else {
+                        this.persistRecordedSales();
+                    }
+                }
+            }, 1000 * 15)
+        },
+
         resetForNewSale() {
             const userStore = useUserStore();
 
             this.newSale = new Sale({
+                uuid: uuidv4(),
                 businesses_id: userStore.activeBusiness?.id,
                 cms_users_id: userStore.user?.id,
                 credits_id: 1,
@@ -52,6 +109,7 @@ export const useSaleStore = defineStore("sale", {
 
         addProductToSale(product: Product) {
             const saleItem = new SaleItem({
+                uuid: uuidv4(),
                 quantity: 1,
                 unit_price: product.product_price,
                 total_price: product.product_price,
@@ -87,26 +145,50 @@ export const useSaleStore = defineStore("sale", {
                 gps_location: coordinates ? `${coordinates.coords.latitude}, ${coordinates.coords.longitude}` : '-'
             })
 
-            // Recreating the object here because JSON.stringify is removing the sale_items property
-            // and keeping only the _sale_items field
-            const sale = Object.assign({}, this.newSale);
-            sale.sale_items = this.newSale.sale_items;
+            this.recordedSales.push(this.newSale);
+            this.persistRecordedSales();
+            this.startSaleDataSync();
 
-            return axios.post('/v2/sales', sale)
+            return this.newSale;
+        },
+
+        async persistRecordedSales() {
+            const userStore = useUserStore();
+            const CACHE_KEY = `${KOLA_RECORDED_SALES}.${userStore.activeBusiness?.id}`;
+
+            storage.set(CACHE_KEY, this.recordedSales, 14, 'days');
+        },
+
+        async recordSaleOnline(sale: Sale): Promise<Sale | null> {
+            const payload = Object.assign({}, sale, {
+                sale_items: sale._sale_items
+            });
+
+            return axios.post('/v2/sales', payload)
                 .then(response => {
-                    const sale = new Sale(response.data.data);
-                    this.sales.unshift(sale);
+                    const savedSale = new Sale(response.data.data);
+                    const unsyncedIndex = this.sales.findIndex((s: Sale) => s.uuid == sale.uuid);
 
-                    return sale;
+                    if( unsyncedIndex > -1 ) {
+                        this.sales[unsyncedIndex] = sale;
+                    } else {
+                        this.sales.unshift(savedSale);
+                    }
+
+                    return savedSale;
                 })
                 .catch(error => {
                     handleAxiosRequestError(error);
 
-                    return null;
+                    throw new Error(error.response.data.api_message);
                 });
         },
 
         async fetchInventory(options = {}) {
+            if( this.inventory.length > 0 ) {
+                return this.inventory;
+            }
+
             const userStore = useUserStore();
             const productStore = useProductStore();
 
@@ -114,7 +196,8 @@ export const useSaleStore = defineStore("sale", {
 
             if( await storage.has(CACHE_KEY) ) {
                 const data = await storage.get(CACHE_KEY);
-                return data.map((p: object) => new Product(p));
+                this.inventory = data.map((p: object) => new Product(p));
+                return this.inventory;
             }
 
             const params = {
@@ -128,6 +211,7 @@ export const useSaleStore = defineStore("sale", {
 
             if( products ) {
                 storage.set(CACHE_KEY, products, 7, 'days');
+                this.inventory = products;
             }
 
             return products;
