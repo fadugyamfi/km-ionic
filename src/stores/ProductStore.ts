@@ -25,22 +25,23 @@ export const useProductStore = defineStore("product", {
   actions: {
     async fetchSearchedProducts(page = 1, limit = 50): Promise<Product[]> {
       const userStore = useUserStore();
+      const params = {
+        product_name_has: this.searchTerm,
+        approved_only: 1,
+        limit,
+        page,
+      };
+
+      let products = [];
+
       try {
         if (!userStore.isInGuestMode()) {
-          const products = await this.fetchProducts({
-            product_name_has: this.searchTerm,
-            limit,
-            page,
-          });
-          return products;
+          products = await this.fetchProducts(params);
         } else {
-          const products = await this.fetchGuestProducts({
-            product_name_has: this.searchTerm,
-            limit,
-            page,
-          });
-          return products;
+          products = await this.fetchGuestProducts(params);
         }
+
+        return products;
       } catch (error) {
         return [];
       }
@@ -64,6 +65,7 @@ export const useProductStore = defineStore("product", {
     },
     async fetchGuestProducts(options = {}): Promise<Product[]> {
       const params = {
+        approved_only: 1,
         ...options,
       };
 

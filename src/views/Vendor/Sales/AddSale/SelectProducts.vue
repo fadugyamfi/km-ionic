@@ -158,11 +158,13 @@ export default defineComponent({
             try {
                 const params = {
                     businesses_id: this.userStore.activeBusiness?.id,
+                    approved_only: 1,
                     limit: 500,
                     ...options
                 }
 
                 this.products = await this.productStore.fetchProducts(params);
+                this.saleStore.inventory = this.products;
             } catch(error) {
                 handleAxiosRequestError(error)
             } finally {

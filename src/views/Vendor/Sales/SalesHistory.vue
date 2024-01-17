@@ -4,7 +4,9 @@
             <IonHeader class="inner-header ion-margin-bottom">
                 <IonToolbar>
                     <IonButtons slot="start">
-                        <IonBackButton defaultHref="/vendor/sales" :icon="arrowBack" mode="md"></IonBackButton>
+                        <IonButton router-link="/vendor/sales">
+                            <IonIcon :icon="arrowBack"></IonIcon>
+                        </IonButton>
                     </IonButtons>
                     <IonTitle size="small"><b>{{ $t("vendor.sales.salesHistory") }}</b></IonTitle>
                     <IonButtons slot="end">
@@ -32,7 +34,7 @@
 
         <ion-content>
             <IonFab slot="fixed" vertical="bottom" horizontal="end">
-                <IonFabButton size="small" @click="onAddSale()">
+                <IonFabButton @click="onAddSale()">
                     <IonIcon :icon="add"></IonIcon>
                 </IonFabButton>
             </IonFab>
@@ -176,7 +178,9 @@ export default defineComponent({
     },
 
     ionViewDidEnter() {
-        this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'thisweek' } }));
+        if( this.saleStore.sales.length == 0 ) {
+            this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'thisweek' } }));
+        }
     }
 })
 </script>

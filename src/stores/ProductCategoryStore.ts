@@ -102,6 +102,7 @@ export const useProductCategoryStore = defineStore("productCategory", {
       try {
         const params = {
           product_categories_id: category.id,
+          approved_only: 1,
           limit,
           page,
           sort: "latest",
@@ -128,6 +129,7 @@ export const useProductCategoryStore = defineStore("productCategory", {
       try {
         const params = {
           product_categories_id: category.id,
+          approved_only: 1,
           limit,
           page,
           sort: "latest",

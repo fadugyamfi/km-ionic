@@ -21,6 +21,7 @@ export class Sale {
     public total_sales_price?: number = 0;
     public total_discount?: number = 0;
     public created_at?: string;
+    public uuid?: string;
 
     public _sale_items?: SaleItem[] = [];
     public sale_items_count?: number = 0;
@@ -37,7 +38,31 @@ export class Sale {
     }
 
     update(data: object) {
-        Object.assign(this, data);
+        Object.assign(this, this.prepareSerializedData(data) );
+    }
+
+    prepareSerializedData(data: any) {
+        if( data._product ) {
+            data.product = data._product;
+        }
+
+        if( data._business ) {
+            data.business = data._business;
+        }
+
+        if( data._customer ) {
+            data.customer = data._customer;
+        }
+
+        if( data._saleType ) {
+            data.saleType = data._saleType;
+        }
+
+        if( data._sale_items ) {
+            data.sale_items = data._sale_items;
+        }
+
+        return data;
     }
 
     isCreditSale() {
