@@ -18,10 +18,10 @@
         </ion-toolbar>
       </ion-header>
     </IonHeader>
-    <div class="ion-padding ion-text-center" v-show="fetching">
-      <IonSpinner name="crescent"></IonSpinner>
-    </div>
     <ion-content class="ion-padding" v-if="!fetching">
+      <div class="ion-padding ion-text-center" v-show="fetching">
+        <IonSpinner name="crescent"></IonSpinner>
+      </div>
       <IonText style="font-size: 14px" color="medium" size="small">
         {{ $t("profile.stock.addProductImage") }}
       </IonText>
@@ -47,6 +47,42 @@
             <p class="font-medium">SVG, PNG, JPG or GIF (max. 2048x1080px)</p>
           </IonCardContent>
         </IonCard>
+
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.product_name }"
+          :label="$t('profile.stock.productName')"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.product_name"
+          name="name"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.product_sku }"
+          label="Product sku"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.product_sku"
+          name="product_sku"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+        <IonTextarea
+          class="kola-input ion-margin-bottom"
+          :class="{
+            'ion-invalid ion-touched': form.errors.product_description,
+          }"
+          :label="$t('profile.stock.itemDescription')"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.product_description"
+          name="description"
+          @ion-input="form.validate($event)"
+          required
+        ></IonTextarea>
         <IonSelect
           class="kola-input ion-margin-bottom"
           :label="$t('profile.stock.category')"
@@ -68,17 +104,6 @@
             >{{ category.name }}</IonSelectOption
           >
         </IonSelect>
-        <IonInput
-          class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.product_name }"
-          :label="$t('profile.stock.productName')"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.product_name"
-          name="name"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
         <IonSelect
           class="kola-input ion-margin-bottom"
           label="Brand"
@@ -101,42 +126,29 @@
             {{ brand.name }}</IonSelectOption
           >
         </IonSelect>
-        <IonSelect
+        <IonInput
           class="kola-input ion-margin-bottom"
-          :label="$t('profile.stock.variation')"
-          :class="{
-            'ion-invalid ion-touched': form.errors.product_variation,
-          }"
+          :class="{ 'ion-invalid ion-touched': form.errors.product_price }"
+          :label="$t('profile.stock.price')"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.product_variation"
-          required
-          name="variation"
-          :toggle-icon="chevronDownOutline"
-          @ion-change="form.validateSelectInput($event)"
-        >
-          <IonSelectOption
-            v-for="variation in productVariations"
-            :key="variation.id"
-            :value="variation.id"
-          >
-            {{ variation.name }}</IonSelectOption
-          >
-        </IonSelect>
-        <IonTextarea
-          class="kola-input ion-margin-bottom"
-          :class="{
-            'ion-invalid ion-touched': form.errors.product_description,
-          }"
-          :label="$t('profile.stock.itemDescription')"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.product_description"
-          name="description"
+          v-model="form.fields.product_price"
+          name="price"
           @ion-input="form.validate($event)"
           required
-        ></IonTextarea>
-
+        ></IonInput>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.stock_quantity }"
+          :label="$t('profile.stock.stockQuantity')"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.stock_quantity"
+          name="stock_quantity"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+    
         <IonSelect
           class="kola-input ion-margin-bottom"
           label="Product unit"
@@ -159,6 +171,7 @@
             {{ unit.name }}</IonSelectOption
           >
         </IonSelect>
+
         <section class="radio-wrapper ion-margin-bottom">
           <h6>Quantity Type</h6>
           <ion-radio-group
@@ -174,82 +187,107 @@
             </div>
           </ion-radio-group>
         </section>
-        <IonInput
-          class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.group_quantity }"
-          :label="$t('profile.stock.groupQuantity')"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.group_quantity"
-          name="quantity_available"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-        <IonInput
-          class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.stock_quantity }"
-          :label="$t('profile.stock.stockQuantity')"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.stock_quantity"
-          name="stock_quantity"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-        <IonInput
-          class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.product_sku }"
-          label="Product sku"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.product_sku"
-          name="product_sku"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-        <IonInput
-          class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.product_price }"
-          :label="$t('profile.stock.price')"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.product_price"
-          name="price"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-        <IonInput
-          class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.weight_value }"
-          :label="$t('profile.stock.weight')"
-          type="number"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.weight_value"
-          name="weight"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-        <IonInput
-          class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.volume_value }"
-          :label="$t('profile.stock.volume')"
-          type="number"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.volume_value"
-          name="volume"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
 
+        <IonGrid>
+          <IonRow>
+            <IonCol>
+              <IonInput
+                class="kola-input"
+                :class="{ 'ion-invalid ion-touched': form.errors.weight_value }"
+                :label="$t('profile.stock.weight')"
+                type="number"
+                labelPlacement="stacked"
+                fill="solid"
+                v-model="form.fields.weight_value"
+                name="weight"
+                @ion-input="form.validate($event)"
+                required
+              ></IonInput>
+            </IonCol>
+            <IonCol>
+              <IonSelect
+                class="kola-input ion-margin-bottom"
+                :label="$t('profile.stock.weightUnit')"
+                :class="{ 'ion-invalid ion-touched': form.errors.weight_unit }"
+                labelPlacement="stacked"
+                fill="solid"
+                v-model="form.fields.weight_unit"
+                required
+                name="weight_unit"
+                :toggle-icon="chevronDownOutline"
+                @ion-change="form.validateSelectInput($event)"
+              >
+                <IonSelectOption> kilograms (kg) </IonSelectOption>
+              </IonSelect>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+        <IonGrid>
+          <IonRow>
+            <IonCol>
+              <IonInput
+                class="kola-input"
+                :class="{ 'ion-invalid ion-touched': form.errors.volume_value }"
+                :label="$t('profile.stock.volume')"
+                type="number"
+                labelPlacement="stacked"
+                fill="solid"
+                v-model="form.fields.volume_value"
+                name="volume"
+                @ion-input="form.validate($event)"
+                required
+              ></IonInput>
+            </IonCol>
+            <IonCol>
+              <IonSelect
+                class="kola-input ion-margin-bottom"
+                :label="$t('profile.stock.volumeUnit')"
+                :class="{ 'ion-invalid ion-touched': form.errors.volume_unit }"
+                labelPlacement="stacked"
+                fill="solid"
+                v-model="form.fields.volume_unit"
+                required
+                name="volume_unit"
+                :toggle-icon="chevronDownOutline"
+                @ion-change="form.validateSelectInput($event)"
+              >
+                <IonSelectOption> liters (L) </IonSelectOption>
+              </IonSelect>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.min_order_amount }"
+          :label="$t('profile.stock.minimumOrderAmount')"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.min_order_amount"
+          name="minimum_order_amount"
+          type="number"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.min_order_quantity }"
+          :label="$t('profile.stock.minimumOrderQuantity')"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.min_order_quantity"
+          name="minimum_order_quantity"
+          type="number"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+        <!-- 
         <ion-input
           :label="$t('profile.stock.selectExpiryDate')"
           label-placement="stacked"
           class="kola-input"
           type="date"
           v-model="form.fields.date"
-        ></ion-input>
+        ></ion-input> -->
 
         <IonFooter class="ion-padding-top ion-no-border">
           <KolaYellowButton
@@ -289,6 +327,9 @@ import {
   IonRadio,
   IonItem,
   IonLabel,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from "@ionic/vue";
 import { arrowBackOutline, chevronDownOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
@@ -312,7 +353,6 @@ const router = useRouter();
 
 const fetching = ref(false);
 const productGroups = ref<any>([]);
-const productVariations = ref<any>([]);
 const brands = ref<Brand[]>([]);
 const productUnits = ref<any>([]);
 
@@ -322,7 +362,6 @@ const form = useForm({
   product_image: "",
   product_categories_id: "",
   product_name: "",
-  product_variation: "",
   product_description: "",
   group_quantity: "",
   product_groups_id: "",
@@ -333,7 +372,12 @@ const form = useForm({
   currencies_id: 1,
   stock_quantity: "",
   weight_value: "",
+  weight_unit: "",
   volume_value: "",
+  volume_unit: "",
+  min_order_amount: "",
+  min_order_quantity: "",
+
   date: "",
 });
 
@@ -346,7 +390,6 @@ const formValid = computed(() => {
     fields.product_description.length > 0 &&
     fields.date.length > 0 &&
     fields.product_sku.length > 0 &&
-    isNaN(Number(fields.product_variation)) == false &&
     isNaN(Number(fields.product_price)) == false &&
     fields.product_categories_id &&
     fields.product_groups_id &&
@@ -355,7 +398,11 @@ const formValid = computed(() => {
     fields.group_quantity &&
     fields.stock_quantity &&
     fields.volume_value &&
-    fields.weight_value
+    fields.volume_unit &&
+    fields.weight_value &&
+    fields.weight_unit &&
+    fields.min_order_amount &&
+    fields.min_order_quantity
   );
 });
 
@@ -402,11 +449,7 @@ const fetchProductGroups = async () => {
   productGroups.value = await stockStore.fetchProductGroups();
   fetching.value = false;
 };
-const fetchProductVariations = async () => {
-  fetching.value = true;
-  productVariations.value = await stockStore.fetchProductVariations();
-  fetching.value = false;
-};
+
 const fetchBrands = async () => {
   const brandStore = useBrandStore();
   fetching.value = true;
@@ -437,7 +480,6 @@ const pickImages = async () => {
 onMounted(() => {
   getProductCategories();
   fetchProductGroups();
-  fetchProductVariations();
   fetchBrands();
   fetchProductUnits();
 });
@@ -502,6 +544,24 @@ ion-radio.ios::part(container) {
     color: #344054;
   }
 }
+
+ion-grid {
+  --ion-grid-padding: 0px;
+
+  ion-col {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    &:nth-child(1) {
+      padding-right: 5px;
+      padding-inline-start: 0px;
+    }
+    &:nth-child(2) {
+      padding-left: 5px;
+      padding-inline-end: 0px;
+    }
+  }
+}
+
 .date-wrapper {
   background: #f6f6f6;
   ion-input {
