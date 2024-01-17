@@ -35,14 +35,14 @@
           <section
             class="d-flex ion-justify-content-between ion-align-items-baseline"
           >
-            <IonText color="dark" class="fw-bold" slot="start"
+            <IonText color="dark" class="fw-semibold" slot="start"
               >{{ getDueDate(credit?.order?.due_date as string) }}
             </IonText>
 
             <IonChip
               v-if="credit?.order?.days_overdue"
               color="danger"
-              class="font-medium fw-bold"
+              class="font-medium fw-semibold"
               slot="end"
             >
               {{ credit?.order?.days_overdue }} days overdue

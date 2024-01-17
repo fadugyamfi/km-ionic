@@ -23,7 +23,7 @@
       </div>
       <section v-if="!fetching">
         <section class="ion-padding">
-          <IonText class="fw-bold">
+          <IonText class="fw-semibold">
             {{ order?._business?.name || "No Business" }}
           </IonText>
           <BusinessMinimumOrderReached :business="order?.business" :totalCost="totalCost"></BusinessMinimumOrderReached>

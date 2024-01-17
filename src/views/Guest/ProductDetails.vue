@@ -7,7 +7,7 @@
             <IonBackButton defaultHref="/guest/home" :icon="close"></IonBackButton>
           </IonButtons>
 
-          <IonTitle size="small" class="font-medium">
+          <IonTitle >
             {{ $t("shopper.productDetails.productDetails") }}
           </IonTitle>
 

@@ -3,6 +3,7 @@ import Product from './Product';
 export class SaleItem {
 
     public id?: number | string;
+    public uuid?: string;
     public businesses_id?: number;
     public products_id?: number;
     public quantity = 0;

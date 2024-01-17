@@ -59,7 +59,7 @@
           <IonListHeader
             class="d-flex flex-column ion-align-items-start ion-margin-bottom"
           >
-            <IonLabel class="fw-bold" style="font-size: 14px">{{
+            <IonLabel class="fw-semibold" style="font-size: 14px">{{
               $t("vendor.sales.selectPaymentMethod")
             }}</IonLabel>
             <p class="font-medium ion-no-margin">
@@ -246,7 +246,7 @@ export default defineComponent({
 .label {
   font-size: 14px;
   color: #000;
-  font-weight: 600;
+  font-weight: 500;
   margin: 0 0 8px 0;
 }
 .mode-icon {

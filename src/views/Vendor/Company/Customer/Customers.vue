@@ -55,7 +55,9 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <section v-show="!fetching">
-        <EmptyCustomers v-if="customers?.length == 0"></EmptyCustomers>
+        <EmptyCustomers
+          v-if="!fetching && customers?.length == 0"
+        ></EmptyCustomers>
         <CustomersList :customers="customers" />
       </section>
       <ion-infinite-scroll @ionInfinite="ionInfinite">
@@ -87,8 +89,8 @@ import {
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   InfiniteScrollCustomEvent,
-onIonViewDidEnter,
-onIonViewWillEnter,
+  onIonViewDidEnter,
+  onIonViewWillEnter,
 } from "@ionic/vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
@@ -141,9 +143,12 @@ const fetchCustomers = async (options: any = {}) => {
   const userStore = useUserStore();
   const customerStore = useCustomerStore();
 
-  if( userStore.user?.isSaleAgent() ) {
+  if (userStore.user?.isSaleAgent()) {
     options = Object.assign(options, { limit: 100 });
-    customers.value = await userStore.fetchAssignedBusinesses( userStore.user?.id, options );
+    customers.value = await userStore.fetchAssignedBusinesses(
+      userStore.user?.id,
+      options
+    );
   } else {
     customers.value = await customerStore.getBusinessCustomers(
       userStore.activeBusiness as Business,
@@ -152,7 +157,6 @@ const fetchCustomers = async (options: any = {}) => {
       refreshing.value
     );
   }
-
 
   fetching.value = false;
 };
