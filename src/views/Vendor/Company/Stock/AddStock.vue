@@ -221,7 +221,13 @@
                   :toggle-icon="chevronDownOutline"
                   @ion-change="form.validateSelectInput($event)"
                 >
-                  <IonSelectOption>kilograms (kg)</IonSelectOption>
+                  <IonSelectOption
+                    v-for="weightUnit in weightUnits"
+                    :key="weightUnit.id"
+                    :value="weightUnit.id"
+                  >
+                    {{ weightUnit.name }}</IonSelectOption
+                  >
                 </IonSelect>
               </IonCol>
             </IonRow>
@@ -251,17 +257,23 @@
                   class="kola-input ion-margin-bottom"
                   :label="$t('profile.stock.volumeUnit')"
                   :class="{
-                    'ion-invalid ion-touched': form.errors.volume_unit,
+                    'ion-invalid ion-touched': form.errors.volume_units_id,
                   }"
                   labelPlacement="stacked"
                   fill="solid"
-                  v-model="form.fields.volume_unit"
+                  v-model="form.fields.volume_units_id"
                   required
-                  name="volume_unit"
+                  name="volume_units_id"
                   :toggle-icon="chevronDownOutline"
                   @ion-change="form.validateSelectInput($event)"
                 >
-                  <IonSelectOption>liters (L)</IonSelectOption>
+                  <IonSelectOption
+                    v-for="volumeUnit in volumeUnits"
+                    :key="volumeUnit.id"
+                    :value="volumeUnit.id"
+                  >
+                    {{ volumeUnit.name }}</IonSelectOption
+                  >
                 </IonSelect>
               </IonCol>
             </IonRow>
@@ -383,14 +395,24 @@ const form = useForm({
   currencies_id: 1,
   stock_quantity: "",
   weight_value: "",
-  weight_unit: "",
+  weight_units_id: "",
   volume_value: "",
-  volume_unit: "",
+  volume_units_id: "",
   min_order_amount: "",
   min_order_quantity: "",
-
   date: "",
 });
+
+const weightUnits = ref([
+  { name: "Kilograms (kg)", id: 1 },
+  { name: "Grams (g)", id: 2 },
+  { name: "Pounds (lbs)", id: 3 },
+]);
+const volumeUnits = ref([
+  { name: "Litres (l)", id: 1 },
+  { name: "Mililitres (ml)", id: 2 },
+  { name: "Centilitres (cl)", id: 3 },
+]);
 
 const categories = computed(() => useProductCategoryStore().categories);
 
@@ -409,9 +431,9 @@ const formValid = computed(() => {
     fields.group_quantity &&
     fields.stock_quantity &&
     fields.volume_value &&
-    fields.volume_unit &&
+    fields.volume_units_id &&
     fields.weight_value &&
-    fields.weight_unit &&
+    fields.weight_units_id &&
     fields.min_order_amount &&
     fields.min_order_quantity
   );

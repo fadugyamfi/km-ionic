@@ -327,7 +327,7 @@
       "weightUnit": "Weight unit",
       "volume": "Volume",
       "volumeUnit": "Volume unit",
-      "minimumOrderAmount": "Minimum order amount",
+      "minimumOrderAmount": "Minimum order amount (GHS)",
       "minimumOrderQuantity": "Minimum order quantity",
       "selectExpiryDate": "Select expiry date",
       "saveChanges": "Save Changes",
@@ -391,5 +391,12 @@
     "clearCachesDescription": "Clear cached data and reload items from the server",
     "confirmClearCache": "Confirm Clear Cache",
     "confirmClearCacheDescription": "Cached data aside authentication data will be cleared. Are you sure you want to continue?"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "noNotifications": "No Notifications",
+    "enableNotifications": "Enable Notifications",
+    "general": "General",
+    "orders": "Orders"
   }
 }
