@@ -42,6 +42,7 @@ import { createPinia } from "pinia";
 import { createI18n } from "vue-i18n";
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
 import { RecycleScroller } from 'vue-virtual-scroller';
+import VueGtag from "vue-gtag";
 
 // Above the createApp() line
 defineCustomElements(window);
@@ -67,7 +68,10 @@ const app = createApp(App)
   })
   .use(i18n)
   .use(pinia)
-  .use(router);
+  .use(router)
+  .use(VueGtag, {
+    config: { id: "G-0X283E0RYF" }
+  });
 
 router.isReady().then(() => {
   app.mount("#app");
