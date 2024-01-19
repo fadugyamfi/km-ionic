@@ -47,7 +47,6 @@
             <p class="font-medium">SVG, PNG, JPG or GIF (max. 2048x1080px)</p>
           </IonCardContent>
         </IonCard>
-
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.product_name }"
@@ -211,11 +210,11 @@
                   class="kola-input ion-margin-bottom"
                   :label="$t('profile.stock.weightUnit')"
                   :class="{
-                    'ion-invalid ion-touched': form.errors.weight_unit,
+                    'ion-invalid ion-touched': form.errors.weight_units_id,
                   }"
                   labelPlacement="stacked"
                   fill="solid"
-                  v-model="form.fields.weight_unit"
+                  v-model="form.fields.weight_units_id"
                   required
                   name="weight_unit"
                   :toggle-icon="chevronDownOutline"
@@ -386,7 +385,6 @@ const form = useForm({
   product_categories_id: "",
   product_name: "",
   product_description: "",
-  group_quantity: "",
   product_groups_id: "",
   product_price: "",
   product_units_id: "",
@@ -400,7 +398,6 @@ const form = useForm({
   volume_units_id: "",
   min_order_amount: "",
   min_order_quantity: "",
-  date: "",
 });
 
 const weightUnits = ref([
@@ -421,14 +418,12 @@ const formValid = computed(() => {
   return (
     fields.product_name.length > 0 &&
     fields.product_description.length > 0 &&
-    fields.date.length > 0 &&
     fields.product_sku.length > 0 &&
     isNaN(Number(fields.product_price)) == false &&
     fields.product_categories_id &&
     fields.product_groups_id &&
     fields.brands_id &&
     fields.product_units_id &&
-    fields.group_quantity &&
     fields.stock_quantity &&
     fields.volume_value &&
     fields.volume_units_id &&

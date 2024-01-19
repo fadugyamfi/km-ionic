@@ -9,16 +9,13 @@
         <b>{{ $t("notifications.noNotifications") }} </b>
       </h5>
       <p v-if="status !== 'denied'" class="ion-margin-top">
-        When you have new notifications they will appear here.
+        {{ $t("notifications.newNotificationsWillAppearHere") }}
       </p>
       <p v-if="status == 'denied' && Capacitor.isNativePlatform()">
-        Notifications are blocked. To get push notifications from Kola, open
-        your phone settings and allow notifications
+        {{ $t("notifications.notificationsAreBlockedOnNative") }}
       </p>
       <p v-if="status == 'denied' && !Capacitor.isNativePlatform()">
-        Notifications are blocked. To get push notifications from Kola, open
-        your browser preferences or click the lock near the address bar to
-        change your notification preferences.
+        {{ $t("notifications.notificationsAreBlockedOnWeb") }}
       </p>
     </div>
     <KolaYellowButton
