@@ -80,6 +80,10 @@ export const useAppStore = defineStore("app", {
             const userStore = useUserStore();
 
             Network.addListener('networkStatusChange', async (status) => {
+                if( this.networkConnected == status.connected ) {
+                    return;
+                }
+
                 let message = '';
                 const anchor = userStore.isInGuestMode() ? 'guestTabs' :
                     (userStore.appMode == 'shopping' ? 'shopperTabs' : 'vendorTabs');
