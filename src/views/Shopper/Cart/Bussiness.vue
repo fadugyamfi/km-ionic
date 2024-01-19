@@ -71,12 +71,10 @@ const removeFromCart = (item: CartItem, index: number) => {
   cartStore.removeAtIndex(index);
 };
 
-onIonViewWillEnter(() => {
+onIonViewWillEnter(async () => {
   if (cartStore.orders.length == 0) {
-    cartStore.loadFromStorage();
+    await cartStore.loadFromStorage();
   }
-});
-onMounted(() => {
   if (cartStore.orders?.length == 1) {
     router.push(
       `/shopper/cart/business/${cartStore.orders[0]?.businesses_id}/orders`
