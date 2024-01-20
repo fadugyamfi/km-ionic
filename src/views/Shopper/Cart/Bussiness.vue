@@ -3,11 +3,14 @@
     <section class="ion-padding">
       <CartBusinessHeader>
         <template v-slot:toolbars>
-          <section style="padding-top: 10px;">
+          <section style="padding-top: 10px">
             <IonSegment value="personal" mode="ios" v-model="viewing">
               <IonSegmentButton value="cart">
                 <div class="segment-button">
-                  <IonLabel color="dark" :class="{ 'yellow-circle': segmentValue === 'cart' }">
+                  <IonLabel
+                    color="dark"
+                    :class="{ 'yellow-circle': segmentValue === 'cart' }"
+                  >
                     Cart
                   </IonLabel>
                   <IonBadge>{{ cartStore.orders.length }}</IonBadge>
@@ -23,18 +26,20 @@
     </section>
 
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
-
-
       <EmptyCart v-if="cartStore.orders.length === 0"></EmptyCart>
       <IonList v-else>
-        <OrderView v-for="order in cartStore.orders" :order="order" :key="order.businesses_id"></OrderView>
+        <OrderView
+          v-for="order in cartStore.orders"
+          :order="order"
+          :key="order.businesses_id"
+        ></OrderView>
       </IonList>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
 import {
   IonSegmentButton,
   IonLabel,
@@ -49,6 +54,9 @@ import { CartItem, useCartStore } from "@/stores/CartStore";
 import CartBusinessHeader from "@/components/header/CartBusinessHeader.vue";
 import EmptyCart from "@/components/cards/EmptyCart.vue";
 import OrderView from "@/components/modules/carts/OrderView.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const cartStore = useCartStore();
 const viewing = ref("cart");
@@ -63,9 +71,14 @@ const removeFromCart = (item: CartItem, index: number) => {
   cartStore.removeAtIndex(index);
 };
 
-onIonViewWillEnter(() => {
-  if ((cartStore.orders.length == 0)) {
-    cartStore.loadFromStorage();
+onIonViewWillEnter(async () => {
+  if (cartStore.orders.length == 0) {
+    await cartStore.loadFromStorage();
+  }
+  if (cartStore.orders?.length == 1) {
+    router.push(
+      `/shopper/cart/business/${cartStore.orders[0]?.businesses_id}/orders`
+    );
   }
 });
 </script>
