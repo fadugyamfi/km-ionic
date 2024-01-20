@@ -5,7 +5,7 @@
     </section>
     <ion-content>
       <section class="ion-padding">
-        <IonText> {{ order?.business?.name || "No Business" }} </IonText>
+        <IonText> {{ order?.business?.name || "Kola Market" }} </IonText>
         <BusinessMinimumOrderReached
           :business="order?.business"
           :totalCost="totalCost"
@@ -61,56 +61,63 @@
         </IonItem>
       </IonList>
 
-
-    <IonCard>
-    <section
-      class="d-flex ion-justify-content-between ion-align-items-center"
-      style="margin-bottom: 8px"
-    >
-      <IonText class="fw-semibold">Items total</IonText>
-      <section class="d-flex ion-align-items-center">
-        <IonText class="fw-semibold ion-margin-end">{{
-          Filters.currency(totalCost as number, "GHS")
-        }}</IonText>
-      </section>
-    </section>
-    <section
-      class="d-flex ion-justify-content-between ion-align-items-center"
-      style="margin-bottom: 8px"
-    >
-      <IonText class="fw-semibold">Delivery Fee</IonText>
-      <section class="d-flex ion-align-items-center">
-        <IonText class="fw-semibold ion-margin-end">
-          {{ Filters.currency(deliveryFee, "GHS") }}
-        </IonText>
-      </section>
-    </section>
-    <section class="d-flex flex-column">
-    <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
-      <IonIcon :icon="locationOutline" style="margin-right: 3px; vertical-align: middle;"></IonIcon>
-      <span style="padding-top: 94px; vertical-align: middle;">{{ orderBusiness?.delivery_location }}</span>
-    </IonText>
-      <!-- <section class="d-flex ion-align-items-center">
+      <IonCard>
+        <section
+          class="d-flex ion-justify-content-between ion-align-items-center"
+          style="margin-bottom: 8px"
+        >
+          <IonText class="fw-semibold">Items total</IonText>
+          <section class="d-flex ion-align-items-center">
+            <IonText class="fw-semibold ion-margin-end">{{
+              Filters.currency(totalCost as number, "GHS")
+            }}</IonText>
+          </section>
+        </section>
+        <section
+          class="d-flex ion-justify-content-between ion-align-items-center"
+          style="margin-bottom: 8px"
+        >
+          <IonText class="fw-semibold">Delivery Fee</IonText>
+          <section class="d-flex ion-align-items-center">
+            <IonText class="fw-semibold ion-margin-end">
+              {{ Filters.currency(deliveryFee, "GHS") }}
+            </IonText>
+          </section>
+        </section>
+        <section class="d-flex flex-column">
+          <IonText
+            color="medium"
+            class="font-medium"
+            style="margin-bottom: 8px"
+          >
+            <IonIcon
+              :icon="locationOutline"
+              style="margin-right: 3px; vertical-align: middle"
+            ></IonIcon>
+            <span style="padding-top: 94px; vertical-align: middle">{{
+              orderBusiness?.delivery_location
+            }}</span>
+          </IonText>
+          <!-- <section class="d-flex ion-align-items-center">
       <IonText class="ion-margin-end date-color" @click="toggleFilterSheet">
         Change address
       </IonText>
     </section> -->
-    </section>
-    <section
-      class="d-flex ion-justify-content-between ion-align-items-center"
-      style="margin-bottom: 8px"
-    >
-      <IonText class="fw-semibold">Total Cost</IonText>
-      <section class="d-flex ion-align-items-center">
-        <IonText class="fw-semibold ion-margin-end">{{
-          Filters.currency(totalWithDelivery as number, "GHS")
-        }}</IonText>
-      </section>
-    </section>
-  </IonCard>
+        </section>
+        <section
+          class="d-flex ion-justify-content-between ion-align-items-center"
+          style="margin-bottom: 8px"
+        >
+          <IonText class="fw-semibold">Total Cost</IonText>
+          <section class="d-flex ion-align-items-center">
+            <IonText class="fw-semibold ion-margin-end">{{
+              Filters.currency(totalWithDelivery as number, "GHS")
+            }}</IonText>
+          </section>
+        </section>
+      </IonCard>
 
-    <!-- <ItemReview :order="order" :orderBusiness="orderBusiness" /> -->
-
+      <!-- <ItemReview :order="order" :orderBusiness="orderBusiness" /> -->
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
@@ -136,7 +143,7 @@ import {
   IonFooter,
   IonText,
   IonCard,
-onIonViewDidEnter
+  onIonViewDidEnter,
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
@@ -145,7 +152,7 @@ import {
   closeCircleOutline,
   warningOutline,
   timeOutline,
-  locationOutline
+  locationOutline,
 } from "ionicons/icons";
 import ItemReview from "@/components/cards/ItemReview.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
@@ -163,7 +170,7 @@ const route = useRoute();
 
 const router = useRouter();
 const toastStore = useToastStore();
-const cartStore = useCartStore()
+const cartStore = useCartStore();
 
 const orderBusiness = computed((): Order | any => {
   return cartStore.orders.find(
@@ -177,18 +184,13 @@ const order = computed<Order>(() => {
   ) as Order;
 });
 
-
 const defaultMinOrderAmount = 2000; // Set your default value here
 
 const minOrderAmountReached = computed(() => {
-  const minOrderAmount = Number(order.value?.business?.min_order_amount) || defaultMinOrderAmount;
-  return (
-    !isNaN(minOrderAmount) &&
-    minOrderAmount <= totalCost.value
-  );
+  const minOrderAmount =
+    Number(order.value?.business?.min_order_amount) || defaultMinOrderAmount;
+  return !isNaN(minOrderAmount) && minOrderAmount <= totalCost.value;
 });
-
-
 
 const updateQuantity = (item: CartItem, newQuantity: number) => {
   item.quantity = newQuantity;

@@ -12,7 +12,7 @@
         >
           <section class="d-flex flex-column business-description">
             <IonText class="fw-bold ellipsis font-medium">
-              {{ order?.business?.name || "Unknown" }}
+              {{ order?.business?.name || "Kola Market" }}
             </IonText>
 
             <IonText color="medium" class="font-medium">

@@ -184,7 +184,7 @@
       "confirmTime": "Expect your item to be delivered between 24-72 hours. Our agent will call to confirm",
       "placeNewOrder": "Place New Order"
     },
-    "credit":{
+    "credit": {
       "totalAmountOverdue": "Total amount overdue",
       "totalTimeOverdue": "Total time overdue"
     }
@@ -261,7 +261,6 @@
       "paymentTerms": "Payment Terms",
       "pleaseTryAgain": "Please try again",
       "noResultsFound": "No results found"
-
     }
   },
   "modules": {
@@ -316,13 +315,19 @@
       "stock": "Stock",
       "addStock": "Add Stock",
       "addProductImage": "Add Product Image",
-      "category": "Category",
+      "category": "Product category",
       "productName": "Product name",
       "variation": "Select size/variation",
       "itemDescription": "Item description",
       "groupQuantity": "Group quantity",
       "stockQuantity": "Stock quantity",
       "price": "Price",
+      "weight": "Weight",
+      "weightUnit": "Weight unit",
+      "volume": "Volume",
+      "volumeUnit": "Volume unit",
+      "minimumOrderAmount": "Minimum order amount (GHS)",
+      "minimumOrderQuantity": "Minimum order quantity",
       "selectExpiryDate": "Select expiry date",
       "saveChanges": "Save Changes",
       "numberOfItems": "Number of items",
@@ -349,16 +354,16 @@
     "editProfile": "Edit Profile",
 
     "address": {
-    "address": "Address",
-    "city": "City",
-    "state": "State",
-    "zip": "Zip",
-    "country": "Country",
-    "region": "Region(You can select multiple regions location)",
-    "addAddress": "Add Address",
-    "editAddress": "Edit Address",
-    "save": "Save",
-    "cancel": "Cancel"
+      "address": "Address",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip",
+      "country": "Country",
+      "region": "Region(You can select multiple regions location)",
+      "addAddress": "Add Address",
+      "editAddress": "Edit Address",
+      "save": "Save",
+      "cancel": "Cancel"
     },
 
     "accountActivity": {
@@ -372,10 +377,7 @@
       "editAddress": "Edit Address",
       "save": "Save",
       "cancel": "Cancel"
-      }
-
-
-
+    }
   },
   "settings": {
     "title": "Settings",
@@ -385,5 +387,16 @@
     "clearCachesDescription": "Clear cached data and reload items from the server",
     "confirmClearCache": "Confirm Clear Cache",
     "confirmClearCacheDescription": "Cached data aside authentication data will be cleared. Are you sure you want to continue?"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "noNotifications": "No Notifications",
+    "enableNotifications": "Enable Notifications",
+    "general": "General",
+    "orders": "Orders",
+    "kolaWantsToSendNotification": "Kola wants to send you notifications",
+    "newNotificationsWillAppearHere": "When you have new notifications they will appear here.",
+    "notificationsAreBlockedOnNative": "Notifications are blocked. To get push notifications from Kola, open your phone settings and allow notifications",
+    "notificationsAreBlockedOnWeb": " Notifications are blocked. To get push notifications from Kola, open your browser preferences or click the lock near the address bar to change your notification preferences."
   }
 }
