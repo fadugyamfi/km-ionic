@@ -2,15 +2,18 @@
   <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5, 0.75]">
     <IonContent class="ion-padding">
       <header class="ion-padding ion-text-center" style="margin-top: 80px">
-        Kola wants to send you notifications
+        {{ $t("notifications.kolaWantsToSendNotification") }}
       </header>
       <main class="ion-padding-vertical">
         <KolaYellowButton
           @click="enableNotification()"
           class="ion-margin-bottom"
-          >Enable Notification</KolaYellowButton
         >
-        <KolaWhiteButton @click="cancel()">Cancel</KolaWhiteButton>
+          {{ $t("notifications.enableNotifications") }}</KolaYellowButton
+        >
+        <KolaWhiteButton @click="cancel()">{{
+          $t("general.cancel")
+        }}</KolaWhiteButton>
       </main>
     </IonContent>
   </IonModal>

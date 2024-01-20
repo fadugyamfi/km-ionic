@@ -7,7 +7,9 @@
             <IonIcon :icon="close"></IonIcon>
           </IonButton>
         </ion-buttons>
-        <ion-title size="small"><b>Notifications</b></ion-title>
+        <ion-title size="small"
+          ><b>{{ $t("notifications.title") }} </b></ion-title
+        >
         <ion-buttons slot="end">
           <ion-button @click="refresh()">
             <IonIcon :icon="refreshOutline"></IonIcon>
@@ -32,10 +34,10 @@
         <section v-else>
           <IonSegment value="personal" mode="ios" v-model="viewing">
             <IonSegmentButton value="general">
-              <IonLabel>General</IonLabel>
+              <IonLabel>{{ $t("notifications.general") }}</IonLabel>
             </IonSegmentButton>
             <IonSegmentButton value="orders">
-              <ion-label>Orders</ion-label>
+              <ion-label>{{ $t("notifications.orders") }}</ion-label>
             </IonSegmentButton>
           </IonSegment>
 
