@@ -186,6 +186,17 @@
             </div>
           </ion-radio-group>
         </section>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.group_quantity }"
+          :label="$t('profile.stock.groupQuantity')"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.group_quantity"
+          name="quantity_available"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
         <section>
           <IonGrid>
             <IonRow>
@@ -398,6 +409,7 @@ const form = useForm({
   volume_units_id: "",
   min_order_amount: "",
   min_order_quantity: "",
+  group_quantity: ""
 });
 
 const weightUnits = ref([
@@ -430,7 +442,8 @@ const formValid = computed(() => {
     fields.weight_value &&
     fields.weight_units_id &&
     fields.min_order_amount &&
-    fields.min_order_quantity
+    fields.min_order_quantity && 
+    fields.group_quantity
   );
 });
 
