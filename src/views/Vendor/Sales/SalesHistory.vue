@@ -43,6 +43,8 @@
                 <IonSpinner name="crescent"></IonSpinner>
             </div>
 
+            <SaleSyncStatus :show-syncing="true"></SaleSyncStatus>
+
             <section v-show="!fetching">
                 <NoResults v-if="saleStore.sales?.length == 0"></NoResults>
 
@@ -75,6 +77,7 @@ import { formatMySQLDateTime } from '@/utilities';
 import NoResults from '@/components/layout/NoResults.vue';
 import SalesList from '@/components/modules/sales/SalesList.vue';
 import FilterSalesSheet from '@/components/modules/sales/FilterSalesSheet.vue';
+import SaleSyncStatus from '@/components/modules/sales/SaleSyncStatus.vue';
 
 export default defineComponent({
 
@@ -106,7 +109,8 @@ export default defineComponent({
         IonFabButton,
         NoResults,
         SalesList,
-        FilterSalesSheet
+        FilterSalesSheet,
+        SaleSyncStatus
     },
 
     data() {

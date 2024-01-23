@@ -33,4 +33,8 @@ export default class User {
   isOwner() {
     return this.id_cms_privileges == 4; // Owner
   }
+
+  isSalesAssociate() {
+    return [2, 5].indexOf(this.id_cms_privileges as number) > -1;
+  }
 }

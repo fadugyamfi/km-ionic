@@ -166,7 +166,7 @@ export default defineComponent({
         return;
       }
 
-      if( this.userStore.user?.isSaleAgent() ) {
+      if( this.userStore.user?.isSalesAssociate() ) {
         this.$router.replace('/agent/sales/add-sale/select-customer');
       } else {
         this.$router.push('/vendor/sales/add-sale/select-sale-type');
@@ -180,7 +180,7 @@ export default defineComponent({
   },
 
   ionViewDidEnter() {
-    if( this.userStore.user?.isSaleAgent() ) {
+    if( this.userStore.user?.isSalesAssociate() ) {
       this.selectAgent(this.userStore.user);
       this.onContinue();
     } else {
