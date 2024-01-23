@@ -58,6 +58,7 @@ import ProductQuantitySelector from '../products/ProductQuantitySelector.vue';
 import { closeCircleOutline } from 'ionicons/icons';
 import Image from '@/components/Image.vue';
 import { SaleItem } from '@/models/SaleItem';
+import { OrderItem } from '@/models/OrderItem';
 import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
 import Product from '@/models/Product';
@@ -78,7 +79,7 @@ export default defineComponent({
 
     props: {
         saleItem: {
-            type: Object as PropType<SaleItem>
+            type: Object as PropType<SaleItem | OrderItem>
         },
 
         editable: {

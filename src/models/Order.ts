@@ -40,6 +40,9 @@ export class Order {
     public total_order_amount?: number | string;
     public order_status_id?: number;
     public payment_modes_id?: number;
+    public order_started_at?: string;
+    public order_ended_at?: string;
+    public uuid?: string;
     
 
     public created_at: any;

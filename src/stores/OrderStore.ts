@@ -3,34 +3,132 @@ import AppStorage from "./AppStorage";
 import { Order, OrderStatus } from "@/models/Order";
 import { useToastStore } from "./ToastStore";
 import axios from "axios";
-import { handleAxiosRequestError } from "../utilities";
 import { useUserStore } from "./UserStore";
 import { ChangeStatusRequest } from "../models/types";
 import Product from "@/models/Product";
 import { OrderItem } from "@/models/OrderItem";
+import { v4 as uuidv4 } from "uuid";
+import Business from "@/models/Business";
+import { useGeolocation } from "../composables/useGeolocation";
+import {
+  formatDateMySQL,
+  formatMySQLDateTime,
+  handleAxiosRequestError,
+} from "../utilities";
+import { useAppStore } from "./AppStore";
 
 const storage = new AppStorage();
 const KOLA_EDITED_ORDER = "kola.edited-order";
+const KOLA_SALE_AGENT_ORDER = "kola.sale-agent-order";
+const KOLA_AGENT_SELECTED_CUSTOMER = "kola.agent-order-selected-customer";
+const KOLA_RECORDED_ORDERS = "kola.recorded-orders";
 
 export const useOrderStore = defineStore("order", {
   state: () => {
     return {
       orders: [] as Order[],
+      newOrder: new Order({}),
+      selectedCustomer: {} as Business,
       editedOrder: {} as Order,
       editing: false,
       approving: false,
       cancelling: false,
-      selectedOrder: null as Order | null
+      selectedOrder: null as Order | null,
+      recordedOrders: [] as Order[],
+      orderSyncTimer: null as any,
     };
   },
 
   actions: {
     async loadFromStorage() {
       let data = await storage.get(KOLA_EDITED_ORDER);
-      console.log(data);
+      let newOrderData = await storage.get(KOLA_SALE_AGENT_ORDER);
+      let selectedCustomerData = await storage.get(
+        KOLA_AGENT_SELECTED_CUSTOMER
+      );
+
       Object.assign(this.editedOrder, data);
+      Object.assign(this.newOrder, newOrderData);
+      Object.assign(this.selectedCustomer, selectedCustomerData);
     },
 
+    async loadCachedRecordedOrders() {
+      if (this.recordedOrders.length > 0) {
+        return;
+      }
+
+      const userStore = useUserStore();
+      const CACHE_KEY = `${KOLA_RECORDED_ORDERS}.${userStore.activeBusiness?.id}`;
+
+      const records = await storage.get(CACHE_KEY);
+
+      if (records) {
+        this.recordedOrders = records.map(
+          (record: object) => new Order(record)
+        ) as Order[];
+      }
+
+      this.startOrderDataSync();
+    },
+    async startOrderDataSync() {
+      if (this.orderSyncTimer != null) {
+        return;
+      }
+
+      console.log("Starting order data sync");
+
+      const appStore = useAppStore();
+
+      this.orderSyncTimer = setInterval(async () => {
+        if (this.recordedOrders.length == 0 || !appStore.networkConnected) {
+          return;
+        }
+
+        const order = this.recordedOrders.shift() as Order;
+
+        try {
+          const synced = await this.recordOrderOnline(order);
+          if (synced) {
+            this.persistRecordedOrders(); // save new cache without synced sale
+          } else {
+            this.recordedOrders.push(order);
+          }
+        } catch (error: any) {
+          if (!error.message.includes("duplicate")) {
+            this.recordedOrders.push(order);
+          } else {
+            this.persistRecordedOrders();
+          }
+        }
+      }, 1000 * 15);
+    },
+    async recordOrderOnline(order: Order): Promise<Order | null> {
+      const payload = Object.assign({}, order, {
+        order_items: order._order_items,
+      });
+
+      return axios
+        .post("/v2/orders", payload)
+        .then((response) => {
+          const savedOrder = new Order(response.data.data);
+          const unsyncedIndex = this.orders.findIndex(
+            (o: Order) => o.uuid == order.uuid
+          );
+
+          if (unsyncedIndex > -1) {
+            this.orders[unsyncedIndex] = order;
+          } else {
+            this.orders.unshift(savedOrder);
+          }
+
+          return savedOrder;
+        })
+        .catch((error) => {
+          handleAxiosRequestError(error);
+
+          throw new Error(error.response.data.api_message);
+        });
+    },
     async fetchPlacedOrders(options = {}) {
       const userStore = useUserStore();
 
@@ -128,6 +226,27 @@ export const useOrderStore = defineStore("order", {
       }
 
       return null;
+    },
+
+    resetForNewOrder() {
+      const userStore = useUserStore();
+
+      this.newOrder = new Order({
+        uuid: uuidv4(),
+        businesses_id: userStore.activeBusiness?.id,
+        cms_users_id: userStore.user?.id,
+        credits_id: 1,
+        gps_location: "-",
+        delivery_location: "Ghana",
+        product_units_id: 1,
+        payment_modes_id: 1,
+        order_started_at: formatMySQLDateTime(new Date().toISOString()),
+        order_ended_at: "",
+        total_items: 0,
+        total_sales_price: 0,
+        total_discount: 0,
+        description: "",
+      });
     },
 
     async updateOrder(orderId: any, updatedData: any): Promise<Boolean> {
@@ -335,8 +454,70 @@ export const useOrderStore = defineStore("order", {
       }
       this.persist();
     },
+
+    isProductSelected(product: Product): boolean {
+      const index = this.newOrder.order_items?.findIndex(
+        (item: OrderItem) => item.products_id == product.id
+      ) as number;
+
+      return !isNaN(index) ? index > -1 : false;
+    },
+
+    addProductToOrder(product: Product) {
+      const orderItem = new OrderItem({
+        uuid: uuidv4(),
+        quantity: 1,
+        unit_price: product.product_price,
+        total_price: product.product_price,
+        products_id: product.id,
+        product: product,
+        product_units_id: 1,
+        currencies_id: 1,
+        cms_users_id: this.newOrder.cms_users_id,
+        businesses_id: this.newOrder.businesses_id,
+        description: "",
+        is_on_sale: 0,
+      });
+      this.newOrder.order_items?.push(orderItem);
+    },
+    removeProductFromOrder(product: Product) {
+      const index = this.newOrder.order_items?.findIndex(
+        (item: OrderItem) => item.products_id == product.id
+      );
+      this.newOrder.order_items?.splice(index as number, 1);
+    },
+    async recordOrder(): Promise<Order | null> {
+      const location = useGeolocation();
+      const coordinates = await location.getCurrentLocation();
+
+      this.newOrder.update({
+        order_ended_at: formatMySQLDateTime(new Date().toISOString()),
+        gps_location: coordinates
+          ? `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`
+          : "-",
+      });
+
+      this.recordedOrders.push(this.newOrder);
+      this.persistRecordedOrders();
+      this.startOrderDataSync();
+
+      return this.newOrder;
+    },
+    async persistRecordedOrders() {
+      const userStore = useUserStore();
+      const CACHE_KEY = `${KOLA_RECORDED_ORDERS}.${userStore.activeBusiness?.id}`;
+
+      storage.set(CACHE_KEY, this.recordedOrders, 14, "days");
+    },
     async persist() {
       await storage.set(KOLA_EDITED_ORDER, this.editedOrder, 1, "days");
+      await storage.set(KOLA_SALE_AGENT_ORDER, this.newOrder, 1, "days");
+      await storage.set(
+        KOLA_AGENT_SELECTED_CUSTOMER,
+        this.selectedCustomer,
+        1,
+        "days"
+      );
     },
   },
 });

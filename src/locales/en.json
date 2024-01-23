@@ -182,7 +182,8 @@
       "proceedToCheckout": "Proceed To Checkout",
       "trackOrder": "Track Order",
       "confirmTime": "Expect your item to be delivered between 24-72 hours. Our agent will call to confirm",
-      "placeNewOrder": "Place New Order"
+      "placeNewOrder": "Place New Order",
+      "placeOrder": "Place Order"
     },
     "credit": {
       "totalAmountOverdue": "Total amount overdue",
@@ -244,11 +245,13 @@
     },
     "orders": {
       "orderHasBeenApproved": "Order has been approved",
+      "orderHasBeenPlaced": "Order has been placed",
       "orderHasBeenCanceled": "Order has been canceled",
       "messageCustomer": "Message Customer",
       "messageSupplier": "Message Supplier",
       "deleteOrderFromList": "Delete Order From List",
-      "youCantUndoThisAction": "You can't undo this action"
+      "youCantUndoThisAction": "You can't undo this action",
+      "orderConfirmation": "Order Confirmation"
     },
     "credit": {
       "totalCredit": "Total Credit",
