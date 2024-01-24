@@ -19,29 +19,32 @@
       </ion-header>
 
       <IonToolbar>
-        <IonSegment value="thisweek" mode="ios" @ionChange="onSegmentChanged($event)">
+        <IonSegment
+          value="thisweek"
+          mode="ios"
+          @ionChange="onSegmentChanged($event)"
+        >
           <IonSegmentButton value="today">
             <IonLabel>
-              {{ $t('general.today') }}
+              {{ $t("general.today") }}
             </IonLabel>
           </IonSegmentButton>
           <IonSegmentButton value="thisweek">
-            <IonLabel>{{ $t('general.thisWeek') }}</IonLabel>
+            <IonLabel>{{ $t("general.thisWeek") }}</IonLabel>
           </IonSegmentButton>
           <IonSegmentButton value="pastmonth">
-            <IonLabel>{{ $t('general.pastMonth') }}</IonLabel>
+            <IonLabel>{{ $t("general.pastMonth") }}</IonLabel>
           </IonSegmentButton>
         </IonSegment>
       </IonToolbar>
     </IonHeader>
 
-
     <ion-content>
-      <!-- <IonFab slot="fixed" vertical="bottom" horizontal="end">
+      <IonFab slot="fixed" vertical="bottom" horizontal="end">
         <IonFabButton @click="onRaiseOrder()">
           <IonIcon :icon="add"></IonIcon>
         </IonFabButton>
-      </IonFab> -->
+      </IonFab>
 
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
@@ -53,10 +56,13 @@
         <ReceivedOrderList :orders="orderStore.orders"></ReceivedOrderList>
       </section>
 
-      <FilterOrdersSheet :isOpen="showFilterSheet" @didDismiss="showFilterSheet = false" @update="onFilterUpdate($event)">
+      <FilterOrdersSheet
+        :isOpen="showFilterSheet"
+        @didDismiss="showFilterSheet = false"
+        @update="onFilterUpdate($event)"
+      >
       </FilterOrdersSheet>
     </ion-content>
-
   </ion-page>
 </template>
 
@@ -76,36 +82,47 @@ import {
   IonButton,
   IonIcon,
   IonSpinner,
-IonFab,
-IonFabButton
-} from '@ionic/vue';
-import NotificationButton from '@/components/notifications/NotificationButton.vue';
-import { defineComponent, ref } from 'vue';
-import { useOrderStore } from '@/stores/OrderStore';
-import ReceivedOrderList from '@/components/modules/order/ReceivedOrderList.vue';
-import { search, arrowBack, ellipsisHorizontal, filter, optionsOutline, add } from 'ionicons/icons';
-import { mapStores } from 'pinia';
-import { formatMySQLDateTime, handleAxiosRequestError } from '@/utilities';
-import filters from '@/utilities/Filters';
-import FilterOrdersSheet from '@/components/modules/order/FilterOrdersSheet.vue';
-import NoResults from '@/components/layout/NoResults.vue';
-import { useUserStore } from '@/stores/UserStore';
+  IonFab,
+  IonFabButton,
+} from "@ionic/vue";
+import NotificationButton from "@/components/notifications/NotificationButton.vue";
+import { defineComponent, ref } from "vue";
+import { useOrderStore } from "@/stores/OrderStore";
+import ReceivedOrderList from "@/components/modules/order/ReceivedOrderList.vue";
+import {
+  search,
+  arrowBack,
+  ellipsisHorizontal,
+  filter,
+  optionsOutline,
+  add,
+} from "ionicons/icons";
+import { mapStores } from "pinia";
+import { formatMySQLDateTime, handleAxiosRequestError } from "@/utilities";
+import filters from "@/utilities/Filters";
+import FilterOrdersSheet from "@/components/modules/order/FilterOrdersSheet.vue";
+import NoResults from "@/components/layout/NoResults.vue";
+import { useUserStore } from "@/stores/UserStore";
 
 export default defineComponent({
-
   data() {
     return {
-      search, arrowBack, ellipsisHorizontal, filter, optionsOutline, add,
+      search,
+      arrowBack,
+      ellipsisHorizontal,
+      filter,
+      optionsOutline,
+      add,
       fetching: false,
       filters,
       showFilterSheet: false,
       searchFilters: {
-        start_dt: '',
-        end_dt: '',
+        start_dt: "",
+        end_dt: "",
         customer_id: null,
-        cms_users_id: null as number | undefined | null
-      }
-    }
+        cms_users_id: null as number | undefined | null,
+      },
+    };
   },
 
   components: {
@@ -128,11 +145,11 @@ export default defineComponent({
     NoResults,
     IonSpinner,
     IonFab,
-    IonFabButton
-},
+    IonFabButton,
+  },
 
   computed: {
-    ...mapStores(useOrderStore, useUserStore)
+    ...mapStores(useOrderStore, useUserStore),
   },
 
   methods: {
@@ -141,9 +158,8 @@ export default defineComponent({
         this.fetching = true;
         this.searchFilters.cms_users_id = this.userStore.user?.id;
         await this.orderStore.fetchPlacedOrders(this.searchFilters);
-
       } catch (error) {
-        handleAxiosRequestError(error)
+        handleAxiosRequestError(error);
       } finally {
         this.fetching = false;
       }
@@ -155,15 +171,15 @@ export default defineComponent({
       const option = event.detail.value;
 
       switch (option) {
-        case 'pastmonth':
+        case "pastmonth":
           start_dt.setMonth(start_dt.getMonth() - 1);
           break;
 
-        case 'today':
+        case "today":
           start_dt.setDate(start_dt.getDate() - 1);
           break;
 
-        case 'thisweek':
+        case "thisweek":
           start_dt.setDate(start_dt.getDate() - 7);
           break;
       }
@@ -174,21 +190,25 @@ export default defineComponent({
       this.fetchOrders();
     },
 
-    onFilterUpdate(event: { start_dt: string, end_dt: string }) {
+    onFilterUpdate(event: { start_dt: string; end_dt: string }) {
       this.searchFilters.start_dt = event.start_dt;
-      this.searchFilters.end_dt = event.end_dt || formatMySQLDateTime(new Date().toISOString());
+      this.searchFilters.end_dt =
+        event.end_dt || formatMySQLDateTime(new Date().toISOString());
       this.fetchOrders();
     },
 
     onRaiseOrder() {
-
-    }
+      this.orderStore.resetForNewOrder();
+      this.$router.push("/agent/orders/place-order/select-customer");
+    },
   },
 
   mounted() {
-    this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'thisweek' } }));
-  }
-})
+    this.onSegmentChanged(
+      new CustomEvent("load", { detail: { value: "thisweek" } })
+    );
+  },
+});
 </script>
 
 <style scoped>
