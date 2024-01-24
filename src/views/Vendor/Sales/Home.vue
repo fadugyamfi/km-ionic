@@ -4,7 +4,9 @@
       <ion-header class="inner-header">
         <IonToolbar class="ion-align-items-center">
           <IonButtons slot="start">
-            <IonBackButton :icon="close" defaultHref="/vendor/home"></IonBackButton>
+            <IonButton router-link="/vendor/home">
+              <IonIcon :icon="arrowBackOutline" slot="icon-only"></IonIcon>
+            </IonButton>
           </IonButtons>
 
           <IonTitle size="small" class="fw-bold">Sales Report</IonTitle>
@@ -30,7 +32,18 @@
         <IonSpinner name="crescent"></IonSpinner>
       </section>
 
+
       <section v-if="!fetchingSummary">
+        <section v-if="showFilterSummary">
+          <IonItem color="light" lines="none">
+            <IonLabel color="dark" class="font-medium">
+              Show Data From:
+              {{ Filters.date(queryFilters['start_dt'] as string, 'short') }} to
+              {{ Filters.date(queryFilters['end_dt'] as string, 'short') }}
+            </IonLabel>
+          </IonItem>
+        </section>
+
         <IonGrid>
           <SalesStatistics :total-sales="businessStore.businessSummary?.total_sales_value"
                            :avg-sales="businessStore.businessSummary?.average_sales_value"></SalesStatistics>
@@ -174,7 +187,7 @@ import { useSaleStore } from "@/stores/SaleStore";
 import { mapStores } from "pinia";
 import SalesList from "@/components/modules/sales/SalesList.vue";
 import { Sale } from "@/models/Sale";
-import { add, arrowUpOutline, optionsOutline, close } from "ionicons/icons";
+import { add, arrowUpOutline, optionsOutline, close, arrowBackOutline } from "ionicons/icons";
 import Filters from "@/utilities/Filters";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useUserStore } from "@/stores/UserStore";
@@ -226,14 +239,16 @@ export default defineComponent({
       add,
       optionsOutline,
       arrowUpOutline,
+      arrowBackOutline,
       close,
       showFilterSheet: false,
+      showFilterSummary: false,
       Filters,
       recentSales: [] as Sale[],
       fetchingSummary: false,
       fetchingHistory: false,
       topProducts: [],
-      queryFilters: {},
+      queryFilters: {} as { [key: string]: any },
     };
   },
 
@@ -265,8 +280,6 @@ export default defineComponent({
     },
 
     async fetchRecentSales() {
-      if( this.recentSales.length > 0 ) return;
-
       this.fetchingHistory = true;
       this.recentSales = await this.saleStore.fetchSales({
         limit: 5,
@@ -277,10 +290,6 @@ export default defineComponent({
     },
 
     async fetchBusinessSummary() {
-      if( this.businessStore.businessSummary && this.businessStore.businessSummary.business?.id == this.userStore.activeBusiness?.id ) {
-        return;
-      }
-
       this.fetchingSummary = true;
       await this.businessStore.getBusinessSummary(
         this.userStore.activeBusiness as Business,
@@ -302,6 +311,7 @@ export default defineComponent({
     },
 
     updateFilterOptions(filters: object) {
+      this.showFilterSummary = true;
       this.queryFilters = { ...filters };
       this.fetchBusinessSummary();
       this.fetchRecentSales();
@@ -309,7 +319,7 @@ export default defineComponent({
     },
   },
 
-  ionViewDidEnter() {
+  mounted() {
     this.fetchRecentSales();
     this.fetchBusinessSummary();
 

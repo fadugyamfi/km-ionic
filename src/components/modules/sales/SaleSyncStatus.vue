@@ -6,7 +6,7 @@
             {{ saleStore.recordedSales.length }} sales pending upload
         </IonLabel>
 
-        <IonSpinner v-if="syncing" slot="end" name="crescent"></IonSpinner>
+        <IonSpinner v-if="syncing || showSyncing" slot="end" name="crescent"></IonSpinner>
     </IonItem>
 </template>
 
@@ -18,6 +18,12 @@ import { ref } from 'vue';
 
 const saleStore = useSaleStore();
 const syncing = ref(false);
+
+const props = defineProps({
+    showSyncing: {
+        default: false
+    }
+})
 
 const startSync = () => {
     saleStore.startSaleDataSync();

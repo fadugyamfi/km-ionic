@@ -166,7 +166,7 @@ export default defineComponent({
     }
   },
 
-  ionViewDidEnter() {
+  mounted() {
     this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'thisweek' } }));
   }
 })

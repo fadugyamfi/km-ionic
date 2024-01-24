@@ -83,7 +83,7 @@ export default defineComponent({
         onDone() {
             this.saleStore.resetForNewSale();
 
-            if( this.userStore.user?.isSaleAgent() ) {
+            if( this.userStore.user?.isSalesAssociate() ) {
                 this.$router.replace('/agent/sales')
             } else {
                 this.$router.replace('/vendor/sales/history')

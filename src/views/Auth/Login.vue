@@ -95,7 +95,7 @@ export default defineComponent({
             })
 
             .then(() => {
-                if( this.userStore.user?.isSaleAgent() || this.userStore.user?.isSalesManager() ) {
+                if( this.userStore.user?.isSalesAssociate() || this.userStore.user?.isSalesManager() ) {
                     this.userStore.setAppModeAsVendor();
                     this.$router.replace('/agent/home');
                     return;

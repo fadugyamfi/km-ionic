@@ -37,7 +37,7 @@
             >
               <IonIcon :icon="createOutline"></IonIcon>
               Udpate Agent
-             
+
             </IonItem> -->
             <IonItem
               lines="none"
@@ -90,12 +90,13 @@ import { getDateFromNow } from "@/utilities";
 import { useToastStore } from "@/stores/ToastStore";
 import ProfileAvatar from "../../ProfileAvatar.vue";
 import User from "@/models/User";
+import Agent from "../../../models/Agent";
 
 const toastStore = useToastStore();
 
 const props = defineProps({
   agents: {
-    type: Object as PropType<User[]>,
+    type: Object as PropType<User[]|Agent[]>,
     default: () => [],
   },
 });
@@ -103,10 +104,10 @@ const props = defineProps({
 const router = useRouter();
 const agentsStore = useAgentsStore();
 
-const selectedAgent = ref<User>();
+const selectedAgent = ref<User|Agent>();
 const showConfirmDeleteModal = ref(false);
 
-const deleteAgent = (agent: User) => {
+const deleteAgent = (agent: User|Agent) => {
   selectedAgent.value = agent;
   showConfirmDeleteModal.value = true;
 };
@@ -125,7 +126,7 @@ const onConfirmDelete = async () => {
   }
 };
 
-const updateAgent = (agent: User) => {
+const updateAgent = (agent: User|Agent) => {
   //   router.push(`/profile/company/customers/${agent.id}/update-customer`);
 };
 </script>

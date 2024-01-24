@@ -15,7 +15,7 @@ export const GuestModeRoutes = [
         return { name: 'Onboarding' };
       }
 
-      if(userStore.user && (userStore.user?.isSaleAgent() || userStore.user?.isSalesManager())) {
+      if(userStore.user && (userStore.user?.isSalesAssociate() || userStore.user?.isSalesManager())) {
         return { name: 'SaleAgentHome' };
       }
 

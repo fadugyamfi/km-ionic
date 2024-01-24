@@ -141,7 +141,7 @@ export default defineComponent({
                     return;
                 }
 
-                if( this.userStore.user?.isSaleAgent() ) {
+                if( this.userStore.user?.isSalesAssociate() ) {
                     this.$router.push('/agent/sales/add-sale/sale-confirmation')
                 } else {
                     this.$router.push('/vendor/sales/add-sale/sale-confirmation')

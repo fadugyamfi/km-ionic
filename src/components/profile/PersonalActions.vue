@@ -167,7 +167,7 @@ export default defineComponent({
     ...mapStores(useUserStore),
 
     canToggleModes() {
-      return !this.userStore.user?.isSaleAgent() && !this.userStore.user?.isSalesManager();
+      return !this.userStore.user?.isSalesAssociate() && !this.userStore.user?.isSalesManager();
     }
   },
 

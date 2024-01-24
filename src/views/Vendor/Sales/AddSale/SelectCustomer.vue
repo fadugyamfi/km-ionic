@@ -144,7 +144,7 @@ export default defineComponent({
       const userStore = useUserStore();
       const businessStore = useBusinessStore();
 
-      if( this.userStore.user?.isSaleAgent() ) {
+      if( this.userStore.user?.isSalesAssociate() ) {
         this.customers = await userStore.fetchAssignedBusinesses( userStore.user?.id );
       } else {
         this.customers = await businessStore.getBusinessCustomers(userStore.activeBusiness as Business, 300, options, this.refreshing);
@@ -165,7 +165,7 @@ export default defineComponent({
         return;
       }
 
-      if( this.userStore.user?.isSaleAgent() ) {
+      if( this.userStore.user?.isSalesAssociate() ) {
         this.$router.push('/agent/sales/add-sale/select-sale-type');
       } else {
         this.$router.push('/vendor/sales/add-sale/select-products')
