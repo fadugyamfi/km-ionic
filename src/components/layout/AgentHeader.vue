@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonText, modalController, IonSearchbar } from '@ionic/vue';
+import { IonHeader, IonTitle, IonToolbar, IonButtons, IonButton, IonIcon, IonText, IonSearchbar } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { mapStores } from 'pinia';
 import { useUserStore } from '@/stores/UserStore';
