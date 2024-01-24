@@ -75,11 +75,6 @@ onIonViewWillEnter(async () => {
   if (cartStore.orders.length == 0) {
     await cartStore.loadFromStorage();
   }
-  if (cartStore.orders?.length == 1) {
-    router.push(
-      `/shopper/cart/business/${cartStore.orders[0]?.businesses_id}/orders`
-    );
-  }
 });
 </script>
 

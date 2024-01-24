@@ -53,8 +53,13 @@ const goToCart = () => {
     confirmSwitch.value = true;
     return;
   }
-
-  router.push("/shopper/cart");
+  if (cartStore.orders?.length == 1) {
+    router.push(
+      `/shopper/cart/business/${cartStore.orders[0]?.businesses_id}/orders`
+    );
+  } else {
+    router.push("/shopper/cart");
+  }
 };
 
 const switchAndGoToCart = () => {
