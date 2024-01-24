@@ -6,7 +6,7 @@
           <IonToolbar>
             <IonButtons slot="start">
               <IonBackButton
-                defaultHref="/agent/orders/place-order/delivery-details"
+                defaultHref="/agent/orders/place-order/select-customer"
                 :icon="arrowBack"
                 mode="md"
               >

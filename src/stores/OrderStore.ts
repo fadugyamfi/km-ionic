@@ -474,9 +474,13 @@ export const useOrderStore = defineStore("order", {
         product_units_id: 1,
         currencies_id: 1,
         cms_users_id: this.newOrder.cms_users_id,
-        businesses_id: this.newOrder.businesses_id,
         description: "",
         is_on_sale: 0,
+        businesses_id: product.businesses_id,
+        product_price: product.product_price,
+        currency_symbol: product.currency?.symbol,
+        product_image: product.image,
+        product_name: product.product_name,
       });
       this.newOrder.order_items?.push(orderItem);
     },
@@ -489,19 +493,20 @@ export const useOrderStore = defineStore("order", {
     async recordOrder(): Promise<Order | null> {
       const location = useGeolocation();
       const coordinates = await location.getCurrentLocation();
-
-      this.newOrder.update({
+      console.log(this.newOrder);
+      const newOrder = new Order(this.newOrder);
+      newOrder?.update({
         order_ended_at: formatMySQLDateTime(new Date().toISOString()),
         gps_location: coordinates
           ? `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`
           : "-",
       });
 
-      this.recordedOrders.push(this.newOrder);
+      this.recordedOrders.push(newOrder);
       this.persistRecordedOrders();
       this.startOrderDataSync();
 
-      return this.newOrder;
+      return newOrder;
     },
     async persistRecordedOrders() {
       const userStore = useUserStore();

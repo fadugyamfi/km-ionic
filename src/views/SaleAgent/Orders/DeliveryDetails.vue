@@ -6,10 +6,12 @@
         <IonToolbar class="ion-align-items-center">
           <IonButtons slot="start">
             <IonBackButton
-              defaultHref="/agent/orders/place-order/select-customer"
+              defaultHref="/agent/orders/place-order/configure-items"
             ></IonBackButton>
           </IonButtons>
-          <IonTitle class="fw-bold">{{ $t("shopper.cart.placeNewOrder") }}</IonTitle>
+          <IonTitle class="fw-bold">{{
+            $t("shopper.cart.placeNewOrder")
+          }}</IonTitle>
           <IonButtons slot="end" style="margin-right: 10px"> </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -82,8 +84,8 @@
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton :disabled="!formValid" @click="storeDeliveryDetails">
-        {{ $t("general.continue") }}
+      <KolaYellowButton :disabled="!formValid" @click="recordOrder">
+        {{ $t("shopper.cart.placeOrder") }}
       </KolaYellowButton>
     </IonFooter>
   </ion-page>
@@ -116,6 +118,7 @@ import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { onMounted, computed } from "vue";
 import { Order } from "@/models/Order";
+import { handleAxiosRequestError } from "@/utilities";
 import { useOrderStore } from "@/stores/OrderStore";
 
 const router = useRouter();
@@ -149,14 +152,34 @@ const selectDeliveryMethod = (method: string) => {
   }
 };
 
-const storeDeliveryDetails = () => {
+const recordOrder = async () => {
   const orderStore = useOrderStore();
   orderStore.newOrder = {
     ...orderStore.newOrder,
     ...form.fields,
   };
-  orderStore.persist();
-  router.push(`/agent/orders/place-order/select-products`);
+
+  toastStore.blockUI();
+  try {
+    const order = await orderStore.recordOrder();
+
+    if (!order) {
+      toastStore.unblockUI();
+      toastStore.showError(
+        "Failed to record order",
+        "Error",
+        "bottom",
+        "configure-continue"
+      );
+      return;
+    }
+    router.push(`/agent/orders/place-order/order-confirmation`);
+  } catch (error) {
+    console.log(error)
+    handleAxiosRequestError(error);
+  } finally {
+    toastStore.unblockUI();
+  }
 };
 
 const formValid = computed(() => {
@@ -180,8 +203,8 @@ const getLocation = async () => {
 };
 onIonViewDidEnter(async () => {
   const orderStore = useOrderStore();
-    await orderStore.loadFromStorage();
-    Object.assign(form.fields, orderStore.newOrder)
+  await orderStore.loadFromStorage();
+  Object.assign(form.fields, orderStore.newOrder);
   // Set the delivery method here based on your requirement
   // For example, setting it to 'standard' when the component is mounted
   const initialDeliveryMethod = "standard";

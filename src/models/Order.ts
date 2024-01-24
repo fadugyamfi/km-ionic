@@ -1,5 +1,3 @@
-
-
 /*
 order_status_id
  1 = Pending
@@ -19,119 +17,126 @@ import { OrderItem } from "./OrderItem";
 import { OrderStatusHistory } from "./OrderStatusHistory";
 
 export enum OrderStatus {
-    PENDING = 1,
-    PREAPPROVED = 2,
-    APPROVED = 3,
-    PARTIALLY_PAID = 4,
-    PAID = 5,
-    OUT_FOR_DELIVERY = 6,
-    DELIVERED = 7,
-    CANCELLED = 8,
-    REJECTED = 9,
-    REFUNDED = 10
+  PENDING = 1,
+  PREAPPROVED = 2,
+  APPROVED = 3,
+  PARTIALLY_PAID = 4,
+  PAID = 5,
+  OUT_FOR_DELIVERY = 6,
+  DELIVERED = 7,
+  CANCELLED = 8,
+  REJECTED = 9,
+  REFUNDED = 10,
 }
 
 export class Order {
+  public id?: number | string;
+  public businesses_id?: number;
+  public cms_users_id?: number | string;
+  public customer_id?: number;
+  public total_order_amount?: number | string;
+  public order_status_id?: number;
+  public payment_modes_id?: number;
+  public order_started_at?: string;
+  public order_ended_at?: string;
+  public total_items?: string | number;
+  public uuid?: string;
 
-    public id?: number | string;
-    public businesses_id?: number;
-    public cms_users_id?: number | string;
-    public customer_id?: number;
-    public total_order_amount?: number | string;
-    public order_status_id?: number;
-    public payment_modes_id?: number;
-    public order_started_at?: string;
-    public order_ended_at?: string;
-    public uuid?: string;
-    
+  public created_at: any;
+  public order_status: any;
+  public start_dt: string | number | Date | undefined;
+  public product_units_id?: number;
+  public delivery_location?: string;
+  public delivery_date?: string;
+  public payment_option_id?: number;
+  public days_overdue?: number | string;
+  public due_date?: number | string;
+  public order_items_count = 0;
 
-    public created_at: any;
-    public order_status: any;
-    public start_dt: string | number | Date | undefined;
-    public product_units_id?: number;
-    public delivery_location?: string;
-    public delivery_date?: string;
-    public payment_option_id?: number;
-    public days_overdue?: number | string;
-    public due_date?: number | string;
-    public order_items_count = 0;
+  public _order_status_histories: OrderStatusHistory[] = [];
+  public _order_items: OrderItem[] = [];
+  public _customer?: Business;
+  public _business?: Business;
+  public _currency?: Currency;
 
-    public _order_status_histories: OrderStatusHistory[] = [];
-    public _order_items: OrderItem[] = [];
-    public _customer?: Business;
-    public _business?: Business;
-    public _currency?: Currency;
+  constructor(data: object) {
+    this.update(data);
+  }
 
+  update(data: object) {
+    Object.assign(this, data);
+  }
 
-    constructor(data: object) {
-        Object.assign(this, data);
-    }
+  getTotal() {
+    return this.order_items.reduce(
+      (acc, value) => acc + (value.total_price || 0),
+      0
+    );
+  }
 
-    update(data: object) {
-        Object.assign(this, data);
-    }
+  get order_items(): OrderItem[] {
+    return this._order_items;
+  }
 
-    getTotal() {
-        return this.order_items.reduce((acc, value) => acc + (value.total_price || 0), 0)
-    }
+  set order_items(items: object[]) {
+    this._order_items = items ? items.map((item) => new OrderItem(item)) : [];
+  }
 
-    get order_items(): OrderItem[] {
-        return this._order_items;
-    }
+  get customer(): Business | undefined {
+    return this._customer;
+  }
 
-    set order_items(items: object[]) {
-        this._order_items = items ? items.map(item => new OrderItem(item)) : [];
-    }
+  set customer(value: object) {
+    this._customer = new Business(value || {});
+  }
 
-    get customer(): Business | undefined {
-        return this._customer;
-    }
+  get business(): Business | undefined {
+    return this._business;
+  }
 
-    set customer(value: object) {
-        this._customer = new Business(value || {});
-    }
+  set business(value: object) {
+    this._business = new Business(value || {});
+  }
 
-    get business(): Business | undefined {
-        return this._business;
-    }
+  get order_status_histories(): OrderStatusHistory[] {
+    return this._order_status_histories;
+  }
 
-    set business(value: object) {
-        this._business = new Business(value || {});
-    }
+  set order_status_histories(history: object[]) {
+    this._order_status_histories = history?.map(
+      (h) => new OrderStatusHistory(h)
+    );
+  }
 
-    get order_status_histories(): OrderStatusHistory[] {
-        return this._order_status_histories;
-    }
+  get currency(): Currency | undefined {
+    return this._currency;
+  }
 
-    set order_status_histories(history: object[]) {
-        this._order_status_histories = history?.map(h => new OrderStatusHistory(h));
-    }
+  set currency(value: object) {
+    this._currency = new Currency(value || {});
+  }
 
-    get currency(): Currency | undefined {
-        return this._currency;
-    }
+  getLastOrderStatusHistory(
+    orderStatusId: number
+  ): OrderStatusHistory | undefined {
+    return this.order_status_histories.find(
+      (h) => h.order_status_id == orderStatusId
+    );
+  }
 
-    set currency(value: object) {
-        this._currency = new Currency(value || {});
-    }
+  isPendingApproval() {
+    return this.order_status_id == 1;
+  }
 
-    getLastOrderStatusHistory(orderStatusId: number): OrderStatusHistory | undefined {
-        return this.order_status_histories.find(h => h.order_status_id == orderStatusId);
-    }
+  isApproved() {
+    return [3, 4, 5, 6, 7].indexOf(this.order_status_id as number) > -1;
+  }
 
-    isPendingApproval() {
-        return this.order_status_id == 1;
-    }
+  isCancelled() {
+    return [8].indexOf(this.order_status_id as number) > -1;
+  }
 
-    isApproved() {
-        return [3,4,5,6,7].indexOf(this.order_status_id as number) > -1
-    }
-
-    isCancelled() {
-        return [8].indexOf(this.order_status_id as number) > -1;
-    }
-
-    isRejected() {
-        return this.order_status_id == 9;
-    }
+  isRejected() {
+    return this.order_status_id == 9;
+  }
 }

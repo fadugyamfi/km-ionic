@@ -198,7 +198,7 @@ export default defineComponent({
     },
 
     onRaiseOrder() {
-      // this.saleStore.resetForNewSale();
+      this.orderStore.resetForNewOrder();
       this.$router.push("/agent/orders/place-order/select-customer");
     },
   },

@@ -62,7 +62,7 @@
         :disabled="!cartTotalCost"
         @click="onContinue()"
       >
-        {{ $t("shopper.cart.placeOrder") }}
+        {{ $t("general.continue") }}
       </KolaYellowButton>
     </IonFooter>
   </IonPage>
@@ -111,6 +111,10 @@ export default defineComponent({
       closeCircleOutline,
     };
   },
+
+  // async ionViewDidEnter() {
+  //   await this.orderStore.loadFromStorage();
+  // },
 
   components: {
     IonPage,
@@ -165,29 +169,13 @@ export default defineComponent({
         );
         return;
       }
-
-      const toastStore = useToastStore();
-      toastStore.blockUI();
-
-      try {
-        const order = await this.orderStore.recordOrder();
-
-        if (!order) {
-          toastStore.unblockUI();
-          toastStore.showError(
-            "Failed to record order",
-            "Error",
-            "bottom",
-            "configure-continue"
-          );
-          return;
-        }
-        this.$router.push("/agent/orders/place-order/order-confirmation");
-      } catch (error) {
-        handleAxiosRequestError(error);
-      } finally {
-        toastStore.unblockUI();
-      }
+      this.orderStore.persist();
+      this.orderStore.newOrder = {
+        ...this.orderStore.newOrder,
+        total_order_amount: this.cartTotalCost,
+        total_items: this.orderStore.newOrder?.order_items?.length,
+      };
+      this.$router.push("/agent/orders/place-order/delivery-details");
     },
   },
 });
