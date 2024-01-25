@@ -8,16 +8,13 @@
 <script setup lang="ts">
 import { IonApp, IonRouterOutlet } from '@ionic/vue';
 import { useUserStore } from './stores/UserStore';
-import { onMounted, onBeforeMount } from 'vue';
+import { onBeforeMount } from 'vue';
 import ProcessNotification from './components/layout/ProcessNotification.vue';
 import axios from 'axios';
 import AppStorage from './stores/AppStorage';
-import { useToastStore } from './stores/ToastStore';
 import { useAppStore } from './stores/AppStore';
 
 const storage = new AppStorage();
-
-// const route = useRoute();
 
 async function configureAxios() {
   axios.defaults.baseURL =

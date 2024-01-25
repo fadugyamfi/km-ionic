@@ -59,7 +59,7 @@ export async function setupPushNotifications() {
   PushNotifications.addListener(
     "pushNotificationActionPerformed",
     (notification: ActionPerformed) => {
-      //   alert("Push action performed: " + JSON.stringify(notification));
+        alert("Push action performed: " + JSON.stringify(notification));
     }
   );
   return response;

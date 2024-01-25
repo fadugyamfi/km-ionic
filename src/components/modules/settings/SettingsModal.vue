@@ -197,7 +197,6 @@ export default defineComponent({
   },
 
  async  mounted() {
-    console.log( import.meta.env );
     await storage.init();
 
     useBackButton(10, () => {
