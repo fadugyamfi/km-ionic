@@ -9,14 +9,14 @@
     {
       "src": "./img/icons/icon-192x192.png",
       "type": "image/png",
-      "sizes": "any",
-      "purpose": "any maskable"
+      "sizes": "128x128 192x192",
+      "purpose": "maskable"
     },
     {
       "src": "./img/icons/icon-512x512.png",
       "type": "image/png",
-      "sizes": "any",
-      "purpose": "any maskable"
+      "sizes": "256x256 512x512",
+      "purpose": "maskable"
     }
   ],
   "screenshots" : [
@@ -43,6 +43,16 @@
       "sizes": "711x1552",
       "type": "image/png",
       "label": "Profile Management"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.kola.market.androidApp"
+    },
+    {
+      "platform": "webapp",
+      "url": "https://app.kola.market"
     }
   ]
 }

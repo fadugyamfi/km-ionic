@@ -98,6 +98,7 @@ import {
   IonSegmentButton,
   IonSpinner,
   IonList,
+useBackButton,
 } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowBack, close, refreshOutline } from 'ionicons/icons'
@@ -155,6 +156,10 @@ export default defineComponent({
 
   mounted() {
     this.favoritesStore.fetchFavorites();
+
+    useBackButton(10, () => {
+      this.cancel();
+    });
   }
 })
 

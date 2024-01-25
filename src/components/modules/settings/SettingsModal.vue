@@ -88,7 +88,8 @@ import {
   IonList,
   IonItem,
   IonAvatar,
-  IonText
+  IonText,
+useBackButton
 } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { isPlatform, getPlatforms } from '@ionic/vue';
@@ -196,8 +197,11 @@ export default defineComponent({
   },
 
  async  mounted() {
-    console.log( import.meta.env );
     await storage.init();
+
+    useBackButton(10, () => {
+      this.cancel();
+    })
   }
 })
 
