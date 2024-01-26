@@ -22,7 +22,43 @@
     </IonHeader>
 
     <ion-content>
-      <v-chart class="chart ion-padding" :option="barOption" autoresize />
+      <!-- <div class="d-flex ion-justify-content-center ion-align-items-center">
+        <ion-text class="ion-margin-horizontal" slot="start"> Sales </ion-text>
+        <ion-item>
+          <ion-select placeholder="Week" slot="start">
+            <ion-select-option value="Week">Week</ion-select-option>
+            <ion-select-option value="Month">Month</ion-select-option>
+            <ion-select-option value="Year">Year</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-text class="ion-margin-horizontal" slot="end">Add Sale</ion-text>
+      </div> -->
+      <IonList style="margin-bottom: 0px; padding-bottom: 0px">
+        <IonListHeader>
+          <IonLabel color="dark" class="fw-semibold">Sales</IonLabel>
+          <ion-item>
+            <ion-select placeholder="Week" slot="start">
+              <ion-select-option value="Week">Week</ion-select-option>
+              <ion-select-option value="Month">Month</ion-select-option>
+              <ion-select-option value="Year">Year</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <IonButton
+            fill="clear"
+            size="small"
+            class="fw-semibold"
+            color="primary"
+          >
+            Add Sales
+          </IonButton>
+        </IonListHeader>
+      </IonList>
+      <v-chart
+        ref="chart"
+        class="chart ion-padding mt-0"
+        :option="barOption"
+        autoresize
+      />
 
       <IonFab slot="fixed" vertical="bottom" horizontal="end">
         <IonFabButton @click="onAddSale()">
@@ -219,6 +255,8 @@ import {
   IonChip,
   IonItem,
   IonProgressBar,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/vue";
 import ShopperHeader from "@/components/layout/ShopperHeader.vue";
 import { defineComponent } from "vue";
@@ -242,7 +280,7 @@ import NotificationButton from "@/components/notifications/NotificationButton.vu
 import FilterSalesSheet from "@/components/modules/sales/FilterSalesSheet.vue";
 import SalesStatistics from "@/components/modules/SalesStatistics.vue";
 import SaleSyncStatus from "../../../components/modules/sales/SaleSyncStatus.vue";
-import { provide } from "vue";
+import { provide, ref } from "vue";
 import {
   TitleComponent,
   TooltipComponent,
@@ -306,6 +344,8 @@ export default defineComponent({
     SalesStatistics,
     SaleSyncStatus,
     VChart,
+    IonSelect,
+    IonSelectOption,
   },
 
   data() {
@@ -338,7 +378,7 @@ export default defineComponent({
         },
         xAxis: {
           type: "category",
-          data: ["M", "T", "W", "T", "F", "S", "S"],
+          data: [],
           axisTick: {
             show: false,
           },
@@ -376,7 +416,7 @@ export default defineComponent({
             name: "Direct",
             type: "bar",
             barWidth: "10",
-            data: [1050, 1000, 2000, 1000, 1050, 1020, 1000],
+            data: [],
             itemStyle: {
               borderRadius: [3, 3, 0, 0],
               opacity: 0.4,
@@ -406,6 +446,26 @@ export default defineComponent({
   },
 
   methods: {
+    async fetchSalesChart() {
+      const backendData = [
+        { day: "M", value: "500" },
+        { day: "T", value: "350" },
+        { day: "W", value: "500" },
+        { day: "T", value: "350" },
+        { day: "F", value: "200" },
+        { day: "S", value: "350" },
+        { day: "S", value: "50" },
+      ];
+
+      const days = backendData.map((item) => item.day);
+      const values = backendData.map((item) => parseInt(item.value, 10));
+
+      this.barOption.xAxis.data = days;
+      this.barOption.series[0].data = values;
+
+      this.fetchingSummary = false;
+    },
+
     onAddSale() {
       this.saleStore.resetForNewSale();
       this.$router.push("/vendor/sales/add-sale/select-agent");
@@ -458,6 +518,7 @@ export default defineComponent({
   mounted() {
     this.fetchRecentSales();
     this.fetchBusinessSummary();
+    this.fetchSalesChart();
 
     setTimeout(() => {
       this.saleStore.loadCachedRecordedSales();
