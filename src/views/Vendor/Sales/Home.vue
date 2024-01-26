@@ -22,43 +22,28 @@
     </IonHeader>
 
     <ion-content>
-      <!-- <div class="d-flex ion-justify-content-center ion-align-items-center">
-        <ion-text class="ion-margin-horizontal" slot="start"> Sales </ion-text>
-        <ion-item>
-          <ion-select placeholder="Week" slot="start">
-            <ion-select-option value="Week">Week</ion-select-option>
-            <ion-select-option value="Month">Month</ion-select-option>
-            <ion-select-option value="Year">Year</ion-select-option>
-          </ion-select>
-        </ion-item>
-        <ion-text class="ion-margin-horizontal" slot="end">Add Sale</ion-text>
-      </div> -->
-      <IonList style="margin-bottom: 0px; padding-bottom: 0px">
-        <IonListHeader>
-          <IonLabel color="dark" class="fw-semibold">Sales</IonLabel>
-          <ion-item>
-            <ion-select placeholder="Week" slot="start">
-              <ion-select-option value="Week">Week</ion-select-option>
-              <ion-select-option value="Month">Month</ion-select-option>
-              <ion-select-option value="Year">Year</ion-select-option>
-            </ion-select>
-          </ion-item>
-          <IonButton
-            fill="clear"
-            size="small"
-            class="fw-semibold"
-            color="primary"
-          >
-            Add Sales
-          </IonButton>
-        </IonListHeader>
-      </IonList>
-      <v-chart
-        ref="chart"
-        class="chart ion-padding mt-0"
-        :option="barOption"
-        autoresize
-      />
+      <IonItem style="width: 100%" lines="none">
+        <IonText color="dark" class="fw-semibold"> Sales </IonText>
+        <IonSelect
+          class="sale-filter"
+          labelPlacement="stacked"
+          fill="outline"
+          v-model="form.sale_filter"
+          required
+          name="category"
+          :toggle-icon="chevronDownOutline"
+          @ion-change="updateFilterOptions"
+        >
+          <ion-select-option value="week">Week</ion-select-option>
+          <ion-select-option value="month">Month</ion-select-option>
+          <ion-select-option value="year">Year</ion-select-option>
+        </IonSelect>
+        <IonButton slot="end" fill="clear" class="add-sale">
+          Add Sale
+        </IonButton>
+      </IonItem>
+
+      <v-chart ref="chart" class="chart" :option="barOption" autoresize />
 
       <IonFab slot="fixed" vertical="bottom" horizontal="end">
         <IonFabButton @click="onAddSale()">
@@ -270,6 +255,7 @@ import {
   optionsOutline,
   close,
   arrowBackOutline,
+  chevronDownOutline,
 } from "ionicons/icons";
 import Filters from "@/utilities/Filters";
 import { useBusinessStore } from "@/stores/BusinessStore";
@@ -354,15 +340,20 @@ export default defineComponent({
       optionsOutline,
       arrowUpOutline,
       arrowBackOutline,
+      chevronDownOutline,
       close,
       showFilterSheet: false,
       showFilterSummary: false,
       Filters,
+      form: {
+        sale_filter: "week",
+      },
       recentSales: [] as Sale[],
       fetchingSummary: false,
       fetchingHistory: false,
       topProducts: [],
       queryFilters: {} as { [key: string]: any },
+
       barOption: {
         tooltip: {
           trigger: "axis",
@@ -371,13 +362,13 @@ export default defineComponent({
           },
         },
         grid: {
-          left: "0%",
-          right: "0%",
-          bottom: "3%",
+          left: "5%",
+          right: "5%",
+          top: "15%",
+          bottom: "0%",
           containLabel: true,
         },
         xAxis: {
-          type: "category",
           data: [],
           axisTick: {
             show: false,
@@ -389,15 +380,10 @@ export default defineComponent({
           axisLine: {
             show: false,
           },
-          splitLine: {
-            show: false,
-          },
         },
 
         yAxis: {
           type: "value",
-          nameLocation: "end",
-          nameGap: 20,
           formatter: "{a|Y-Axis Name}",
           axisLabel: {
             color: "#000",
@@ -413,18 +399,18 @@ export default defineComponent({
 
         series: [
           {
-            name: "Direct",
+            name: "Sales",
             type: "bar",
             barWidth: "10",
             data: [],
             itemStyle: {
-              borderRadius: [3, 3, 0, 0],
+              barBorderRadius: [2, 2, 2, 2],
               opacity: 0.4,
               color: "#036",
             },
           },
         ],
-      },
+      } as any,
     };
   },
 
@@ -447,8 +433,9 @@ export default defineComponent({
 
   methods: {
     async fetchSalesChart() {
-      const backendData = [
-        { day: "M", value: "500" },
+      // const response  = await this.saleStore.fetchChartReport()
+      const response = [
+        { day: "M", value: "350" },
         { day: "T", value: "350" },
         { day: "W", value: "500" },
         { day: "T", value: "350" },
@@ -456,12 +443,12 @@ export default defineComponent({
         { day: "S", value: "350" },
         { day: "S", value: "50" },
       ];
-
-      const days = backendData.map((item) => item.day);
-      const values = backendData.map((item) => parseInt(item.value, 10));
-
-      this.barOption.xAxis.data = days;
-      this.barOption.series[0].data = values;
+      if (response) {
+        const days = response.map((sale) => sale.day);
+        const values = response.map((sale) => sale.value);
+        this.barOption.xAxis.data = days;
+        this.barOption.series[0].data = values;
+      }
 
       this.fetchingSummary = false;
     },
@@ -507,6 +494,7 @@ export default defineComponent({
     },
 
     updateFilterOptions(filters: object) {
+      console.log(filters);
       this.showFilterSummary = true;
       this.queryFilters = { ...filters };
       this.fetchBusinessSummary();
@@ -528,9 +516,9 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .chart {
-  height: 30vh;
+  height: 165px;
   margin-bottom: 0px;
 }
 .customers-card {
@@ -546,5 +534,27 @@ export default defineComponent({
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.add-sale {
+  text-transform: none;
+  font-weight: 400;
+  --color: #666eed;
+  font-size: 14px
+}
+.sale-filter {
+  --background: #fff;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-radius: 10px;
+  --border-color: #e8e8e8;
+  --highlight-color-focused: none !important;
+  --ripple-color: none !important;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  min-height: 32px;
+  font-size: 14px;
+  max-width: 89px;
+  margin-left: 10px;
 }
 </style>
