@@ -32,24 +32,24 @@
           required
           name="category"
           :toggle-icon="chevronDownOutline"
-          @ion-change="updateFilterOptions"
+          @ion-change="fetchSalesChart($event.detail.value)"
         >
           <ion-select-option value="week">Week</ion-select-option>
           <ion-select-option value="month">Month</ion-select-option>
           <ion-select-option value="year">Year</ion-select-option>
         </IonSelect>
-        <IonButton slot="end" fill="clear" class="add-sale">
+        <IonButton slot="end" fill="clear" class="add-sale" @click="onAddSale()">
           Add Sale
         </IonButton>
       </IonItem>
 
       <v-chart ref="chart" class="chart" :option="barOption" autoresize />
-
+<!-- 
       <IonFab slot="fixed" vertical="bottom" horizontal="end">
         <IonFabButton @click="onAddSale()">
           <IonIcon :icon="add"></IonIcon>
         </IonFabButton>
-      </IonFab>
+      </IonFab> -->
 
       <section v-if="fetchingSummary" class="d-flex ion-justify-content-center">
         <IonSpinner name="crescent"></IonSpinner>
@@ -404,7 +404,7 @@ export default defineComponent({
             barWidth: "10",
             data: [],
             itemStyle: {
-              barBorderRadius: [2, 2, 2, 2],
+              borderRadius: [2, 2, 2, 2],
               opacity: 0.4,
               color: "#036",
             },
@@ -432,7 +432,8 @@ export default defineComponent({
   },
 
   methods: {
-    async fetchSalesChart() {
+    async fetchSalesChart(e: any) {
+      console.log(e);
       // const response  = await this.saleStore.fetchChartReport()
       const response = [
         { day: "M", value: "350" },
@@ -539,8 +540,10 @@ export default defineComponent({
 .add-sale {
   text-transform: none;
   font-weight: 400;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
   --color: #666eed;
-  font-size: 14px
+  font-size: 14px;
 }
 .sale-filter {
   --background: #fff;
@@ -550,7 +553,7 @@ export default defineComponent({
   --border-color: #e8e8e8;
   --highlight-color-focused: none !important;
   --ripple-color: none !important;
-  --padding-start: 10px;
+  --padding-start: 13px;
   --padding-end: 10px;
   min-height: 32px;
   font-size: 14px;

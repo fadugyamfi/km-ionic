@@ -43,7 +43,6 @@ import { createI18n } from "vue-i18n";
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
 import { RecycleScroller } from "vue-virtual-scroller";
 import VueGtag from "vue-gtag";
-import VueEcharts from "vue-echarts";
 
 // Above the createApp() line
 defineCustomElements(window);
@@ -63,7 +62,6 @@ const pinia = createPinia();
 const app = createApp(App)
   .component("v-otp-input", VOtpInput)
   .component("RecycleScroller", RecycleScroller)
-  .component("v-chart", VueEcharts)
   .use(IonicVue, {
     rippleEffect: true,
     mode: "md",
