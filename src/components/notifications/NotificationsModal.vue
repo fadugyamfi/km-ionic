@@ -71,6 +71,7 @@ import {
   IonSegment,
   IonSegmentButton,
   IonSpinner,
+useBackButton,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { arrowBack, close, refreshOutline } from "ionicons/icons";
@@ -130,6 +131,10 @@ export default defineComponent({
   mounted() {
     const notificationStore = useNotificationStore();
     notificationStore.fetchNotifications();
+
+    useBackButton(10, () => {
+      this.cancel();
+    });
   },
 });
 </script>
