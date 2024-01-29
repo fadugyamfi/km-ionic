@@ -1,6 +1,9 @@
 import { useUserStore } from "@/stores/UserStore";
 import TabsPage from "@/views/TabsPage.vue";
 import HomePage from "@/views/Shopper/HomePage.vue";
+import { Store, StoreDefinition } from "pinia";
+
+let userStore: any = null;
 
 export const ShopperModeRoutes = [
   {
@@ -8,8 +11,11 @@ export const ShopperModeRoutes = [
     component: TabsPage,
     beforeEnter: async function () {
       // to, from
-      const userStore = useUserStore();
-      await userStore.loadStoredData();
+
+      if( userStore == null ) {
+        userStore = useUserStore();
+        await userStore.loadStoredData();
+      }
 
       if (!userStore.user && !userStore.onboarded) {
         return { name: "Onboarding" };
