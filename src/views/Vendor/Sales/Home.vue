@@ -548,6 +548,7 @@ export default defineComponent({
       }
     },
     handleFilter(period: string) {
+      this.showFilterSheet = false;
       if (period == "custom") {
         this.showFilterSheet = true;
         this.saleFilters.period = period;
