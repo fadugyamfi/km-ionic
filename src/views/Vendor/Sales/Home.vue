@@ -49,7 +49,21 @@
         </IonButton>
       </IonItem>
 
-      <v-chart ref="chart" class="chart" :option="barOption" autoresize />
+      <section
+        v-if="fetchingChartData"
+        class="d-flex ion-justify-content-center ion-align-items-center"
+        style="height: 165px"
+      >
+        <IonSpinner name="crescent"></IonSpinner>
+      </section>
+
+      <v-chart
+        v-else
+        ref="chart"
+        class="chart"
+        :option="barOption"
+        autoresize
+      />
       <!-- 
       <IonFab slot="fixed" vertical="bottom" horizontal="end">
         <IonFabButton @click="onAddSale()">
@@ -287,6 +301,7 @@ import { BarChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
 
 import VChart, { THEME_KEY } from "vue-echarts";
+import { getDateDifference } from "@/utilities";
 
 use([
   BarChart,
@@ -353,12 +368,13 @@ export default defineComponent({
       close,
       showFilterSheet: false,
       showFilterSummary: false,
+      fetchingChartData: false,
       Filters,
+      getDateDifference,
       saleFilters: {
         period: "thisweek",
-        // groupby: "week",
-        // start_dt: Filters.date(startDate.toISOString(), "input"),
-        // end_dt: Filters.date(new Date().toISOString(), "input"),
+        start_dt: "",
+        end_dt: "",
       },
       recentSales: [] as Sale[],
       fetchingSummary: false,
@@ -444,28 +460,91 @@ export default defineComponent({
   },
 
   methods: {
-    async fetchSalesSummary() {
-      const summary = await this.saleStore.fetchSalesSummary({
-        ...this.saleFilters,
-      });
-      if (summary) {
-        const days = summary.map((s: any) => s.short_dayname);
-        const weeks = summary.map((s: any) => `Week ${s.week_of_month}`);
-        const months = summary.map((s: any) => s.short_monthname);
-        const totalSales = summary.map((s: any) => s.total);
-        switch (this.saleFilters.period) {
-          case "thisweek":
-            this.barOption.xAxis.data = days;
-            break;
-          case "thismonth":
-            this.barOption.xAxis.data = weeks;
-            break;
-          case "thisyear":
-            this.barOption.xAxis.data = months;
-            break;
-          // case "custom":
+    getTotalSales(name: string, summary: any[]) {
+      let totalSales = [] as any[];
+
+      for (const sale of summary) {
+        if (totalSales.some((item: any) => item[name] === sale[name])) {
+          totalSales.find((sale: any) => sale[name] === sale[name]).total =
+            Number(
+              totalSales.find((sale: any) => sale[name] === sale[name]).total
+            ) + Number(sale.total);
+        } else {
+          totalSales.push(sale);
         }
-        this.barOption.series[0].data = totalSales;
+      }
+      const totalSalesValues = totalSales.map((sale) => sale.total);
+      return totalSalesValues;
+    },
+    removeDuplicates(arr: any[]) {
+      return arr.filter((item, index) => arr.indexOf(item) === index);
+    },
+
+    async fetchSalesSummary() {
+      try {
+        this.fetchingChartData = true;
+        const summary = await this.saleStore.fetchSalesSummary({
+          ...this.saleFilters,
+        });
+        if (summary) {
+          const days = this.removeDuplicates(
+            summary.map((s: any) => s.dayname)
+          );
+          const weeks = this.removeDuplicates(
+            summary.map((s: any) => `Week ${s.week_of_month}`)
+          );
+          const months = this.removeDuplicates(
+            summary.map((s: any) => s.short_monthname)
+          );
+          const totalSales = summary.map((s: any) => s.total);
+
+          const difference = getDateDifference(
+            this.saleFilters.start_dt,
+            this.saleFilters.end_dt
+          );
+
+          switch (this.saleFilters.period) {
+            case "thisweek":
+              this.barOption.xAxis.data = days?.map((day) => day[0]);
+              this.barOption.series[0].data = totalSales;
+              break;
+            case "thismonth":
+              this.barOption.xAxis.data = weeks;
+              this.barOption.series[0].data = totalSales;
+              break;
+            case "thisyear":
+              this.barOption.xAxis.data = months?.map((month) => month[0]);
+              this.barOption.series[0].data = totalSales;
+              break;
+            case "custom":
+              switch (true) {
+                case difference <= 14:
+                  this.barOption.xAxis.data = days?.map((day) => day[0]);
+                  this.barOption.series[0].data = this.getTotalSales(
+                    "dayname",
+                    summary
+                  );
+                  break;
+                case difference > 14 && difference < 32:
+                  this.barOption.xAxis.data = weeks;
+                  this.barOption.series[0].data = this.getTotalSales(
+                    "week_of_month",
+                    summary
+                  );
+                  break;
+                case difference > 31:
+                  this.barOption.xAxis.data = months?.map((month) => month[0]);
+                  this.barOption.series[0].data = this.getTotalSales(
+                    "monthname",
+                    summary
+                  );
+                  break;
+              }
+          }
+        }
+      } catch (error) {
+      } finally {
+        this.fetchingChartData = false;
       }
     },
     handleFilter(period: string) {
