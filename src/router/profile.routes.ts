@@ -1,14 +1,18 @@
 import { useUserStore } from "@/stores/UserStore";
 import TabsPage from "@/views/TabsPage.vue";
 
+let userStore: any = null;
+
 export const ProfileRoutes = [
   {
     path: "/profile",
     component: TabsPage,
     beforeEnter: async function () {
       // to, from
-      const userStore = useUserStore();
-      await userStore.loadStoredData();
+      if( userStore == null ) {
+        userStore = useUserStore();
+        await userStore.loadStoredData();
+      }
 
       if (!userStore.user && !userStore.onboarded) {
         return { name: "Onboarding" };
@@ -128,7 +132,7 @@ export const ProfileRoutes = [
           },
         ],
       },
-      
+
       {
         path: "address",
         component: () => import("@/views/Profile/Address.vue"),
@@ -154,7 +158,7 @@ export const ProfileRoutes = [
         path: "account-activity",
         component: () =>
           import("@/views/Profile/AccountActivity.vue"),
-      }, 
+      },
     ],
   },
 ];

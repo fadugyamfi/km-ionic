@@ -2,14 +2,18 @@ import { useUserStore } from "@/stores/UserStore";
 import TabsPage from "@/views/TabsPage.vue";
 import HomePage from "@/views/SaleAgent/HomePage.vue";
 
+let userStore: any = null;
+
 export const SaleAgentRoutes = [
   {
     path: "/agent/",
     component: TabsPage,
     beforeEnter: async function () {
       // to, from
-      const userStore = useUserStore();
-      await userStore.loadStoredData();
+      if( userStore == null ) {
+        userStore = useUserStore();
+        await userStore.loadStoredData();
+      }
 
       if (!userStore.user && !userStore.onboarded) {
         return { name: "Onboarding" };
@@ -42,12 +46,44 @@ export const SaleAgentRoutes = [
           {
             path: "",
             name: "SaleAgentOrders",
-            component: () => import("@/views/SaleAgent/OrderHistory.vue"),
+            component: () =>
+              import("@/views/SaleAgent/Orders/OrderHistory.vue"),
           },
           {
             name: "VendorOrderDetails",
             path: ":id",
             component: () => import("@/views/Vendor/Orders/OrderDetails.vue"),
+          },
+          {
+            path: "place-order",
+            component: () => import("@/views/Vendor/Sales/AddSale.vue"),
+            children: [
+              {
+                path: "select-customer",
+                component: () =>
+                  import("@/views/SaleAgent/Orders/SelectCustomer.vue"),
+              },
+              {
+                path: "delivery-details",
+                component: () =>
+                  import("@/views/SaleAgent/Orders/DeliveryDetails.vue"),
+              },
+              {
+                path: "select-products",
+                component: () =>
+                  import("@/views/SaleAgent/Orders/SelectProducts.vue"),
+              },
+              {
+                path: "configure-items",
+                component: () =>
+                  import("@/views/SaleAgent/Orders/ConfigureItems.vue"),
+              },
+              {
+                path: "order-confirmation",
+                component: () =>
+                  import("@/views/SaleAgent/Orders/OrderConfirmation.vue"),
+              },
+            ],
           },
         ],
       },
@@ -112,8 +148,8 @@ export const SaleAgentRoutes = [
             path: "products/:id",
             component: () => import("@/views/Shopper/ProductDetails.vue"),
             meta: {
-              showCartButtons: false
-            }
+              showCartButtons: false,
+            },
           },
           {
             path: ":id",

@@ -13,7 +13,7 @@
                 </IonText>
                 <span class="ion-margin-horizontal">|</span>
                 <IonText color="medium">
-                    {{ $tc('general.products', order.order_items_count as number, { count: order.order_items_count }) }}
+                    {{ $tc('general.products', order.order_items?.length as number, { count: order.order_items?.length }) }}
                 </IonText>
             </p>
             <p>

@@ -1,93 +1,110 @@
 <template>
-    <IonCard>
-        <IonCardContent>
-            <IonGrid>
-                <IonRow>
-                    <IonCol size="auto">
-                        <ProfileAvatar :image="customer?.logo"
-                           :username="customer?.name" customSize="40px"></ProfileAvatar>
-                        <!-- <IonAvatar>
+  <IonCard>
+    <IonCardContent>
+      <IonGrid>
+        <IonRow>
+          <IonCol size="auto">
+            <ProfileAvatar
+              :image="customer?.logo"
+              :username="customer?.name"
+              customSize="40px"
+            ></ProfileAvatar>
+            <!-- <IonAvatar>
                             <Image :src="customer?.logo"></Image>
                         </IonAvatar> -->
-                    </IonCol>
-                    <IonCol class="d-flex ion-align-items-start ion-justify-content-center flex-column">
-                        <IonLabel class="fw-semibold">{{ customer?.name }}</IonLabel>
-                        <IonLabel class="d-flex ion-align-items-center font-medium">
-                            <IonIcon :icon="locationOutline"></IonIcon>
-                            {{ customer?.location }}
-                        </IonLabel>
-                    </IonCol>
-                </IonRow>
-            </IonGrid>
-        </IonCardContent>
-    </IonCard>
+          </IonCol>
+          <IonCol
+            class="d-flex ion-align-items-start ion-justify-content-center flex-column"
+          >
+            <IonLabel class="fw-semibold">{{ customer?.name }}</IonLabel>
+            <IonLabel class="d-flex ion-align-items-center font-medium">
+              <IonIcon :icon="locationOutline"></IonIcon>
+              {{ customer?.location }}
+            </IonLabel>
+          </IonCol>
+        </IonRow>
+      </IonGrid>
+    </IonCardContent>
+  </IonCard>
 </template>
 
 <script lang="ts">
-import { IonAvatar, IonCard, IonCardContent, IonCol, IonGrid, IonIcon, IonLabel, IonRow } from '@ionic/vue';
-import { defineComponent } from 'vue';
-import { mapStores } from 'pinia';
-import { useBusinessStore } from '@/stores/BusinessStore';
-import { useSaleStore } from '@/stores/SaleStore';
-import Business from '@/models/Business';
-import { useUserStore } from '@/stores/UserStore';
-import { handleAxiosRequestError } from '@/utilities';
-import Image from '@/components/Image.vue';
-import { location, locationOutline } from 'ionicons/icons';
-import ProfileAvatar from '../../ProfileAvatar.vue';
-
+import {
+  IonAvatar,
+  IonCard,
+  IonCardContent,
+  IonCol,
+  IonGrid,
+  IonIcon,
+  IonLabel,
+  IonRow,
+} from "@ionic/vue";
+import { defineComponent } from "vue";
+import { mapStores } from "pinia";
+import { useBusinessStore } from "@/stores/BusinessStore";
+import { useSaleStore } from "@/stores/SaleStore";
+import Business from "@/models/Business";
+import { useUserStore } from "@/stores/UserStore";
+import { handleAxiosRequestError } from "@/utilities";
+import Image from "@/components/Image.vue";
+import { location, locationOutline } from "ionicons/icons";
+import ProfileAvatar from "../../ProfileAvatar.vue";
+import { useOrderStore } from "@/stores/OrderStore";
 
 export default defineComponent({
+  data() {
+    return {
+      location,
+      locationOutline,
+      customer: null as Business | null,
+    };
+  },
 
-    data() {
-        return {
-            location, locationOutline,
-            customer: null as Business | null
-        }
+  computed: {
+    ...mapStores(useBusinessStore, useSaleStore, useUserStore, useOrderStore),
+  },
+
+  components: {
+    IonCard,
+    IonAvatar,
+    IonCardContent,
+    IonLabel,
+    Image,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonIcon,
+    ProfileAvatar,
+  },
+
+  methods: {
+    async loadSelectedCustomer() {
+      this.customer = this.saleStore.selectedCustomer;
+      if (!this.customer?.id) {
+        this.customer = this.orderStore.selectedCustomer;
+      }
+      // try {
+      //     const customers = await this.businessStore.getBusinessCustomers(this.userStore.activeBusiness as Business, 300);
+      //     this.customer = customers.find((c: Business) => c.id == this.saleStore.newSale.customer_id) as Business;
+      // } catch (error) {
+      //     handleAxiosRequestError(error);
+      // }
     },
+  },
 
-    computed: {
-        ...mapStores(useBusinessStore, useSaleStore, useUserStore)
-    },
-
-    components: {
-        IonCard,
-        IonAvatar,
-        IonCardContent,
-        IonLabel,
-        Image,
-        IonGrid,
-        IonRow,
-        IonCol,
-        IonIcon,
-        ProfileAvatar
-    },
-
-    methods: {
-        async loadSelectedCustomer() {
-            this.customer = this.saleStore.selectedCustomer;
-            // try {
-            //     const customers = await this.businessStore.getBusinessCustomers(this.userStore.activeBusiness as Business, 300);
-            //     this.customer = customers.find((c: Business) => c.id == this.saleStore.newSale.customer_id) as Business;
-            // } catch (error) {
-            //     handleAxiosRequestError(error);
-            // }
-        }
-    },
-
-    mounted() {
-        this.loadSelectedCustomer();
-    }
-})
+  mounted() {
+    this.loadSelectedCustomer();
+  },
+});
 </script>
 
 <style scoped>
 ion-avatar {
-    height: 48px;
-    width: 48px;
+  height: 48px;
+  width: 48px;
 }
 
 ion-card-content {
-    padding: 2px;
+  padding: 2px;
 }
 </style>

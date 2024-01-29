@@ -41,7 +41,7 @@
           <p class="product-title line-clamp">
             {{ product?.product_name }}
             <span v-if="product?.is_on_sale">
-              - {{ product?.discountApplied }}% {{ $t('general.discount') }}
+              - {{ product?.discountApplied }}% {{ $t("general.discount") }}
             </span>
           </p>
 
@@ -63,32 +63,45 @@
         <section class="pricing d-flex flex-column">
           <section>
             <section v-if="product?.is_on_sale && product.sale_price > 0">
-              <span class="font-medium" style="margin-right: 5px;">
+              <span class="font-medium" style="margin-right: 5px">
                 <s>
-                  {{ Filters.currency(Number(product?.product_price), String(product?.currency?.symbol || 'GHS') ) }}
+                  {{
+                    Filters.currency(
+                      Number(product?.product_price),
+                      String(product?.currency?.symbol || "GHS")
+                    )
+                  }}
                 </s>
               </span>
 
-              <IonText class="fw-semibold" color="danger">
-                  {{ Filters.currency(Number(product?.sale_price), String(product?.currency?.symbol || 'GHS') ) }}
+              <IonText class="fw-medium" color="danger">
+                {{
+                  Filters.currency(
+                    Number(product?.sale_price),
+                    String(product?.currency?.symbol || "GHS")
+                  )
+                }}
               </IonText>
             </section>
 
-            <section v-else class="fw-semibold">
+            <section v-else class="fw-medium">
               {{
                 Filters.currency(
                   Number(product?.product_price),
-                  String(product?.currency?.symbol || 'GHS')
+                  String(product?.currency?.symbol || "GHS")
                 )
               }}
             </section>
           </section>
 
-          <section class="font-medium">
+          <section class="product-weight">
             <span v-if="product?.weight_value">
-              {{ product?.weight_value }}{{ product?.weight_unit?.symbol || 'g' }}
+              {{ product?.weight_value
+              }}{{ product?.weight_unit?.symbol || "g" }}
             </span>
-            <span v-if="product?.weight_value && product?.group_quantity">/</span>
+            <span v-if="product?.weight_value && product?.group_quantity"
+              >/</span
+            >
             <span v-if="product?.group_quantity">
               {{ product?.group_quantity }}pcs
             </span>
@@ -118,7 +131,7 @@ import {
   IonIcon,
   IonRippleEffect,
   IonSkeletonText,
-IonText,
+  IonText,
 } from "@ionic/vue";
 import { PropType, defineComponent } from "vue";
 import { locationOutline } from "ionicons/icons";
@@ -210,8 +223,8 @@ export default defineComponent({
     FavoriteButton,
     IonCheckbox,
     IonText,
-    IonRippleEffect
-},
+    IonRippleEffect,
+  },
 
   methods: {
     doAction() {
@@ -291,6 +304,7 @@ export default defineComponent({
 
       .product-title {
         font-size: 0.95em;
+        font-weight: 500;
         margin-top: 0px;
         margin-bottom: 5px;
         text-overflow: ellipsis;
@@ -301,10 +315,14 @@ export default defineComponent({
 
       .pricing {
         font-size: 0.93em;
-        font-weight: normal;
+        font-weight: 400;
         color: #212121;
       }
-
+      .product-weight {
+        font-weight: 400;
+        font-size: 0.85em;
+        color: #9e9e9e;
+      }
       .product-description {
         font-size: 0.85em;
         margin-top: 5px;
