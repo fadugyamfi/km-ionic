@@ -28,23 +28,29 @@
           class="sale-filter"
           labelPlacement="stacked"
           fill="outline"
-          v-model="form.sale_filter"
           required
+          v-model="saleFilters.period"
           name="category"
           :toggle-icon="chevronDownOutline"
-          @ion-change="fetchSalesChart($event.detail.value)"
+          @ion-change="handleFilter($event.detail.value)"
         >
-          <ion-select-option value="week">Week</ion-select-option>
-          <ion-select-option value="month">Month</ion-select-option>
-          <ion-select-option value="year">Year</ion-select-option>
+          <ion-select-option value="thisweek">Week</ion-select-option>
+          <ion-select-option value="thismonth">Month</ion-select-option>
+          <ion-select-option value="thisyear">Year</ion-select-option>
+          <ion-select-option value="custom">Custom</ion-select-option>
         </IonSelect>
-        <IonButton slot="end" fill="clear" class="add-sale" @click="onAddSale()">
+        <IonButton
+          slot="end"
+          fill="clear"
+          class="add-sale"
+          @click="onAddSale()"
+        >
           Add Sale
         </IonButton>
       </IonItem>
 
       <v-chart ref="chart" class="chart" :option="barOption" autoresize />
-<!-- 
+      <!-- 
       <IonFab slot="fixed" vertical="bottom" horizontal="end">
         <IonFabButton @click="onAddSale()">
           <IonIcon :icon="add"></IonIcon>
@@ -335,6 +341,9 @@ export default defineComponent({
   },
 
   data() {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 7);
+
     return {
       add,
       optionsOutline,
@@ -345,8 +354,11 @@ export default defineComponent({
       showFilterSheet: false,
       showFilterSummary: false,
       Filters,
-      form: {
-        sale_filter: "week",
+      saleFilters: {
+        period: "thisweek",
+        // groupby: "week",
+        // start_dt: Filters.date(startDate.toISOString(), "input"),
+        // end_dt: Filters.date(new Date().toISOString(), "input"),
       },
       recentSales: [] as Sale[],
       fetchingSummary: false,
@@ -432,26 +444,38 @@ export default defineComponent({
   },
 
   methods: {
-    async fetchSalesChart(e: any) {
-      console.log(e);
-      // const response  = await this.saleStore.fetchChartReport()
-      const response = [
-        { day: "M", value: "350" },
-        { day: "T", value: "350" },
-        { day: "W", value: "500" },
-        { day: "T", value: "350" },
-        { day: "F", value: "200" },
-        { day: "S", value: "350" },
-        { day: "S", value: "50" },
-      ];
-      if (response) {
-        const days = response.map((sale) => sale.day);
-        const values = response.map((sale) => sale.value);
-        this.barOption.xAxis.data = days;
-        this.barOption.series[0].data = values;
+    async fetchSalesSummary() {
+      const summary = await this.saleStore.fetchSalesSummary({
+        ...this.saleFilters,
+      });
+      if (summary) {
+        const days = summary.map((s: any) => s.short_dayname);
+        const weeks = summary.map((s: any) => `Week ${s.week_of_month}`);
+        const months = summary.map((s: any) => s.short_monthname);
+        const totalSales = summary.map((s: any) => s.total);
+        switch (this.saleFilters.period) {
+          case "thisweek":
+            this.barOption.xAxis.data = days;
+            break;
+          case "thismonth":
+            this.barOption.xAxis.data = weeks;
+            break;
+          case "thisyear":
+            this.barOption.xAxis.data = months;
+            break;
+          // case "custom":
+        }
+        this.barOption.series[0].data = totalSales;
       }
-
-      this.fetchingSummary = false;
+    },
+    handleFilter(period: string) {
+      if (period == "custom") {
+        this.showFilterSheet = true;
+        this.saleFilters.period = period;
+        return;
+      }
+      this.saleFilters.period = period;
+      this.fetchSalesSummary();
     },
 
     onAddSale() {
@@ -495,9 +519,10 @@ export default defineComponent({
     },
 
     updateFilterOptions(filters: object) {
-      console.log(filters);
       this.showFilterSummary = true;
       this.queryFilters = { ...filters };
+      this.saleFilters = { ...this.saleFilters, ...filters, period: "custom" };
+      this.fetchSalesSummary();
       this.fetchBusinessSummary();
       this.fetchRecentSales();
       this.showFilterSheet = false;
@@ -507,7 +532,7 @@ export default defineComponent({
   mounted() {
     this.fetchRecentSales();
     this.fetchBusinessSummary();
-    this.fetchSalesChart();
+    this.fetchSalesSummary();
 
     setTimeout(() => {
       this.saleStore.loadCachedRecordedSales();
@@ -520,7 +545,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .chart {
   height: 165px;
-  margin-bottom: 0px;
+  margin-bottom: 10px;
 }
 .customers-card {
   --background: #f2f7f7;
