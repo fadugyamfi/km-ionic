@@ -1,5 +1,5 @@
 <template>
-  <ion-page>
+  <ion-page class="order-history">
     <IonHeader class="ion-padding ion-no-border">
       <ion-header class="inner-header">
         <ion-toolbar class="ion-align-items-center">
@@ -117,6 +117,7 @@ export default defineComponent({
       filters,
       showFilterSheet: false,
       searchFilters: {
+        businesses_id: null as number | undefined | null,
         start_dt: "",
         end_dt: "",
         customer_id: null,
@@ -157,6 +158,8 @@ export default defineComponent({
       try {
         this.fetching = true;
         this.searchFilters.cms_users_id = this.userStore.user?.id;
+        this.searchFilters.businesses_id = this.userStore.activeBusiness?.id as number;
+
         await this.orderStore.fetchPlacedOrders(this.searchFilters);
       } catch (error) {
         handleAxiosRequestError(error);
@@ -212,7 +215,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.ion-content {
+.order-history .ion-content {
   --align-items: center;
   --padding-top: 10px;
   --padding-bottom: 10px;
@@ -223,7 +226,7 @@ export default defineComponent({
   --border-radius: 10px;
 }
 
-.ion-segment-button {
+.order-history .ion-segment-button {
   --padding-top: 10px;
   --padding-bottom: 10px;
   --padding-left: 10px;

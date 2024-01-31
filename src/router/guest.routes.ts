@@ -2,14 +2,18 @@ import { useUserStore } from "@/stores/UserStore";
 import TabsPage from "@/views/TabsPage.vue";
 import HomePage from "@/views/Guest/HomePage.vue";
 
+let userStore: any = null;
+
 export const GuestModeRoutes = [
   {
     path: "/guest/",
     component: TabsPage,
     beforeEnter: async function () {
       // to, from
-      const userStore = useUserStore();
-      await userStore.loadStoredData();
+      if( userStore == null ) {
+        userStore = useUserStore();
+        await userStore.loadStoredData();
+      }
 
       if(!userStore.onboarded && !userStore.user) {
         return { name: 'Onboarding' };
