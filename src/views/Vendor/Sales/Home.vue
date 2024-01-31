@@ -29,15 +29,17 @@
           labelPlacement="stacked"
           fill="outline"
           required
-          v-model="saleFilters.period"
+          v-model="queryFilters.period"
           name="category"
           :toggle-icon="chevronDownOutline"
-          @ion-change="handleFilter($event.detail.value)"
+          @ion-change="handleSalesSummaryFilter($event.detail.value)"
         >
-          <ion-select-option value="thisweek">Week</ion-select-option>
-          <ion-select-option value="thismonth">Month</ion-select-option>
-          <ion-select-option value="thisyear">Year</ion-select-option>
-          <ion-select-option value="custom">Custom</ion-select-option>
+          <ion-select-option
+            v-for="(period, index) in periods"
+            :key="index"
+            :value="period.value"
+            >{{ period.label }}</ion-select-option
+          >
         </IonSelect>
         <IonButton
           slot="end"
@@ -371,16 +373,22 @@ export default defineComponent({
       fetchingChartData: false,
       Filters,
       getDateDifference,
-      saleFilters: {
-        period: "thisweek",
-        start_dt: "",
-        end_dt: "",
-      },
+      periods: [
+        { label: "This Week", value: "thisweek" },
+        { label: "Last Week", value: "lastweek" },
+        { label: "This Month", value: "thismonth" },
+        { label: "Last Month", value: "lastmonth" },
+        { label: "This Year", value: "thisyear" },
+        { label: "Last Year", value: "lastyear" },
+        { label: "Custom", value: "custom" },
+      ],
       recentSales: [] as Sale[],
       fetchingSummary: false,
       fetchingHistory: false,
       topProducts: [],
-      queryFilters: {} as { [key: string]: any },
+      queryFilters: {
+        period: "thisweek",
+      } as { [key: string]: any },
 
       barOption: {
         tooltip: {
@@ -460,14 +468,31 @@ export default defineComponent({
   },
 
   methods: {
-    getTotalSales(name: string, summary: any[]) {
+    handleSalesSummaryFilter(period: string) {
+      this.showFilterSheet = false;
+      if (period == "custom") {
+        this.showFilterSheet = true;
+        this.queryFilters.period = period;
+        return;
+      }
+      Object.assign(this.queryFilters, {
+        start_dt: "",
+        end_dt: "",
+        period: this.queryFilters.period,
+      });
+      this.fetchSalesSummary();
+      this.fetchBusinessSummary();
+      this.fetchRecentSales();
+    },
+
+    getTotalYearSales(summary: any[]) {
       let totalSales = [] as any[];
 
       for (const sale of summary) {
-        if (totalSales.some((item: any) => item[name] === sale[name])) {
-          totalSales.find((sale: any) => sale[name] === sale[name]).total =
+        if (totalSales.some((item: any) => item.year === sale.year)) {
+          totalSales.find((sale: any) => sale.year === sale.year).total =
             Number(
-              totalSales.find((sale: any) => sale[name] === sale[name]).total
+              totalSales.find((sale: any) => sale.year === sale.year).total
             ) + Number(sale.total);
         } else {
           totalSales.push(sale);
@@ -476,86 +501,11 @@ export default defineComponent({
       const totalSalesValues = totalSales.map((sale) => sale.total);
       return totalSalesValues;
     },
-    removeDuplicates(arr: any[]) {
-      return arr.filter((item, index) => arr.indexOf(item) === index);
-    },
 
-    async fetchSalesSummary() {
-      try {
-        this.fetchingChartData = true;
-        const summary = await this.saleStore.fetchSalesSummary({
-          ...this.saleFilters,
-        });
-        if (summary) {
-          const days = this.removeDuplicates(
-            summary.map((s: any) => s.dayname)
-          );
-          const weeks = this.removeDuplicates(
-            summary.map((s: any) => `Week ${s.week_of_month}`)
-          );
-          const months = this.removeDuplicates(
-            summary.map((s: any) => s.short_monthname)
-          );
-          const totalSales = summary.map((s: any) => s.total);
-
-          const difference = getDateDifference(
-            this.saleFilters.start_dt,
-            this.saleFilters.end_dt
-          );
-
-          switch (this.saleFilters.period) {
-            case "thisweek":
-              this.barOption.xAxis.data = days?.map((day) => day[0]);
-              this.barOption.series[0].data = totalSales;
-              break;
-            case "thismonth":
-              this.barOption.xAxis.data = weeks;
-              this.barOption.series[0].data = totalSales;
-              break;
-            case "thisyear":
-              this.barOption.xAxis.data = months?.map((month) => month[0]);
-              this.barOption.series[0].data = totalSales;
-              break;
-            case "custom":
-              switch (true) {
-                case difference <= 14:
-                  this.barOption.xAxis.data = days?.map((day) => day[0]);
-                  this.barOption.series[0].data = this.getTotalSales(
-                    "dayname",
-                    summary
-                  );
-                  break;
-                case difference > 14 && difference < 32:
-                  this.barOption.xAxis.data = weeks;
-                  this.barOption.series[0].data = this.getTotalSales(
-                    "week_of_month",
-                    summary
-                  );
-                  break;
-                case difference > 31:
-                  this.barOption.xAxis.data = months?.map((month) => month[0]);
-                  this.barOption.series[0].data = this.getTotalSales(
-                    "monthname",
-                    summary
-                  );
-                  break;
-              }
-          }
-        }
-      } catch (error) {
-      } finally {
-        this.fetchingChartData = false;
-      }
-    },
-    handleFilter(period: string) {
-      this.showFilterSheet = false;
-      if (period == "custom") {
-        this.showFilterSheet = true;
-        this.saleFilters.period = period;
-        return;
-      }
-      this.saleFilters.period = period;
-      this.fetchSalesSummary();
+    removeDuplicates(duplicates: any[]) {
+      return duplicates.filter(
+        (item, index) => duplicates.indexOf(item) === index
+      );
     },
 
     onAddSale() {
@@ -581,13 +531,80 @@ export default defineComponent({
       this.fetchingSummary = true;
       await this.businessStore.getBusinessSummary(
         this.userStore.activeBusiness as Business,
-        { ...this.queryFilters }
+        {
+          ...this.queryFilters,
+        }
       );
       this.topProducts = await this.businessStore.getTopSellingProducts(
         this.userStore.activeBusiness as Business,
-        { limit: 2, ...this.queryFilters }
+        {
+          limit: 2,
+          ...this.queryFilters,
+        }
       );
       this.fetchingSummary = false;
+    },
+
+    async fetchSalesSummary() {
+      try {
+        this.fetchingChartData = true;
+        const summary = await this.saleStore.fetchSalesSummary({
+          ...this.queryFilters,
+        });
+        if (summary) {
+          const days = summary.map((s: any) => s.short_dayname);
+          const weeks = summary.map((s: any) => `Week ${s.week_of_month}`);
+          const months = summary.map((s: any) => s.short_monthname);
+          const years = summary.map((s: any) => s.year);
+          const totalSales = summary.map((s: any) => s.total);
+
+          const difference = getDateDifference(
+            this.queryFilters.start_dt,
+            this.queryFilters.end_dt
+          );
+          
+          switch (this.queryFilters.period) {
+            case "thisweek":
+            case "lastweek":
+              this.barOption.xAxis.data = days;
+              this.barOption.series[0].data = totalSales;
+              break;
+            case "thismonth":
+            case "lastmonth":
+              this.barOption.xAxis.data = weeks;
+              this.barOption.series[0].data = totalSales;
+              break;
+            case "thisyear":
+            case "lastyear":
+              this.barOption.xAxis.data = months;
+              this.barOption.series[0].data = totalSales;
+              break;
+            case "custom":
+              switch (true) {
+                case difference <= 14:
+                  this.barOption.xAxis.data = days;
+                  this.barOption.series[0].data = totalSales;
+                  break;
+                case difference > 14 && difference < 32:
+                  this.barOption.xAxis.data = weeks;
+                  this.barOption.series[0].data = totalSales;
+                  break;
+                case difference > 31 && difference <= 365:
+                  this.barOption.xAxis.data = months;
+                  this.barOption.series[0].data = totalSales;
+                  break;
+                case difference > 365:
+                  this.barOption.xAxis.data = this.removeDuplicates(years);
+                  this.barOption.series[0].data =
+                    this.getTotalYearSales(summary);
+                  break;
+              }
+          }
+        }
+      } catch (error) {
+      } finally {
+        this.fetchingChartData = false;
+      }
     },
 
     viewTopSellingProduct() {
@@ -600,8 +617,12 @@ export default defineComponent({
 
     updateFilterOptions(filters: object) {
       this.showFilterSummary = true;
-      this.queryFilters = { ...filters };
-      this.saleFilters = { ...this.saleFilters, ...filters, period: "custom" };
+      this.queryFilters = {
+        ...this.queryFilters,
+        ...filters,
+        period: "custom",
+      };
+      // this.saleFilters = { ...this.saleFilters, ...filters, period: "custom" };
       this.fetchSalesSummary();
       this.fetchBusinessSummary();
       this.fetchRecentSales();
@@ -662,7 +683,7 @@ export default defineComponent({
   --padding-end: 10px;
   min-height: 32px;
   font-size: 14px;
-  max-width: 89px;
+  max-width: 120px;
   margin-left: 10px;
 }
 </style>
