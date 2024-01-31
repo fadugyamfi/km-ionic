@@ -51,6 +51,7 @@ export async function setupPushNotifications() {
   PushNotifications.addListener(
     "pushNotificationReceived",
     (notification: PushNotificationSchema) => {
+      console.log("received notification", notification)
       //   alert("Push received: " + JSON.stringify(notification));
     }
   );
@@ -59,8 +60,10 @@ export async function setupPushNotifications() {
   PushNotifications.addListener(
     "pushNotificationActionPerformed",
     (notification: ActionPerformed) => {
-        alert("Push action performed: " + JSON.stringify(notification));
+        // alert("Push action performed: " + JSON.stringify(notification));
+        console.log("push notification action performed", notification)
     }
+
   );
   return response;
 }

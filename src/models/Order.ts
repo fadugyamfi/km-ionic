@@ -139,4 +139,12 @@ export class Order {
   isRejected() {
     return this.order_status_id == 9;
   }
+
+  isOutForDelivery() {
+    return this.order_status_id == OrderStatus.OUT_FOR_DELIVERY;
+  }
+
+  isDelivered() {
+    return this.order_status_id == OrderStatus.DELIVERED;
+  }
 }
