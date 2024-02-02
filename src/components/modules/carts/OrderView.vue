@@ -2,7 +2,7 @@
   <IonItem class="d-flex w-100 ion-align-items-stretch">
     <section class="d-flex w-100" @click="viewOrderItems()">
       <IonThumbnail>
-        <Image :src="order?.business?.logo"></Image>
+        <Image :src="order?.business?.logo" w="100"></Image>
       </IonThumbnail>
 
       <section class="w-100">
@@ -33,7 +33,7 @@
                 :key="product.products_id"
                 class="cart-items"
               >
-                <Image :src="product.product_image"></Image>
+                <Image :src="product.product_image" w="32"></Image>
               </IonThumbnail>
             </section>
           </section>
