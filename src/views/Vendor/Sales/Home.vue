@@ -492,9 +492,9 @@ export default defineComponent({
 
       for (const sale of summary) {
         if (totalSales.some((item: any) => item.year === sale.year)) {
-          totalSales.find((sale: any) => sale.year === sale.year).total =
+          totalSales.find((item: any) => item.year === sale.year).total =
             Number(
-              totalSales.find((sale: any) => sale.year === sale.year).total
+              totalSales.find((item: any) => item.year === sale.year).total
             ) + Number(sale.total);
         } else {
           totalSales.push(sale);
