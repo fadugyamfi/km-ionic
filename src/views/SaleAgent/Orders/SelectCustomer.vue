@@ -12,7 +12,10 @@
               >
               </IonBackButton>
             </IonButtons>
-            <IonTitle size="small"
+            <IonTitle v-if="$route.fullPath.includes('record')" size="small"
+              ><b>Record New Order</b></IonTitle
+            >
+            <IonTitle v-else size="small"
               ><b>{{ $t("shopper.cart.placeNewOrder") }}</b></IonTitle
             >
             <IonButtons slot="end">
@@ -237,7 +240,11 @@ export default defineComponent({
         return;
       }
       this.orderStore.persist();
-      this.$router.push("/agent/orders/place-order/select-products");
+      if (this.userStore.user?.isSalesAssociate()) {
+        this.$router.push("/agent/orders/place-order/select-products");
+      } else {
+        this.$router.push("/vendor/orders/record-order/select-products");
+      }
     },
 
     async onSearch(event: Event) {

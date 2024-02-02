@@ -9,9 +9,12 @@
               defaultHref="/agent/orders/place-order/configure-items"
             ></IonBackButton>
           </IonButtons>
-          <IonTitle class="fw-bold">{{
-            $t("shopper.cart.placeNewOrder")
-          }}</IonTitle>
+          <IonTitle v-if="$route.fullPath.includes('record')" size="small"
+            ><b>Record New Order</b></IonTitle
+          >
+          <IonTitle v-else size="small"
+            ><b>{{ $t("shopper.cart.placeNewOrder") }}</b></IonTitle
+          >
           <IonButtons slot="end" style="margin-right: 10px"> </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -120,6 +123,7 @@ import { onMounted, computed } from "vue";
 import { Order } from "@/models/Order";
 import { handleAxiosRequestError } from "@/utilities";
 import { useOrderStore } from "@/stores/OrderStore";
+import { useUserStore } from "@/stores/UserStore";
 
 const router = useRouter();
 const route = useRoute();
@@ -154,6 +158,8 @@ const selectDeliveryMethod = (method: string) => {
 
 const recordOrder = async () => {
   const orderStore = useOrderStore();
+  const userStore = useUserStore();
+
   orderStore.newOrder = {
     ...orderStore.newOrder,
     ...form.fields,
@@ -173,9 +179,13 @@ const recordOrder = async () => {
       );
       return;
     }
-    router.push(`/agent/orders/place-order/order-confirmation`);
+    if (userStore.user?.isSalesAssociate()) {
+      router.push("/agent/orders/place-order/order-confirmation");
+    } else {
+      router.push("/vendor/orders/record-order/order-confirmation");
+    }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     handleAxiosRequestError(error);
   } finally {
     toastStore.unblockUI();

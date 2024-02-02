@@ -10,7 +10,7 @@ export const VendorModeRoutes = [
     component: TabsPage,
     beforeEnter: async function () {
       // to, from
-      if( userStore == null ) {
+      if (userStore == null) {
         userStore = useUserStore();
         await userStore.loadStoredData();
       }
@@ -59,6 +59,42 @@ export const VendorModeRoutes = [
           {
             path: ":id",
             component: () => import("@/views/Vendor/Orders/OrderDetails.vue"),
+          },
+          {
+            path: "record-order",
+            component: () => import("@/views/Vendor/Sales/AddSale.vue"),
+            children: [
+              {
+                path: "select-agent",
+                component: () =>
+                  import("@/views/Vendor/Orders/SelectAgent.vue"),
+              },
+              {
+                path: "select-customer",
+                component: () =>
+                  import("@/views/SaleAgent/Orders/SelectCustomer.vue"),
+              },
+              {
+                path: "delivery-details",
+                component: () =>
+                  import("@/views/SaleAgent/Orders/DeliveryDetails.vue"),
+              },
+              {
+                path: "select-products",
+                component: () =>
+                  import("@/views/SaleAgent/Orders/SelectProducts.vue"),
+              },
+              {
+                path: "configure-items",
+                component: () =>
+                  import("@/views/SaleAgent/Orders/ConfigureItems.vue"),
+              },
+              {
+                path: "order-confirmation",
+                component: () =>
+                  import("@/views/SaleAgent/Orders/OrderConfirmation.vue"),
+              },
+            ],
           },
         ],
       },

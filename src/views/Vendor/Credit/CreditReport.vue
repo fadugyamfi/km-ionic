@@ -22,7 +22,7 @@
       </div>
       <section v-if="!fetching">
         <CreditSummary
-          :creditSummary="creditSummary.credit_sales"
+          :creditSummary="creditSummary?.credit_sales"
         ></CreditSummary>
         <div class="d-flex ion-align-items-center credit-history ion-padding">
           <h6 slot="start" class="fw-bold">
