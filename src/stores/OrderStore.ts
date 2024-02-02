@@ -28,7 +28,7 @@ export const useOrderStore = defineStore("order", {
     return {
       orders: [] as Order[],
       newOrder: new Order({}),
-      selectedCustomer: {} as Business,
+      selectedCustomer: null as Business | null,
       editedOrder: {} as Order,
       editing: false,
       approving: false,
@@ -49,7 +49,7 @@ export const useOrderStore = defineStore("order", {
 
       Object.assign(this.editedOrder, data);
       Object.assign(this.newOrder, newOrderData);
-      Object.assign(this.selectedCustomer, selectedCustomerData);
+      Object.assign({}, this.selectedCustomer, selectedCustomerData);
     },
 
     async loadCachedRecordedOrders() {
