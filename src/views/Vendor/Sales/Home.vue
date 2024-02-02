@@ -68,9 +68,7 @@
             <IonItem color="light" lines="none">
               <IonLabel color="dark" class="font-medium">
                 Show Data From:
-                {{
-                  Filters.date(queryFilters["start_dt"] as string, "short")
-                }}
+                {{ Filters.date(queryFilters["start_dt"] as string, "short") }}
                 to
                 {{ Filters.date(queryFilters["end_dt"] as string, "short") }}
               </IonLabel>
@@ -409,6 +407,13 @@ export default defineComponent({
           axisLabel: {
             color: "#74787c",
             fontSize: 11,
+            formatter: function (value: string) {
+              return value.includes("Week")
+                ? value
+                : value.match("^[0-9].*")
+                ? value
+                : value[0];
+            },
           },
           axisLine: {
             show: false,
@@ -549,9 +554,9 @@ export default defineComponent({
           ...this.queryFilters,
         });
         if (summary) {
-          const days = summary.map((s: any) => s.short_dayname);
+          const days = summary.map((s: any) => s.dayname);
           const weeks = summary.map((s: any) => `Week ${s.week_of_month}`);
-          const months = summary.map((s: any) => s.short_monthname);
+          const months = summary.map((s: any) => s.monthname);
           const years = summary.map((s: any) => s.year);
           const totalSales = summary.map((s: any) => s.total);
 
