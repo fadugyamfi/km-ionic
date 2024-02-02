@@ -4,7 +4,7 @@
             <FavoriteButton class="favorite-button" :brand="brand" color="dark">
             </FavoriteButton>
 
-            <Image :alt="brand.name" :src="brand.logo" />
+            <Image :alt="brand.name" :src="brand.logo" w="150" />
 
             <IonCardHeader>
                 <IonCardTitle class="ion-text-center">{{ brand.name }}</IonCardTitle>

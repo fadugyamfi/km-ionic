@@ -251,7 +251,9 @@
       "messageSupplier": "Message Supplier",
       "deleteOrderFromList": "Delete Order From List",
       "youCantUndoThisAction": "You can't undo this action",
-      "orderConfirmation": "Order Confirmation"
+      "orderConfirmation": "Order Confirmation",
+      "orderStatusChanged": "Order Status Changed",
+      "anErrorOccured": "An error occured"
     },
     "credit": {
       "totalCredit": "Total Credit",

@@ -25,6 +25,7 @@
         :src="product?.image"
         :path="product?.product_banner_image"
         :no-img-src="noImage"
+        w="150"
         @loaded="imgLoaded = true"
       />
 

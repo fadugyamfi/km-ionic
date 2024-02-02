@@ -34,7 +34,7 @@
         <Swiper>
           <SwiperSlide>
             <section style="height: 200px; border-radius: 10px">
-              <Image :src="product?.image" :path="product?.product_banner_image" :no-img-src="noImage" style="height: 200px"></Image>
+              <Image :src="product?.image" :path="product?.product_banner_image" :no-img-src="noImage" style="height: 200px" w="300" h="300"></Image>
             </section>
           </SwiperSlide>
         </Swiper>

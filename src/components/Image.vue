@@ -1,6 +1,6 @@
 <template>
     <IonImg
-        :src="imageData || noImgSrc"
+        :src="url"
         @ion-error="onLoadError($event)"
         @ion-img-did-load="onLoaded($event)"
     />
@@ -31,6 +31,14 @@ export default defineComponent({
         noImgSrc: {
             default: '/images/no-image.png',
             type: String as PropType<string>
+        },
+
+        w: {
+            type: String as PropType<string | undefined>
+        },
+
+        h: {
+            type: String as PropType<string | undefined>
         }
     },
 
@@ -42,6 +50,24 @@ export default defineComponent({
     },
 
     emits: ['loaded'],
+
+    computed: {
+        url() {
+            let path = this.imageData || this.noImgSrc;
+
+            const urlParams = new URLSearchParams();
+
+            if( this.w ) {
+                urlParams.append('w', this.w as string);
+            }
+
+            if( this.h ) {
+                urlParams.append('h', this.h as string);
+            }
+
+            return path + (this.w ? '?' + urlParams.toString() : '');
+        }
+    },
 
     methods: {
         onLoadError(event: Event) {

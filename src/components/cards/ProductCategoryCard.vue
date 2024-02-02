@@ -1,7 +1,7 @@
 <template>
     <section class="product-category-card" :class="{ 'tall': tall === true }">
         <ion-card>
-            <Image :alt="category.name" :src="category.image" />
+            <Image :alt="category.name" :src="category.image" w="150" />
 
             <IonCardHeader>
                 <IonCardTitle class="ion-text-center">{{ category.name }}</IonCardTitle>

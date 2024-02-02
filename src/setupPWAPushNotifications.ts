@@ -4,6 +4,7 @@ import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { useDeviceStore } from "@/stores/DeviceStore";
 import { Capacitor } from "@capacitor/core";
 import { useNotificationStore } from "./stores/NotificationStore";
+import { useRouter } from "vue-router";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -72,6 +73,7 @@ function requestPermission() {
     });
 
     onMessage(messaging, (payload) => {
+      const router = useRouter();
       console.log("Message received. ", payload);
 
       const notificationTitle = payload.notification?.title as string;
@@ -80,7 +82,18 @@ function requestPermission() {
         icon: payload.notification?.icon,
       };
 
-      new Notification(notificationTitle, notificationOptions);
+      const notification = new Notification(notificationTitle, notificationOptions);
+      console.log(notification);
+
+      notification.addEventListener("click", function(ev) {
+        console.log("notification clicked");
+        console.log(ev);
+
+        if( payload.data?.order ) {
+          const order = JSON.parse(payload.data?.order as string);
+          router.push(`/vendor/orders/${order.id}`);
+        }
+      });
     });
     return result;
   } catch (err) {
