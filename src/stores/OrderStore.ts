@@ -28,11 +28,12 @@ export const useOrderStore = defineStore("order", {
     return {
       orders: [] as Order[],
       newOrder: new Order({}),
-      selectedCustomer: {} as Business,
+      selectedCustomer: null as Business | null,
       editedOrder: {} as Order,
       editing: false,
       approving: false,
       cancelling: false,
+      changingStatus: false,
       selectedOrder: null as Order | null,
       recordedOrders: [] as Order[],
       orderSyncTimer: null as any,
@@ -49,7 +50,7 @@ export const useOrderStore = defineStore("order", {
 
       Object.assign(this.editedOrder, data);
       Object.assign(this.newOrder, newOrderData);
-      Object.assign(this.selectedCustomer, selectedCustomerData);
+      Object.assign({}, this.selectedCustomer, selectedCustomerData);
     },
 
     async loadCachedRecordedOrders() {
@@ -382,6 +383,8 @@ export const useOrderStore = defineStore("order", {
 
     async changeOrderStatus(orderId: number, payload: ChangeStatusRequest) {
       try {
+        this.changingStatus = true;
+
         const response = await axios.put(
           `/v2/orders/${orderId}/status`,
           payload
@@ -403,6 +406,8 @@ export const useOrderStore = defineStore("order", {
         handleAxiosRequestError(error);
 
         throw error;
+      } finally {
+        this.changingStatus = false;
       }
     },
 

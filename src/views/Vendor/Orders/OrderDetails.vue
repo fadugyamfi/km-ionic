@@ -26,16 +26,28 @@
         <OrderImages :order="(order as Order)" />
         <ReceivedOrderItems :order="(order as Order)" />
 
-        <section class="ion-padding-horizontal update-button-section">
-          <KolaYellowButton v-if="order?.isPendingApproval()" @click="confirmApproval()">
+        <section class="ion-padding-horizontal update-button-section" v-if="order?.isPendingApproval()">
+          <KolaYellowButton @click="confirmApproval()">
             <IonSpinner v-if="orderStore.approving" name="crescent"></IonSpinner>
             <IonText>{{ 'Accept Order' }}</IonText>
           </KolaYellowButton>
 
-          <KolaWhiteButton class="ion-margin-top" v-if="order?.isPendingApproval()" @click="confirmCancellation()">
+          <KolaWhiteButton class="ion-margin-top" @click="confirmCancellation()">
             <IonSpinner v-if="orderStore.cancelling" name="crescent"></IonSpinner>
             <IonText>{{ 'Cancel Order' }}</IonText>
           </KolaWhiteButton>
+        </section>
+
+        <section class="ion-padding-horizontal update-button-section" v-if="order?.isApproved()">
+          <KolaYellowButton v-if="!order?.isOutForDelivery() && !order?.isDelivered()" @click="confirmOutForDelivery()">
+            <IonSpinner v-if="orderStore.changingStatus" name="crescent"></IonSpinner>
+            <IonText>{{ 'Out For Delivery' }}</IonText>
+          </KolaYellowButton>
+
+          <KolaYellowButton v-if="order?.isOutForDelivery() && !order?.isDelivered()" class="ion-margin-top" @click="confirmDelivered()">
+            <IonSpinner v-if="orderStore.changingStatus" name="crescent"></IonSpinner>
+            <IonText>{{ 'Delivered' }}</IonText>
+          </KolaYellowButton>
         </section>
 
         <OrderStatusHistoryView :order="(order as Order)" />
@@ -52,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { Order } from '@/models/Order';
+import { Order, OrderStatus } from '@/models/Order';
 import { IonIcon, IonContent, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonButton, IonSpinner, IonText } from '@ionic/vue';
 import { IonSelect, IonSelectOption, IonAvatar, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 import { defineComponent } from 'vue';
@@ -148,11 +160,33 @@ export default defineComponent({
       this.showConfirm = true;
     },
 
+    confirmOutForDelivery() {
+      this.confirmAction = 'outForDelivery',
+      this.confirmDescription = 'Are you sure you want change the status of this order?'
+      this.showConfirm = true;
+    },
+
+    confirmDelivered() {
+      this.confirmAction = 'delivered',
+      this.confirmDescription = 'Are you sure you want change the status of this order?'
+      this.showConfirm = true;
+    },
+
     doConfirm() {
       this.showConfirm = false;
 
       if( this.confirmAction == 'approve' ) {
         this.approveOrder();
+        return;
+      }
+
+      if( this.confirmAction == 'outForDelivery' ) {
+        this.changeStatusToOutForDelivery();
+        return;
+      }
+
+      if( this.confirmAction == 'delivered' ) {
+        this.changeStatusToDelivered();
         return;
       }
 
@@ -175,6 +209,40 @@ export default defineComponent({
         const response = await this.orderStore.cancelOrder(this.order as Order);
 
         this.toastStore.showSuccess( this.$t('vendor.orders.orderHasBeenCanceled'), '', 'bottom', 'vendorTabs')
+      } catch(error) {
+        handleAxiosRequestError(error);
+        this.toastStore.showError(this.$t('vendor.orders.anErrorOccured'), '', 'bottom', 'vendorTabs')
+      }
+    },
+
+    async changeStatusToOutForDelivery() {
+      try {
+        const response = await this.orderStore.changeOrderStatus(this.order?.id as number, {
+          businesses_id: this.order?.businesses_id as number,
+          cms_users_id: this.userStore.user?.id as number,
+          comment: 'Out For Delivery',
+          order_id: this.order?.id as number,
+          order_status_id: OrderStatus.OUT_FOR_DELIVERY
+        });
+
+        this.toastStore.showSuccess( this.$t('vendor.orders.orderStatusChanged'), '', 'bottom', 'vendorTabs')
+      } catch(error) {
+        handleAxiosRequestError(error);
+        this.toastStore.showError(this.$t('vendor.orders.anErrorOccured'), '', 'bottom', 'vendorTabs')
+      }
+    },
+
+    async changeStatusToDelivered() {
+      try {
+        const response = await this.orderStore.changeOrderStatus(this.order?.id as number, {
+          businesses_id: this.order?.businesses_id as number,
+          cms_users_id: this.userStore.user?.id as number,
+          comment: 'Out For Delivery',
+          order_id: this.order?.id as number,
+          order_status_id: OrderStatus.DELIVERED
+        });
+
+        this.toastStore.showSuccess( this.$t('vendor.orders.orderStatusChanged'), '', 'bottom', 'vendorTabs')
       } catch(error) {
         handleAxiosRequestError(error);
         this.toastStore.showError(this.$t('vendor.orders.anErrorOccured'), '', 'bottom', 'vendorTabs')

@@ -12,7 +12,10 @@
               >
               </IonBackButton>
             </IonButtons>
-            <IonTitle size="small"
+            <IonTitle v-if="$route.fullPath.includes('record')" size="small"
+              ><b>Record New Order</b></IonTitle
+            >
+            <IonTitle v-else size="small"
               ><b>{{ $t("shopper.cart.placeNewOrder") }}</b></IonTitle
             >
             <IonButtons slot="end">
@@ -54,7 +57,7 @@
     </section>
 
     <IonContent>
-      <SelectedCustomer></SelectedCustomer>
+      <SelectedCustomer v-if="orderStore.selectedCustomer"></SelectedCustomer>
 
       <div class="ion-text-center" v-if="fetching">
         <IonSpinner name="crescent"></IonSpinner>
@@ -251,7 +254,11 @@ export default defineComponent({
         );
         return;
       }
-      this.$router.push("/agent/orders/place-order/configure-items");
+      if (this.userStore.user?.isSalesAssociate()) {
+        this.$router.push("/agent/orders/place-order/configure-items");
+      } else {
+        this.$router.push("/vendor/orders/record-order/configure-items");
+      }
     },
 
     toggleSearchEnabled() {

@@ -9,16 +9,31 @@
 
   <IonCard class="list-card">
     <IonList lines="none">
-    <ion-item v-for="(status, index) in orderStatuses" :key="index">
-      <ion-icon :icon="status.icon" slot="start" class="status-icon" :class="{ active: isActive(status) }"></ion-icon>
-      <ion-label>
-        <h3 class="ion-no-margin">{{ status.name }}</h3>
-        <p class="font-small">
-          {{ getHistoryEntry(status) ? Filters.date( getHistoryEntry(status)?.created_at as string, 'short') : '' }}
-        </p>
-      </ion-label>
-      <ion-icon slot="end" :icon="index < orderStatuses.length - 1 ? 'arrow-forward' : ''"></ion-icon>
-    </ion-item>
+
+    <template v-if="order?.order_status_id as number < 8">
+      <ion-item v-for="(status, index) in orderStatuses" :key="index">
+        <ion-icon :icon="status.icon" slot="start" class="status-icon" :class="{ active: isActive(status) }"></ion-icon>
+        <ion-label>
+          <h3 class="ion-no-margin">{{ status.name }}</h3>
+          <p class="font-small">
+            {{ getHistoryEntry(status) ? Filters.date( getHistoryEntry(status)?.created_at as string, 'short') : '' }}
+          </p>
+        </ion-label>
+      </ion-item>
+    </template>
+
+    <template v-if="order?.order_status_id as number >= 8">
+      <ion-item v-for="(status, index) in rejectedOrderStatuses" :key="index">
+        <ion-icon :icon="status.icon" slot="start" class="status-icon" :class="{ active: isActive(status) }"></ion-icon>
+        <ion-label>
+          <h3 class="ion-no-margin">{{ status.name }}</h3>
+          <p class="font-small">
+            {{ getHistoryEntry(status) ? Filters.date( getHistoryEntry(status)?.created_at as string, 'short') : '' }}
+          </p>
+        </ion-label>
+      </ion-item>
+    </template>
+
   </IonList>
   </IonCard>
 
@@ -29,7 +44,7 @@ import { IonAvatar, IonCard, IonCardHeader, IonIcon, IonItem, IonLabel, IonList,
 import { useOrderStore } from '@/stores/OrderStore';
 import { defineComponent, computed, PropType, defineProps } from 'vue';
 import { Order } from '@/models/Order';
-import { trainOutline, checkmarkCircle, cubeOutline } from 'ionicons/icons'
+import { trainOutline, checkmarkCircle, cubeOutline, arrowForwardOutline, removeOutline, arrowBackOutline } from 'ionicons/icons'
 import Filters from '@/utilities/Filters';
 
 export default defineComponent({
@@ -56,11 +71,17 @@ export default defineComponent({
   data() {
     return {
       Filters,
+      arrowForwardOutline,
       orderStatuses: [
         { id: 1, name: 'Order Placed', icon: trainOutline },
         { id: 3, name: 'Order Confirmed', icon: checkmarkCircle },
         { id: 6, name: 'Out For Delivery', icon: trainOutline },
         { id: 7, name: 'Delivered', icon: cubeOutline },
+      ],
+      rejectedOrderStatuses: [
+        { id: 1, name: 'Order Placed', icon: trainOutline },
+        { id: 8, name: 'Rejected', icon: removeOutline },
+        { id: 10, name: 'Refunded', icon: arrowBackOutline },
       ]
     }
   },

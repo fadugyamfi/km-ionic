@@ -105,12 +105,20 @@ export default defineComponent({
   methods: {
     onAddNewOrder() {
       this.orderStore.resetForNewOrder();
-      this.$router.replace("/agent/orders/place-order/select-customer");
+      if (this.userStore.user?.isSalesAssociate()) {
+        this.$router.replace("/agent/orders/place-order/select-customer");
+      } else {
+        this.$router.replace("/vendor/orders/record-order/select-agent");
+      }
     },
 
     onDone() {
       this.orderStore.resetForNewOrder();
-      this.$router.replace("/agent/orders");
+      if (this.userStore.user?.isSalesAssociate()) {
+        this.$router.replace("/agent/orders");
+      } else {
+        this.$router.replace("/vendor/orders");
+      }
     },
   },
 });
