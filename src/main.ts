@@ -30,7 +30,7 @@ import "swiper/scss";
 import "@ionic/vue/css/ionic-swiper.css";
 
 /* Virtual Scrolling */
-import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 
 /* Theme variables */
 // import './theme/variables.css';
@@ -41,7 +41,7 @@ import messages from "./locales";
 import { createPinia } from "pinia";
 import { createI18n } from "vue-i18n";
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
-import { RecycleScroller } from 'vue-virtual-scroller';
+import { RecycleScroller } from "vue-virtual-scroller";
 import VueGtag from "vue-gtag";
 
 // Above the createApp() line
@@ -61,7 +61,7 @@ const pinia = createPinia();
 // initialize the app
 const app = createApp(App)
   .component("v-otp-input", VOtpInput)
-  .component('RecycleScroller', RecycleScroller)
+  .component("RecycleScroller", RecycleScroller)
   .use(IonicVue, {
     rippleEffect: true,
     mode: "md",
@@ -69,8 +69,9 @@ const app = createApp(App)
   .use(i18n)
   .use(pinia)
   .use(router)
+
   .use(VueGtag, {
-    config: { id: "G-0X283E0RYF" }
+    config: { id: "G-0X283E0RYF" },
   });
 
 router.isReady().then(() => {
