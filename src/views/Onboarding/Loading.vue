@@ -19,7 +19,7 @@
                 </div>
 
                 <div v-for="brand in brandStore.brands" class="">
-                    <Image :src="brand.logo" w="100" />
+                    <Image :src="brand.logo" w="150" />
                 </div>
 
                 <!-- Image preloading -->

@@ -27,7 +27,7 @@
         <IonSpinner name="crescent"></IonSpinner>
       </section>
       <section v-if="!fetching">
-        <Image :src="product?.image" style="height: 250px;" w="100"></Image>
+        <Image :src="product?.image" style="height: 250px;" w="150"></Image>
         <StockInfo :product="product" />
         <section class="ion-padding-vertical">
           <KolaYellowButton @click="showFilterSheet = true">
