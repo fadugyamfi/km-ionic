@@ -1,7 +1,7 @@
 <template>
     <section class="supplier-pill">
       <IonAvatar>
-        <Image :alt="supplier.name" :src="supplier.logo" w="100" />
+        <Image :alt="supplier.name" :src="supplier.logo" w="150" />
       </IonAvatar>
       <p>{{ supplier.name }}</p>
     </section>

@@ -3,7 +3,7 @@
     <Swiper ref="swiper" :slides-per-view="1" :pagination="true">
       <SwiperSlide v-for="(orderItem, index) in order?.order_items" :key="index">
         <IonCard>
-          <Image :src="orderItem.product?.image" w="300" />
+          <Image :src="orderItem.product?.image" w="400" />
         </IonCard>
       </SwiperSlide>
       <div class="swiper-pagination"></div>

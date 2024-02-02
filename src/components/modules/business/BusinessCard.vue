@@ -1,7 +1,7 @@
 <template>
     <section class="business-card">
         <ion-card @click="viewBusiness" class="ion-no-padding ion-no-margin">
-            <Image :alt="business.name" :src="business?.logo" w="100" :no-img-src="getRandomSupplierImage()" />
+            <Image :alt="business.name" :src="business?.logo" w="150" :no-img-src="getRandomSupplierImage()" />
             <IonCardHeader>
                 <IonCardTitle>{{ business.name }}</IonCardTitle>
                 <IonCardSubtitle>
