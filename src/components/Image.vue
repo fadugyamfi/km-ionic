@@ -7,9 +7,9 @@
 </template>
 
 <script lang="ts">
-import { IonImg, IonSkeletonText, getPlatforms, isPlatform } from '@ionic/vue';
+import { IonImg, IonSkeletonText } from '@ionic/vue';
 import { defineComponent, PropType } from 'vue';
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 import AppStorage from '@/stores/AppStorage';
 import axios from 'axios';
 

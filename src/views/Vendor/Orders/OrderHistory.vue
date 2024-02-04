@@ -4,7 +4,7 @@
       <ion-header class="inner-header">
         <ion-toolbar class="ion-align-items-center">
           <ion-buttons slot="start">
-            <ion-back-button defaultHref="/shopper/home"></ion-back-button>
+            <ion-back-button defaultHref="/vendor/home"></ion-back-button>
           </ion-buttons>
 
           <IonTitle size="small" class="fw-bold">Order History</IonTitle>

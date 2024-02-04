@@ -4,10 +4,10 @@
       <IonHeader class="inner-header">
         <IonToolbar class="ion-align-items-center">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/vendor/orders"></IonBackButton>
+            <IonBackButton defaultHref="/vendor/orders/history"></IonBackButton>
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
-            {{ $t('shopper.orders.orderDetails') }} -
+            {{ $t('shopper.orders.orderDetails') }} - #{{ order?.id }}
           </IonTitle>
           <IonButtons slot="end">
             <IonButton v-if="false">
@@ -123,10 +123,8 @@ export default defineComponent({
     this.order = this.orderStore.selectedOrder;
   },
 
-  async ionViewDidEnter() {
-    if( !this.order ) {
-      await this.loadOrder();
-    }
+  async mounted() {
+    await this.loadOrder();
   },
 
   computed: {
@@ -135,6 +133,10 @@ export default defineComponent({
 
   methods: {
     async loadOrder() {
+      if( this.order && this.order.order_items?.length > 0 && this.order?.business ) {
+        return;
+      }
+
       this.loading = true;
       const order_id = +this.$route.params.id;
 

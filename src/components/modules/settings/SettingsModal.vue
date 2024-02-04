@@ -42,7 +42,7 @@
           </IonLabel>
         </IonItem>
 
-        <IonItem class="profile-item" @click="incrementTaps()">
+        <IonItem :button="true" class="profile-item" @click="incrementTaps()">
           <IonAvatar slot="start" class="ion-align-self-start">
             <IonIcon :icon="bookOutline"></IonIcon>
           </IonAvatar>
