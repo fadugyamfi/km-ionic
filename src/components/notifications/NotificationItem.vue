@@ -1,5 +1,5 @@
 <template>
-    <IonItem class="notification-item success">
+    <IonItem :button="true" class="notification-item success">
         <IonIcon slot="start" :icon="checkmarkCircleOutline"></IonIcon>
         <IonLabel>
             <header>{{ notification?.title }}</header>

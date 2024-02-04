@@ -1,3 +1,4 @@
+import { Order } from "./Order";
 
 export default class Notification {
 
@@ -10,7 +11,18 @@ export default class Notification {
     public created_at: string | null = null;
     public notifiable: object | null = null;
 
+    public _order: Order | null = null;
+
     constructor(data: object) {
         Object.assign(this, data)
+    }
+
+    get order(): Order | null
+    {
+        return this._order;
+    }
+
+    set order(value: object) {
+        this._order = value ? new Order(value) : null;
     }
 };

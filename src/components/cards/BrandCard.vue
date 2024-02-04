@@ -1,6 +1,8 @@
 <template>
     <section class="brand-card">
-        <ion-card @click="viewBrand">
+        <ion-card @click="viewBrand" class="ion-activatable">
+            <IonRippleEffect></IonRippleEffect>
+
             <FavoriteButton class="favorite-button" :brand="brand" color="dark">
             </FavoriteButton>
 
@@ -14,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon } from '@ionic/vue';
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon, IonRippleEffect } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { locationOutline } from 'ionicons/icons';
 import Brand from '@/models/Brand';
@@ -49,7 +51,8 @@ export default defineComponent({
         IonIcon,
         Image,
         FavoriteButton,
-        Brand
+        Brand,
+        IonRippleEffect
     }
 });
 
@@ -62,6 +65,7 @@ export default defineComponent({
         width: 100%;
         margin: 5px auto;
         position: relative;
+        overflow: hidden;
 
         ion-img {
             width: 100%;

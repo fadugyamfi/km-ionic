@@ -1,6 +1,7 @@
 <template>
     <section class="product-category-card" :class="{ 'tall': tall === true }">
-        <ion-card>
+        <ion-card class="ion-activatable">
+            <IonRippleEffect></IonRippleEffect>
             <Image :alt="category.name" :src="category.image" w="150" />
 
             <IonCardHeader>
@@ -11,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon } from '@ionic/vue';
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonIcon, IonRippleEffect } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { locationOutline } from 'ionicons/icons';
 import ProductCategory from '../../models/ProductCategory';
@@ -36,7 +37,7 @@ export default defineComponent({
         };
     },
 
-    components: { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonIcon, Image }
+    components: { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonCardSubtitle, IonIcon, Image, IonRippleEffect }
 });
 </script>
 
@@ -47,6 +48,7 @@ export default defineComponent({
         width: 100%;
         margin: 5px auto;
         position: relative;
+        overflow: hidden;
         // border: solid 1px #f4f4f4;
         // border-radius: 8px;
         // box-shadow: 1px 2px 9px #f9f9f9;

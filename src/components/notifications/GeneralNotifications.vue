@@ -28,6 +28,8 @@ export default defineComponent({
         NotificationItem
     },
 
+    emits: ['notification-clicked'],
+
     data() {
         return {
             checkmarkCircleOutline,

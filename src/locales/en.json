@@ -175,6 +175,7 @@
     },
     "orders": {
       "orderDetails": "Order Details",
+      "yourOrder": "Your Order",
       "orderStatus": "Order Status",
       "delivery": "Delivery"
     },
