@@ -65,6 +65,7 @@ const app = createApp(App)
   .use(IonicVue, {
     rippleEffect: true,
     mode: "md",
+    experimentalCloseWatcher: true,
   })
   .use(i18n)
   .use(pinia)
