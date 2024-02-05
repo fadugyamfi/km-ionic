@@ -157,6 +157,11 @@ export default defineComponent({
   mounted() {
     this.favoritesStore.fetchFavorites();
 
+    document.addEventListener('ionBackButton', (ev) => {
+      ev.stopPropagation();
+      this.cancel();
+    }, { once: true })
+
     useBackButton(10, () => {
       this.cancel();
     });
