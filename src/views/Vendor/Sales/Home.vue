@@ -56,7 +56,7 @@
         </IonItem>
 
         <v-chart ref="chart" class="chart" :option="barOption" autoresize />
-        <!-- 
+        <!--
         <IonFab slot="fixed" vertical="bottom" horizontal="end">
           <IonFabButton @click="onAddSale()">
             <IonIcon :icon="add"></IonIcon>
@@ -148,9 +148,9 @@
           </IonGrid>
 
           <section class="ion-margin-top">
-            <IonLabel class="font-medium ion-margin-horizontal"
-              >Conversion Rate From Orders To Sales</IonLabel
-            >
+            <IonLabel class="font-medium ion-margin-horizontal">
+              Conversion Rate From Orders To Sales
+            </IonLabel>
             <IonCard>
               <IonCardContent
                 class="d-flex ion-justify-content-between ion-align-items-center"

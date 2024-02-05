@@ -18,7 +18,7 @@
 import { IonButton } from "@ionic/vue";
 import Business from "@/models/Business";
 import { useBusinessStore } from "@/stores/BusinessStore";
-import { ref, defineProps, onBeforeMount, PropType, computed } from "vue";
+import { ref, PropType, computed } from "vue";
 import LoginRequiredSheet from "../LoginRequiredSheet.vue";
 import { useUserStore } from "@/stores/UserStore";
 
