@@ -39,11 +39,11 @@ export default defineComponent({
   props: {
     topSellingProduct: {
       type: Object,
-      default: true,
+      default: () => {},
     },
     totalCustomers: {
       type: Number,
-      default: true,
+      default: 0,
     },
   },
   data() {

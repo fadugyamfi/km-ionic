@@ -25,7 +25,7 @@
       <div class="ion-padding ion-text-center" v-if="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-      <section v-else>
+      <section v-if="!fetching">
         <IonItem style="width: 100%" lines="none">
           <IonText color="dark" class="fw-semibold"> Sales </IonText>
           <IonSelect
@@ -203,18 +203,7 @@
             </IonListHeader>
           </IonList>
 
-          <section
-            v-if="fetchingHistory"
-            class="d-flex ion-justify-content-center"
-          >
-            <IonSpinner name="crescent"></IonSpinner>
-          </section>
-
-          <SalesList
-            v-else
-            :sales="recentSales"
-            style="padding-top: 0px"
-          ></SalesList>
+          <SalesList :sales="recentSales" style="padding-top: 0px"></SalesList>
         </section>
 
         <FilterSalesSheet
@@ -363,10 +352,8 @@ export default defineComponent({
       close,
       showFilterSheet: false,
       showFilterSummary: false,
-      fetchingChartData: false,
       Filters,
       fetching: false,
-
       getDateDifference,
       periods: [
         { label: "This Week", value: "thisweek" },
@@ -378,8 +365,6 @@ export default defineComponent({
         { label: "Custom", value: "custom" },
       ],
       recentSales: [] as Sale[],
-      fetchingSummary: false,
-      fetchingHistory: false,
       topProducts: [],
       queryFilters: {
         period: "thisweek",
@@ -549,7 +534,7 @@ export default defineComponent({
 
     async fetchSalesSummary() {
       try {
-        this.fetchingChartData = true;
+        this.fetching = true;
         const summary = await this.saleStore.fetchSalesSummary({
           ...this.queryFilters,
         });
@@ -605,7 +590,7 @@ export default defineComponent({
         }
       } catch (error) {
       } finally {
-        this.fetchingChartData = false;
+        this.fetching = false;
       }
     },
 
