@@ -61,7 +61,7 @@
           :total-customers="agent?.total_customers"
         ></BestSellingItems>
         <section>
-          <div class="d-flex ion-justify-content-between ion-padding-horizontal ion-margin-top">
+          <div class="d-flex ion-justify-content-between ion-align-items-center ion-padding-horizontal ion-margin-top">
             <IonText color="dark" class="fw-semibold"> Sales </IonText>
             <IonSelect
               class="sale-filter"

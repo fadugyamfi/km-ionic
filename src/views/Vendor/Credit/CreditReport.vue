@@ -24,6 +24,31 @@
         <CreditSummary
           :creditSummary="creditSummary?.credit_sales"
         ></CreditSummary>
+        <section>
+          <div
+            class="d-flex ion-justify-content-between ion-align-items-center ion-padding-horizontal ion-margin-top"
+          >
+            <IonText color="dark" class="fw-semibold font-medium"> Amount collected </IonText>
+            <IonSelect
+              class="sale-filter"
+              labelPlacement="stacked"
+              fill="outline"
+              required
+              v-model="searchFilters.period"
+              name="category"
+              :toggle-icon="chevronDownOutline"
+              @ion-change="handleSalesSummaryFilter($event.detail.value)"
+            >
+              <ion-select-option
+                v-for="(period, index) in periods"
+                :key="index"
+                :value="period.value"
+                >{{ period.label }}</ion-select-option
+              >
+            </IonSelect>
+          </div>
+          <v-chart ref="chart" class="chart" :option="option" autoresize />
+        </section>
         <div class="d-flex ion-align-items-center credit-history ion-padding">
           <h6 slot="start" class="fw-bold">
             {{ $t("vendor.credit.creditHistory") }}
@@ -76,6 +101,8 @@ import {
   IonSpinner,
   IonText,
   IonPopover,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/vue";
 import {
   search,
@@ -85,9 +112,10 @@ import {
   optionsOutline,
   createOutline,
   trashOutline,
+  chevronDownOutline,
   add,
 } from "ionicons/icons";
-import { defineComponent, ref } from "vue";
+import { defineComponent, provide, ref } from "vue";
 import { useOrderStore } from "@/stores/OrderStore";
 import ReceivedOrderList from "@/components/modules/order/ReceivedOrderList.vue";
 import { mapStores } from "pinia";
@@ -99,6 +127,36 @@ import CreditSummary from "@/components/modules/credit/CreditSummary.vue";
 import CreditHistoryItem from "@/components/modules/credit/CreditHistoryItem.vue";
 import { useCreditStore } from "@/stores/CreditStore";
 import Credit from "@/models/Credit";
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  LegendComponent,
+} from "echarts/components";
+import { LabelLayout, UniversalTransition } from "echarts/features";
+
+import { use } from "echarts/core";
+import { PieChart } from "echarts/charts";
+import { CanvasRenderer } from "echarts/renderers";
+
+import VChart, { THEME_KEY } from "vue-echarts";
+import { getDateDifference } from "@/utilities";
+
+use([
+  PieChart,
+  LegendComponent,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  LabelLayout,
+  UniversalTransition,
+  CanvasRenderer,
+]);
+provide(THEME_KEY, "light");
 
 const date = new Date();
 
@@ -108,6 +166,7 @@ export default defineComponent({
       search,
       arrowBack,
       ellipsisHorizontal,
+      chevronDownOutline,
       filter,
       optionsOutline,
       trashOutline,
@@ -118,12 +177,72 @@ export default defineComponent({
       searchFilters: {
         start_dt: "",
         end_dt: "",
+        period: "custom",
       },
       credits: [] as Credit[] | null,
       creditSummary: {} as any,
       showFilterSheet: false,
       event: null as any,
       openPopover: -1,
+      option: {
+        tooltip: {
+          trigger: "item",
+        },
+        color: ["#FEDA9A", "#4FE3A4", "#F5AA29"],
+        legend: {
+          top: "center",
+          left: "center",
+          orient: "vertical",
+          align: "left",
+          itemWidth: 10,
+          itemHeight: 10,
+          textStyle: {
+            color: "#000",
+          },
+        },
+        series: [
+          {
+            name: "Credit Report",
+            type: "pie",
+            radius: ["50%", "75%"],
+            avoidLabelOverlap: false,
+            itemStyle: {
+              borderRadius: 100,
+              borderColor: "#fff",
+              borderWidth: 10,
+            },
+            label: {
+              show: true,
+              position: "center",
+            },
+            center: ["20%", "50%"],
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: 16,
+                fontWeight: "bold",
+              },
+            },
+            labelLine: {
+              show: false,
+            },
+            data: [
+              { value: 1048, name: "Collected" },
+              { value: 735, name: "Pending" },
+              { value: 580, name: "Cancelled" },
+            ],
+          },
+        ],
+      },
+      periods: [
+        { label: "This Week", value: "thisweek" },
+        { label: "Last Week", value: "lastweek" },
+        { label: "This Month", value: "thismonth" },
+        { label: "Last Month", value: "lastmonth" },
+        { label: "This Year", value: "thisyear" },
+        { label: "Last Year", value: "lastyear" },
+        { label: "Custom", value: "custom" },
+      ],
     };
   },
 
@@ -131,6 +250,8 @@ export default defineComponent({
     IonPage,
     IonHeader,
     IonToolbar,
+    IonSelect,
+  IonSelectOption,
     IonContent,
     IonSegmentButton,
     IonSegment,
@@ -149,6 +270,7 @@ export default defineComponent({
     CreditHistoryItem,
     IonText,
     IonPopover,
+    VChart,
   },
 
   computed: {
@@ -172,6 +294,20 @@ export default defineComponent({
       this.searchFilters.start_dt = event.start_dt;
       this.searchFilters.end_dt =
         event.end_dt || formatMySQLDateTime(new Date().toISOString());
+      this.fetchCredits();
+    },
+    handleSalesSummaryFilter(period: string) {
+      this.showFilterSheet = false;
+      if (period == "custom") {
+        this.showFilterSheet = true;
+        this.searchFilters.period = period;
+        return;
+      }
+      Object.assign(this.searchFilters, {
+        start_dt: "",
+        end_dt: "",
+        period: this.searchFilters.period,
+      });
       this.fetchCredits();
     },
     openMenu(event: any, index: number) {
@@ -209,6 +345,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.chart {
+  height: 150px;
+}
 .ion-content {
   --align-items: center;
   --padding-top: 10px;
@@ -232,7 +371,6 @@ export default defineComponent({
   justify-content: space-between;
   font-size: 14px;
   padding-bottom: 10px;
-  margin-top: 20px;
 
   h6 {
     font-weight: 500;
@@ -244,5 +382,20 @@ export default defineComponent({
     padding: 3px 10px;
     color: #666eed;
   }
+}
+.sale-filter {
+  --background: #fff;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-radius: 10px;
+  --border-color: #e8e8e8;
+  --highlight-color-focused: none !important;
+  --ripple-color: none !important;
+  --padding-start: 13px;
+  --padding-end: 10px;
+  min-height: 32px;
+  font-size: 14px;
+  max-width: 120px;
+  margin-left: 10px;
 }
 </style>
