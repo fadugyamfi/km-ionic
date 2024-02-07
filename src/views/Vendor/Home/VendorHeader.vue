@@ -1,7 +1,8 @@
 <template>
     <section class="banner">
-        <img
+        <Image
             :src="userStore.activeBusiness?.cover_image || defaultBanner"
+            w="400"
             @error="onLoadError($event)"
         />
 
@@ -23,6 +24,7 @@ import { mapStores } from 'pinia';
 import { useBusinessStore } from '@/stores/BusinessStore';
 import { useUserStore } from '@/stores/UserStore';
 import ProfileAvatar from '../../../components/ProfileAvatar.vue';
+import Image from '../../../components/Image.vue';
 
 export default defineComponent({
 
@@ -32,7 +34,7 @@ export default defineComponent({
         }
     },
 
-    components: { IonAvatar, ProfileAvatar },
+    components: { IonAvatar, ProfileAvatar, Image },
 
     computed: {
         ...mapStores( useBusinessStore, useUserStore )

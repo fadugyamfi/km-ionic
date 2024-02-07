@@ -1,12 +1,13 @@
 <template>
   <div class="order-slider">
-    <Swiper ref="swiper" :slides-per-view="1" :pagination="true">
+    <Swiper ref="swiper" :slides-per-view="1" pagination :modules="modules" >
       <SwiperSlide v-for="(orderItem, index) in order?.order_items" :key="index">
         <IonCard>
-          <Image :src="orderItem.product?.image" />
+          <IonCardContent>
+            <Image :src="orderItem.product?.image" w="400" />
+          </IonCardContent>
         </IonCard>
       </SwiperSlide>
-      <div class="swiper-pagination"></div>
     </Swiper>
   </div>
 </template>
@@ -14,9 +15,17 @@
 <script lang="ts">
 import { Order } from '@/models/Order';
 import { PropType, defineComponent } from 'vue';
-import { IonCard } from '@ionic/vue';
+import { IonCard, IonCardContent } from '@ionic/vue';
 import Image from '../../Image.vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import { PaginationOptions } from 'swiper/types';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/scss/navigation';
+import 'swiper/scss/pagination';
+import 'swiper/scss/scrollbar';
 
 export default defineComponent({
 
@@ -28,6 +37,7 @@ export default defineComponent({
 
   data() {
     return {
+      modules: [Navigation, Pagination, Scrollbar, A11y],
       swiperOptions: {
         slidesPerView: 1,
         autoplay: {
@@ -36,7 +46,9 @@ export default defineComponent({
         pagination: {
           el: '.swiper-pagination',
           clickable: true,
-        },
+          type: 'bullets',
+          enabled: true
+        } as PaginationOptions,
       },
     };
   },
@@ -46,16 +58,17 @@ export default defineComponent({
     Swiper,
     SwiperSlide,
     IonCard,
-    Image
-  },
+    Image,
+    IonCardContent
+},
 
 
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .order-slider {
-  height: 200px;
+  height: 250px;
   margin-bottom: 2em;
 
   ion-card {
@@ -64,6 +77,21 @@ export default defineComponent({
     ion-img {
       height: 200px;
       object-fit: contain;
+    }
+  }
+
+  .swiper {
+
+    .swiper-pagination {
+      bottom: 6px;
+
+      .swiper-pagination-bullet {
+        background: #777;
+      }
+
+      .swiper-pagination-bullet-active {
+        background: #369;
+      }
     }
   }
 }

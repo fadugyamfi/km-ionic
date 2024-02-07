@@ -2,7 +2,7 @@
     <IonItem>
         <section class="d-flex ion-align-items-stretch">
             <IonThumbnail :class="{ 'non-editable': !editable }">
-                <Image :src="saleItem?.product?.image"></Image>
+                <Image :src="saleItem?.product?.image" w="150"></Image>
             </IonThumbnail>
 
             <section>

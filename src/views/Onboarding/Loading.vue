@@ -15,11 +15,11 @@
 
             <div class="image-loading">
                 <div v-for="category in productCategoryStore.categories" class="">
-                    <Image :src="category.image" />
+                    <Image :src="category.image" w="150" />
                 </div>
 
                 <div v-for="brand in brandStore.brands" class="">
-                    <Image :src="brand.logo" />
+                    <Image :src="brand.logo" w="150" />
                 </div>
 
                 <!-- Image preloading -->

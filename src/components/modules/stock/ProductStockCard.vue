@@ -2,7 +2,7 @@
   <section>
     <section class="product-category-card" :class="{ tall: tall === true }">
       <ion-card>
-        <Image :alt="stock.product_name" :src="stock.image" />
+        <Image :alt="stock.product_name" :src="stock.image" w="150" />
         <IonCardHeader>
           <section
             class="d-flex ion-align-items-center ion-justify-content-between"

@@ -2,7 +2,7 @@
     <IonItem>
         <section class="d-flex ion-align-items-stretch">
             <IonThumbnail>
-                <Image :src="orderItem?.product?.image"></Image>
+                <Image :src="orderItem?.product?.image" w="150"></Image>
             </IonThumbnail>
             <section>
                 <section class="d-flex ion-justify-content-between">

@@ -24,7 +24,7 @@
           :key="item.products_id"
         >
           <ion-thumbnail slot="start" class="custom-thumbnail">
-            <Image :src="item.product_image"></Image>
+            <Image :src="item.product_image" w="150"></Image>
           </ion-thumbnail>
 
           <ion-row class="item-row">

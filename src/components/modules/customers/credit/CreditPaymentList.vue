@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import { defineProps, computed, PropType, ref, defineComponent } from "vue";
+import { PropType, defineComponent } from "vue";
 import {
   IonAvatar,
   IonBadge,

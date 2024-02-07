@@ -42,7 +42,7 @@
 <script lang="ts">
 import { IonAvatar, IonCard, IonCardHeader, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonSkeletonText, IonText } from '@ionic/vue';
 import { useOrderStore } from '@/stores/OrderStore';
-import { defineComponent, computed, PropType, defineProps } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { Order } from '@/models/Order';
 import { trainOutline, checkmarkCircle, cubeOutline, arrowForwardOutline, removeOutline, arrowBackOutline } from 'ionicons/icons'
 import Filters from '@/utilities/Filters';

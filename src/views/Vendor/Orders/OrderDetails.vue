@@ -4,10 +4,10 @@
       <IonHeader class="inner-header">
         <IonToolbar class="ion-align-items-center">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/vendor/orders"></IonBackButton>
+            <IonBackButton defaultHref="/vendor/orders/history"></IonBackButton>
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
-            {{ $t('shopper.orders.orderDetails') }} -
+            {{ $t('shopper.orders.orderDetails') }} - #{{ order?.id }}
           </IonTitle>
           <IonButtons slot="end">
             <IonButton v-if="false">
@@ -26,28 +26,30 @@
         <OrderImages :order="(order as Order)" />
         <ReceivedOrderItems :order="(order as Order)" />
 
-        <section class="ion-padding-horizontal update-button-section" v-if="order?.isPendingApproval()">
-          <KolaYellowButton @click="confirmApproval()">
-            <IonSpinner v-if="orderStore.approving" name="crescent"></IonSpinner>
-            <IonText>{{ 'Accept Order' }}</IonText>
-          </KolaYellowButton>
+        <section v-if="userCanApproveOrders">
+          <section class="ion-padding-horizontal update-button-section" v-if="order?.isPendingApproval()">
+            <KolaYellowButton @click="confirmApproval()">
+              <IonSpinner v-if="orderStore.approving" name="crescent"></IonSpinner>
+              <IonText>{{ 'Accept Order' }}</IonText>
+            </KolaYellowButton>
 
-          <KolaWhiteButton class="ion-margin-top" @click="confirmCancellation()">
-            <IonSpinner v-if="orderStore.cancelling" name="crescent"></IonSpinner>
-            <IonText>{{ 'Cancel Order' }}</IonText>
-          </KolaWhiteButton>
-        </section>
+            <KolaWhiteButton class="ion-margin-top" @click="confirmCancellation()">
+              <IonSpinner v-if="orderStore.cancelling" name="crescent"></IonSpinner>
+              <IonText>{{ 'Cancel Order' }}</IonText>
+            </KolaWhiteButton>
+          </section>
 
-        <section class="ion-padding-horizontal update-button-section" v-if="order?.isApproved()">
-          <KolaYellowButton v-if="!order?.isOutForDelivery() && !order?.isDelivered()" @click="confirmOutForDelivery()">
-            <IonSpinner v-if="orderStore.changingStatus" name="crescent"></IonSpinner>
-            <IonText>{{ 'Out For Delivery' }}</IonText>
-          </KolaYellowButton>
+          <section class="ion-padding-horizontal update-button-section" v-if="order?.isApproved()">
+            <KolaYellowButton v-if="!order?.isOutForDelivery() && !order?.isDelivered()" @click="confirmOutForDelivery()">
+              <IonSpinner v-if="orderStore.changingStatus" name="crescent"></IonSpinner>
+              <IonText>{{ 'Out For Delivery' }}</IonText>
+            </KolaYellowButton>
 
-          <KolaYellowButton v-if="order?.isOutForDelivery() && !order?.isDelivered()" class="ion-margin-top" @click="confirmDelivered()">
-            <IonSpinner v-if="orderStore.changingStatus" name="crescent"></IonSpinner>
-            <IonText>{{ 'Delivered' }}</IonText>
-          </KolaYellowButton>
+            <KolaYellowButton v-if="order?.isOutForDelivery() && !order?.isDelivered()" class="ion-margin-top" @click="confirmDelivered()">
+              <IonSpinner v-if="orderStore.changingStatus" name="crescent"></IonSpinner>
+              <IonText>{{ 'Delivered' }}</IonText>
+            </KolaYellowButton>
+          </section>
         </section>
 
         <OrderStatusHistoryView :order="(order as Order)" />
@@ -123,18 +125,24 @@ export default defineComponent({
     this.order = this.orderStore.selectedOrder;
   },
 
-  async ionViewDidEnter() {
-    if( !this.order ) {
-      await this.loadOrder();
-    }
+  async mounted() {
+    await this.loadOrder();
   },
 
   computed: {
     ...mapStores(useOrderStore, useUserStore, useToastStore),
+
+    userCanApproveOrders() {
+      return this.userStore.user?.isSuperAdmin() || this.userStore.user?.isOwner() || this.userStore.user?.isSalesManager();
+    }
   },
 
   methods: {
     async loadOrder() {
+      if( this.order && this.order.order_items?.length > 0 && this.order?.business ) {
+        return;
+      }
+
       this.loading = true;
       const order_id = +this.$route.params.id;
 

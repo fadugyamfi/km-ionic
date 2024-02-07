@@ -1,7 +1,7 @@
 <template>
     <section class="brand-pill">
         <IonAvatar>
-            <Image alt="brand name" :src="brand.logo " />
+            <Image alt="brand name" :src="brand.logo" w="150" />
         </IonAvatar>
         <p>{{ brand.name }}</p>
 

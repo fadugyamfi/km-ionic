@@ -31,7 +31,7 @@
         <IonList>
           <IonItem v-for="(item, index) in orderBusiness?.order_items" :key="item.product?.id">
             <ion-thumbnail slot="start" class="custom-thumbnail">
-              <Image :src="item.product_image"></Image>
+              <Image :src="item.product_image" w="150"></Image>
             </ion-thumbnail>
 
             <ion-row class="item-row">

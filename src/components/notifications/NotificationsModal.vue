@@ -44,11 +44,13 @@
           <GeneralNotifications
             v-if="viewing == 'general'"
             :notifications="notificationsStore.getGeneralNotifications()"
+            @notification-clicked="cancel()"
           >
           </GeneralNotifications>
           <OrderNotifications
             v-if="viewing == 'orders'"
             :notifications="notificationsStore.getOrderNotifications()"
+            @notification-clicked="cancel()"
           >
           </OrderNotifications>
         </section>
@@ -130,7 +132,15 @@ export default defineComponent({
 
   mounted() {
     const notificationStore = useNotificationStore();
-    notificationStore.fetchNotifications();
+
+    if( notificationStore.notifications?.length == 0 ) {
+      notificationStore.fetchNotifications();
+    }
+
+    document.addEventListener('ionBackButton', (ev) => {
+      ev.stopPropagation();
+      this.cancel();
+    }, { once: true })
 
     useBackButton(10, () => {
       this.cancel();

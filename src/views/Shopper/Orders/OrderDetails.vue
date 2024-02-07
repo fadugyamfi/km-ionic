@@ -7,7 +7,7 @@
             <IonBackButton defaultHref="/shopper/orders"></IonBackButton>
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
-            {{ $t('shopper.orders.orderDetails') }} - #{{ order?.id }}
+            {{ $t('shopper.orders.yourOrder') }} #{{ order?.id }}
           </IonTitle>
           <IonButtons slot="end">
             <IonButton>
@@ -93,8 +93,8 @@ export default defineComponent({
     this.order = this.orderStore.selectedOrder;
   },
 
-  async ionViewDidEnter() {
-    // await this.loadFullOrderDetails();
+  async mounted() {
+    await this.loadFullOrderDetails();
   },
 
   computed: {
@@ -111,7 +111,11 @@ export default defineComponent({
 
   methods: {
     async loadFullOrderDetails() {
-      // this.loading = true;
+      if( this.order && this.order.order_items?.length > 0 && this.order?.customer ) {
+        return;
+      }
+
+      this.loading = true;
       const order_id = +this.$route.params.id;
 
       // fetch full order info from backend to overwrite the basic data
@@ -120,7 +124,7 @@ export default defineComponent({
       } catch (error) {
         handleAxiosRequestError(error);
       } finally {
-        // this.loading = false;
+        this.loading = false;
       }
     }
   }

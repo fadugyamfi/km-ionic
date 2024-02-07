@@ -42,7 +42,7 @@
           </IonLabel>
         </IonItem>
 
-        <IonItem class="profile-item" @click="incrementTaps()">
+        <IonItem :button="true" class="profile-item" @click="incrementTaps()">
           <IonAvatar slot="start" class="ion-align-self-start">
             <IonIcon :icon="bookOutline"></IonIcon>
           </IonAvatar>
@@ -198,6 +198,11 @@ export default defineComponent({
 
  async  mounted() {
     await storage.init();
+
+    document.addEventListener('ionBackButton', (ev) => {
+      ev.stopPropagation();
+      this.cancel();
+    }, { once: true })
 
     useBackButton(10, () => {
       this.cancel();

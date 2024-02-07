@@ -1,6 +1,8 @@
 <template>
   <section class="product-card">
-    <ion-card @click="doAction()">
+    <ion-card @click="doAction()" class="ion-activatable">
+      <IonRippleEffect></IonRippleEffect>
+
       <FavoriteButton
         v-if="showAddToFavorites"
         class="favorite-button"
@@ -23,6 +25,7 @@
         :src="product?.image"
         :path="product?.product_banner_image"
         :no-img-src="noImage"
+        w="150"
         @loaded="imgLoaded = true"
       />
 
