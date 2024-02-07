@@ -61,7 +61,9 @@
           :total-customers="agent?.total_customers"
         ></BestSellingItems>
         <section>
-          <div class="d-flex ion-justify-content-between ion-align-items-center ion-padding-horizontal ion-margin-top">
+          <div
+            class="d-flex ion-justify-content-between ion-align-items-center ion-padding-horizontal ion-margin-top"
+          >
             <IonText color="dark" class="fw-semibold"> Sales </IonText>
             <IonSelect
               class="sale-filter"
@@ -81,7 +83,7 @@
               >
             </IonSelect>
           </div>
-          <v-chart ref="chart" class="chart" :option="barOption" autoresize />
+          <BarChart :query-filters="searchFilters" sales-type="agent" />
         </section>
       </section>
     </ion-content>
@@ -137,34 +139,7 @@ import SalesStatistics from "../../../components/modules/SalesStatistics.vue";
 import Performance from "../../../components/modules/Performance.vue";
 import BestSellingItems from "../../../components/modules/BestSellingItems.vue";
 import FilterAgentSaleReportSheet from "../../../components/modules/agents/FilterAgentSaleReportSheet.vue";
-import {
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  DatasetComponent,
-  TransformComponent,
-} from "echarts/components";
-import { LabelLayout, UniversalTransition } from "echarts/features";
-
-import { use } from "echarts/core";
-import { BarChart } from "echarts/charts";
-import { CanvasRenderer } from "echarts/renderers";
-
-import VChart, { THEME_KEY } from "vue-echarts";
-import { getDateDifference } from "@/utilities";
-
-use([
-  BarChart,
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  DatasetComponent,
-  TransformComponent,
-  LabelLayout,
-  UniversalTransition,
-  CanvasRenderer,
-]);
-provide(THEME_KEY, "light");
+import BarChart from "@/components/charts/BarChart.vue";
 
 const fetching = ref(false);
 const route = useRoute();
@@ -187,77 +162,11 @@ const periods = ref([
   { label: "Custom", value: "custom" },
 ]);
 
-const barOption = ref({
-  tooltip: {
-    trigger: "axis",
-    axisPointer: {
-      type: "shadow",
-    },
-  },
-  grid: {
-    left: "5%",
-    right: "5%",
-    top: "15%",
-    bottom: "0%",
-    containLabel: true,
-  },
-  xAxis: {
-    data: [] as any[],
-    axisTick: {
-      show: false,
-    },
-    axisLabel: {
-      color: "#74787c",
-      fontSize: 11,
-      formatter: function (value: string) {
-        return value.includes("Week")
-          ? value
-          : value.match("^[0-9].*")
-          ? value
-          : value[0];
-      },
-    },
-    axisLine: {
-      show: false,
-    },
-  },
-
-  yAxis: {
-    type: "value",
-    formatter: "{a|Y-Axis Name}",
-    axisLabel: {
-      color: "#000",
-      fontSize: 11,
-    },
-    splitLine: {
-      lineStyle: {
-        type: "dashed",
-        color: "#E7EAEC",
-      },
-    },
-  },
-
-  series: [
-    {
-      name: "Sales",
-      type: "bar",
-      barWidth: "10",
-      data: [] as any[],
-      itemStyle: {
-        borderRadius: [2, 2, 2, 2],
-        opacity: 0.4,
-        color: "#036",
-      },
-    },
-  ],
-});
-
 const onFilterUpdate = (event: { start_dt: string; end_dt: string }) => {
   searchFilters.value.start_dt = event.start_dt;
   searchFilters.value.end_dt =
     event.end_dt || formatMySQLDateTime(new Date().toISOString());
   searchFilters.value.period = "custom";
-  fetchAgentSalesSummary();
   fetchAgent();
 };
 
@@ -273,7 +182,6 @@ const handleSalesSummaryFilter = (period: string) => {
     end_dt: "",
     period: searchFilters.value.period,
   });
-  fetchAgentSalesSummary();
   fetchAgent();
 };
 
@@ -301,27 +209,7 @@ const onSegmentChanged = (event: CustomEvent) => {
 
   searchFilters.value.start_dt = formatMySQLDateTime(start_dt.toISOString());
   searchFilters.value.end_dt = formatMySQLDateTime(end_dt.toISOString());
-  fetchAgentSalesSummary();
   fetchAgent();
-};
-const getTotalYearSales = (summary: any[]) => {
-  let totalSales = [] as any[];
-
-  for (const sale of summary) {
-    if (totalSales.some((item: any) => item.year === sale.year)) {
-      totalSales.find((item: any) => item.year === sale.year).total =
-        Number(totalSales.find((item: any) => item.year === sale.year).total) +
-        Number(sale.total);
-    } else {
-      totalSales.push(sale);
-    }
-  }
-  const totalSalesValues = totalSales.map((sale) => sale.total);
-  return totalSalesValues;
-};
-
-const removeDuplicates = (duplicates: any[]) => {
-  return duplicates.filter((item, index) => duplicates.indexOf(item) === index);
 };
 const fetchAgent = async (options = {}) => {
   fetching.value = true;
@@ -336,68 +224,6 @@ const fetchAgent = async (options = {}) => {
   );
   fetching.value = false;
 };
-const fetchAgentSalesSummary = async () => {
-  try {
-    const agentsStore = useAgentsStore();
-    fetching.value = true;
-    const summary = await agentsStore.fetchAgentSalesSummary({
-      ...searchFilters.value,
-    });
-    if (summary) {
-      const days = summary.map((s: any) => s.dayname);
-      const weeks = summary.map((s: any) => `Week ${s.week_of_month}`);
-      const months = summary.map((s: any) => s.monthname);
-      const years = summary.map((s: any) => s.year);
-      const totalSales = summary.map((s: any) => s.total);
-
-      const difference = getDateDifference(
-        searchFilters.value.start_dt,
-        searchFilters.value.end_dt
-      );
-
-      switch (searchFilters.value.period) {
-        case "thisweek":
-        case "lastweek":
-          barOption.value.xAxis.data = days;
-          barOption.value.series[0].data = totalSales;
-          break;
-        case "thismonth":
-        case "lastmonth":
-          barOption.value.xAxis.data = weeks;
-          barOption.value.series[0].data = totalSales;
-          break;
-        case "thisyear":
-        case "lastyear":
-          barOption.value.xAxis.data = months;
-          barOption.value.series[0].data = totalSales;
-          break;
-        case "custom":
-          switch (true) {
-            case difference <= 14:
-              barOption.value.xAxis.data = days;
-              barOption.value.series[0].data = totalSales;
-              break;
-            case difference > 14 && difference < 32:
-              barOption.value.xAxis.data = weeks;
-              barOption.value.series[0].data = totalSales;
-              break;
-            case difference > 31 && difference <= 365:
-              barOption.value.xAxis.data = months;
-              barOption.value.series[0].data = totalSales;
-              break;
-            case difference > 365:
-              barOption.value.xAxis.data = removeDuplicates(years);
-              barOption.value.series[0].data = getTotalYearSales(summary);
-              break;
-          }
-      }
-    }
-  } catch (error) {
-  } finally {
-    fetching.value = false;
-  }
-};
-
 onMounted(() => {
   onSegmentChanged(new CustomEvent("load", { detail: { value: "thisweek" } }));
 });

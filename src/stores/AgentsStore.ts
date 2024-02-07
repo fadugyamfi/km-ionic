@@ -141,22 +141,5 @@ export const useAgentsStore = defineStore("agents", {
           return [];
         });
     },
-    async fetchAgentSalesSummary(options: {}) {
-      const userStore = useUserStore();
-      const params = {
-        cms_users_id: userStore.user?.id,
-        ...options,
-      };
-      return axios
-        .get("v2/sales/summary", { params })
-        .then((response) => {
-          return response.data.data;
-        })
-        .catch((error) => {
-          handleAxiosRequestError(error);
-
-          return null;
-        });
-    },
   },
 });
