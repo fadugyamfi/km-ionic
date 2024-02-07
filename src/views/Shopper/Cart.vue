@@ -5,5 +5,8 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * @deprecated DELETE THIS FILE
+ */
 import { IonPage, IonRouterOutlet } from '@ionic/vue';
 </script>

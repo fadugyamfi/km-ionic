@@ -7,62 +7,37 @@
 
       <PromoSpace></PromoSpace>
 
-      <Promotions
-        v-for="promotion in promotions"
-        :key="promotion.id"
-        :promotion="promotion"
-      ></Promotions>
+      <Promotions></Promotions>
 
       <TopCategories></TopCategories>
 
       <!-- <TopBrands></TopBrands> -->
 
+      <!-- <SuppliersNearYou></SuppliersNearYou> -->
+
       <RecentlyViewedProducts ></RecentlyViewedProducts>
 
       <TrendingProducts ></TrendingProducts>
 
-      <!-- <SuppliersNearYou></SuppliersNearYou> -->
 
-      <!-- <section class="shopper-home-section">
-        <ModeToggleCard></ModeToggleCard>
-      </section> -->
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent, onIonViewDidEnter } from "@ionic/vue";
-import { onMounted, ref } from "vue";
+import { IonPage, IonContent } from "@ionic/vue";
 import ShopperHeader from "@/components/layout/ShopperHeader.vue";
-import SuppliersNearYou from "@/views/Shopper/Home/SuppliersNearYou.vue";
-import ModeToggleCard from "@/components/cards/ModeToggleCard.vue";
-import Promotions from "./Promotions.vue";
 import TopCategories from "./TopCategories.vue";
-import TopBrands from "./TopBrands.vue";
-import RecentlyViewedProducts from "./RecentlyViewedProducts.vue";
 import CategoryPills from "./CategoryPills.vue";
 import PromoSpace from "./PromoSpace.vue";
-import Promotion from "@/models/Promotion";
-import { usePromotionStore } from "@/stores/PromotionStore";
-import TrendingProducts from "./TrendingProducts.vue";
+import { defineAsyncComponent } from "vue";
 
-const promotions = ref<Promotion[]>([]);
-const viewLoaded = ref(false);
-const showTrending = ref(false);
-
-onMounted(() => {
-  setTimeout(() => showTrending.value = true, 2000);
-})
-
-const fetchPromotions = async () => {
-  const promotionStore = usePromotionStore();
-  promotions.value = await promotionStore.getPromotions();
-};
-
-onIonViewDidEnter(() => {
-  viewLoaded.value = true;
-  fetchPromotions();
-})
+// code split
+// const SuppliersNearYou = defineAsyncComponent(() => import("@/views/Shopper/Home/SuppliersNearYou.vue"));
+// const TopBrands = defineAsyncComponent(() => import("./TopBrands.vue"));
+const RecentlyViewedProducts = defineAsyncComponent(() => import("./RecentlyViewedProducts.vue"));
+const TrendingProducts = defineAsyncComponent(() => import("./TrendingProducts.vue"));
+const Promotions = defineAsyncComponent(() => import("./Promotions.vue"))
 
 </script>
 

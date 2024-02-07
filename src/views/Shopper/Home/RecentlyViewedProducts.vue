@@ -29,7 +29,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import { IonText } from '@ionic/vue';
 import ProductCard from '@/components/cards/ProductCard.vue';
 import AppStorage from '@/stores/AppStorage';
-import ProductsLoadingSkeletons from '../../../components/layout/ProductsLoadingSkeletons.vue';
+import ProductsLoadingSkeletons from '@/components/layout/ProductsLoadingSkeletons.vue';
 
 const storage = new AppStorage();
 const RECENTLY_VIEWED = 'kola.recently-viewed';
