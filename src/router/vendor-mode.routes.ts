@@ -36,6 +36,7 @@ export const VendorModeRoutes = [
       },
       {
         path: "home",
+        name: 'VendorHome',
         component: () => import("@/views/Vendor/Home/Home.vue"),
       },
 

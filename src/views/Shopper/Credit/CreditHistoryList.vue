@@ -37,21 +37,21 @@
     </IonHeader>
 
     <ion-content>
-      <PlacedCreditSummary></PlacedCreditSummary>
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <section v-if="!fetching">
         <EmptyCredit v-if="credits?.length == 0"></EmptyCredit>
-
-        <PlacedCreditHistoryItem
-          @click="viewDetails(credit)"
-          v-for="credit in credits"
-          :key="credit?.id"
-          :credit="credit"
-        >
-        </PlacedCreditHistoryItem>
-
+        <PlacedCreditSummary></PlacedCreditSummary>
+        <section class="ion-margin-top">
+          <PlacedCreditHistoryItem
+            @click="viewDetails(credit)"
+            v-for="credit in credits"
+            :key="credit?.id"
+            :credit="credit"
+          >
+          </PlacedCreditHistoryItem>
+        </section>
         <FilterCreditSheet
           :isOpen="showFilterSheet"
           @didDismiss="showFilterSheet = false"

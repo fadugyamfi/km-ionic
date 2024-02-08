@@ -35,7 +35,7 @@
         <section>
           <PlacedCreditDetails :credit="credit"></PlacedCreditDetails>
           <section class="ion-padding-horizontal update-button-section">
-            <KolaYellowButton @click="recordRepayment">
+            <KolaYellowButton @click="makePayment" disabled>
               {{ "Pay credit due" }}
             </KolaYellowButton>
             <p class="font-medium d-flex flex-column">
@@ -180,8 +180,8 @@ export default defineComponent({
         this.loading = false;
       }
     },
-    recordRepayment() {
-      this.$router.push(`/vendor/credits/${this.credit?.id}/record-repayment`);
+    makePayment() {
+      this.$router.push(`/shopper/credits/${this.credit?.id}/payment`);
     },
   },
 });
