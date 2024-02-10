@@ -12,9 +12,7 @@
             {{ $t("profile.stock.productDetail") }}
           </IonTitle>
           <IonButtons slot="end">
-            <IonButton slot="icon-only">
-              <IonIcon :icon="shareOutline"></IonIcon>
-            </IonButton>
+            <ShareButton :title="product?.product_name || ''"></ShareButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -27,11 +25,11 @@
         <IonSpinner name="crescent"></IonSpinner>
       </section>
       <section v-if="!fetching">
-        <Image :src="product?.image" style="height: 250px;" w="150"></Image>
+        <Image :src="product?.image" style="height: 250px" w="150"></Image>
         <StockInfo :product="product" />
         <section class="ion-padding-vertical">
           <KolaYellowButton @click="showFilterSheet = true">
-            {{ $t('profile.stock.updateStock') }}
+            {{ $t("profile.stock.updateStock") }}
           </KolaYellowButton>
         </section>
       </section>
@@ -85,6 +83,7 @@ import StockInfo from "@/components/modules/stock/StockInfo.vue";
 import { useStockStore } from "@/stores/StockStore";
 import Stock from "@/models/Stock";
 import { useToastStore } from "@/stores/ToastStore";
+import ShareButton from "@/components/buttons/ShareButton.vue"
 
 export default defineComponent({
   components: {
@@ -113,6 +112,7 @@ export default defineComponent({
     Image,
     StockUpdateSheet,
     StockInfo,
+    ShareButton
   },
 
   name: "OrderDetails",

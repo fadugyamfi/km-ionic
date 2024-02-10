@@ -10,9 +10,7 @@
             {{ $t("vendor.credit.creditOrder") }} - #{{ credit?.id }}
           </IonTitle>
           <IonButtons slot="end">
-            <IonButton>
-              <IonIcon :icon="shareOutline"></IonIcon>
-            </IonButton>
+            <ShareButton :title="`Credit Order - #${credit?.id}`"></ShareButton>
             <IonButton>
               <IonIcon :icon="chatbubbleOutline"></IonIcon>
             </IonButton>
@@ -114,6 +112,7 @@ import Credit from "@/models/Credit";
 import { useCreditStore } from "@/stores/CreditStore";
 import filters from "@/utilities/Filters";
 import { SalePayment } from "@/models/SalePayment";
+import ShareButton from "@/components/buttons/ShareButton.vue";
 
 export default defineComponent({
   components: {
@@ -143,6 +142,7 @@ export default defineComponent({
     ReceivedCreditStatistics,
     IonChip,
     IonText,
+    ShareButton,
   },
 
   name: "CreditDetails",
