@@ -23,7 +23,6 @@ const props = defineProps({
 const shareUrl = computed(() => `https://m.kola.market${route.fullPath}`);
 
 const share = async () => {
-  console.log(props.title);
   if (Capacitor.isNativePlatform()) {
     const userStore = useUserStore();
     await Share.share({

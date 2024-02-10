@@ -41,8 +41,8 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <section v-if="!fetching">
-        <EmptyCredit v-if="credits?.length == 0"></EmptyCredit>
         <PlacedCreditSummary></PlacedCreditSummary>
+        <EmptyCredit v-if="credits?.length == 0"></EmptyCredit>
         <section class="ion-margin-top">
           <PlacedCreditHistoryItem
             @click="viewDetails(credit)"
