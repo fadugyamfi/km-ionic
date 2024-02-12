@@ -32,13 +32,11 @@ const share = async () => {
       url: shareUrl.value,
     });
   } else {
-    if (navigator.canShare()) {
-      navigator.share({
-        title: `${props.title} | Kola Market`,
-        text: `${props.title} | Kola Market`,
-        url: shareUrl.value,
-      });
-    }
+    navigator.share({
+      title: `${props.title} | Kola Market`,
+      text: `${props.title} | Kola Market`,
+      url: shareUrl.value,
+    });
   }
 };
 </script>
