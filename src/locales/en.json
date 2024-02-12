@@ -296,6 +296,7 @@
       "location": {
         "useCurrentLocation": "Use Current Location"
       },
+      "idCardNumber": "ID Card Number",
       "fullName": "Owner's Full Name",
       "businessOwnerPhone": "Business Owner Phone Number",
       "businessName": "Business Name",
