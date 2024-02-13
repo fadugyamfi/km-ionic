@@ -169,6 +169,14 @@ export const SaleAgentRoutes = [
         path: "leaderboard",
         component: () => import("@/views/SaleAgent/Leaderboard.vue"),
       },
+      {
+        path: "request",
+        component: () => import("@/views/SaleAgent/Request/Request.vue"),
+      },
+      {
+        path: "request/:id",
+        component: () => import("@/views/SaleAgent/Request/RequestDetails.vue"),
+    },
     ],
   },
 ];

@@ -356,7 +356,10 @@
       "requests": "Requests",
       "leaderboard": "Leaderboard",
       "agentSaleReport": "Agent sales report",
-      "filterAgent": "Filter agents sales report"
+      "filterAgent": "Filter agents sales report",
+      "approve": "Approve",
+      "decline": "Decline",
+      "agentRequest": "Agent Request"
     },
     "editProfile": "Edit Profile",
 
