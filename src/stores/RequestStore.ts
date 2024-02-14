@@ -1,57 +1,39 @@
 import { defineStore } from "pinia";
 import { useToastStore } from "./ToastStore";
-import AgentRequests from "@/models/AgentRequest";
+import AgentRequest from "@/models/AgentRequest";
 import axios from "axios";
 import { handleAxiosRequestError } from "../utilities";
 
 export const useRequestStore = defineStore("request", {
   state: () => {
     return {
-      agentRequests: [] as AgentRequests[],
+      agentRequests: [] as AgentRequest[],
     };
   },
 
   actions: {
-    async fetchAgentRequests(options = {}) {
+    async fetchAgentRequests(options = {}): Promise<AgentRequest[] | null> {
       try {
         const params = {
           limit: 25,
           ...options,
         };
         const response = await axios.get("/v2/agent-requests", { params });
-
-        if (response.status === 200) {
-          const requestData = response.data.data.data;
-          this.agentRequests = requestData;
-          return this.agentRequests;
-        }
+        const requestData = response.data.data.data.map(
+          (item: AgentRequest) => new AgentRequest(item)
+        );
+        this.agentRequests = requestData;
+        return this.agentRequests;
       } catch (error) {
         handleAxiosRequestError(error);
+        return null;
       }
     },
-    async fetchSingleAgentRequest(
-      agentRequests: AgentRequests,
-      agentRequest_id: any,
-      options: Object
-    ): Promise<AgentRequests | null> {
+    async fetchAgentRequest(request_id: string | number) {
       try {
-        const params = {
-          agentsRequests_id: agentRequests.id,
-          ...options,
-        };
-        const response = await axios.get(
-          `/v2/agent-requests/${agentRequest_id}`,
-          {
-            params,
-          }
-        );
-
-        if (response.status === 200) {
-          const requestData = response.data.data.data;
-          this.agentRequests = requestData;
-          return new AgentRequests(agentRequests);
-        }
-        return null;
+        const response = await axios.get(`/v2/agent-requests/${request_id}`);
+        const request = response.data.data;
+        return request;
       } catch (error) {
         handleAxiosRequestError(error);
         return null;

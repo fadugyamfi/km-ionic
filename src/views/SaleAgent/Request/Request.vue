@@ -50,12 +50,12 @@
         <RequestOrderList :agentRequests="agentRequests"></RequestOrderList>
       </section>
 
-      <FilterOrdersSheet
+      <FilterAgentRequestsSheet
         :isOpen="showFilterSheet"
         @didDismiss="showFilterSheet = false"
         @update="onFilterUpdate($event)"
       >
-      </FilterOrdersSheet>
+      </FilterAgentRequestsSheet>
     </ion-content>
   </ion-page>
 </template>
@@ -82,7 +82,7 @@ import {
 import NotificationButton from "@/components/notifications/NotificationButton.vue";
 import { defineComponent, ref } from "vue";
 import { useRequestStore } from "@/stores/RequestStore";
-import RequestOrderList from "@/components/request/RequestOrderList.vue";
+import RequestOrderList from "@/components/modules/request/RequestOrderList.vue";
 import {
   search,
   arrowBack,
@@ -94,8 +94,9 @@ import {
 import { mapStores } from "pinia";
 import { formatMySQLDateTime, handleAxiosRequestError } from "@/utilities";
 import filters from "@/utilities/Filters";
-import FilterOrdersSheet from "@/components/request/FilterAgentRequestsSheet.vue";
+import FilterAgentRequestsSheet from "@/components/modules/request/FilterAgentRequestsSheet.vue";
 import NoResults from "@/components/layout/NoResults.vue";
+import AgentRequest from "@/models/AgentRequest";
 
 export default defineComponent({
   data() {
@@ -108,7 +109,7 @@ export default defineComponent({
       add,
       fetching: false,
       filters,
-      agentRequests: [] as any[],
+      agentRequests: [] as AgentRequest[] | null,
       showFilterSheet: false,
       searchFilters: {
         start_dt: "",
@@ -133,7 +134,7 @@ export default defineComponent({
     NotificationButton,
     IonButton,
     IonIcon,
-    FilterOrdersSheet,
+    FilterAgentRequestsSheet,
     NoResults,
     IonSpinner,
     IonFab,

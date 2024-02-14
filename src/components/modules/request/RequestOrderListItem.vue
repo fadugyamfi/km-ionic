@@ -47,7 +47,6 @@ import {
 import { PropType, defineComponent } from "vue";
 import Image from "@/components/Image.vue";
 import Filters from "@/utilities/Filters";
-import { OrderItem } from "@/models/OrderItem";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 
 export default defineComponent({
@@ -80,33 +79,6 @@ export default defineComponent({
     return {
       Filters,
     };
-  },
-
-  computed: {
-    showChangeDate() {
-      return false;
-    },
-
-    showChangeAddress() {
-      return false;
-    },
-  },
-
-  methods: {
-    getItemUnit(orderItem: OrderItem) {
-      if (orderItem.product_units_id == 2) {
-        return this.$tc("general.units.piece", orderItem.quantity as number);
-      }
-
-      return this.$tc("general.units.box", orderItem.quantity as number);
-    },
-
-    update() {
-      this.$router.push({
-        name: "OrderUpdate",
-        params: { id: this.order?.id },
-      });
-    },
   },
 });
 </script>

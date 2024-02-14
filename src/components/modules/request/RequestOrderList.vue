@@ -38,7 +38,7 @@ import { Order } from "@/models/Order";
 import { mapStores } from "pinia";
 import filters from "@/utilities/Filters";
 import Image from "@/components/Image.vue";
-import RequestOrderListItem from "@/components/request/RequestOrderListItem.vue";
+import RequestOrderListItem from "@/components/modules/request/RequestOrderListItem.vue";
 import { useToastStore } from "@/stores/ToastStore";
 import { handleAxiosRequestError } from "@/utilities";
 
