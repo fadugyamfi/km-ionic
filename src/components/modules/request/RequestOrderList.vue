@@ -41,11 +41,12 @@ import Image from "@/components/Image.vue";
 import RequestOrderListItem from "@/components/modules/request/RequestOrderListItem.vue";
 import { useToastStore } from "@/stores/ToastStore";
 import { handleAxiosRequestError } from "@/utilities";
+import AgentRequest from "@/models/AgentRequest";
 
 export default defineComponent({
   props: {
     agentRequests: {
-      type: Array as PropType<any[]>,
+      type: Array as PropType<AgentRequest[] | null[]>,
       required: true,
     },
   },

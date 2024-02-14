@@ -42,8 +42,8 @@
       <IonLabel>{{ $t('general.credit') }}</IonLabel>
     </IonTabButton> -->
     <IonTabButton tab="tab4" href="/agent/request">
-      <IonIcon :icon="starOutline"></IonIcon>
-      <IonIcon :icon="star" class="active"></IonIcon>
+      <IonIcon :icon="fileTrayFullOutline" style="height: 25px"></IonIcon>
+      <IonIcon :icon="fileTrayFull" class="active" style="height: 25px"></IonIcon>
       <!-- <IonLabel>{{ $t('agent.requests') }}</IonLabel> -->
       <IonLabel>Requests</IonLabel>
     </IonTabButton>
@@ -69,7 +69,12 @@
 
 <script lang="ts">
 import { IonIcon, IonLabel, IonTabBar, IonTabButton } from "@ionic/vue";
-import { starOutline, star } from "ionicons/icons";
+import {
+  starOutline,
+  star,
+  fileTrayFullOutline,
+  fileTrayFull,
+} from "ionicons/icons";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -79,6 +84,8 @@ export default defineComponent({
     return {
       starOutline,
       star,
+      fileTrayFullOutline,
+      fileTrayFull,
     };
   },
 });

@@ -4,7 +4,7 @@
       <ion-header class="inner-header">
         <ion-toolbar class="ion-align-items-center">
           <ion-buttons slot="start">
-            <ion-back-button defaultHref="/vendor/home"></ion-back-button>
+            <ion-back-button defaultHref="/agent/home"></ion-back-button>
           </ion-buttons>
 
           <IonTitle size="small" class="fw-bold">Requests</IonTitle>
@@ -193,7 +193,7 @@ export default defineComponent({
     },
   },
 
-  mounted() {
+  ionViewDidEnter() {
     this.onSegmentChanged(
       new CustomEvent("load", { detail: { value: "thisweek" } })
     );

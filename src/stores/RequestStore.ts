@@ -1,8 +1,13 @@
 import { defineStore } from "pinia";
-import { useToastStore } from "./ToastStore";
+import { useUserStore } from "./UserStore";
 import AgentRequest from "@/models/AgentRequest";
 import axios from "axios";
 import { handleAxiosRequestError } from "../utilities";
+import { useToastStore } from "./ToastStore";
+import router from "@/router";
+
+const userStore = useUserStore();
+const toastStore = useToastStore();
 
 export const useRequestStore = defineStore("request", {
   state: () => {
@@ -16,6 +21,7 @@ export const useRequestStore = defineStore("request", {
       try {
         const params = {
           limit: 25,
+          // cms_users_id: userStore.user?.id,
           ...options,
         };
         const response = await axios.get("/v2/agent-requests", { params });
@@ -36,6 +42,17 @@ export const useRequestStore = defineStore("request", {
         return request;
       } catch (error) {
         handleAxiosRequestError(error);
+        return null;
+      }
+    },
+    async cancelRequest(request_id: string | number) {
+      try {
+        const response = await axios.delete(`/v2/agent-requests/${request_id}`);
+        toastStore.showSuccess("Request cancelled successfully");
+        return response.data.data;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        toastStore.showError("Failed to cancel request");
         return null;
       }
     },

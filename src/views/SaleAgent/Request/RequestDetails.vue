@@ -40,7 +40,7 @@
                   <span class="fw-semibold">{{
                     request?.sale_agent?.name
                   }}</span>
-                  on {{ Filters.date(request?.created_at, "short") }}
+                  on {{ Filters.date(request?.created_at as string, "short") }}
                 </IonLabel>
               </IonText>
             </IonItem>
@@ -76,7 +76,18 @@
           ></ProductCard>
         </RecycleScroller>
       </section>
+      <ConfirmModal
+        :isOpen="showConfirm"
+        description="Are you sure you want to cancel this request?"
+        @confirm="doConfirm()"
+        @dismiss="showConfirm = false"
+      ></ConfirmModal>
     </ion-content>
+    <ion-footer class="ion-no-border ion-padding">
+      <KolaYellowButton @click="confirmCancel()"
+        >Cancel request</KolaYellowButton
+      >
+    </ion-footer>
   </IonPage>
 </template>
 
@@ -96,6 +107,7 @@ import {
   IonItem,
   IonCard,
   IonCardHeader,
+  IonFooter,
   IonCardTitle,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
@@ -108,12 +120,16 @@ import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import ProductCard from "@/components/cards/ProductCard.vue";
 import { RecycleScroller } from "vue-virtual-scroller";
 import Filters from "@/utilities/Filters";
+import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import ConfirmModal from "@/components/modals/ConfirmModal.vue";
+import AgentRequest from "@/models/AgentRequest";
 
 export default defineComponent({
   data() {
     return {
       loading: false,
-      request: null,
+      request: null as AgentRequest | null,
+      showConfirm: false,
       Filters,
     };
   },
@@ -136,6 +152,9 @@ export default defineComponent({
     ProductCard,
     ProfileAvatar,
     RecycleScroller,
+    IonFooter,
+    KolaYellowButton,
+    ConfirmModal,
   },
 
   computed: {
@@ -162,8 +181,19 @@ export default defineComponent({
         this.loading = false;
       }
     },
+    confirmCancel() {
+      this.showConfirm = true;
+    },
+    async doConfirm() {
+      this.showConfirm = false;
+      const request_id = +this.$route.params.id;
+      const response = await this.requestStore.cancelRequest(request_id);
+      if (response !== null) {
+        this.$router.replace("/agent/request");
+      }
+    },
   },
-  mounted() {
+  ionViewDidEnter() {
     this.fetchAgentRequest();
   },
 });

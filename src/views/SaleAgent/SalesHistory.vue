@@ -4,7 +4,7 @@
             <IonHeader class="inner-header ion-margin-bottom">
                 <IonToolbar>
                     <IonButtons slot="start">
-                        <IonButton router-link="/agent/sales">
+                        <IonButton router-link="/agent/home">
                             <IonIcon :icon="arrowBack"></IonIcon>
                         </IonButton>
                     </IonButtons>
