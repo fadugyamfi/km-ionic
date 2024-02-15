@@ -1,33 +1,24 @@
 <template>
   <IonList lines="full">
-    <RequestOrderListItem
+    <AgentRequestListItem
       v-for="request in agentRequests"
       :key="request?.id"
       :request="request"
       @click="viewDetails(request)"
     >
-    </RequestOrderListItem>
+    </AgentRequestListItem>
   </IonList>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import { IonList } from "@ionic/vue";
-import {
-  chatbubbleOutline,
-  checkmark,
-  closeCircleOutline,
-  ellipsisHorizontal,
-  trashOutline,
-} from "ionicons/icons";
+
 import { useRequestStore } from "@/stores/RequestStore";
-import { Order } from "@/models/Order";
 import { mapStores } from "pinia";
-import filters from "@/utilities/Filters";
 import Image from "@/components/Image.vue";
-import RequestOrderListItem from "@/components/modules/request/RequestOrderListItem.vue";
+import AgentRequestListItem from "@/components/modules/agents/AgentRequestListItem.vue";
 import { useToastStore } from "@/stores/ToastStore";
-import { handleAxiosRequestError } from "@/utilities";
 import AgentRequest from "@/models/AgentRequest";
 
 export default defineComponent({
@@ -41,7 +32,7 @@ export default defineComponent({
   components: {
     IonList,
     Image,
-    RequestOrderListItem,
+    AgentRequestListItem,
   },
 
   computed: {
@@ -50,28 +41,19 @@ export default defineComponent({
 
   data() {
     return {
-      chatbubbleOutline,
-      closeCircleOutline,
-      ellipsisHorizontal,
-      trashOutline,
-      checkmark,
       openPopover: -1,
-      selectedOrder: null as Order | null,
       showConfirmDeleteModal: false,
       showConfirm: false,
-
-      actionOrder: null as Order | null,
-      filters,
     };
   },
 
   methods: {
     viewDetails(request: { id: number }) {
-      this.$router.push(`/agent/request/${request.id}`);
+      this.$router.push(
+        `/profile/company/sale-agents/${request.id}/agent-request`
+      );
     },
   },
 });
 </script>
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

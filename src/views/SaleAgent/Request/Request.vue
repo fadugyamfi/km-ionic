@@ -13,7 +13,6 @@
               <IonIcon :icon="optionsOutline"></IonIcon>
             </IonButton>
 
-            <!-- <NotificationButton /> -->
           </ion-buttons>
         </ion-toolbar>
       </ion-header>

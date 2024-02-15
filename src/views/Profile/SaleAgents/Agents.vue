@@ -20,7 +20,7 @@
               <ion-badge class="badge">{{ agents?.length }}</ion-badge>
             </section></IonTitle
           >
-          <ion-buttons slot="end">
+          <ion-buttons slot="end" v-if="segment !== 'request'">
             <ion-button
               v-if="agents?.length > 0"
               @click="searchEnabled = !searchEnabled"
@@ -28,6 +28,12 @@
             >
               <IonIcon :icon="search"></IonIcon>
             </ion-button>
+          </ion-buttons>
+
+          <ion-buttons slot="end" v-else>
+            <IonButton @click="showFilterSheet = true" color="dark">
+              <IonIcon :icon="optionsOutline"></IonIcon>
+            </IonButton>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
@@ -40,7 +46,7 @@
           <IonSegmentButton value="all">
             <IonLabel>{{ $t("profile.agent.allAgents") }}</IonLabel>
           </IonSegmentButton>
-          <IonSegmentButton disabled value="request">
+          <IonSegmentButton value="request">
             <IonLabel>{{ $t("profile.agent.requests") }}</IonLabel>
           </IonSegmentButton>
           <IonSegmentButton value="leaderboard">
@@ -70,8 +76,18 @@
       </div>
       <section v-show="!fetching">
         <AgentsList v-if="segment == 'all'" :agents="agents" />
+        <AgentRequestList
+          v-if="segment == 'request'"
+          :agentRequests="agentRequests"
+        />
         <LeaderBoard v-if="segment == 'leaderboard'" />
       </section>
+      <FilterAgentRequestsSheet
+        :isOpen="showFilterSheet"
+        @didDismiss="showFilterSheet = false"
+        @update="onFilterUpdate($event)"
+      >
+      </FilterAgentRequestsSheet>
     </ion-content>
   </ion-page>
 </template>
@@ -99,15 +115,25 @@ import {
   IonSegment,
 } from "@ionic/vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
+import {
+  arrowBackOutline,
+  personAddOutline,
+  search,
+  optionsOutline,
+} from "ionicons/icons";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import Business from "@/models/Business";
 import Agent from "@/models/Agent";
 import AgentsList from "@/components/modules/agents/AgentsList.vue";
+import AgentRequestList from "@/components/modules/agents/AgentRequestList.vue";
 import LeaderBoard from "@/components/modules/agents/LeaderBoard.vue";
+import FilterAgentRequestsSheet from "@/components/modules/request/FilterAgentRequestsSheet.vue";
+import AgentRequest from "@/models/AgentRequest";
 import { useRouter } from "vue-router";
 import { useAgentsStore } from "@/stores/AgentsStore";
+import { formatMySQLDateTime, handleAxiosRequestError } from "@/utilities";
+import { useRequestStore } from "@/stores/RequestStore";
 
 const fetching = ref(false);
 const refreshing = ref(false);
@@ -115,6 +141,12 @@ const router = useRouter();
 const searchEnabled = ref(false);
 const agents = ref<Agent[]>([]);
 const segment = ref("all");
+const showFilterSheet = ref(false);
+const agentRequests = ref<AgentRequest[] | null>(null);
+const searchFilters = ref({
+  start_dt: "",
+  end_dt: "",
+});
 
 const handleRefresh = async (event: RefresherCustomEvent) => {
   refreshing.value = true;
@@ -133,7 +165,43 @@ const onSearch = async (event: Event) => {
   refreshing.value = false;
 };
 const onSegmentChanged = (event: CustomEvent) => {
-  segment.value = event.detail.value;
+  const option = event.detail.value;
+  switch (option) {
+    case "all":
+      segment.value = option;
+      fetchAgents();
+      break;
+    case "request":
+      segment.value = option;
+      fetchAgentRequests();
+      break;
+    case "leaderboard":
+      segment.value = option;
+      break;
+
+    default:
+      break;
+  }
+};
+const fetchAgentRequests = async () => {
+  try {
+    fetching.value = true;
+
+    const requestStore = useRequestStore();
+    agentRequests.value = await requestStore.fetchAgentRequests(
+      searchFilters.value
+    );
+  } catch (error) {
+    handleAxiosRequestError(error);
+  } finally {
+    fetching.value = false;
+  }
+};
+const onFilterUpdate = (event: { start_dt: string; end_dt: string }) => {
+  searchFilters.value.start_dt = event.start_dt;
+  searchFilters.value.end_dt =
+    event.end_dt || formatMySQLDateTime(new Date().toISOString());
+  fetchAgentRequests();
 };
 const fetchAgents = async (options = {}) => {
   if (agents.value?.length == 0) {
@@ -152,7 +220,7 @@ const fetchAgents = async (options = {}) => {
 };
 
 onMounted(() => {
-  fetchAgents();
+  onSegmentChanged(new CustomEvent("load", { detail: { value: "all" } }));
 });
 </script>
 
