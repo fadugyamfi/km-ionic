@@ -48,6 +48,11 @@
 
         <RequestOrderList :agentRequests="agentRequests"></RequestOrderList>
       </section>
+      <IonFab slot="fixed" vertical="bottom" horizontal="end">
+        <IonFabButton @click="onRaiseRequest()">
+          <IonIcon :icon="add"></IonIcon>
+        </IonFabButton>
+      </IonFab>
 
       <FilterAgentRequestsSheet
         :isOpen="showFilterSheet"
@@ -183,7 +188,10 @@ export default defineComponent({
 
       this.fetchAgentRequests();
     },
-
+    onRaiseRequest() {
+      this.requestStore.resetForNewRequest();
+      this.$router.push("/agent/request/place-request/select-customer");
+    },
     onFilterUpdate(event: { start_dt: string; end_dt: string }) {
       this.searchFilters.start_dt = event.start_dt;
       this.searchFilters.end_dt =
