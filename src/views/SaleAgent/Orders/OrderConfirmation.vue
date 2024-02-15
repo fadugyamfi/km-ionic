@@ -10,7 +10,10 @@
               mode="md"
             ></IonBackButton>
           </IonButtons>
-          <IonTitle size="small"
+          <IonTitle size="small" v-if="$route.fullPath.includes('request')"
+            ><b>Request Confirmation</b></IonTitle
+          >
+          <IonTitle size="small" v-else
             ><b>{{ $t("vendor.orders.orderConfirmation") }}</b></IonTitle
           >
           <!-- <IonButtons slot="end">
@@ -29,12 +32,24 @@
             <IonImg
               :src="'/images/vendor/sale-confirmation-smiley.svg'"
             ></IonImg>
-            <IonLabel class="fw-bold">
+            <IonLabel
+              class="fw-bold"
+              v-if="$route.fullPath.includes('request')"
+            >
+              Request has been recorded successfully!
+            </IonLabel>
+            <IonLabel class="fw-bold" v-else>
               {{ $t("vendor.orders.orderHasBeenPlaced") }}
             </IonLabel>
           </section>
 
-          <KolaYellowButton @click="onAddNewOrder()">
+          <KolaYellowButton
+            @click="onAddNewOrder()"
+            v-if="$route.fullPath.includes('request')"
+          >
+            Record new request
+          </KolaYellowButton>
+          <KolaYellowButton @click="onAddNewOrder()" v-else>
             {{ $t("shopper.cart.placeNewOrder") }}
           </KolaYellowButton>
 
@@ -107,6 +122,8 @@ export default defineComponent({
       this.orderStore.resetForNewOrder();
       if (this.userStore.user?.isSalesAssociate()) {
         this.$router.replace("/agent/orders/place-order/select-customer");
+      } else if (this.$route.fullPath.includes("request")) {
+        this.$router.replace("/agent/request/place-request/select-customer");
       } else {
         this.$router.replace("/vendor/orders/record-order/select-agent");
       }
@@ -116,6 +133,8 @@ export default defineComponent({
       this.orderStore.resetForNewOrder();
       if (this.userStore.user?.isSalesAssociate()) {
         this.$router.replace("/agent/orders");
+      } else if (this.$route.fullPath.includes("request")) {
+        this.$router.replace("/agent/request");
       } else {
         this.$router.replace("/vendor/orders");
       }
