@@ -1,7 +1,6 @@
 <template>
   <IonList lines="full">
-    <EmptyRequest v-if="request?.value?.length < 1"></EmptyRequest>
-
+    <NoResults v-if="agentRequests?.length == 0"></NoResults>
     <AgentRequestListItem
       v-else
       v-for="request in agentRequests"
@@ -23,12 +22,13 @@ import Image from "@/components/Image.vue";
 import AgentRequestListItem from "@/components/modules/agents/AgentRequestListItem.vue";
 import { useToastStore } from "@/stores/ToastStore";
 import AgentRequest from "@/models/AgentRequest";
-import EmptyRequest from "@/components/modules/agents/EmptyRequest.vue";
+import NoResults from "@/components/layout/NoResults.vue";
+import { useUserStore } from "@/stores/UserStore";
 
 export default defineComponent({
   props: {
     agentRequests: {
-      type: Array as PropType<AgentRequest[] | null[]>,
+      type: Array as PropType<AgentRequest[] | null>,
       required: true,
     },
   },
@@ -37,11 +37,11 @@ export default defineComponent({
     IonList,
     Image,
     AgentRequestListItem,
-    EmptyRequest,
+    NoResults,
   },
 
   computed: {
-    ...mapStores(useRequestStore, useToastStore),
+    ...mapStores(useRequestStore, useToastStore, useUserStore),
   },
 
   data() {
@@ -53,7 +53,11 @@ export default defineComponent({
   },
 
   methods: {
-    viewDetails(request: { id: number }) {
+    viewDetails(request: AgentRequest) {
+      if (this.userStore.user?.isSalesAssociate()) {
+        this.$router.push(`/agent/request/${request.id}/details`);
+        return;
+      }
       this.$router.push(
         `/profile/company/sale-agents/${request.id}/agent-request`
       );

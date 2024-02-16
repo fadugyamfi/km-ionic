@@ -113,6 +113,7 @@ import {
   IonList,
   IonSegmentButton,
   IonSegment,
+  onIonViewDidEnter,
 } from "@ionic/vue";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import {
@@ -122,27 +123,25 @@ import {
   optionsOutline,
 } from "ionicons/icons";
 import { useUserStore } from "@/stores/UserStore";
-import { useBusinessStore } from "@/stores/BusinessStore";
 import Business from "@/models/Business";
 import Agent from "@/models/Agent";
 import AgentsList from "@/components/modules/agents/AgentsList.vue";
 import AgentRequestList from "@/components/modules/agents/AgentRequestList.vue";
 import LeaderBoard from "@/components/modules/agents/LeaderBoard.vue";
-import FilterAgentRequestsSheet from "@/components/modules/request/FilterAgentRequestsSheet.vue";
+import FilterAgentRequestsSheet from "@/components/modules/agents/FilterAgentRequestsSheet.vue";
 import AgentRequest from "@/models/AgentRequest";
-import { useRouter } from "vue-router";
 import { useAgentsStore } from "@/stores/AgentsStore";
 import { formatMySQLDateTime, handleAxiosRequestError } from "@/utilities";
 import { useRequestStore } from "@/stores/RequestStore";
 
 const fetching = ref(false);
 const refreshing = ref(false);
-const router = useRouter();
 const searchEnabled = ref(false);
 const agents = ref<Agent[]>([]);
 const segment = ref("all");
 const showFilterSheet = ref(false);
-const agentRequests = ref<AgentRequest[] | null>(null);
+const agentRequests = ref<AgentRequest[] | null>([]);
+
 const searchFilters = ref({
   start_dt: "",
   end_dt: "",
@@ -219,7 +218,7 @@ const fetchAgents = async (options = {}) => {
   fetching.value = false;
 };
 
-onMounted(() => {
+onIonViewDidEnter(() => {
   onSegmentChanged(new CustomEvent("load", { detail: { value: "all" } }));
 });
 </script>

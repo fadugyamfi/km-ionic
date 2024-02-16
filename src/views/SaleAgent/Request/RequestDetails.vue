@@ -6,9 +6,7 @@
           <IonButtons slot="start">
             <IonBackButton defaultHref="/agent/request"></IonBackButton>
           </IonButtons>
-          <IonTitle size="small" class="fw-bold">
-            {{ $t("profile.agent.agentRequest") }}
-          </IonTitle>
+          <IonTitle size="small" class="fw-bold"> Request Details </IonTitle>
         </IonToolbar>
       </IonHeader>
     </section>

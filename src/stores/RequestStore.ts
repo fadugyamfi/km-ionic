@@ -188,7 +188,7 @@ export const useRequestStore = defineStore("request", {
       try {
         const params = {
           limit: 25,
-          // cms_users_id: userStore.user?.id,
+          cms_users_id: userStore.user?.id,
           ...options,
         };
         const response = await axios.get("/v2/agent-requests", { params });
@@ -225,10 +225,13 @@ export const useRequestStore = defineStore("request", {
     },
     async approveRequest(request_id: string | number) {
       try {
-        const response = await axios.put(`/v2/agent-requests/${request_id}/approve`);
+        const response = await axios.put(
+          `/v2/agent-requests/${request_id}/approve`
+        );
         toastStore.showSuccess("Request approved successfully");
         return response.data.data;
       } catch (error) {
+        console.log(error);
         handleAxiosRequestError(error);
         toastStore.showError("Failed to approve request");
         return null;
@@ -236,7 +239,10 @@ export const useRequestStore = defineStore("request", {
     },
     async declineRequest(request_id: string | number) {
       try {
-        const response = await axios.put(`/v2/agent-requests/${request_id}/reject`);
+        const response = await axios.put(
+          `/v2/agent-requests/${request_id}/reject`
+        );
+        console.log(response);
         toastStore.showSuccess("Request declined successfully");
         return response.data.data;
       } catch (error) {

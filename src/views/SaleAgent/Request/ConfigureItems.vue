@@ -228,11 +228,7 @@ export default defineComponent({
           );
           return;
         }
-        // if (userStore.user?.isSalesAssociate()) {
-        //   this.$router.push("/agent/orders/place-order/order-confirmation");
-        // } else {
-        //   this.$router.push("/vendor/orders/record-order/order-confirmation");
-        // }
+        this.$router.push("/agent/request/place-request/order-confirmation");
       } catch (error) {
         console.log(error);
         handleAxiosRequestError(error);

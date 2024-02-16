@@ -80,14 +80,14 @@
       </section>
       <ConfirmModal
         :isOpen="showConfirm"
-        description="Are you sure you want to approve this request?"
-        @confirm="doConfirmApproval()"
+        description="Are you sure you want to decline this request?"
+        @confirm="doConfirmDecline()"
         @dismiss="showConfirm = false"
       ></ConfirmModal>
     </ion-content>
     <ion-footer class="ion-no-border ion-padding">
-      <KolaYellowButton @click="confirmApproval()">Approve</KolaYellowButton>
-      <KolaWhiteButton @click="doConfirmDecline()">Decline</KolaWhiteButton>
+      <KolaYellowButton @click="approve()">Approve</KolaYellowButton>
+      <KolaWhiteButton @click="confirmDecline()">Decline</KolaWhiteButton>
     </ion-footer>
   </IonPage>
 </template>
@@ -184,15 +184,15 @@ export default defineComponent({
         this.loading = false;
       }
     },
-    confirmApproval() {
+    confirmDecline() {
       this.showConfirm = true;
     },
-    async doConfirmApproval() {
+    async approve() {
       this.showConfirm = false;
       const request_id = +this.$route.params.id;
       const response = await this.requestStore.approveRequest(request_id);
       if (response !== null) {
-        this.$router.replace("profile/company/sale-agents");
+        this.$router.replace("/profile/company/sale-agents");
       }
     },
     async doConfirmDecline() {
@@ -200,7 +200,7 @@ export default defineComponent({
       const request_id = +this.$route.params.id;
       const response = await this.requestStore.declineRequest(request_id);
       if (response !== null) {
-        this.$router.replace("profile/company/sale-agents");
+        this.$router.replace("/profile/company/sale-agents");
       }
     },
   },

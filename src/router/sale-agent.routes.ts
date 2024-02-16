@@ -171,10 +171,10 @@ export const SaleAgentRoutes = [
       },
       {
         path: "request",
-        component: () => import("@/views/SaleAgent/Request/Request.vue"),
+        component: () => import("@/views/SaleAgent/Request/RequestHistory.vue"),
       },
       {
-        path: "request/:id/",
+        path: "request/:id/details",
         component: () => import("@/views/SaleAgent/Request/RequestDetails.vue"),
       },
       {

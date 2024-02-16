@@ -12,7 +12,6 @@
             <IonButton @click="showFilterSheet = true" color="dark">
               <IonIcon :icon="optionsOutline"></IonIcon>
             </IonButton>
-
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
@@ -44,9 +43,7 @@
       </div>
 
       <section v-show="!fetching">
-        <NoResults v-if="agentRequests?.length == 0"></NoResults>
-
-        <RequestOrderList :agentRequests="agentRequests"></RequestOrderList>
+        <AgentRequestList :agentRequests="agentRequests"></AgentRequestList>
       </section>
       <IonFab slot="fixed" vertical="bottom" horizontal="end">
         <IonFabButton @click="onRaiseRequest()">
@@ -86,7 +83,7 @@ import {
 import NotificationButton from "@/components/notifications/NotificationButton.vue";
 import { defineComponent, ref } from "vue";
 import { useRequestStore } from "@/stores/RequestStore";
-import RequestOrderList from "@/components/modules/request/RequestOrderList.vue";
+import AgentRequestList from "@/components/modules/agents/AgentRequestList.vue";
 import {
   search,
   arrowBack,
@@ -98,7 +95,7 @@ import {
 import { mapStores } from "pinia";
 import { formatMySQLDateTime, handleAxiosRequestError } from "@/utilities";
 import filters from "@/utilities/Filters";
-import FilterAgentRequestsSheet from "@/components/modules/request/FilterAgentRequestsSheet.vue";
+import FilterAgentRequestsSheet from "@/components/modules/agents/FilterAgentRequestsSheet.vue";
 import NoResults from "@/components/layout/NoResults.vue";
 import AgentRequest from "@/models/AgentRequest";
 
@@ -134,7 +131,7 @@ export default defineComponent({
     IonBackButton,
     IonBadge,
     IonTitle,
-    RequestOrderList,
+    AgentRequestList,
     NotificationButton,
     IonButton,
     IonIcon,
