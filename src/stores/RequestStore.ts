@@ -223,6 +223,28 @@ export const useRequestStore = defineStore("request", {
         return null;
       }
     },
+    async approveRequest(request_id: string | number) {
+      try {
+        const response = await axios.put(`/v2/agent-requests/${request_id}/approve`);
+        toastStore.showSuccess("Request approved successfully");
+        return response.data.data;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        toastStore.showError("Failed to approve request");
+        return null;
+      }
+    },
+    async declineRequest(request_id: string | number) {
+      try {
+        const response = await axios.put(`/v2/agent-requests/${request_id}/reject`);
+        toastStore.showSuccess("Request declined successfully");
+        return response.data.data;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        toastStore.showError("Failed to decline request");
+        return null;
+      }
+    },
     async recordRequest(): Promise<AgentRequest | null> {
       const location = useGeolocation();
       const coordinates = await location.getCurrentLocation();

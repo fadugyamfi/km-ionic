@@ -1,6 +1,9 @@
 <template>
   <IonList lines="full">
+    <EmptyRequest v-if="request?.value?.length < 1"></EmptyRequest>
+
     <AgentRequestListItem
+      v-else
       v-for="request in agentRequests"
       :key="request?.id"
       :request="request"
@@ -20,6 +23,7 @@ import Image from "@/components/Image.vue";
 import AgentRequestListItem from "@/components/modules/agents/AgentRequestListItem.vue";
 import { useToastStore } from "@/stores/ToastStore";
 import AgentRequest from "@/models/AgentRequest";
+import EmptyRequest from "@/components/modules/agents/EmptyRequest.vue";
 
 export default defineComponent({
   props: {
@@ -33,6 +37,7 @@ export default defineComponent({
     IonList,
     Image,
     AgentRequestListItem,
+    EmptyRequest,
   },
 
   computed: {
