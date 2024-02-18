@@ -17,6 +17,7 @@ export default class AgentRequest {
   public cms_users_id?: string | number;
   public total_items?: number;
   public uuid?: string;
+  public approved_by?: number;
 
   constructor(data: Object) {
     this.update(data);

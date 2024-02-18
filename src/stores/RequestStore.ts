@@ -35,6 +35,8 @@ export const useRequestStore = defineStore("request", {
       selectedCustomer: null as Business | null,
       recordedRequests: [] as AgentRequest[],
       requestSyncTimer: null as any,
+      approving: false,
+      declining: false,
     };
   },
 
@@ -188,7 +190,6 @@ export const useRequestStore = defineStore("request", {
       try {
         const params = {
           limit: 25,
-          cms_users_id: userStore.user?.id,
           ...options,
         };
         const response = await axios.get("/v2/agent-requests", { params });
@@ -223,10 +224,15 @@ export const useRequestStore = defineStore("request", {
         return null;
       }
     },
-    async approveRequest(request_id: string | number) {
+    async approveRequest(
+      request_id: string | number,
+      form: { approved_by: number | string; approved_at: string }
+    ) {
       try {
+        this.approving = true;
         const response = await axios.put(
-          `/v2/agent-requests/${request_id}/approve`
+          `/v2/agent-requests/${request_id}/approve`,
+          form
         );
         toastStore.showSuccess("Request approved successfully");
         return response.data.data;
@@ -235,20 +241,28 @@ export const useRequestStore = defineStore("request", {
         handleAxiosRequestError(error);
         toastStore.showError("Failed to approve request");
         return null;
+      } finally {
+        this.approving = false;
       }
     },
     async declineRequest(request_id: string | number) {
       try {
+        this.declining = true;
         const response = await axios.put(
           `/v2/agent-requests/${request_id}/reject`
         );
         console.log(response);
         toastStore.showSuccess("Request declined successfully");
+        this.agentRequests = this.agentRequests.filter(
+          (item) => item.id !== response.data.data.id
+        );
         return response.data.data;
       } catch (error) {
         handleAxiosRequestError(error);
         toastStore.showError("Failed to decline request");
         return null;
+      } finally {
+        this.declining = false;
       }
     },
     async recordRequest(): Promise<AgentRequest | null> {
