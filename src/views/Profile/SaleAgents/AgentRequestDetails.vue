@@ -80,14 +80,23 @@
       </section>
       <ConfirmModal
         :isOpen="showConfirm"
-        description="Are you sure you want to decline this request?"
-        @confirm="doConfirmDecline()"
+        :description="confirmDescription"
+        @confirm="doConfirm()"
         @dismiss="showConfirm = false"
       ></ConfirmModal>
     </ion-content>
-    <ion-footer class="ion-no-border ion-padding">
-      <KolaYellowButton @click="approve()">Approve</KolaYellowButton>
-      <KolaWhiteButton @click="confirmDecline()">Decline</KolaWhiteButton>
+    <ion-footer
+      class="ion-no-border ion-padding"
+      v-if="!canApprove && !loading"
+    >
+      <KolaYellowButton @click="confirmApproval()">
+        <IonSpinner v-if="requestStore?.approving" name="crescent"></IonSpinner>
+        <IonText>{{ "Approve" }}</IonText></KolaYellowButton
+      >
+      <KolaWhiteButton @click="confirmDecline()">
+        <IonSpinner v-if="requestStore?.declining" name="crescent"></IonSpinner>
+        <IonText>{{ "Decline" }}</IonText></KolaWhiteButton
+      >
     </ion-footer>
   </IonPage>
 </template>
@@ -125,13 +134,16 @@ import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import ConfirmModal from "@/components/modals/ConfirmModal.vue";
 import AgentRequest from "@/models/AgentRequest";
+import { formatMySQLDateTime } from "@/utilities";
 
 export default defineComponent({
   data() {
     return {
-      loading: false,
+      loading: true,
       request: null as AgentRequest | null,
       showConfirm: false,
+      confirmAction: "",
+      confirmDescription: "",
       Filters,
     };
   },
@@ -165,6 +177,9 @@ export default defineComponent({
     cardWidth() {
       return window.document.documentElement.clientWidth / 2;
     },
+    canApprove() {
+      return this.request?.approved_by;
+    },
   },
 
   methods: {
@@ -185,22 +200,48 @@ export default defineComponent({
       }
     },
     confirmDecline() {
+      this.confirmDescription =
+        "Are you sure you want to decline this request?";
+      this.confirmAction = "decline";
       this.showConfirm = true;
     },
-    async approve() {
+    confirmApproval() {
+      this.confirmDescription =
+        "Are you sure you want to approve this request?";
+      this.confirmAction = "approve";
+      this.showConfirm = true;
+    },
+
+    doConfirm() {
       this.showConfirm = false;
-      const request_id = +this.$route.params.id;
-      const response = await this.requestStore.approveRequest(request_id);
-      if (response !== null) {
-        this.$router.replace("/profile/company/sale-agents");
+      if (this.confirmAction == "approve") {
+        this.approve();
+      } else {
+        this.doConfirmDecline();
       }
     },
+    async approve() {
+      const request_id = +this.$route.params.id;
+      const response = await this.requestStore.approveRequest(request_id, {
+        approved_by: this.userStore.user?.id || "",
+        approved_at: formatMySQLDateTime(new Date().toISOString()),
+      });
+      if (response !== null) {
+        setTimeout(
+          () => this.$router.replace("/profile/company/sale-agents"),
+          2000
+        );
+      }
+    },
+
     async doConfirmDecline() {
-      this.showConfirm = false;
       const request_id = +this.$route.params.id;
       const response = await this.requestStore.declineRequest(request_id);
       if (response !== null) {
-        this.$router.replace("/profile/company/sale-agents");
+        setTimeout(
+          () => this.$router.replace("/profile/company/sale-agents"),
+          2000
+        );
       }
     },
   },

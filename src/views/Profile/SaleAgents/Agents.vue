@@ -39,7 +39,7 @@
       </ion-header>
       <IonToolbar>
         <IonSegment
-          value="all"
+          :value="segment"
           mode="ios"
           @ionChange="onSegmentChanged($event)"
         >
@@ -140,7 +140,7 @@ const searchEnabled = ref(false);
 const agents = ref<Agent[]>([]);
 const segment = ref("all");
 const showFilterSheet = ref(false);
-const agentRequests = ref<AgentRequest[] | null>([]);
+const agentRequests = computed(() => useRequestStore().agentRequests);
 
 const searchFilters = ref({
   start_dt: "",
@@ -164,6 +164,8 @@ const onSearch = async (event: Event) => {
   refreshing.value = false;
 };
 const onSegmentChanged = (event: CustomEvent) => {
+  let start_dt = new Date();
+  let end_dt = new Date();
   const option = event.detail.value;
   switch (option) {
     case "all":
@@ -171,6 +173,11 @@ const onSegmentChanged = (event: CustomEvent) => {
       fetchAgents();
       break;
     case "request":
+      start_dt.setDate(start_dt.getDate() - 7);
+      searchFilters.value.start_dt = formatMySQLDateTime(
+        start_dt.toISOString()
+      );
+      searchFilters.value.end_dt = formatMySQLDateTime(end_dt.toISOString());
       segment.value = option;
       fetchAgentRequests();
       break;
@@ -184,12 +191,14 @@ const onSegmentChanged = (event: CustomEvent) => {
 };
 const fetchAgentRequests = async () => {
   try {
+    const userStore = useUserStore();
     fetching.value = true;
 
     const requestStore = useRequestStore();
-    agentRequests.value = await requestStore.fetchAgentRequests(
-      searchFilters.value
-    );
+    await requestStore.fetchAgentRequests({
+      ...searchFilters.value,
+      businesses_id: userStore.activeBusiness?.id,
+    });
   } catch (error) {
     handleAxiosRequestError(error);
   } finally {
@@ -218,8 +227,10 @@ const fetchAgents = async (options = {}) => {
   fetching.value = false;
 };
 
-onIonViewDidEnter(() => {
-  onSegmentChanged(new CustomEvent("load", { detail: { value: "all" } }));
+onMounted(() => {
+  onSegmentChanged(
+    new CustomEvent("load", { detail: { value: segment.value } })
+  );
 });
 </script>
 

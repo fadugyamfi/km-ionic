@@ -98,6 +98,7 @@ import filters from "@/utilities/Filters";
 import FilterAgentRequestsSheet from "@/components/modules/agents/FilterAgentRequestsSheet.vue";
 import NoResults from "@/components/layout/NoResults.vue";
 import AgentRequest from "@/models/AgentRequest";
+import { useUserStore } from "@/stores/UserStore";
 
 export default defineComponent({
   data() {
@@ -143,7 +144,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useRequestStore),
+    ...mapStores(useRequestStore, useUserStore),
   },
 
   methods: {
@@ -151,9 +152,10 @@ export default defineComponent({
       try {
         this.fetching = true;
 
-        this.agentRequests = await this.requestStore.fetchAgentRequests(
-          this.searchFilters
-        );
+        this.agentRequests = await this.requestStore.fetchAgentRequests({
+          ...this.searchFilters,
+          cms_users_id: this.userStore.user?.id,
+        });
       } catch (error) {
         handleAxiosRequestError(error);
       } finally {
