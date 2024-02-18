@@ -6,13 +6,13 @@
           <IonToolbar>
             <IonButtons slot="start">
               <IonBackButton
-                defaultHref="/agent/request/place-request/select-customer"
+                defaultHref="/agent/request"
                 :icon="arrowBack"
                 mode="md"
               >
               </IonBackButton>
             </IonButtons>
-            <IonTitle size="small"><b>Agent Request</b></IonTitle>
+            <IonTitle size="small"><b>Request</b></IonTitle>
             <IonButtons slot="end">
               <IonButton color="dark" @click="toggleSearchEnabled()">
                 <IonIcon :icon="search" color="dark"></IonIcon>
@@ -52,10 +52,6 @@
     </section>
 
     <IonContent>
-      <SelectedCustomer
-        v-if="requestStore.selectedCustomer"
-        :customer="requestStore.selectedCustomer"
-      ></SelectedCustomer>
 
       <div class="ion-text-center" v-if="fetching">
         <IonSpinner name="crescent"></IonSpinner>
@@ -137,7 +133,6 @@ import { useToastStore } from "@/stores/ToastStore";
 import Product from "@/models/Product";
 import { SaleItem } from "@/models/SaleItem";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
-import SelectedCustomer from "@/components/modules/sales/SelectedCustomer.vue";
 import ProductCard, {
   ProductSelection,
 } from "@/components/cards/ProductCard.vue";
@@ -176,7 +171,6 @@ export default defineComponent({
     IonFooter,
     KolaYellowButton,
     IonContent,
-    SelectedCustomer,
     IonList,
     IonListHeader,
     IonLabel,

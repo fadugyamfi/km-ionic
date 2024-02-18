@@ -81,7 +81,7 @@
         @dismiss="showConfirm = false"
       ></ConfirmModal>
     </ion-content>
-    <ion-footer class="ion-no-border ion-padding">
+    <ion-footer class="ion-no-border ion-padding" v-if="!canCancel(request) && !loading">
       <KolaYellowButton @click="confirmCancel()"
         >Cancel request</KolaYellowButton
       >
@@ -125,7 +125,7 @@ import AgentRequest from "@/models/AgentRequest";
 export default defineComponent({
   data() {
     return {
-      loading: false,
+      loading: true,
       request: null as AgentRequest | null,
       showConfirm: false,
       Filters,
@@ -189,6 +189,9 @@ export default defineComponent({
       if (response !== null) {
         this.$router.replace("/agent/request");
       }
+    },
+    canCancel(request: AgentRequest | null) {
+      return request?.approved_by;
     },
   },
   ionViewDidEnter() {

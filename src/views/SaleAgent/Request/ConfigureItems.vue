@@ -12,7 +12,7 @@
               >
               </IonBackButton>
             </IonButtons>
-            <IonTitle size="small"><b>Agent request</b></IonTitle>
+            <IonTitle size="small"><b>Request</b></IonTitle>
             <IonButtons slot="end">
               <IonButton color="dark" style="opacity: 0">
                 <IonIcon :icon="search" color="dark"></IonIcon>
@@ -38,8 +38,30 @@
         </IonCard>
       </IonHeader>
     </section>
-
     <IonContent>
+      <section class="ion-padding-horizontal">
+        <IonInput
+          class="kola-input delivery-details-input"
+          :class="{ 'ion-invalid ion-touched': form.errors.delivery_location }"
+          label="Delivery Location"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.delivery_location"
+          name="location"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+        <IonButton
+          fill="clear"
+          size="small"
+          style="text-transform: none"
+          class="use-location ion-text-start"
+          @click="getLocation()"
+        >
+          <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
+          {{ $t("signup.vendor.location.useCurrentLocation") }}
+        </IonButton>
+      </section>
       <IonCard>
         <IonCardContent>
           <IonList lines="full">
@@ -52,35 +74,12 @@
           </IonList>
         </IonCardContent>
       </IonCard>
-      <section class="ion-margin-top ion-padding">
-        <IonInput
-          class="kola-input delivery-details-input"
-          :class="{ 'ion-invalid ion-touched': form.errors.gps_location }"
-          label="Delivery Location"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.gps_location"
-          name="location"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-        <IonButton
-          fill="clear"
-          size="small"
-          style="text-transform: none"
-          class="ion-margin-bottom use-location ion-text-start"
-          @click="getLocation()"
-        >
-          <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
-          {{ $t("signup.vendor.location.useCurrentLocation") }}
-        </IonButton>
-      </section>
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton
         id="configure-continue"
-        :disabled="!cartTotalCost"
+        :disabled="!cartTotalCost || !form.fields.delivery_location"
         @click="onContinue()"
       >
         Record request
@@ -140,7 +139,7 @@ export default defineComponent({
       closeCircleOutline,
       navigateOutline,
       form: useForm({
-        gps_location: "",
+        delivery_location: "",
       }),
     };
   },
@@ -244,7 +243,7 @@ export default defineComponent({
         console.log(coordinates);
 
         if (coordinates) {
-          this.form.fields.gps_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
+          this.form.fields.delivery_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
         }
       } catch (error) {
         this.toastStore.showError("Cannot retrieve location info");

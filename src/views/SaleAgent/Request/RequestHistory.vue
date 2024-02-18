@@ -111,7 +111,7 @@ export default defineComponent({
       add,
       fetching: false,
       filters,
-      agentRequests: [] as AgentRequest[] | null,
+      // agentRequests: [] as AgentRequest[] | null,
       showFilterSheet: false,
       searchFilters: {
         start_dt: "",
@@ -145,6 +145,10 @@ export default defineComponent({
 
   computed: {
     ...mapStores(useRequestStore, useUserStore),
+
+    agentRequests() {
+      return this.requestStore.agentRequests;
+    },
   },
 
   methods: {
@@ -152,7 +156,7 @@ export default defineComponent({
       try {
         this.fetching = true;
 
-        this.agentRequests = await this.requestStore.fetchAgentRequests({
+        await this.requestStore.fetchAgentRequests({
           ...this.searchFilters,
           cms_users_id: this.userStore.user?.id,
         });
@@ -189,7 +193,7 @@ export default defineComponent({
     },
     onRaiseRequest() {
       this.requestStore.resetForNewRequest();
-      this.$router.push("/agent/request/place-request/select-customer");
+      this.$router.push("/agent/request/place-request/select-products");
     },
     onFilterUpdate(event: { start_dt: string; end_dt: string }) {
       this.searchFilters.start_dt = event.start_dt;

@@ -23,8 +23,6 @@ const toastStore = useToastStore();
 const storage = new AppStorage();
 
 const KOLA_SALE_AGENT_REQUEST = "kola.sale-agent-request";
-const KOLA_AGENT_REQUEST_SELECTED_CUSTOMER =
-  "kola.agent-request-selected-customer";
 const KOLA_RECORDED_REQUESTS = "kola.recorded-requests";
 
 export const useRequestStore = defineStore("request", {
@@ -32,7 +30,6 @@ export const useRequestStore = defineStore("request", {
     return {
       agentRequests: [] as AgentRequest[],
       newRequest: new AgentRequest({}),
-      selectedCustomer: null as Business | null,
       recordedRequests: [] as AgentRequest[],
       requestSyncTimer: null as any,
       approving: false,
@@ -46,10 +43,8 @@ export const useRequestStore = defineStore("request", {
         uuid: uuidv4(),
         businesses_id: userStore.activeBusiness?.id,
         cms_users_id: userStore.user?.id,
-        credits_id: 1,
+        delivery_location: "",
         gps_location: "-",
-        product_units_id: 1,
-        payment_modes_id: 1,
         request_started_at: formatMySQLDateTime(new Date().toISOString()),
         request_ended_at: "",
         total_items: 0,
@@ -146,8 +141,6 @@ export const useRequestStore = defineStore("request", {
     },
 
     addProductToRequest(product: Product) {
-      console.log(this.newRequest);
-      console.log(product);
       const requestItem = new OrderItem({
         uuid: uuidv4(),
         quantity: 1,
@@ -167,7 +160,6 @@ export const useRequestStore = defineStore("request", {
         product_name: product.product_name,
       });
       this.newRequest.items?.push(requestItem);
-      console.log(this.newRequest);
     },
     removeProductFromRequest(product: Product) {
       const index = this.newRequest.items?.findIndex(
@@ -178,12 +170,8 @@ export const useRequestStore = defineStore("request", {
 
     async loadFromStorage() {
       let newRequestData = await storage.get(KOLA_SALE_AGENT_REQUEST);
-      let selectedCustomerData = await storage.get(
-        KOLA_AGENT_REQUEST_SELECTED_CUSTOMER
-      );
 
       Object.assign(this.newRequest, newRequestData);
-      Object.assign({}, this.selectedCustomer, selectedCustomerData);
     },
 
     async fetchAgentRequests(options = {}): Promise<AgentRequest[] | null> {
@@ -196,7 +184,7 @@ export const useRequestStore = defineStore("request", {
         const requestData = response.data.data.data.map(
           (item: AgentRequest) => new AgentRequest(item)
         );
-        this.agentRequests = requestData;
+        this.agentRequests = requestData.reverse();
         return this.agentRequests;
       } catch (error) {
         handleAxiosRequestError(error);
@@ -290,12 +278,6 @@ export const useRequestStore = defineStore("request", {
     },
     async persist() {
       await storage.set(KOLA_SALE_AGENT_REQUEST, this.newRequest, 1, "days");
-      await storage.set(
-        KOLA_AGENT_REQUEST_SELECTED_CUSTOMER,
-        this.selectedCustomer,
-        1,
-        "days"
-      );
     },
   },
 });

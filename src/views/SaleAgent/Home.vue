@@ -122,7 +122,7 @@
             description="Record a sale to show up on leaderboard"
             v-if="topThree?.length == 0"
           ></NoRecordCard>
-          <TopLeaders :top-three="topThree" />
+          <TopLeaders :top-three="topThree" v-if="topThree?.length !== 0" />
         </section>
       </section>
     </ion-content>

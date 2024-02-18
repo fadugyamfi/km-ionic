@@ -178,14 +178,6 @@ export const SaleAgentRoutes = [
         component: () => import("@/views/SaleAgent/Request/RequestDetails.vue"),
       },
       {
-        path: "request/place-request/select-customer",
-        component: () => import("@/views/SaleAgent/Request/SelectCustomer.vue"),
-      },
-      // {
-      //   path: "request/place-request/delivery-details",
-      //   component: () => import("@/views/SaleAgent/Orders/DeliveryDetails.vue"),
-      // },
-      {
         path: "request/place-request/select-products",
         component: () => import("@/views/SaleAgent/Request/SelectProducts.vue"),
       },
