@@ -28,7 +28,9 @@
           <div
             class="d-flex ion-justify-content-between ion-align-items-center ion-padding-horizontal ion-margin-top"
           >
-            <IonText color="dark" class="fw-semibold font-medium"> Amount collected </IonText>
+            <IonText color="dark" class="fw-semibold font-medium">
+              Amount collected
+            </IonText>
             <IonSelect
               class="sale-filter"
               labelPlacement="stacked"
@@ -188,7 +190,7 @@ export default defineComponent({
         tooltip: {
           trigger: "item",
         },
-        color: ["#FEDA9A", "#4FE3A4", "#F5AA29"],
+        color: ["#4FE3A4", "#FEDA9A"],
         legend: {
           top: "center",
           left: "center",
@@ -198,6 +200,8 @@ export default defineComponent({
           itemHeight: 10,
           textStyle: {
             color: "#000",
+            fontFamily: 'Poppins',
+            fontWeight: 400,
           },
         },
         series: [
@@ -214,7 +218,35 @@ export default defineComponent({
             label: {
               show: true,
               position: "center",
+              formatter: function (dataSet: any) {
+                if (dataSet.name == "Collected") {
+                  return `{a| GHS ${dataSet.value}} \n {b| collected}`;
+                }
+                if (dataSet.name == "Pending") {
+                  return `{a| GHS ${dataSet.value}} \n {b| owed you}`;
+                }
+              },
+              rich: {
+                a: {
+                  color: "#000000",
+                  lineHeight: 18,
+                  align: "center",
+                  fontSize: 12,
+                  fontWeight: 500,
+                  fontFamily: 'Poppins'
+                },
+                b: {
+                  color: "#6B7785",
+                  lineHeight: 18,
+                  align: "center",
+                  fontSize: 10,
+                  fontWeight: 400,
+                  fontFamily: 'Poppins'
+                },
+              },
             },
+            top: 0,
+            left: 0,
             center: ["20%", "50%"],
             emphasis: {
               label: {
@@ -227,9 +259,9 @@ export default defineComponent({
               show: false,
             },
             data: [
-              { value: 1048, name: "Collected" },
-              { value: 735, name: "Pending" },
-              { value: 580, name: "Cancelled" },
+              { value: 0, name: "Collected" },
+              { value: 0, name: "Pending" },
+              // { value: 0, name: "Cancelled" },
             ],
           },
         ],
@@ -251,7 +283,7 @@ export default defineComponent({
     IonHeader,
     IonToolbar,
     IonSelect,
-  IonSelectOption,
+    IonSelectOption,
     IonContent,
     IonSegmentButton,
     IonSegment,
@@ -321,6 +353,12 @@ export default defineComponent({
         this.creditSummary = await this.creditStore.getCreditSummary(
           this.searchFilters
         );
+        this.option.series[0].data[0].value = Number(
+          this.creditSummary?.credit_sales?.collections?.collected
+        ).toFixed(2) as any;
+        this.option.series[0].data[1].value = Number(
+          this.creditSummary?.credit_sales?.collections?.pending
+        ).toFixed(2) as any;
       } catch (error) {
         handleAxiosRequestError(error);
       } finally {

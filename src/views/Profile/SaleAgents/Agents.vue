@@ -197,7 +197,7 @@ const fetchAgentRequests = async () => {
     const requestStore = useRequestStore();
     await requestStore.fetchAgentRequests({
       ...searchFilters.value,
-      businesses_id: userStore.activeBusiness?.id,
+      // businesses_id: userStore.activeBusiness?.id,
     });
   } catch (error) {
     handleAxiosRequestError(error);
