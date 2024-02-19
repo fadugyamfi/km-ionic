@@ -38,7 +38,8 @@
                   class="font-medium ion-align-self-start"
                   style="color: #787486"
                 >
-                  Request made by
+                  {{ $t("profile.agent.requestMadeBy") }}
+
                   <span class="fw-semibold">{{
                     request?.sale_agent?.name
                   }}</span>

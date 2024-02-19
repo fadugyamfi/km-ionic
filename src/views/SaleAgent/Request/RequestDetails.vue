@@ -6,7 +6,9 @@
           <IonButtons slot="start">
             <IonBackButton defaultHref="/agent/request"></IonBackButton>
           </IonButtons>
-          <IonTitle size="small" class="fw-bold"> Request Details </IonTitle>
+          <IonTitle size="small" class="fw-bold">
+            {{ $t("profile.agent.requestDetails") }}
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
     </section>
@@ -34,7 +36,8 @@
                   class="font-medium ion-align-self-start"
                   style="color: #787486"
                 >
-                  Request made by
+                  {{ $t("profile.agent.requestMadeBy") }}
+
                   <span class="fw-semibold">{{
                     request?.sale_agent?.name
                   }}</span>
@@ -81,10 +84,13 @@
         @dismiss="showConfirm = false"
       ></ConfirmModal>
     </ion-content>
-    <ion-footer class="ion-no-border ion-padding" v-if="!canCancel(request) && !loading">
+    <ion-footer
+      class="ion-no-border ion-padding"
+      v-if="!canCancel(request) && !loading"
+    >
       <KolaYellowButton @click="confirmCancel()"
-        >Cancel request</KolaYellowButton
-      >
+        >Cancel request {{ $t("profile.agent.cancelRequest") }}
+      </KolaYellowButton>
     </ion-footer>
   </IonPage>
 </template>

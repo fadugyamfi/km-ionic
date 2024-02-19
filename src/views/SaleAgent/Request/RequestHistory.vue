@@ -7,7 +7,9 @@
             <ion-back-button defaultHref="/agent/home"></ion-back-button>
           </ion-buttons>
 
-          <IonTitle size="small" class="fw-bold">Requests</IonTitle>
+          <IonTitle size="small" class="fw-bold">
+            {{ $t("profile.agent.requests") }}
+          </IonTitle>
           <ion-buttons slot="end">
             <IonButton @click="showFilterSheet = true" color="dark">
               <IonIcon :icon="optionsOutline"></IonIcon>

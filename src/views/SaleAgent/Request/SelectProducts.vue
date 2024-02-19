@@ -12,7 +12,9 @@
               >
               </IonBackButton>
             </IonButtons>
-            <IonTitle size="small"><b>Request</b></IonTitle>
+            <IonTitle size="small"
+              ><b> {{ $t("profile.agent.request") }} </b></IonTitle
+            >
             <IonButtons slot="end">
               <IonButton color="dark" @click="toggleSearchEnabled()">
                 <IonIcon :icon="search" color="dark"></IonIcon>
@@ -52,7 +54,6 @@
     </section>
 
     <IonContent>
-
       <div class="ion-text-center" v-if="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>

@@ -15,11 +15,26 @@
               request?.sale_agent?.name
             }}</IonText>
             <IonLabel class="font-medium ion-align-self-end"
-              >{{ request?.agent_request_items_count }} item(s)</IonLabel
-            >
+              >{{ request?.agent_request_items_count }}
+              {{ $t("profile.agent.items") }}
+            </IonLabel>
 
-            <IonChip v-if="request?.approved_by" color="success" class="font-medium"> Approved </IonChip>
-            <IonChip v-if="!request?.approved_by" color="danger" class="font-medium"> Unapproved </IonChip>
+            <IonChip
+              v-if="request?.approved_by"
+              color="success"
+              class="font-medium"
+            >
+              {{ $t("profile.agent.approved") }}
+
+            </IonChip>
+            <IonChip
+              v-if="!request?.approved_by"
+              color="danger"
+              class="font-medium"
+            >
+              {{ $t("profile.agent.unapproved") }}
+
+            </IonChip>
           </IonLabel>
           <IonText slot="end" class="font-medium">{{
             Filters.date(request?.created_at, "short")

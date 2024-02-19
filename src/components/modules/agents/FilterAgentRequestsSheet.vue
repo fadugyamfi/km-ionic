@@ -2,7 +2,7 @@
     <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5]">
       <IonContent>
         <header class="fw-semibold ion-padding ion-text-center">
-          Filter Agent Requests
+          {{ $t("profile.agent.filterAgentRequest") }}
         </header>
         <main class="ion-padding-vertical">
           <IonGrid>
