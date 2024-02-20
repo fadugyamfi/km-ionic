@@ -18,6 +18,7 @@ export default class AgentRequest {
   public total_items?: number;
   public uuid?: string;
   public approved_by?: number;
+  public approved_at?: string;
 
   constructor(data: Object) {
     this.update(data);

@@ -86,18 +86,33 @@
         @dismiss="showConfirm = false"
       ></ConfirmModal>
     </ion-content>
-    <ion-footer
-      class="ion-no-border ion-padding"
-      v-if="!canApprove && !loading"
-    >
-      <KolaYellowButton @click="confirmApproval()">
-        <IonSpinner v-if="requestStore?.approving" name="crescent"></IonSpinner>
-        <IonText>{{ "Approve" }}</IonText></KolaYellowButton
-      >
-      <KolaWhiteButton @click="confirmDecline()">
-        <IonSpinner v-if="requestStore?.declining" name="crescent"></IonSpinner>
-        <IonText>{{ "Decline" }}</IonText></KolaWhiteButton
-      >
+    <ion-footer class="ion-no-border ion-padding">
+      <section class="ion-text-center" v-if="request?.approved_by">
+        <IonChip color="success" class="font-medium">
+          {{
+            `Approved on ${Filters.date(
+              request?.approved_at as string,
+              "short"
+            )}`
+          }}
+        </IonChip>
+      </section>
+      <section v-if="!canApprove && !loading">
+        <KolaYellowButton @click="confirmApproval()">
+          <IonSpinner
+            v-if="requestStore?.approving"
+            name="crescent"
+          ></IonSpinner>
+          <IonText>{{ "Approve" }}</IonText></KolaYellowButton
+        >
+        <KolaWhiteButton @click="confirmDecline()">
+          <IonSpinner
+            v-if="requestStore?.declining"
+            name="crescent"
+          ></IonSpinner>
+          <IonText>{{ "Decline" }}</IonText></KolaWhiteButton
+        >
+      </section>
     </ion-footer>
   </IonPage>
 </template>
@@ -119,6 +134,7 @@ import {
   IonCard,
   IonCardHeader,
   IonFooter,
+  IonChip,
   IonCardTitle,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
@@ -171,6 +187,7 @@ export default defineComponent({
     KolaYellowButton,
     KolaWhiteButton,
     ConfirmModal,
+    IonChip,
   },
 
   computed: {

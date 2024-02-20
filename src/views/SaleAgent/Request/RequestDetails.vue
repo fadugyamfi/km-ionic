@@ -84,12 +84,23 @@
         @dismiss="showConfirm = false"
       ></ConfirmModal>
     </ion-content>
-    <ion-footer
-      class="ion-no-border ion-padding"
-      v-if="!canCancel(request) && !loading"
-    >
-      <KolaYellowButton @click="confirmCancel()"
-        >Cancel request {{ $t("profile.agent.cancelRequest") }}
+    <ion-footer class="ion-no-border ion-padding">
+      <section class="ion-text-center" v-if="request?.approved_by">
+        <IonChip color="success" class="font-medium">
+          {{
+            `Approved on ${Filters.date(
+              request?.approved_at as string,
+              "short"
+            )}`
+          }}
+        </IonChip>
+      </section>
+      <KolaYellowButton
+        @click="confirmCancel()"
+        v-if="!canCancel(request) && !loading"
+      >
+        <IonSpinner v-if="requestStore?.cancelling" name="crescent"></IonSpinner
+        ><IonText>{{ $t("profile.agent.cancelRequest") }}</IonText>
       </KolaYellowButton>
     </ion-footer>
   </IonPage>
@@ -113,6 +124,7 @@ import {
   IonCardHeader,
   IonFooter,
   IonCardTitle,
+  IonChip,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { mapStores } from "pinia";
@@ -159,6 +171,7 @@ export default defineComponent({
     IonFooter,
     KolaYellowButton,
     ConfirmModal,
+    IonChip,
   },
 
   computed: {

@@ -34,6 +34,7 @@ export const useRequestStore = defineStore("request", {
       requestSyncTimer: null as any,
       approving: false,
       declining: false,
+      cancelling: false,
     };
   },
 
@@ -51,6 +52,7 @@ export const useRequestStore = defineStore("request", {
         items: [] as OrderItem[],
         total_sales_price: 0,
       });
+      this.persist();
       console.log(this.newRequest);
     },
     async loadCachedRecordedRequests() {
@@ -203,6 +205,7 @@ export const useRequestStore = defineStore("request", {
     },
     async cancelRequest(request_id: string | number) {
       try {
+        this.cancelling = true;
         const response = await axios.delete(`/v2/agent-requests/${request_id}`);
         toastStore.showSuccess("Request cancelled successfully");
         return response.data.data;
@@ -210,6 +213,8 @@ export const useRequestStore = defineStore("request", {
         handleAxiosRequestError(error);
         toastStore.showError("Failed to cancel request");
         return null;
+      } finally {
+        this.cancelling = false;
       }
     },
     async approveRequest(
@@ -223,6 +228,13 @@ export const useRequestStore = defineStore("request", {
           form
         );
         toastStore.showSuccess("Request approved successfully");
+        const index = this.agentRequests.findIndex(
+          (request) => request.id == response.data.data.id
+        );
+        if (index > -1) {
+          this.agentRequests[index].approved_by =
+            response.data.data.approved_by;
+        }
         return response.data.data;
       } catch (error) {
         console.log(error);

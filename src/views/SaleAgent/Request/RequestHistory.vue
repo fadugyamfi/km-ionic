@@ -44,6 +44,8 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
 
+      <RequestSyncStatus :show-syncing="true"></RequestSyncStatus>
+
       <section v-show="!fetching">
         <AgentRequestList :agentRequests="agentRequests"></AgentRequestList>
       </section>
@@ -86,6 +88,7 @@ import NotificationButton from "@/components/notifications/NotificationButton.vu
 import { defineComponent, ref } from "vue";
 import { useRequestStore } from "@/stores/RequestStore";
 import AgentRequestList from "@/components/modules/agents/AgentRequestList.vue";
+import RequestSyncStatus from "@/components/modules/agents/RequestSyncStatus.vue";
 import {
   search,
   arrowBack,
@@ -143,6 +146,7 @@ export default defineComponent({
     IonSpinner,
     IonFab,
     IonFabButton,
+    RequestSyncStatus,
   },
 
   computed: {

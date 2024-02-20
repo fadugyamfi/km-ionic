@@ -44,7 +44,8 @@
             <div class="ion-padding ion-text-center" v-show="fetching">
                 <IonSpinner name="crescent"></IonSpinner>
             </div>
-
+            <SaleSyncStatus :show-syncing="true"></SaleSyncStatus>
+            
             <section v-show="!fetching">
                 <NoResults v-if="saleStore.sales?.length == 0"></NoResults>
 
@@ -79,6 +80,7 @@ import SalesList from '@/components/modules/sales/SalesList.vue';
 import FilterSalesSheet from '@/components/modules/sales/FilterSalesSheet.vue';
 import { useAgentsStore } from '../../stores/AgentsStore';
 import { useUserStore } from '../../stores/UserStore';
+import SaleSyncStatus from '@/components/modules/sales/SaleSyncStatus.vue';
 
 export default defineComponent({
 
@@ -110,7 +112,8 @@ export default defineComponent({
         IonFabButton,
         NoResults,
         SalesList,
-        FilterSalesSheet
+        FilterSalesSheet,
+        SaleSyncStatus
     },
 
     data() {
