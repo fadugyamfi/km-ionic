@@ -3,7 +3,7 @@
              v-if="orderStore.recordedOrders.length > 0" :button="true" @click="startSync()">
         <IonLabel>
             <IonIcon :icon="arrowUpOutline"></IonIcon>
-            {{ orderStore.recordedOrders.length }} sales pending upload
+            {{ orderStore.recordedOrders.length }} orders pending upload
         </IonLabel>
 
         <IonSpinner v-if="syncing || showSyncing" slot="end" name="crescent"></IonSpinner>
