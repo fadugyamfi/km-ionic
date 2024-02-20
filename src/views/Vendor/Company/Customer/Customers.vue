@@ -54,10 +54,8 @@
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-      <section v-show="!fetching">
-        <EmptyCustomers
-          v-if="!fetching && customers?.length == 0"
-        ></EmptyCustomers>
+      <section v-if="!fetching">
+        <EmptyCustomers v-if="customers?.length == 0"></EmptyCustomers>
         <CustomersList :customers="customers" />
       </section>
       <ion-infinite-scroll @ionInfinite="ionInfinite">

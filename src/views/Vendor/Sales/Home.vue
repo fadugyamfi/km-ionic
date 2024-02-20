@@ -237,6 +237,8 @@ import {
   IonChip,
   IonItem,
   IonProgressBar,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/vue";
 import ShopperHeader from "@/components/layout/ShopperHeader.vue";
 import { defineComponent } from "vue";
@@ -298,6 +300,8 @@ export default defineComponent({
     FilterSalesSheet,
     SalesStatistics,
     SaleSyncStatus,
+    IonSelect,
+    IonSelectOption,
   },
 
   data() {
