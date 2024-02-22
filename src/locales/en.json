@@ -300,6 +300,8 @@
       "fullName": "Owner's Full Name",
       "businessOwnerPhone": "Business Owner Phone Number",
       "businessName": "Business Name",
+      "addBusiness": "Add Business",
+
       "businessLocation": "Business Location",
       "phoneNumber": "Phone Number",
       "assignToSalesAgentOrManager": "Assign to a sales agent or manager",

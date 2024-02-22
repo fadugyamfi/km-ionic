@@ -99,6 +99,18 @@ export const ProfileRoutes = [
               },
             ],
           },
+          {
+            path: "add-business",
+            component: () => import("@/views/Profile/SaleAgents.vue"),
+            children: [
+              {
+                path: "",
+                component: () =>
+                  import("@/views/Profile/Business/AddBusiness.vue"),
+              },
+             
+            ],
+          },
 
           {
             path: "edit-profile",

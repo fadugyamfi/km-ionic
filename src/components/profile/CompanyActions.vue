@@ -54,6 +54,17 @@
         v-if="userStore.user?.isOwner()"
         :detail="true"
         class="profile-item"
+        router-link="/profile/company/add-business"
+      >
+        <IonAvatar slot="start">
+          <IonIcon :icon="personAddOutline" style="font-size: 21px"></IonIcon>
+        </IonAvatar>
+        <IonLabel>Add Business</IonLabel>
+      </IonItem>
+      <IonItem
+        v-if="userStore.user?.isOwner()"
+        :detail="true"
+        class="profile-item"
         router-link="/profile/company/sale-agents"
       >
         <IonAvatar slot="start">
