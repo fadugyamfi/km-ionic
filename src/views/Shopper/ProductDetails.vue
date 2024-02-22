@@ -20,10 +20,7 @@
             <CartStatusButton
               :product="product || undefined"
             ></CartStatusButton>
-
-            <IonButton slot="icon-only">
-              <IonIcon :icon="shareOutline"></IonIcon>
-            </IonButton>
+            <ShareButton :title="product?.product_name || ''"></ShareButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -34,7 +31,14 @@
         <Swiper>
           <SwiperSlide>
             <section style="height: 200px; border-radius: 10px">
-              <Image :src="product?.image" :path="product?.product_banner_image" :no-img-src="noImage" style="height: 200px" w="400" h="400"></Image>
+              <Image
+                :src="product?.image"
+                :path="product?.product_banner_image"
+                :no-img-src="noImage"
+                style="height: 200px"
+                w="400"
+                h="400"
+              ></Image>
             </section>
           </SwiperSlide>
         </Swiper>
@@ -61,7 +65,7 @@
             {{
               Filters.currency(
                 Number(product?.product_price),
-                String(product?.currency?.symbol || 'GHS')
+                String(product?.currency?.symbol || "GHS")
               )
             }}
           </span>
@@ -74,7 +78,7 @@
             {{
               Filters.currency(
                 Number(product?.sale_price),
-                String(product?.currency?.symbol || 'GHS')
+                String(product?.currency?.symbol || "GHS")
               )
             }}
           </IonText>
@@ -88,7 +92,7 @@
             {{
               Filters.currency(
                 Number(product?.retail_price),
-                String(product?.currency?.symbol || 'GHS')
+                String(product?.currency?.symbol || "GHS")
               )
             }}
           </IonText>
@@ -202,6 +206,7 @@ import { useCartStore } from "@/stores/CartStore";
 import { handleAxiosRequestError } from "@/utilities";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import Filters from "../../utilities/Filters";
+import ShareButton from "@/components/buttons/ShareButton.vue";
 
 export default defineComponent({
   components: {
@@ -231,6 +236,7 @@ export default defineComponent({
     FavoriteButton,
     CartStatusButton,
     ProfileAvatar,
+    ShareButton,
   },
 
   data() {
@@ -301,7 +307,7 @@ export default defineComponent({
 
     async buyNow() {
       console.log(this.product);
-      this.cartStore.clearCart()
+      this.cartStore.clearCart();
       await this.cartStore.addProduct(this.product as Product, this.quantity);
       this.$router.push(
         `/shopper/cart/business/${this.product?.businesses_id}/orders`
@@ -318,12 +324,12 @@ export default defineComponent({
   },
 
   mounted() {
-      setTimeout(() => {
-        if( !this.product ) {
-          this.fetchProductDetails();
-        }
-      }, 100);
-  }
+    setTimeout(() => {
+      if (!this.product) {
+        this.fetchProductDetails();
+      }
+    }, 100);
+  },
 });
 </script>
 

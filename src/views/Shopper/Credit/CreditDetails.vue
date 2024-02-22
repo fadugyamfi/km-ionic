@@ -10,9 +10,7 @@
             {{ $t("vendor.credit.creditOrder") }} - #{{ credit?.id }}
           </IonTitle>
           <IonButtons slot="end">
-            <IonButton>
-              <IonIcon :icon="shareOutline"></IonIcon>
-            </IonButton>
+            <ShareButton :title="`Credit Order - #${credit?.id}`"></ShareButton>
             <IonButton>
               <IonIcon :icon="chatbubbleOutline"></IonIcon>
             </IonButton>
@@ -35,7 +33,7 @@
         <section>
           <PlacedCreditDetails :credit="credit"></PlacedCreditDetails>
           <section class="ion-padding-horizontal update-button-section">
-            <KolaYellowButton @click="recordRepayment">
+            <KolaYellowButton @click="makePayment" disabled>
               {{ "Pay credit due" }}
             </KolaYellowButton>
             <p class="font-medium d-flex flex-column">
@@ -98,6 +96,8 @@ import filters from "@/utilities/Filters";
 import { SalePayment } from "@/models/SalePayment";
 import PlacedCreditDetails from "@/components/modules/credit/PlacedCreditDetails.vue";
 
+import ShareButton from "@/components/buttons/ShareButton.vue";
+
 export default defineComponent({
   components: {
     IonHeader,
@@ -129,6 +129,7 @@ export default defineComponent({
     IonChip,
     IonText,
     IonLabel,
+    ShareButton,
   },
 
   name: "CreditDetails",
@@ -180,8 +181,8 @@ export default defineComponent({
         this.loading = false;
       }
     },
-    recordRepayment() {
-      this.$router.push(`/vendor/credits/${this.credit?.id}/record-repayment`);
+    makePayment() {
+      this.$router.push(`/shopper/credits/${this.credit?.id}/payment`);
     },
   },
 });

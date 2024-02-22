@@ -1,11 +1,14 @@
 <template>
   <ion-page>
-
-    <AgentHeader></AgentHeader>
+    <AgentHeader @openFilterSheet="showFilterSheet = true"></AgentHeader>
 
     <IonHeader class="ion-padding-horizontal ion-no-border">
       <IonToolbar>
-        <IonSegment value="thisweek" mode="ios" @ionChange="onSegmentChanged($event)">
+        <IonSegment
+          value="thisweek"
+          mode="ios"
+          @ionChange="onSegmentChanged($event)"
+        >
           <IonSegmentButton value="today">
             <IonLabel>
               {{ $t("general.today") }}
@@ -17,9 +20,6 @@
           <IonSegmentButton value="pastmonth">
             <IonLabel>{{ $t("general.pastMonth") }}</IonLabel>
           </IonSegmentButton>
-          <IonSegmentButton value="filter">
-              <IonIcon :icon="optionsOutline"></IonIcon>
-          </IonSegmentButton>
         </IonSegment>
       </IonToolbar>
     </IonHeader>
@@ -28,34 +28,110 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <IonGrid v-if="!fetching">
-        <SalesStatistics :total-sales="agent?.total_sales" :avg-sales="agent?.avg_sales"></SalesStatistics>
+        <SalesStatistics
+          :total-sales="agent?.total_sales"
+          :avg-sales="agent?.avg_sales"
+        ></SalesStatistics>
         <Performance :agent="agent"></Performance>
-        <BestSellingItems :top-selling-product="agent?.top_selling_product" :total-customers="agent?.total_customers">
+        <BestSellingItems
+          :top-selling-product="agent?.top_selling_product"
+          :total-customers="agent?.total_customers"
+        >
         </BestSellingItems>
       </IonGrid>
-
+      <section v-if="!fetching">
+        <div
+          class="d-flex ion-justify-content-between ion-align-items-center ion-padding-horizontal ion-margin-top"
+        >
+          <IonText color="dark" class="fw-semibold"> Sales </IonText>
+          <IonSelect
+            class="sale-filter"
+            labelPlacement="stacked"
+            fill="outline"
+            required
+            v-model="searchFilters.period"
+            name="category"
+            :toggle-icon="chevronDownOutline"
+            @ion-change="handleSalesSummaryFilter($event.detail.value)"
+          >
+            <ion-select-option
+              v-for="(period, index) in periods"
+              :key="index"
+              :value="period.value"
+              >{{ period.label }}</ion-select-option
+            >
+          </IonSelect>
+        </div>
+        <BarChart :queryFilters="searchFilters"></BarChart>
+      </section>
       <section>
         <IonList style="margin-bottom: 0px; padding-bottom: 0px">
           <IonListHeader>
             <IonLabel color="dark" class="fw-semibold">Sales History</IonLabel>
-            <IonButton fill="clear" size="small" class="fw-semibold" color="primary" @click="onViewSales()">
+            <IonButton
+              fill="clear"
+              size="small"
+              class="fw-semibold ion-text-capitalize"
+              color="primary"
+              @click="onViewSales()"
+            >
               View All
             </IonButton>
           </IonListHeader>
         </IonList>
 
-        <section v-if="fetchingHistory" class="d-flex ion-justify-content-center">
+        <section
+          v-if="fetchingHistory"
+          class="d-flex ion-justify-content-center"
+        >
+          <IonSpinner name="crescent"></IonSpinner>
+        </section>
+        <section v-else>
+          <NoRecordCard
+            title="No sale history available"
+            description="Record a sale to see history here"
+            v-if="recentSales?.length == 0"
+          ></NoRecordCard>
+          <SalesList :sales="recentSales" style="padding-top: 0px"></SalesList>
+        </section>
+      </section>
+      <section>
+        <IonList style="margin-bottom: 0px; padding-bottom: 0px">
+          <IonListHeader>
+            <IonLabel color="dark" class="fw-semibold">{{
+              $t("general.leaderboard")
+            }}</IonLabel>
+            <IonButton
+              fill="clear"
+              size="small"
+              class="fw-semibold ion-text-capitalize"
+              color="primary"
+              router-link="/agent/leaderboard"
+            >
+              View More
+            </IonButton>
+          </IonListHeader>
+        </IonList>
+        <section v-if="fetching" class="d-flex ion-justify-content-center">
           <IonSpinner name="crescent"></IonSpinner>
         </section>
 
-        <SalesList v-else :sales="recentSales" style="padding-top: 0px"></SalesList>
+        <section v-else>
+          <NoRecordCard
+            title="No sale history available"
+            description="Record a sale to show up on leaderboard"
+            v-if="topThree?.length == 0"
+          ></NoRecordCard>
+          <TopLeaders :top-three="topThree" v-if="topThree?.length !== 0" />
+        </section>
       </section>
-
     </ion-content>
 
-
-    <FilterAgentSaleReportSheet :isOpen="showFilterSheet" @didDismiss="showFilterSheet = false"
-                                @update="onFilterUpdate($event)"></FilterAgentSaleReportSheet>
+    <FilterAgentSaleReportSheet
+      :isOpen="showFilterSheet"
+      @didDismiss="showFilterSheet = false"
+      @update="onFilterUpdate($event)"
+    ></FilterAgentSaleReportSheet>
   </ion-page>
 </template>
 
@@ -73,9 +149,10 @@ import {
   IonList,
   IonListHeader,
   IonButton,
-  IonButtons,
-  IonIcon,
-onIonViewDidEnter,
+  IonText,
+  IonSelect,
+  IonSelectOption,
+  onIonViewDidEnter,
 } from "@ionic/vue";
 import { onMounted, ref } from "vue";
 import { useUserStore } from "@/stores/UserStore";
@@ -84,15 +161,19 @@ import { useRoute, useRouter } from "vue-router";
 import { useAgentsStore } from "@/stores/AgentsStore";
 import { useSaleStore } from "../../stores/SaleStore";
 import { Sale } from "../../models/Sale";
-import { optionsOutline } from "ionicons/icons";
+import { chevronDownOutline } from "ionicons/icons";
 import Agent from "@/models/Agent";
-import AgentHeader from '@/components/layout/AgentHeader.vue';
+import AgentHeader from "@/components/layout/AgentHeader.vue";
 import BestSellingItems from "@/components/modules/BestSellingItems.vue";
 import Business from "@/models/Business";
 import FilterAgentSaleReportSheet from "@/components/modules/agents/FilterAgentSaleReportSheet.vue";
 import Performance from "@/components/modules/Performance.vue";
 import SalesStatistics from "@/components/modules/SalesStatistics.vue";
-import SalesList from "../../components/modules/sales/SalesList.vue";
+import SalesList from "@/components/modules/sales/SalesList.vue";
+import BarChart from "@/components/charts/BarChart.vue";
+import TopPerformingAgent from "@/models/TopPerformingAgent";
+import TopLeaders from "@/components/modules/agents/TopLeaders.vue";
+import NoRecordCard from "@/components/cards/NoRecordCard.vue";
 
 const fetching = ref(false);
 const route = useRoute();
@@ -100,19 +181,49 @@ const router = useRouter();
 
 const recentSales = ref([] as Sale[]);
 const fetchingHistory = ref(false);
+const topPerformingAgents = ref<TopPerformingAgent[]>([]);
+const topThree = ref<TopPerformingAgent[]>([]);
+
 const showFilterSheet = ref(false);
 const agent = ref<Agent | null>();
 const searchFilters = ref({
   start_dt: "",
   end_dt: "",
+  period: "thisweek",
 });
+
+const periods = ref([
+  { label: "This Week", value: "thisweek" },
+  { label: "Last Week", value: "lastweek" },
+  { label: "This Month", value: "thismonth" },
+  { label: "Last Month", value: "lastmonth" },
+  { label: "This Year", value: "thisyear" },
+  { label: "Last Year", value: "lastyear" },
+  { label: "Custom", value: "custom" },
+]);
 
 const onFilterUpdate = (event: { start_dt: string; end_dt: string }) => {
   searchFilters.value.start_dt = event.start_dt;
-  searchFilters.value.end_dt = event.end_dt || formatMySQLDateTime(new Date().toISOString());
+  searchFilters.value.end_dt =
+    event.end_dt || formatMySQLDateTime(new Date().toISOString());
 
   fetchAgent();
   fetchRecentSales();
+};
+
+const handleSalesSummaryFilter = (period: string) => {
+  showFilterSheet.value = false;
+  if (period == "custom") {
+    showFilterSheet.value = true;
+    searchFilters.value.period = period;
+    return;
+  }
+  Object.assign(searchFilters.value, {
+    start_dt: "",
+    end_dt: "",
+    period: searchFilters.value.period,
+  });
+  fetchAgent();
 };
 
 const onSegmentChanged = (event: CustomEvent) => {
@@ -121,10 +232,6 @@ const onSegmentChanged = (event: CustomEvent) => {
   const option = event.detail.value;
 
   switch (option) {
-    case "filter":
-      showFilterSheet.value = true;
-      return;
-
     case "pastmonth":
       start_dt.setMonth(start_dt.getMonth() - 1);
       break;
@@ -142,6 +249,7 @@ const onSegmentChanged = (event: CustomEvent) => {
   searchFilters.value.end_dt = formatMySQLDateTime(end_dt.toISOString());
 
   fetchAgent();
+  fetchTopPerformingAgents();
 };
 
 const fetchAgent = async (options = {}) => {
@@ -156,6 +264,20 @@ const fetchAgent = async (options = {}) => {
   );
   fetching.value = false;
 };
+const fetchTopPerformingAgents = async () => {
+  const agentsStore = useAgentsStore();
+  const userStore = useUserStore();
+
+  fetching.value = true;
+  topPerformingAgents.value = await agentsStore.fetchTopPerformingAgents(
+    userStore.activeBusiness as Business,
+    10,
+    searchFilters.value
+  );
+  topThree.value = [...topPerformingAgents.value].splice(0, 3);
+  // remaining.value = this.topPerformingAgents.slice(3);
+  fetching.value = false;
+};
 
 onMounted(() => {
   onSegmentChanged(new CustomEvent("load", { detail: { value: "thisweek" } }));
@@ -165,11 +287,11 @@ onMounted(() => {
 onIonViewDidEnter(() => {
   const saleStore = useSaleStore();
   setTimeout(() => saleStore.fetchInventory(), 200);
-})
+});
 
 const onViewSales = () => {
   router.push("/agent/sales");
-}
+};
 
 const fetchRecentSales = async () => {
   const userStore = useUserStore();
@@ -184,7 +306,7 @@ const fetchRecentSales = async () => {
     ...searchFilters.value,
   });
   fetchingHistory.value = false;
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -199,5 +321,21 @@ ion-segment {
     padding-top: 0.4em;
     padding-bottom: 0.4em;
   }
+}
+
+.sale-filter {
+  --background: #fff;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-radius: 10px;
+  --border-color: #e8e8e8;
+  --highlight-color-focused: none !important;
+  --ripple-color: none !important;
+  --padding-start: 13px;
+  --padding-end: 10px;
+  min-height: 32px;
+  font-size: 14px;
+  max-width: 120px;
+  margin-left: 10px;
 }
 </style>

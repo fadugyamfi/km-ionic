@@ -4,10 +4,12 @@
       <ion-header class="inner-header">
         <ion-toolbar class="ion-align-items-center">
           <ion-buttons slot="start">
-            <ion-back-button defaultHref="/shopper/home"></ion-back-button>
+            <ion-back-button defaultHref="/agent/home"></ion-back-button>
           </ion-buttons>
 
-          <IonTitle size="small" class="fw-bold">Credit History</IonTitle>
+          <IonTitle size="small" class="fw-bold">
+            {{ $t("profile.agent.requests") }}
+          </IonTitle>
           <ion-buttons slot="end">
             <IonButton @click="showFilterSheet = true" color="dark">
               <IonIcon :icon="optionsOutline"></IonIcon>
@@ -15,6 +17,7 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
+
       <IonToolbar>
         <IonSegment
           value="thisweek"
@@ -40,25 +43,24 @@
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-      <section v-if="!fetching">
-        <PlacedCreditSummary></PlacedCreditSummary>
-        <EmptyCredit v-if="credits?.length == 0"></EmptyCredit>
-        <section class="ion-margin-top">
-          <PlacedCreditHistoryItem
-            @click="viewDetails(credit)"
-            v-for="credit in credits"
-            :key="credit?.id"
-            :credit="credit"
-          >
-          </PlacedCreditHistoryItem>
-        </section>
-        <FilterCreditSheet
-          :isOpen="showFilterSheet"
-          @didDismiss="showFilterSheet = false"
-          @update="onFilterUpdate($event)"
-        >
-        </FilterCreditSheet>
+
+      <RequestSyncStatus :show-syncing="true"></RequestSyncStatus>
+
+      <section v-show="!fetching">
+        <AgentRequestList :agentRequests="agentRequests"></AgentRequestList>
       </section>
+      <IonFab slot="fixed" vertical="bottom" horizontal="end">
+        <IonFabButton @click="onRaiseRequest()">
+          <IonIcon :icon="add"></IonIcon>
+        </IonFabButton>
+      </IonFab>
+
+      <FilterAgentRequestsSheet
+        :isOpen="showFilterSheet"
+        @didDismiss="showFilterSheet = false"
+        @update="onFilterUpdate($event)"
+      >
+      </FilterAgentRequestsSheet>
     </ion-content>
   </ion-page>
 </template>
@@ -77,38 +79,49 @@ import {
   IonBadge,
   IonTitle,
   IonButton,
+  IonFab,
+  IonFabButton,
   IonIcon,
   IonSpinner,
-  IonList,
-  IonItem,
 } from "@ionic/vue";
+import NotificationButton from "@/components/notifications/NotificationButton.vue";
 import { defineComponent, ref } from "vue";
-import { useCreditStore } from "@/stores/CreditStore";
-import { arrowBack, optionsOutline } from "ionicons/icons";
+import { useRequestStore } from "@/stores/RequestStore";
+import AgentRequestList from "@/components/modules/agents/AgentRequestList.vue";
+import RequestSyncStatus from "@/components/modules/agents/RequestSyncStatus.vue";
+import {
+  search,
+  arrowBack,
+  ellipsisHorizontal,
+  filter,
+  optionsOutline,
+  add,
+} from "ionicons/icons";
 import { mapStores } from "pinia";
 import { formatMySQLDateTime, handleAxiosRequestError } from "@/utilities";
 import filters from "@/utilities/Filters";
-import FilterCreditSheet from "@/components/modules/credit/FilterCreditSheet.vue";
+import FilterAgentRequestsSheet from "@/components/modules/agents/FilterAgentRequestsSheet.vue";
 import NoResults from "@/components/layout/NoResults.vue";
-import PlacedCreditHistoryItem from "@/components/modules/credit/PlacedCreditHistoryItem.vue";
-import PlacedCreditSummary from "@/components/modules/credit/PlacedCreditSummary.vue";
-import EmptyCredit from "@/components/modules/credit/EmptyCredit.vue";
-import Credit from "@/models/Credit";
+import AgentRequest from "@/models/AgentRequest";
+import { useUserStore } from "@/stores/UserStore";
 
 export default defineComponent({
   data() {
     return {
+      search,
       arrowBack,
+      ellipsisHorizontal,
+      filter,
       optionsOutline,
+      add,
       fetching: false,
       filters,
+      // agentRequests: [] as AgentRequest[] | null,
       showFilterSheet: false,
       searchFilters: {
         start_dt: "",
         end_dt: "",
       },
-      event: null as any,
-      selectedCredit: {} as any | null,
     };
   },
 
@@ -124,39 +137,42 @@ export default defineComponent({
     IonBackButton,
     IonBadge,
     IonTitle,
+    AgentRequestList,
+    NotificationButton,
     IonButton,
     IonIcon,
-    FilterCreditSheet,
+    FilterAgentRequestsSheet,
     NoResults,
     IonSpinner,
-    PlacedCreditHistoryItem,
-    IonList,
-    IonItem,
-    EmptyCredit,
-    PlacedCreditSummary,
+    IonFab,
+    IonFabButton,
+    RequestSyncStatus,
   },
 
   computed: {
-    ...mapStores(useCreditStore),
-    credits() {
-      return this.creditStore.credits;
+    ...mapStores(useRequestStore, useUserStore),
+
+    agentRequests() {
+      return this.requestStore.agentRequests;
     },
   },
 
   methods: {
-    async fetchCredits() {
+    async fetchAgentRequests() {
       try {
         this.fetching = true;
-        await this.creditStore.getCredits(this.searchFilters);
+
+        await this.requestStore.fetchAgentRequests({
+          ...this.searchFilters,
+          cms_users_id: this.userStore.user?.id,
+        });
       } catch (error) {
         handleAxiosRequestError(error);
       } finally {
         this.fetching = false;
       }
     },
-    viewDetails(credit: Credit) {
-      this.$router.push(`/shopper/credits/${credit.id}/credit-details`);
-    },
+
     onSegmentChanged(event: CustomEvent) {
       let start_dt = new Date();
       let end_dt = new Date();
@@ -179,18 +195,21 @@ export default defineComponent({
       this.searchFilters.start_dt = formatMySQLDateTime(start_dt.toISOString());
       this.searchFilters.end_dt = formatMySQLDateTime(end_dt.toISOString());
 
-      this.fetchCredits();
+      this.fetchAgentRequests();
     },
-
+    onRaiseRequest() {
+      this.requestStore.resetForNewRequest();
+      this.$router.push("/agent/request/place-request/select-products");
+    },
     onFilterUpdate(event: { start_dt: string; end_dt: string }) {
       this.searchFilters.start_dt = event.start_dt;
       this.searchFilters.end_dt =
         event.end_dt || formatMySQLDateTime(new Date().toISOString());
-      this.fetchCredits();
+      this.fetchAgentRequests();
     },
   },
 
-  mounted() {
+  ionViewDidEnter() {
     this.onSegmentChanged(
       new CustomEvent("load", { detail: { value: "thisweek" } })
     );
@@ -198,11 +217,30 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-ion-segment {
-  ion-segment-button {
-    padding-top: 0.4em;
-    padding-bottom: 0.4em;
-  }
+<style scoped>
+.ion-content {
+  --align-items: center;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --padding-left: 10px;
+  --padding-right: 10px;
+  --text-align: justify;
+  --white-space: normal;
+  --border-radius: 10px;
 }
+
+.ion-segment-button {
+  --padding-top: 10px;
+  --padding-bottom: 10px;
+  --padding-left: 10px;
+  --padding-right: 10px;
+}
+
+/* ion-segment-button ion-label {
+      font-size: 16px;
+      --align-items: center;
+      text-align: center;
+      overflow: inherit;
+      text-overflow: inherit;
+    } */
 </style>

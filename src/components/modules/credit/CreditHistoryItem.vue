@@ -73,7 +73,7 @@ const toastStore = useToastStore();
 
 const props = defineProps({
   credit: {
-    type: Credit,
+    type: Object as PropType<Credit>,
     default: () => {},
   },
   popover: {

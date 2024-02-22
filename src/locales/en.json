@@ -296,6 +296,7 @@
       "location": {
         "useCurrentLocation": "Use Current Location"
       },
+      "idCardNumber": "ID Card Number",
       "fullName": "Owner's Full Name",
       "businessOwnerPhone": "Business Owner Phone Number",
       "businessName": "Business Name",
@@ -352,10 +353,22 @@
     "agent": {
       "agents": "Agents",
       "allAgents": "All agents",
+      "items": "item(s)",
+      "request": "Request",
       "requests": "Requests",
+      "requestDetails": "Request Details",
+      "requestMadeBy": "Request made by",
       "leaderboard": "Leaderboard",
       "agentSaleReport": "Agent sales report",
-      "filterAgent": "Filter agents sales report"
+      "filterAgent": "Filter agents sales report",
+      "approve": "Approve",
+      "approved": "Approved",
+      "unapproved": "Unapproved",
+      "decline": "Decline",
+      "deleteAgent": "Delete Agent",
+      "cancelRequest": "Cancel Request",
+      "agentRequest": "Agent Request",
+      "filterAgentRequest": "Filter Agent Requests"
     },
     "editProfile": "Edit Profile",
 

@@ -154,7 +154,7 @@ export default defineComponent({
   props: {
     product: {
       required: true,
-      type: Product,
+      type: Object as PropType<Product>,
     },
 
     tall: {

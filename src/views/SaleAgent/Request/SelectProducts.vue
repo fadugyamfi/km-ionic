@@ -6,14 +6,14 @@
           <IonToolbar>
             <IonButtons slot="start">
               <IonBackButton
-                defaultHref="/vendor/sales/add-sale/select-customer"
+                defaultHref="/agent/request"
                 :icon="arrowBack"
                 mode="md"
               >
               </IonBackButton>
             </IonButtons>
             <IonTitle size="small"
-              ><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle
+              ><b> {{ $t("profile.agent.request") }} </b></IonTitle
             >
             <IonButtons slot="end">
               <IonButton color="dark" @click="toggleSearchEnabled()">
@@ -44,7 +44,7 @@
             <IonLabel class="fw-bold ion-text-end" color="medium">
               {{
                 $t("vendor.sales.itemsSelected", {
-                  total: saleStore.newSale.sale_items?.length,
+                  total: requestStore.newRequest.items?.length,
                 })
               }}
             </IonLabel>
@@ -54,11 +54,6 @@
     </section>
 
     <IonContent>
-      <SelectedCustomer
-        v-if="saleStore.selectedCustomer"
-        :customer="saleStore.selectedCustomer"
-      ></SelectedCustomer>
-
       <div class="ion-text-center" v-if="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
@@ -98,7 +93,7 @@
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton
         id="select-products-continue"
-        :disabled="saleStore.newSale.sale_items?.length == 0"
+        :disabled="requestStore.newRequest.items?.length == 0"
         @click="onContinue()"
       >
         {{ $t("general.continue") }}
@@ -139,7 +134,6 @@ import { useToastStore } from "@/stores/ToastStore";
 import Product from "@/models/Product";
 import { SaleItem } from "@/models/SaleItem";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
-import SelectedCustomer from "@/components/modules/sales/SelectedCustomer.vue";
 import ProductCard, {
   ProductSelection,
 } from "@/components/cards/ProductCard.vue";
@@ -148,6 +142,7 @@ import { useProductStore } from "@/stores/ProductStore";
 import { useUserStore } from "@/stores/UserStore";
 import NoResults from "@/components/layout/NoResults.vue";
 import { RecycleScroller } from "vue-virtual-scroller";
+import { useRequestStore } from "@/stores/RequestStore";
 
 export default defineComponent({
   data() {
@@ -160,8 +155,9 @@ export default defineComponent({
     };
   },
 
-  ionViewDidEnter() {
+  async ionViewDidEnter() {
     this.loadCachedInventory();
+    this.requestStore.loadFromStorage();
   },
 
   components: {
@@ -176,7 +172,6 @@ export default defineComponent({
     IonFooter,
     KolaYellowButton,
     IonContent,
-    SelectedCustomer,
     IonList,
     IonListHeader,
     IonLabel,
@@ -194,7 +189,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useSaleStore, useProductStore, useUserStore),
+    ...mapStores(useSaleStore, useProductStore, useUserStore, useRequestStore),
 
     cardWidth() {
       return window.document.documentElement.clientWidth / 2;
@@ -230,19 +225,19 @@ export default defineComponent({
     },
 
     isSelected(product: Product): boolean {
-      return this.saleStore.isProductSelected(product);
+      return this.requestStore.isProductSelected(product);
     },
 
     selectProduct(selection: ProductSelection) {
       if (selection.selected) {
-        this.saleStore.addProductToSale(selection.product);
+        this.requestStore.addProductToRequest(selection.product);
       } else {
-        this.saleStore.removeProductFromSale(selection.product);
+        this.requestStore.removeProductFromRequest(selection.product);
       }
     },
 
     onContinue() {
-      if (this.saleStore.newSale.sale_items?.length == 0) {
+      if (this.requestStore.newRequest.items?.length == 0) {
         const toastStore = useToastStore();
         toastStore.showError(
           this.$t("vendor.sales.selectProductsToContinue"),
@@ -252,12 +247,7 @@ export default defineComponent({
         );
         return;
       }
-
-      if (this.userStore.user?.isSalesAssociate()) {
-        this.$router.push("/agent/sales/add-sale/configure-items");
-      } else {
-        this.$router.push("/vendor/sales/add-sale/configure-items");
-      }
+      this.$router.push("/agent/request/place-request/configure-items");
     },
 
     toggleSearchEnabled() {

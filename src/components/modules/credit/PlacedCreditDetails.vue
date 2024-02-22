@@ -14,35 +14,56 @@
                 <IonText color="medium">
                   Order date:
                   {{
-                    Filters.date(credit?.order?.due_date as string, "short") ||
-                    "N/A"
+                    Filters.date(
+                      credit?.order?.created_at as string,
+                      "short"
+                    ) || "N/A"
                   }}
                 </IonText>
               </p>
               <p>
                 <IonChip color="danger" class="font-medium fw-bold">
-                  12 days overdue
+                  {{ credit?.order?.days_overdue }} days overdue
                 </IonChip>
               </p>
               <p class="font-medium">
-                <!-- {{ order?.delivery_location || 'Unknown' }} -->
-                <IonText color="medium">Achimota Golf club, 180a</IonText>
+                <IonText
+                  color="medium"
+                  class="d-flex ion-align-items-center"
+                  style="gap: 5px"
+                >
+                  <ion-icon :icon="locationOutline"></ion-icon>
+                  {{ credit?.order?.delivery_location || "Unknown" }}</IonText
+                >
               </p>
               <p class="font-medium">
-                <!-- {{ order?.delivery_date ? Filters.date(order?.delivery_date as string, 'short') : 'TBD' }} -->
-                <IonText color="medium">Order delivered on - 2.08.2023</IonText>
+                <IonText
+                  color="medium"
+                  class="d-flex ion-align-items-center"
+                  style="gap: 5px"
+                >
+                  <ion-icon :icon="timeOutline"></ion-icon> Order delivered on -
+                  {{
+                    credit?.order?.delivery_date
+                      ? Filters.date(
+                          credit?.order?.delivery_date as string,
+                          "short"
+                        )
+                      : "TBD"
+                  }}</IonText
+                >
               </p>
             </IonLabel>
           </IonItem>
           <IonItem lines="none">
-            <IonLabel class="ion-text-wrap font-medium fw-bold">
+            <IonLabel slot="start" class="ion-text-wrap font-medium fw-bold">
               Total amount due
             </IonLabel>
             <IonLabel
               slot="end"
-              class="font-medium text-end ion-align-self-start fw-bold"
+              class="font-medium text-end ion-align-self-start fw-bold ion-text-end"
             >
-              GHS 300
+              {{ Filters.currency(Number(credit?.total_sales_price)) }}
             </IonLabel>
           </IonItem>
         </IonList>

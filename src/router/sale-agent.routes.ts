@@ -10,7 +10,7 @@ export const SaleAgentRoutes = [
     component: TabsPage,
     beforeEnter: async function () {
       // to, from
-      if( userStore == null ) {
+      if (userStore == null) {
         userStore = useUserStore();
         await userStore.loadStoredData();
       }
@@ -168,6 +168,27 @@ export const SaleAgentRoutes = [
       {
         path: "leaderboard",
         component: () => import("@/views/SaleAgent/Leaderboard.vue"),
+      },
+      {
+        path: "request",
+        component: () => import("@/views/SaleAgent/Request/RequestHistory.vue"),
+      },
+      {
+        path: "request/:id/details",
+        component: () => import("@/views/SaleAgent/Request/RequestDetails.vue"),
+      },
+      {
+        path: "request/place-request/select-products",
+        component: () => import("@/views/SaleAgent/Request/SelectProducts.vue"),
+      },
+      {
+        path: "request/place-request/configure-items",
+        component: () => import("@/views/SaleAgent/Request/ConfigureItems.vue"),
+      },
+      {
+        path: "request/place-request/order-confirmation",
+        component: () =>
+          import("@/views/SaleAgent/Orders/OrderConfirmation.vue"),
       },
     ],
   },

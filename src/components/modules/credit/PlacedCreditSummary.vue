@@ -7,7 +7,7 @@
             $t("shopper.credit.totalAmountOverdue")
           }}</IonText>
           <IonText color="dark" class="fw-semibold">
-            {{ Filters.currency(placedCreditSummary?.total_value) }}
+            {{ Filters.currency(placedCreditSummary?.total_value || 0) }}
           </IonText>
         </IonCardContent>
       </IonCard>

@@ -3,9 +3,9 @@
     <IonCol size="6">
       <IonCard class="ion-no-margin">
         <IonCardContent class="d-flex flex-column">
-          <IonText color="medium">{{ $t('general.totalSalesMade') }}</IonText>
+          <IonText color="medium">{{ $t("general.totalSalesMade") }}</IonText>
           <IonText color="dark" class="fw-semibold">
-            {{ Filters.currency(totalSales) }}
+            {{ Filters.currency(totalSales as number) }}
           </IonText>
         </IonCardContent>
       </IonCard>
@@ -13,9 +13,9 @@
     <IonCol size="6">
       <IonCard class="ion-no-margin">
         <IonCardContent class="d-flex flex-column">
-          <IonText color="medium">{{ $t('general.avgSalesValue') }}</IonText>
+          <IonText color="medium">{{ $t("general.avgSalesValue") }}</IonText>
           <IonText color="dark" class="fw-semibold">
-            {{ Filters.currency(avgSales) }}
+            {{ Filters.currency(avgSales as number) }}
           </IonText>
         </IonCardContent>
       </IonCard>
@@ -38,11 +38,11 @@ export default defineComponent({
   },
   props: {
     totalSales: {
-      type: Number,
+      type: [Number, String],
       default: 0,
     },
     avgSales: {
-      type: Number,
+      type: [Number, String],
       default: 0,
     },
   },
