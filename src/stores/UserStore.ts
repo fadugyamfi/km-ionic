@@ -13,7 +13,6 @@ const meta = (key: string) => {
 const storage = new AppStorage();
 
 type UserStoreState = {
-
   getUserAccountActivities: [];
   onboarded: Boolean;
   user?: User | null;
@@ -185,20 +184,20 @@ export const useUserStore = defineStore("user", {
     },
 
     async setAppModeAsGuest() {
-      if( this.appMode == 'guest' ) return;
+      if (this.appMode == "guest") return;
 
       this.appMode = "guest";
       await storage.set("kola.app-mode", this.appMode, 7, "days");
     },
     async setAppModeAsVendor() {
-      if( this.appMode == 'vendor' ) return;
+      if (this.appMode == "vendor") return;
 
       this.appMode = "vendor";
       await storage.set("kola.app-mode", this.appMode, 7, "days");
     },
 
     async setAppModeAsShopping() {
-      if( this.appMode == 'shopping' ) return;
+      if (this.appMode == "shopping") return;
 
       this.appMode = "shopping";
       await storage.set("kola.app-mode", this.appMode, 7, "days");
@@ -381,12 +380,15 @@ export const useUserStore = defineStore("user", {
         });
     },
 
-    async fetchAssignedBusinesses(user_id: number|null = null, options: any = {}): Promise<Business[]> {
+    async fetchAssignedBusinesses(
+      user_id: number | null = null,
+      options: any = {}
+    ): Promise<Business[]> {
       let user = user_id || this.user?.id;
 
       const params = {
-        ...options
-      }
+        ...options,
+      };
 
       return axios
         .get(`/v2/users/${user}/businesses`, { params })
@@ -397,7 +399,7 @@ export const useUserStore = defineStore("user", {
 
           return businesses;
         })
-        .catch(error => {
+        .catch((error) => {
           handleAxiosRequestError(error);
           return [];
         });
@@ -411,14 +413,13 @@ export const useUserStore = defineStore("user", {
         ...options,
       };
       try {
-        const response = await axios.get('/v2/activities', { params });
+        const response = await axios.get("/v2/activities", { params });
 
         if (response.status >= 200 && response.status < 300) {
           const data = response.data.data;
           return data;
         }
       } catch (error) {
-
         handleAxiosRequestError(error);
       }
 

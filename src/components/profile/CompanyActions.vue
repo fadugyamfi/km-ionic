@@ -1,5 +1,5 @@
 <template>
-  <section style="width: 100%;" class="font-medium">
+  <section style="width: 100%" class="font-medium">
     <IonItem lines="none" class="profile-item ion-margin-top">
       <ProfileAvatar
         slot="start"
@@ -12,7 +12,13 @@
     </IonItem>
 
     <IonList lines="none">
-      <IonItem v-if="userStore.user?.isOwner()" :detail="true" :button="true" class="profile-item" router-link="/profile/company/edit-profile">
+      <IonItem
+        v-if="userStore.user?.isOwner()"
+        :detail="true"
+        :button="true"
+        class="profile-item"
+        router-link="/profile/company/edit-profile"
+      >
         <IonAvatar slot="start">
           <img src="/images/ic_location.svg" class="action-img" />
         </IonAvatar>
@@ -43,7 +49,13 @@
         <IonLabel>Stock</IonLabel>
       </IonItem>
 
-      <IonItem v-if="userStore.user?.isOwner()" :detail="true" :button="true" class="profile-item" :disabled="true">
+      <IonItem
+        v-if="userStore.user?.isOwner()"
+        :detail="true"
+        :button="true"
+        class="profile-item"
+        :disabled="true"
+      >
         <IonAvatar slot="start">
           <img src="/images/ic_user.svg" class="action-img" />
         </IonAvatar>
@@ -57,9 +69,20 @@
         router-link="/profile/company/add-business"
       >
         <IonAvatar slot="start">
-          <IonIcon :icon="personAddOutline" style="font-size: 21px"></IonIcon>
+          <IonIcon :icon="briefcaseOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
         <IonLabel>Add Business</IonLabel>
+      </IonItem>
+      <IonItem
+        v-if="userStore.user?.isOwner()"
+        :detail="true"
+        class="profile-item"
+        router-link="/profile/company/summary"
+      >
+        <IonAvatar slot="start">
+          <IonIcon :icon="bagOutline" style="font-size: 21px"></IonIcon>
+        </IonAvatar>
+        <IonLabel>Become a Seller</IonLabel>
       </IonItem>
       <IonItem
         v-if="userStore.user?.isOwner()"
@@ -73,7 +96,12 @@
         <IonLabel>Agents</IonLabel>
       </IonItem>
 
-      <IonItem :detail="true" :button="true" class="profile-item" @click="onAddSale()">
+      <IonItem
+        :detail="true"
+        :button="true"
+        class="profile-item"
+        @click="onAddSale()"
+      >
         <IonAvatar slot="start">
           <IonIcon :icon="addCircleOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
@@ -89,14 +117,19 @@
         @click="showFilterSheet = true"
       >
         <IonAvatar slot="start">
-          <IonIcon :icon="swapHorizontalOutline" style="font-size: 21px"></IonIcon>
+          <IonIcon
+            :icon="swapHorizontalOutline"
+            style="font-size: 21px"
+          ></IonIcon>
         </IonAvatar>
         <IonLabel>Switch Business</IonLabel>
       </IonItem>
     </IonList>
 
     <section class="shopper-home-section" v-if="canToggleModes">
-      <ModeToggleCard style="margin-left: 0px; margin-right: 0px;"></ModeToggleCard>
+      <ModeToggleCard
+        style="margin-left: 0px; margin-right: 0px"
+      ></ModeToggleCard>
     </section>
 
     <GeneralActions></GeneralActions>
@@ -114,7 +147,16 @@ import { IonIcon, IonLabel, IonItem, IonAvatar, IonList } from "@ionic/vue";
 import { computed, defineComponent } from "vue";
 import { useUserStore } from "@/stores/UserStore";
 import { mapStores } from "pinia";
-import { search, createOutline, repeatOutline, swapHorizontalOutline, addCircleOutline, personAddOutline } from "ionicons/icons";
+import {
+  search,
+  createOutline,
+  repeatOutline,
+  swapHorizontalOutline,
+  addCircleOutline,
+  personAddOutline,
+  briefcaseOutline,
+  bagOutline
+} from "ionicons/icons";
 import ProfileAvatar from "../ProfileAvatar.vue";
 import SwitchBusinessSheet from "@/components/modules/SwitchBusinessSheet.vue";
 import ModeToggleCard from "../cards/ModeToggleCard.vue";
@@ -130,15 +172,18 @@ export default defineComponent({
     ProfileAvatar,
     SwitchBusinessSheet,
     ModeToggleCard,
-    GeneralActions
-},
+    GeneralActions,
+  },
 
   computed: {
     ...mapStores(useUserStore),
 
     canToggleModes() {
-      return !this.userStore.user?.isSalesAssociate() && !this.userStore.user?.isSalesManager();
-    }
+      return (
+        !this.userStore.user?.isSalesAssociate() &&
+        !this.userStore.user?.isSalesManager()
+      );
+    },
   },
 
   data() {
@@ -151,6 +196,8 @@ export default defineComponent({
       search,
       showFilterSheet: false,
       fetching: false,
+      briefcaseOutline,
+      bagOutline
     };
   },
 

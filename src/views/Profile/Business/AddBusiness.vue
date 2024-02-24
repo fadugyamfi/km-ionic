@@ -9,8 +9,7 @@
               :icon="arrowBackOutline"
               text=""
               style="margin-left: 10px"
-              @click="() => router.push(defaultBackRoute)"
-              defaultHref=""
+              defaultHref="/vendor/profile"
             ></ion-back-button>
           </ion-buttons>
           <IonTitle size="small" class="fw-bold">
@@ -24,11 +23,8 @@
       </ion-header>
     </IonHeader>
     <IonContent>
-      <div class="ion-padding ion-text-center" v-show="fetching">
-        <IonSpinner name="crescent"></IonSpinner>
-      </div>
-      <section v-if="!fetching">
-        <form class="ion-padding" v-show="!fetching">
+      <section>
+        <form class="ion-padding">
           <IonInput
             class="kola-input ion-margin-bottom"
             :class="{ 'ion-invalid ion-touched': form.errors.name }"
@@ -108,13 +104,13 @@ import {
 } from "@ionic/vue";
 import { arrowBackOutline, navigateOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
-import { ref, computed } from "vue";
-import { useUserStore } from "@/stores/UserStore";
+import { ref, computed, onMounted } from "vue";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useToastStore } from "@/stores/ToastStore";
 import { useGeolocation } from "@/composables/useGeolocation";
 import { useRoute, useRouter } from "vue-router";
 import { useForm } from "@/composables/form";
+import { useUserStore } from "@/stores/UserStore";
 
 const toastStore = useToastStore();
 const businessStore = useBusinessStore();
@@ -125,19 +121,10 @@ const router = useRouter();
 
 const fetching = ref(false);
 
-const company = computed(() => userStore.activeBusiness);
 const form = useForm({
   name: "",
   location: "",
   phone_number: "",
-});
-
-const defaultBackRoute = computed(() => {
-  if (userStore.appMode == "vendor") {
-    return "/vendor/profile";
-  } else {
-    return "/shopper/profile";
-  }
 });
 
 const formValid = computed(() => {
@@ -164,34 +151,31 @@ const getLocation = async () => {
     toastStore.showError("Cannot retrieve location info");
   }
 };
-
 const addBusiness = async () => {
   try {
-    toastStore.blockUI("Hold On As We Update Company Profile");
+    console.log(userStore.user);
+    toastStore.blockUI("Hold On As We Add your Business");
+    const business = await businessStore.addBusiness({
+      ...form.fields,
+      business_types_id: 1,
+      business_owner_name: userStore.user?.name,
+      business_owner_phone: userStore.user?.phone_number,
+    });
 
-    await businessStore.updateBusiness(
-      Number(userStore.activeBusiness?.id),
-      form.fields
-    );
-
-    if (company.value) {
+    if (business) {
       toastStore.unblockUI();
       toastStore.showSuccess(
-        "Company profile has been updated successfully",
+        "Business has been added successfully",
         "",
         "bottom",
         "edit-profile-save-btn"
       );
-      Object.assign(form.fields, {
-        name: company.value?.name,
-        location: company.value?.location,
-        phone_number: company.value?.phone_number,
-        email: company.value?.email,
-      });
+      userStore.fetchUserBusinesses();
+      router.go(-1);
     } else {
       toastStore.unblockUI();
       toastStore.showError(
-        "Failed to update Company profile. Please try again",
+        "Failed to add Business. Please try again",
         "",
         "bottom",
         "edit-profile-save-btn"

@@ -65,7 +65,7 @@ export const useBusinessStore = defineStore("business", {
     searchQuery: "",
     SearchResults: [] as Business[],
     businessSummary: null as any | null,
-    business:  null as any | null,
+    business: null as any | null,
   }),
 
   actions: {
@@ -192,7 +192,7 @@ export const useBusinessStore = defineStore("business", {
 
         if (response) {
           const { data } = response.data;
-          this.business = data
+          this.business = data;
           return new Business(data);
         }
 
@@ -230,7 +230,7 @@ export const useBusinessStore = defineStore("business", {
 
         if (response) {
           const { data } = response.data;
-          this.business = data
+          this.business = data;
           const business = new Business(data);
 
           userStore.setActiveBusiness(business);
@@ -570,7 +570,16 @@ export const useBusinessStore = defineStore("business", {
         })
         .catch((error) => handleAxiosRequestError(error));
     },
-
+    async addBusiness(businessInfo: object): Promise<Business | null> {
+      try {
+        const response = await axios.post(`/v2/businesses`, businessInfo);
+        const businesss = new Business(response.data.data);
+        return businesss;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return null;
+      }
+    },
     async getBusinessLocation(
       business_id: any,
       location_id: any
