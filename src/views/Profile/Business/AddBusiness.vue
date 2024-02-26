@@ -71,6 +71,10 @@
               style="margin-right: 5px"
             ></IonIcon>
             {{ $t("profile.customers.location.useCurrentLocation") }}
+            <IonSpinner class="spinner"
+            name="crescent"
+            v-if=userStore.locationLoading
+          ></IonSpinner>
           </IonButton>
 
           <IonFooter class="ion-padding-top ion-no-border">
@@ -138,13 +142,20 @@ const formValid = computed(() => {
 });
 
 const getLocation = async () => {
-  const { getCurrentLocation } = useGeolocation();
+  const { getCurrentLocation, getDisplayName } = useGeolocation();
 
   try {
     const coordinates = await getCurrentLocation();
+    const displayName = await getDisplayName(coordinates);
+
     console.log(coordinates);
 
-    if (coordinates) {
+    // if (coordinates) {
+    //   form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
+    // }
+    if (displayName) {
+      form.fields.location = displayName;
+    } else {
       form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
     }
   } catch (error) {
@@ -188,6 +199,11 @@ const addBusiness = async () => {
 </script>
 
 <style lang="scss" scoped>
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
 ion-input {
   color: #74787c;
   --padding-end: 10px;

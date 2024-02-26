@@ -61,6 +61,11 @@
         >
           <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
           {{ $t("signup.vendor.location.useCurrentLocation") }}
+          <IonSpinner
+            class="spinner"
+            name="crescent"
+            v-if="userStore.locationLoading"
+          ></IonSpinner>
         </IonButton>
 
         <PinEntryField
@@ -214,3 +219,10 @@ const getLocation = async () => {
   }
 };
 </script>
+<style scoped>
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
+</style>

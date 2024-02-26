@@ -60,6 +60,12 @@
         >
           <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
           {{ $t("signup.vendor.location.useCurrentLocation") }}
+
+          <IonSpinner
+            class="spinner"
+            name="crescent"
+            v-if="userStore.locationLoading"
+          ></IonSpinner>
         </IonButton>
       </section>
       <IonCard>
@@ -107,7 +113,7 @@ import {
   IonThumbnail,
   IonTitle,
   IonToolbar,
-  IonInput,
+  IonInput,IonSpinner
 } from "@ionic/vue";
 import {
   arrowBack,
@@ -170,7 +176,7 @@ export default defineComponent({
     SaleItemView,
     IonFooter,
     KolaYellowButton,
-    IonInput,
+    IonInput,IonSpinner
   },
 
   computed: {
@@ -254,3 +260,10 @@ export default defineComponent({
   },
 });
 </script>
+<style scoped>
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
+</style>

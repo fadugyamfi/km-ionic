@@ -45,6 +45,11 @@
         >
           <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
           {{ $t("signup.vendor.location.useCurrentLocation") }}
+          <IonSpinner
+            class="spinner"
+            name="crescent"
+            v-if="userStore.locationLoading"
+          ></IonSpinner>
         </IonButton>
 
         <IonInput
@@ -109,6 +114,7 @@ import {
   IonText,
   IonInput,
   onIonViewDidEnter,
+  IonSpinner
 } from "@ionic/vue";
 import { navigateOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
@@ -156,9 +162,9 @@ const selectDeliveryMethod = (method: string) => {
   }
 };
 
+const userStore = useUserStore();
 const recordOrder = async () => {
   const orderStore = useOrderStore();
-  const userStore = useUserStore();
 
   orderStore.newOrder = {
     ...orderStore.newOrder,
@@ -225,6 +231,11 @@ onIonViewDidEnter(async () => {
 </script>
 
 <style scoped lang="scss">
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
 .delivery-details-input {
   color: #74787c;
   --padding-end: 10px;

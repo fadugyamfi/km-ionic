@@ -80,6 +80,10 @@
         >
           <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
           {{ $t("profile.customers.location.useCurrentLocation") }}
+          <IonSpinner class="spinner"
+            name="crescent"
+            v-if=userStore.locationLoading
+          ></IonSpinner>
         </IonButton>
         <IonInput
           class="kola-input ion-margin-bottom"
@@ -318,6 +322,11 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
 .use-location {
   --color: #666eed;
   --padding-start: 0px;

@@ -115,6 +115,10 @@
               style="margin-right: 5px"
             ></IonIcon>
             {{ $t("profile.customers.location.useCurrentLocation") }}
+            <IonSpinner class="spinner"
+          name="crescent"
+          v-if=userStore.locationLoading
+        ></IonSpinner>
           </IonButton>
           <IonInput
             class="kola-input ion-margin-bottom"
@@ -352,6 +356,11 @@ onIonViewWillEnter(() => fetchCompany());
 </script>
 
 <style lang="scss" scoped>
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
 ion-badge.badge {
   --background: rgba(245, 170, 41, 0.38);
   --color: #344054;

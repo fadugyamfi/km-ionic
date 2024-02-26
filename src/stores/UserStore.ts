@@ -30,6 +30,7 @@ type UserStoreState = {
     phone_number: String;
     response: any;
   };
+  locationLoading: Boolean;
   userForm?: any;
   companyForm?: any;
 };
@@ -73,6 +74,7 @@ export const useUserStore = defineStore("user", {
           two_factor_auth_sent: false,
         },
       },
+      locationLoading: false,
       userForm: {
         id: "",
         name: "",

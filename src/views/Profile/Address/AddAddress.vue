@@ -28,6 +28,10 @@
         >
           <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
           {{ $t("signup.vendor.location.useCurrentLocation") }}
+          <IonSpinner class="spinner"
+            name="crescent"
+            v-if=userStore.locationLoading
+          ></IonSpinner>
         </IonButton>
 
         <IonSelect
@@ -220,6 +224,11 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
 ion-badge.badge {
   --background: rgba(245, 170, 41, 0.38);
   --color: #344054;

@@ -1,5 +1,6 @@
 import { Geolocation } from "@capacitor/geolocation";
 import { isPlatform } from "@ionic/vue";
+import { useUserStore } from "@/stores/UserStore";
 import axios from "axios";
 
 export const useGeolocation = () => {
@@ -53,7 +54,9 @@ export const useGeolocation = () => {
   const getDisplayName = async (coordinates: {
     coords: { latitude: number; longitude: number };
   }) => {
+    const userStore = useUserStore();
     try {
+      userStore.locationLoading = true;
       const lat = coordinates?.coords?.latitude;
       const lon = coordinates?.coords?.longitude;
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=jsonv2`;
@@ -68,7 +71,8 @@ export const useGeolocation = () => {
       }
     } catch (error) {
       return null;
-      console.log(error);
+    } finally {
+      userStore.locationLoading = false;
     }
   };
 

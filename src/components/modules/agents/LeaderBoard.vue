@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="ion-padding ion-text-center" v-show="fetching">
-      <IonSpinner name="crescent"></IonSpinner>
+      <ion-spinner name="crescent"></ion-spinner>
     </div>
   </section>
   <section
@@ -71,7 +71,6 @@
           <IonLabel>{{ $t("general.thisMonth") }}</IonLabel>
         </section>
       </IonSegmentButton>
-
     </IonSegment>
   </section>
   <section v-if="!fetching && remaining.length > 0">
@@ -176,6 +175,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+
 .star {
   width: 40px;
 }

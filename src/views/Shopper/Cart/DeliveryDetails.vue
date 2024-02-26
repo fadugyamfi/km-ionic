@@ -30,6 +30,10 @@
         >
           <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
           {{ $t("signup.vendor.location.useCurrentLocation") }}
+          <IonSpinner class="spinner"
+          name="crescent"
+          v-if=userStore.locationLoading
+        ></IonSpinner>
         </IonButton>
 
         <IonInput
@@ -87,7 +91,7 @@ import {
   IonIcon,
   IonPage,
   IonText,
-  IonInput,
+  IonInput,IonSpinner,
   onIonViewDidEnter,
 } from "@ionic/vue";
 import { navigateOutline } from "ionicons/icons";
@@ -101,10 +105,12 @@ import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { onMounted, computed } from "vue";
 import { Order } from "@/models/Order";
+import { useUserStore } from "@/stores/UserStore";
 
 const router = useRouter();
 const route = useRoute();
 const toastStore = useToastStore();
+const userStore = useUserStore();
 const form = useForm({
   delivery_location: "",
   delivery_nearest_landmark: "",
@@ -195,6 +201,11 @@ onIonViewDidEnter(async () => {
 </script>
 
 <style scoped lang="scss">
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
 .delivery-details-input {
   color: #74787c;
   --padding-end: 10px;

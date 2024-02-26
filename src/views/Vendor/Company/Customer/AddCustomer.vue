@@ -76,6 +76,10 @@
               style="margin-right: 5px"
             ></IonIcon>
             {{ $t("profile.customers.location.useCurrentLocation") }}
+            <IonSpinner class="spinner"
+            name="crescent"
+            v-if=userStore.locationLoading
+          ></IonSpinner>
           </IonButton>
         </section>
 
@@ -283,9 +287,9 @@ const getPaymentModes = async () => {
     }
   } catch (error) {}
 };
+const userStore = useUserStore();
 const fetchBusinessSalesAgent = async () => {
   fetching.value = true;
-  const userStore = useUserStore();
   const businessStore = useBusinessStore();
   salesAgents.value = await businessStore.getBusinessSaleAgents(
     userStore.activeBusiness as Business,
@@ -320,6 +324,11 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
 ion-input {
   color: #74787c;
   --padding-end: 10px;
