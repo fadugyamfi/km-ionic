@@ -198,13 +198,15 @@ const formValid = computed(() => {
   return fields.delivery_nearest_landmark || fields.delivery_nearest_landmark;
 });
 const getLocation = async () => {
-  const { getCurrentLocation } = useGeolocation();
+  const { getCurrentLocation, getDisplayName } = useGeolocation();
 
   try {
     const coordinates = await getCurrentLocation();
-    console.log(coordinates);
+    const displayName = await getDisplayName(coordinates);
 
-    if (coordinates) {
+    if (displayName) {
+      form.fields.delivery_location = displayName;
+    } else {
       form.fields.delivery_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
     }
   } catch (error) {

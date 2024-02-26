@@ -236,14 +236,16 @@ export default defineComponent({
       }
     },
     async getLocation() {
-      const { getCurrentLocation } = useGeolocation();
+      const { getCurrentLocation, getDisplayName } = useGeolocation();
 
       try {
         const coordinates = await getCurrentLocation();
-        console.log(coordinates);
+        const displayName = await getDisplayName(coordinates);
 
-        if (coordinates) {
-          this.form.fields.delivery_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
+        if (displayName) {
+          this.form.fields.delivery_location = displayName;
+        } else {
+          this.form.fields.delivery_location = coordinates;
         }
       } catch (error) {
         this.toastStore.showError("Cannot retrieve location info");
