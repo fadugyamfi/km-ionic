@@ -40,6 +40,11 @@
         >
           <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
           {{ $t("signup.vendor.location.useCurrentLocation") }}
+          <IonSpinner
+            class="spinner"
+            name="crescent"
+            v-if="userStore.locationLoading"
+          ></IonSpinner>
         </IonButton>
 
         <IonSelect
@@ -112,6 +117,7 @@ import {
   IonPage,
   IonSelect,
   IonSelectOption,
+  IonSpinner,
   IonTitle,
   IonToolbar,
 } from "@ionic/vue";
@@ -148,6 +154,7 @@ export default defineComponent({
     IonSelectOption,
     IonButton,
     HeaderArea,
+    IonSpinner,
   },
 
   data() {
@@ -174,12 +181,16 @@ export default defineComponent({
 
     async getCurrentLocation() {
       const toastStore = useToastStore();
-      const { getCurrentLocation } = useGeolocation();
+      const { getCurrentLocation, getDisplayName } = useGeolocation();
 
       try {
         const coordinates = await getCurrentLocation();
+        const displayName = await getDisplayName(coordinates);
 
-        if (coordinates) {
+        if (displayName) {
+          this.businessStore.registration.location = displayName;
+          this.businessStore.registration.gps = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
+        } else {
           this.businessStore.registration.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
           this.businessStore.registration.gps = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
         }
@@ -195,7 +206,7 @@ export default defineComponent({
       }
 
       this.businessStore.cacheRegistrationInfo();
-      if (this.userStore?.isInShoppingMode()) {
+      if (this.userStore.appMode !== "guest") {
         this.$router.push("/profile/company/stock-info");
         return;
       }
@@ -209,3 +220,10 @@ export default defineComponent({
   },
 });
 </script>
+<style scoped>
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
+</style>

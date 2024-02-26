@@ -151,7 +151,7 @@ export default defineComponent({
       this.businessStore.cacheRegistrationInfo();
       toastStore.blockUI(this.$t("Registering Your Business. Please hold"));
 
-      if (this.userStore?.isInShoppingMode()) {
+      if (this.userStore.appMode !== "guest") {
         this.updateBusiness();
         return;
       }
@@ -182,9 +182,12 @@ export default defineComponent({
           {
             ...this.businessStore.registration,
             phone_number: this.userStore.activeBusiness?.phone_number,
+            business_owner_name: this.userStore.user?.name,
+            business_owner_phone: this.userStore.user?.phone_number,
           }
         );
         if (business) {
+          this.businessStore.clearCachedRegistrationInfo();
           this.$router.push("/profile/company/signup-complete");
         }
       } catch (error) {

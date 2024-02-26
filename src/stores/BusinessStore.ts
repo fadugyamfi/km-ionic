@@ -232,8 +232,11 @@ export const useBusinessStore = defineStore("business", {
           const { data } = response.data;
           this.business = data;
           const business = new Business(data);
+          console.log(business, 'new business data')
 
           userStore.setActiveBusiness(business);
+
+          console.log(userStore.activeBusiness, 'active')
 
           return business;
         }

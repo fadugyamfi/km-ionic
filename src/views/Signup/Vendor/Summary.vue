@@ -133,7 +133,7 @@ export default defineComponent({
 
   methods: {
     onContinue() {
-      if (this.userStore?.isInShoppingMode()) {
+      if (this.userStore.appMode !== "guest") {
         this.$router.push("/profile/company/business-info");
         return;
       }

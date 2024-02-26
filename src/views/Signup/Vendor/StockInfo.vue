@@ -166,7 +166,7 @@ export default defineComponent({
       }
 
       this.businessStore.cacheRegistrationInfo();
-      if (this.userStore?.isInShoppingMode()) {
+      if (this.userStore.appMode !== "guest") {
         this.$router.push("/profile/company/upload-photo");
         return;
       }

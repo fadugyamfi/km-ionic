@@ -74,7 +74,7 @@
         <IonLabel>Add Business</IonLabel>
       </IonItem>
       <IonItem
-        v-if="userStore.user?.isOwner()"
+        v-if="userStore.user?.isOwner() && canBecomeSeller"
         :detail="true"
         class="profile-item"
         router-link="/profile/company/summary"
@@ -155,7 +155,7 @@ import {
   addCircleOutline,
   personAddOutline,
   briefcaseOutline,
-  bagOutline
+  bagOutline,
 } from "ionicons/icons";
 import ProfileAvatar from "../ProfileAvatar.vue";
 import SwitchBusinessSheet from "@/components/modules/SwitchBusinessSheet.vue";
@@ -184,6 +184,13 @@ export default defineComponent({
         !this.userStore.user?.isSalesManager()
       );
     },
+
+    canBecomeSeller() {
+      return (
+        this.userStore.activeBusiness?.approved_vendor == 0 ||
+        this.userStore.activeBusiness?.approved_vendor == 3
+      );
+    },
   },
 
   data() {
@@ -197,7 +204,7 @@ export default defineComponent({
       showFilterSheet: false,
       fetching: false,
       briefcaseOutline,
-      bagOutline
+      bagOutline,
     };
   },
 
