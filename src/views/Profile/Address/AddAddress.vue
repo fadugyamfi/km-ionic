@@ -198,12 +198,15 @@ const getRegions = async () => {
 
 const getLocation = async () => {
   const toastStore = useToastStore();
-  const { getCurrentLocation } = useGeolocation();
+  const { getCurrentLocation, getDisplayName } = useGeolocation();
 
   try {
     const coordinates = await getCurrentLocation();
+    const displayName = await getDisplayName(coordinates);
 
-    if (coordinates) {
+    if (displayName) {
+      form.fields.address = displayName;
+    } else {
       form.fields.address = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
     }
   } catch (error) {
