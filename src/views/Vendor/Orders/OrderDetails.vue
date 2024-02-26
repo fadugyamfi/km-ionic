@@ -7,7 +7,7 @@
             <IonBackButton defaultHref="/vendor/orders/history"></IonBackButton>
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
-            {{ $t('shopper.orders.orderDetails') }} - #{{ order?.id }}
+            {{ $t('shopper.orders.orderDetails') }} - #{{ order?.order_no || 'N/A' }}
           </IonTitle>
           <IonButtons slot="end">
             <IonButton v-if="false">
@@ -17,6 +17,7 @@
         </IonToolbar>
       </IonHeader>
     </section>
+
     <ion-content>
       <section v-if="loading" class="d-flex ion-justify-content-center ion-padding">
         <IonSpinner name="crescent"></IonSpinner>

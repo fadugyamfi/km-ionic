@@ -8,7 +8,7 @@
 
         <aside>
             <ProfileAvatar
-                :image="userStore.activeBusiness?.logo"
+                :image="companyLogo"
                 :username="userStore.activeBusiness?.name"
                 custom-size="90px"
                 font-size="48px"
@@ -37,7 +37,23 @@ export default defineComponent({
     components: { IonAvatar, ProfileAvatar, Image },
 
     computed: {
-        ...mapStores( useBusinessStore, useUserStore )
+        ...mapStores( useBusinessStore, useUserStore ),
+
+        coverImage() {
+            if( this.userStore.activeBusiness?.cover_image ) {
+                return `${this.userStore.activeBusiness?.cover_image}?w=400`
+            }
+
+            return this.defaultBanner;
+        },
+
+        companyLogo() {
+            if( this.userStore.activeBusiness?.logo ) {
+                return `${this.userStore.activeBusiness?.logo}?w=150`;
+            }
+
+            return undefined;
+        }
     },
 
     methods: {

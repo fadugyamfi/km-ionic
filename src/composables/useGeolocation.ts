@@ -1,6 +1,7 @@
 import { Geolocation } from "@capacitor/geolocation";
 import { isPlatform } from "@ionic/vue";
 import axios from "axios";
+import { useToastStore } from "../stores/ToastStore";
 
 export const useGeolocation = () => {
   const hasPermission = async () => {
@@ -25,7 +26,7 @@ export const useGeolocation = () => {
 
   const getCurrentLocation = async (): Promise<any> => {
     try {
-      if (isPlatform("ios") || isPlatform("android")) {
+      if ( (isPlatform("ios") || isPlatform("android")) && !isPlatform('mobileweb') ) {
         const status = await Geolocation.checkPermissions();
 
         if (status.location == "granted") {
@@ -56,6 +57,13 @@ export const useGeolocation = () => {
     try {
       const lat = coordinates?.coords?.latitude;
       const lon = coordinates?.coords?.longitude;
+
+      if( !lat && !lon ) {
+        const toastStore = useToastStore();
+        toastStore.showError('Please enable device Location', 'Device Location Unknown', 'top');
+        return null;
+      }
+
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=jsonv2`;
 
       const response = await axios.get(url);

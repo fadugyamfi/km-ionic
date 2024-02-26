@@ -172,12 +172,14 @@ export default defineComponent({
         );
         return;
       }
+
       this.orderStore.persist();
       this.orderStore.newOrder = {
         ...this.orderStore.newOrder,
         total_order_amount: this.cartTotalCost,
         total_items: this.orderStore.newOrder?.order_items?.length,
       };
+
       if (this.userStore.user?.isSalesAssociate()) {
         this.$router.push("/agent/orders/place-order/delivery-details");
       } else {
