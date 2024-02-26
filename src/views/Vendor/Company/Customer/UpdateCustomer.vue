@@ -253,12 +253,15 @@ const updateCustomer = async () => {
 
 const getLocation = async () => {
   const toastStore = useToastStore();
-  const { getCurrentLocation } = useGeolocation();
+  const { getCurrentLocation, getDisplayName } = useGeolocation();
 
   try {
     const coordinates = await getCurrentLocation();
+    const displayName = await getDisplayName(coordinates);
 
-    if (coordinates) {
+    if (displayName) {
+      form.fields.location = displayName;
+    } else {
       form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
     }
   } catch (error) {
@@ -268,7 +271,7 @@ const getLocation = async () => {
 const fetchCustomer = async () => {
   fetching.value = true;
 
-  if( customerStore.selectedCustomer ) {
+  if (customerStore.selectedCustomer) {
     customer.value = customerStore.selectedCustomer;
   } else {
     customer.value = (await customerStore.getCustomer(
@@ -282,7 +285,8 @@ const fetchCustomer = async () => {
   form.fields.location = customer.value?.location;
   form.fields.phone_number = customer.value?.phone_number;
   form.fields.business_types_id = customer.value?.business_types_id;
-  form.fields.business_owner_phone = customer.value?.business_owner?.phone_number;
+  form.fields.business_owner_phone =
+    customer.value?.business_owner?.phone_number;
   form.fields.business_owner_name = customer.value?.business_owner?.name;
 };
 const getPaymentModes = async () => {

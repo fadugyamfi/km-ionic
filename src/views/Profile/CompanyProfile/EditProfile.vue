@@ -294,13 +294,15 @@ const fetchCompany = async () => {
 };
 
 const getLocation = async () => {
-  const { getCurrentLocation } = useGeolocation();
+  const { getCurrentLocation, getDisplayName } = useGeolocation();
 
   try {
     const coordinates = await getCurrentLocation();
-    console.log(coordinates);
+    const displayName = await getDisplayName(coordinates);
 
-    if (coordinates) {
+    if (displayName) {
+      form.fields.location = displayName;
+    } else {
       form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
     }
   } catch (error) {

@@ -5,48 +5,86 @@
     </section>
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
       <form>
-        <IonInput class="kola-input" :class="{
-          'ion-invalid ion-touched': form.errors.address,
-        }" label="Business Address" labelPlacement="stacked" fill="solid" v-model="form.fields.address"
-                  name="address" @ion-input="form.validate($event)" required></IonInput>
+        <IonInput
+          class="kola-input"
+          :class="{
+            'ion-invalid ion-touched': form.errors.address,
+          }"
+          label="Business Address"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.address"
+          name="address"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
 
-        <IonButton fill="clear" size="small" style="text-transform: none"
-                   class="ion-margin-bottom use-location ion-text-start" @click="getLocation()">
+        <IonButton
+          fill="clear"
+          size="small"
+          style="text-transform: none"
+          class="ion-margin-bottom use-location ion-text-start"
+          @click="getLocation()"
+        >
           <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
           {{ $t("signup.vendor.location.useCurrentLocation") }}
         </IonButton>
 
-        <IonSelect class="kola-input ion-margin-bottom" :label="$t('profile.address.region')" :class="{
-          'ion-invalid ion-touched': form.errors.state_id,
-        }" labelPlacement="stacked" fill="solid" v-model="form.fields.state_id" required name="state_id"
-                   :toggle-icon="chevronDownOutline" @ion-change="form.validateSelectInput($event)">
+        <IonSelect
+          class="kola-input ion-margin-bottom"
+          :label="$t('profile.address.region')"
+          :class="{
+            'ion-invalid ion-touched': form.errors.state_id,
+          }"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.state_id"
+          required
+          name="state_id"
+          :toggle-icon="chevronDownOutline"
+          @ion-change="form.validateSelectInput($event)"
+        >
           >
-          <IonSelectOption v-for="region in regions" :key="region.id" :value="region.id">
+          <IonSelectOption
+            v-for="region in regions"
+            :key="region.id"
+            :value="region.id"
+          >
             {{ region.name }}
           </IonSelectOption>
         </IonSelect>
 
-        <IonInput class="kola-input ion-margin-bottom" :label="$t('profile.address.city')" :class="{
-          'ion-invalid ion-touched': form.errors.city,
-        }" labelPlacement="stacked" fill="solid" v-model="form.fields.city" required name="city"
-                  :toggle-icon="chevronDownOutline" @ion-change="form.validateSelectInput($event)">
-
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :label="$t('profile.address.city')"
+          :class="{
+            'ion-invalid ion-touched': form.errors.city,
+          }"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.city"
+          required
+          name="city"
+          :toggle-icon="chevronDownOutline"
+          @ion-change="form.validateSelectInput($event)"
+        >
         </IonInput>
       </form>
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton :disabled="!formValid" @click.prevent="updateBusinessLocations" class="ion-margin-bottom">
+      <KolaYellowButton
+        :disabled="!formValid"
+        @click.prevent="updateBusinessLocations"
+        class="ion-margin-bottom"
+      >
         {{ $t("profile.customers.save") }}
       </KolaYellowButton>
 
       <KolaWhiteButton @click.prevent="cancel">
         {{ $t("profile.address.cancel") }}
       </KolaWhiteButton>
-
-
     </IonFooter>
-
   </ion-page>
 </template>
 
@@ -60,12 +98,8 @@ import {
   IonInput,
   IonSelect,
   IonSelectOption,
-
 } from "@ionic/vue";
-import {
-  navigateOutline,
-  chevronDownOutline,
-} from "ionicons/icons";
+import { navigateOutline, chevronDownOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
@@ -106,7 +140,7 @@ const updateBusinessLocations = async () => {
     const businessLocation = await businessStore.updateBusinessLocation(
       form.fields,
       userStore.activeBusiness?.id as string,
-      route.params.id as string,
+      route.params.id as string
     );
 
     if (businessLocation) {
@@ -136,7 +170,6 @@ const cancel = () => {
   router.push("/profile/address");
 };
 
-
 const getRegions = async () => {
   try {
     const countryId = businessStore?.registration?.country_id;
@@ -144,17 +177,20 @@ const getRegions = async () => {
     if (response) {
       regions.value = response;
     }
-  } catch (error) { }
+  } catch (error) {}
 };
 
 const getLocation = async () => {
   const toastStore = useToastStore();
-  const { getCurrentLocation } = useGeolocation();
+  const { getCurrentLocation, getDisplayName } = useGeolocation();
 
   try {
     const coordinates = await getCurrentLocation();
+    const displayName = await getDisplayName(coordinates);
 
-    if (coordinates) {
+    if (displayName) {
+      form.fields.address = displayName;
+    } else {
       form.fields.address = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
     }
   } catch (error) {
