@@ -153,7 +153,6 @@ const getLocation = async () => {
 };
 const addBusiness = async () => {
   try {
-    console.log(userStore.user);
     toastStore.blockUI("Hold On As We Add your Business");
     const business = await businessStore.addBusiness({
       ...form.fields,

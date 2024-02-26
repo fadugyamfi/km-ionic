@@ -149,8 +149,12 @@ export default defineComponent({
       const userStore = useUserStore();
 
       this.businessStore.cacheRegistrationInfo();
-
       toastStore.blockUI(this.$t("Registering Your Business. Please hold"));
+
+      if (this.userStore?.isInShoppingMode()) {
+        this.updateBusiness();
+        return;
+      }
 
       try {
         const business = await this.businessStore.createBusinessAsVendor();
@@ -162,12 +166,26 @@ export default defineComponent({
             pin_confirmation:
               this.businessStore.registration.user.pin_confirmation,
           });
-          if (this.userStore?.isInShoppingMode()) {
-            this.$router.push("/profile/company/signup-complete");
-            return;
-          }
-
           this.$router.push("/signup/vendor/signup-complete");
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      } finally {
+        toastStore.unblockUI();
+      }
+    },
+    async updateBusiness() {
+      const toastStore = useToastStore();
+      try {
+        const business = await this.businessStore.updateBusiness(
+          Number(this.userStore.activeBusiness?.id),
+          {
+            ...this.businessStore.registration,
+            phone_number: this.userStore.activeBusiness?.phone_number,
+          }
+        );
+        if (business) {
+          this.$router.push("/profile/company/signup-complete");
         }
       } catch (error) {
         handleAxiosRequestError(error);
