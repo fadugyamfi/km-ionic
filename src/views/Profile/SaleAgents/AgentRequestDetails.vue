@@ -55,7 +55,7 @@
               {{ $t("general.totalCost") }}</IonLabel
             >
             <IonLabel slot="end" class="fw-semibold font-medium">{{
-              Filters.currency((request?.total_sales_price as number) || 0)
+              Filters.currency((request?.total_price as number) || 0)
             }}</IonLabel>
           </IonItem>
         </IonCard>
