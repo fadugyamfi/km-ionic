@@ -156,7 +156,7 @@ export default defineComponent({
   },
 
   async ionViewDidEnter() {
-    this.loadCachedInventory();
+    await this.loadCachedInventory();
     this.requestStore.loadFromStorage();
   },
 
@@ -225,6 +225,7 @@ export default defineComponent({
     },
 
     isSelected(product: Product): boolean {
+      this.requestStore.persist()
       return this.requestStore.isProductSelected(product);
     },
 

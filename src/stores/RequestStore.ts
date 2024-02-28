@@ -186,7 +186,7 @@ export const useRequestStore = defineStore("request", {
         const requestData = response.data.data.data.map(
           (item: AgentRequest) => new AgentRequest(item)
         );
-        this.agentRequests = requestData.reverse();
+        this.agentRequests = requestData;
         return this.agentRequests;
       } catch (error) {
         handleAxiosRequestError(error);
