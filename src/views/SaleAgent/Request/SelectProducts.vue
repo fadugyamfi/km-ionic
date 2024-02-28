@@ -225,7 +225,6 @@ export default defineComponent({
     },
 
     isSelected(product: Product): boolean {
-      this.requestStore.persist()
       return this.requestStore.isProductSelected(product);
     },
 
@@ -248,6 +247,7 @@ export default defineComponent({
         );
         return;
       }
+      this.requestStore.persist()
       this.$router.push("/agent/request/place-request/configure-items");
     },
 
