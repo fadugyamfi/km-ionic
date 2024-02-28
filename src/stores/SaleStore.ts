@@ -22,6 +22,7 @@ import { useAppStore } from "./AppStore";
 
 const storage = new AppStorage();
 const KOLA_SALES = "kola.sales";
+const KOLA_SALE_AGENT_SALE = "kola.sale-agent-sale";
 const KOLA_INVENTORY = "kola.sales.inventory";
 const KOLA_RECORDED_SALES = "kola.recorded-sales";
 
@@ -38,6 +39,11 @@ export const useSaleStore = defineStore("sale", {
   },
 
   actions: {
+    async loadFromStorage() {
+      let newSaleData = await storage.get(KOLA_SALE_AGENT_SALE);
+      Object.assign(this.newSale, newSaleData);
+    },
+
     async loadCachedRecordedSales() {
       if (this.recordedSales.length > 0) {
         return;
@@ -317,6 +323,9 @@ export const useSaleStore = defineStore("sale", {
 
           return null;
         });
+    },
+    async persist() {
+      await storage.set(KOLA_SALE_AGENT_SALE, this.newSale, 1, "days");
     },
   },
 });
