@@ -40,11 +40,11 @@
     </IonHeader>
 
     <ion-content>
+      <RequestSyncStatus :show-syncing="true"></RequestSyncStatus>
+      
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-
-      <RequestSyncStatus :show-syncing="true"></RequestSyncStatus>
 
       <section v-show="!fetching">
         <AgentRequestList :agentRequests="agentRequests"></AgentRequestList>

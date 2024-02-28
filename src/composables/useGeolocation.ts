@@ -1,11 +1,12 @@
 import { Geolocation } from "@capacitor/geolocation";
-import { isPlatform } from "@ionic/vue";
+import { isPlatform, getPlatforms } from "@ionic/vue";
 import { useUserStore } from "@/stores/UserStore";
 import axios from "axios";
+import { Capacitor } from "@capacitor/core";
 
 export const useGeolocation = () => {
   const hasPermission = async () => {
-    if (isPlatform("ios") || isPlatform("android")) {
+    if (Capacitor.isNativePlatform()) {
       const status = await Geolocation.checkPermissions();
 
       return status.location == "granted";
@@ -15,7 +16,7 @@ export const useGeolocation = () => {
   };
 
   const requestPermissions = async () => {
-    if (isPlatform("ios") || isPlatform("android")) {
+    if (Capacitor.isNativePlatform()) {
       const permissionStatus = await Geolocation.requestPermissions();
 
       return (permissionStatus.location = "granted");
@@ -25,8 +26,10 @@ export const useGeolocation = () => {
   };
 
   const getCurrentLocation = async (): Promise<any> => {
+    const userStore = useUserStore();
     try {
-      if (isPlatform("ios") || isPlatform("android")) {
+      userStore.locationLoading = true;
+      if (Capacitor.isNativePlatform()) {
         const status = await Geolocation.checkPermissions();
 
         if (status.location == "granted") {
@@ -48,6 +51,8 @@ export const useGeolocation = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      userStore.locationLoading = false;
     }
   };
 

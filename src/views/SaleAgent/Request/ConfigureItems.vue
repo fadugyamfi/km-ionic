@@ -113,7 +113,8 @@ import {
   IonThumbnail,
   IonTitle,
   IonToolbar,
-  IonInput,IonSpinner
+  IonInput,
+  IonSpinner,
 } from "@ionic/vue";
 import {
   arrowBack,
@@ -176,7 +177,8 @@ export default defineComponent({
     SaleItemView,
     IonFooter,
     KolaYellowButton,
-    IonInput,IonSpinner
+    IonInput,
+    IonSpinner,
   },
 
   computed: {
@@ -251,7 +253,7 @@ export default defineComponent({
         if (displayName) {
           this.form.fields.delivery_location = displayName;
         } else {
-          this.form.fields.delivery_location = coordinates;
+          this.form.fields.delivery_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
         }
       } catch (error) {
         this.toastStore.showError("Cannot retrieve location info");

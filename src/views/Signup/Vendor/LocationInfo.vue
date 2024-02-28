@@ -189,11 +189,10 @@ export default defineComponent({
 
         if (displayName) {
           this.businessStore.registration.location = displayName;
-          this.businessStore.registration.gps = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
         } else {
           this.businessStore.registration.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
-          this.businessStore.registration.gps = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
         }
+        this.businessStore.registration.gps = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
       } catch (error) {
         toastStore.showError("Cannot retrieve location info");
         console.log(error);
