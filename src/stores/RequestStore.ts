@@ -50,7 +50,7 @@ export const useRequestStore = defineStore("request", {
         request_ended_at: "",
         total_items: 0,
         items: [] as OrderItem[],
-        total_sales_price: 0,
+        total_price: 0,
       });
       this.persist();
       console.log(this.newRequest);

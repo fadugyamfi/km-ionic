@@ -8,6 +8,7 @@ export default class AgentRequest {
   public email?: string;
   public agent_request_items_count?: number | string;
   public total_sales_price?: number | string;
+  public total_price?: number | string;
   public agent_request_items?: any[] | null;
   public description?: string;
   public photo?: string;

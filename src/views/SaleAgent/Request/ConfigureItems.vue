@@ -214,7 +214,7 @@ export default defineComponent({
       this.requestStore.newRequest = {
         ...this.requestStore.newRequest,
         ...this.form.fields,
-        total_sales_price: this.cartTotalCost,
+        total_price: this.cartTotalCost,
         total_items: this.requestStore.newRequest?.items?.length,
       };
       this.recordRequest();
