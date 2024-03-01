@@ -30,6 +30,7 @@ export default class Business {
   public favorited?: FavoritedBusiness | null;
   public deliveryTime?: string;
   public tags?: Tag[];
+  public attributes?: any;
 
   constructor(data: object | null) {
     Object.assign(this, data);

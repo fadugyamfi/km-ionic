@@ -74,7 +74,7 @@
         <IonLabel>Add Business</IonLabel>
       </IonItem>
       <IonItem
-        v-if="userStore.user?.isOwner() && canBecomeSeller"
+        v-if="userStore.user?.isOwner() && !hasAppliedToSell"
         :detail="true"
         class="profile-item"
         router-link="/profile/company/summary"
@@ -185,10 +185,10 @@ export default defineComponent({
       );
     },
 
-    canBecomeSeller() {
+    hasAppliedToSell() {
       return (
-        this.userStore.activeBusiness?.approved_vendor == 0 ||
-        this.userStore.activeBusiness?.approved_vendor == 3
+        this.userStore.activeBusiness?.attributes?.applied_to.length > 0 ||
+        this.userStore?.activeBusiness?.approved_vendor != null
       );
     },
   },
