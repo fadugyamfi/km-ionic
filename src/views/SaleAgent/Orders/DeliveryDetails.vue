@@ -23,7 +23,21 @@
     <!-- Main Content -->
     <ion-content class="ion-padding">
       <form>
-        <h6 style="margin-top: 0px">Add Delivery Address</h6>
+        <h6 style="margin-top: 0px">Order Date</h6>
+        <IonInput
+          type="datetime-local"
+          class="kola-input delivery-details-input"
+          :class="{ 'ion-invalid ion-touched': form.errors.delivery_location }"
+          label="Order Date & Time"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.ordered_at"
+          name="ordered_at"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+
+        <h6>Add Delivery Address</h6>
         <IonInput
           class="kola-input delivery-details-input"
           :class="{ 'ion-invalid ion-touched': form.errors.delivery_location }"
@@ -45,7 +59,7 @@
         >
           <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
           {{ $t("signup.vendor.location.useCurrentLocation") }}
-          <IonSpinner
+<IonSpinner
             class="spinner"
             name="crescent"
             v-if="userStore.locationLoading"
@@ -114,7 +128,7 @@ import {
   IonText,
   IonInput,
   onIonViewDidEnter,
-  IonSpinner
+IonSpinner
 } from "@ionic/vue";
 import { navigateOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
@@ -127,7 +141,7 @@ import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { onMounted, computed } from "vue";
 import { Order } from "@/models/Order";
-import { handleAxiosRequestError } from "@/utilities";
+import { formatDateTimeForInput, handleAxiosRequestError } from "@/utilities";
 import { useOrderStore } from "@/stores/OrderStore";
 import { useUserStore } from "@/stores/UserStore";
 
@@ -140,6 +154,7 @@ const form = useForm({
   delivery_date: "",
   delivery_method: "",
   payment_option_id: "2",
+  ordered_at: formatDateTimeForInput( new Date().toLocaleString() )
 });
 
 const selectDeliveryMethod = (method: string) => {
@@ -165,7 +180,7 @@ const selectDeliveryMethod = (method: string) => {
 const userStore = useUserStore();
 const recordOrder = async () => {
   const orderStore = useOrderStore();
-
+  
   orderStore.newOrder = {
     ...orderStore.newOrder,
     ...form.fields,

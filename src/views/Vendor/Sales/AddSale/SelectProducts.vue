@@ -162,6 +162,7 @@ export default defineComponent({
 
   ionViewDidEnter() {
     this.loadCachedInventory();
+    this.saleStore.loadFromStorage();
   },
 
   components: {
@@ -252,7 +253,7 @@ export default defineComponent({
         );
         return;
       }
-
+      this.saleStore.persist()
       if (this.userStore.user?.isSalesAssociate()) {
         this.$router.push("/agent/sales/add-sale/configure-items");
       } else {

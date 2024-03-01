@@ -2,6 +2,7 @@ import { Geolocation } from "@capacitor/geolocation";
 import { isPlatform, getPlatforms } from "@ionic/vue";
 import { useUserStore } from "@/stores/UserStore";
 import axios from "axios";
+import { useToastStore } from "../stores/ToastStore";
 import { Capacitor } from "@capacitor/core";
 
 export const useGeolocation = () => {
@@ -26,10 +27,10 @@ export const useGeolocation = () => {
   };
 
   const getCurrentLocation = async (): Promise<any> => {
-    const userStore = useUserStore();
+const userStore = useUserStore();
     try {
       userStore.locationLoading = true;
-      if (Capacitor.isNativePlatform()) {
+      if ( (isPlatform("ios") || isPlatform("android")) && !isPlatform('mobileweb') ) {
         const status = await Geolocation.checkPermissions();
 
         if (status.location == "granted") {
@@ -51,7 +52,7 @@ export const useGeolocation = () => {
       }
     } catch (error) {
       console.log(error);
-    } finally {
+} finally {
       userStore.locationLoading = false;
     }
   };
@@ -59,11 +60,18 @@ export const useGeolocation = () => {
   const getDisplayName = async (coordinates: {
     coords: { latitude: number; longitude: number };
   }) => {
-    const userStore = useUserStore();
+const userStore = useUserStore();
     try {
-      userStore.locationLoading = true;
+userStore.locationLoading = true;
       const lat = coordinates?.coords?.latitude;
       const lon = coordinates?.coords?.longitude;
+
+      if( !lat && !lon ) {
+        const toastStore = useToastStore();
+        toastStore.showError('Please enable device Location', 'Device Location Unknown', 'top');
+        return null;
+      }
+
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=jsonv2`;
 
       const response = await axios.get(url);
@@ -76,7 +84,7 @@ export const useGeolocation = () => {
       }
     } catch (error) {
       return null;
-    } finally {
+      } finally {
       userStore.locationLoading = false;
     }
   };

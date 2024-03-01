@@ -156,7 +156,7 @@ export default defineComponent({
   },
 
   async ionViewDidEnter() {
-    this.loadCachedInventory();
+    await this.loadCachedInventory();
     this.requestStore.loadFromStorage();
   },
 
@@ -247,6 +247,7 @@ export default defineComponent({
         );
         return;
       }
+      this.requestStore.persist()
       this.$router.push("/agent/request/place-request/configure-items");
     },
 

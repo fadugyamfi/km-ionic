@@ -151,11 +151,11 @@ import {
   search,
   createOutline,
   repeatOutline,
+  briefcaseOutline,
+  bagOutline,
   swapHorizontalOutline,
   addCircleOutline,
   personAddOutline,
-  briefcaseOutline,
-  bagOutline,
 } from "ionicons/icons";
 import ProfileAvatar from "../ProfileAvatar.vue";
 import SwitchBusinessSheet from "@/components/modules/SwitchBusinessSheet.vue";
@@ -199,12 +199,12 @@ export default defineComponent({
       repeatOutline,
       addCircleOutline,
       swapHorizontalOutline,
+      bagOutline,
       personAddOutline,
+      briefcaseOutline,
       search,
       showFilterSheet: false,
       fetching: false,
-      briefcaseOutline,
-      bagOutline,
     };
   },
 
