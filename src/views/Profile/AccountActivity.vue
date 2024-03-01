@@ -4,7 +4,7 @@
       <ion-header class="inner-header">
         <ion-toolbar class="ion-align-items-center">
           <ion-buttons slot="start">
-            <ion-back-button defaultHref="/shopper/home"></ion-back-button>
+            <ion-back-button defaultHref="/shopper/profile"></ion-back-button>
           </ion-buttons>
 
           <IonTitle size="small" class="fw-bold">{{
@@ -41,7 +41,7 @@
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-      <section>
+      <!-- <section>
         <div v-show="selectedOption === 'today'">
           <IonText>{{ $t("general.today") }} </IonText>
         </div>
@@ -51,7 +51,7 @@
         <div v-show="selectedOption === 'year'">
           <IonText>{{ $t("general.year") }}</IonText>
         </div>
-      </section>
+      </section> -->
 
       <section v-show="!fetching">
         <NoResults v-if="accountActivities.length === 0"></NoResults>
@@ -101,12 +101,6 @@ import filters from "@/utilities/Filters";
 import { formatMySQLDateTime, handleAxiosRequestError } from "@/utilities";
 
 export default defineComponent({
-  props: {
-    accountActivities: {
-      type: Array,
-      required: true,
-    },
-  },
   data() {
     return {
       search,

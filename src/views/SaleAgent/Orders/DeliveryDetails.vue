@@ -23,7 +23,21 @@
     <!-- Main Content -->
     <ion-content class="ion-padding">
       <form>
-        <h6 style="margin-top: 0px">Add Delivery Address</h6>
+        <h6 style="margin-top: 0px">Order Date</h6>
+        <IonInput
+          type="datetime-local"
+          class="kola-input delivery-details-input"
+          :class="{ 'ion-invalid ion-touched': form.errors.delivery_location }"
+          label="Order Date & Time"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.ordered_at"
+          name="ordered_at"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+
+        <h6>Add Delivery Address</h6>
         <IonInput
           class="kola-input delivery-details-input"
           :class="{ 'ion-invalid ion-touched': form.errors.delivery_location }"
@@ -121,7 +135,7 @@ import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { onMounted, computed } from "vue";
 import { Order } from "@/models/Order";
-import { handleAxiosRequestError } from "@/utilities";
+import { formatDateTimeForInput, handleAxiosRequestError } from "@/utilities";
 import { useOrderStore } from "@/stores/OrderStore";
 import { useUserStore } from "@/stores/UserStore";
 
@@ -134,6 +148,7 @@ const form = useForm({
   delivery_date: "",
   delivery_method: "",
   payment_option_id: "2",
+  ordered_at: formatDateTimeForInput( new Date().toLocaleString() )
 });
 
 const selectDeliveryMethod = (method: string) => {
@@ -198,13 +213,15 @@ const formValid = computed(() => {
   return fields.delivery_nearest_landmark || fields.delivery_nearest_landmark;
 });
 const getLocation = async () => {
-  const { getCurrentLocation } = useGeolocation();
+  const { getCurrentLocation, getDisplayName } = useGeolocation();
 
   try {
     const coordinates = await getCurrentLocation();
-    console.log(coordinates);
+    const displayName = await getDisplayName(coordinates);
 
-    if (coordinates) {
+    if (displayName) {
+      form.fields.delivery_location = displayName;
+    } else {
       form.fields.delivery_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
     }
   } catch (error) {

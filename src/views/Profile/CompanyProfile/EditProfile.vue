@@ -116,6 +116,38 @@
             ></IonIcon>
             {{ $t("profile.customers.location.useCurrentLocation") }}
           </IonButton>
+          <IonInput
+            class="kola-input ion-margin-bottom"
+            :class="{ 'ion-invalid ion-touched': form.errors.id_card_number }"
+            :label="$t('profile.customers.idCardNumber')"
+            labelPlacement="stacked"
+            fill="solid"
+            v-model="form.fields.id_card_number"
+            name="id_card_number"
+            @ion-input="form.validate($event)"
+            required
+          ></IonInput>
+          <IonCard color="light" style="margin: 0px">
+            <IonImg
+              v-if="form.fields.id_card_photo"
+              :src="photo?.webviewPath"
+              @click="takePhoto()"
+            ></IonImg>
+
+            <IonCardContent
+              v-if="!photo"
+              @click="takePhoto()"
+              class="d-flex ion-justify-content-center ion-align-items-center flex-column"
+              style="height: 150px"
+            >
+              <IonImg
+                src="/images/vendor/featured-image.svg"
+                style="width: 64px; margin-bottom: 15px"
+              ></IonImg>
+              <p class="font-medium">Tap to take photo of ID Card</p>
+              <!-- <p class="font-medium">SVG, PNG, JPG or GIF (max. 2048x1080px)</p> -->
+            </IonCardContent>
+          </IonCard>
 
           <IonFooter class="ion-padding-top ion-no-border">
             <KolaYellowButton
@@ -146,10 +178,13 @@ import {
   IonSpinner,
   IonInput,
   IonFooter,
+  IonCard,
+  IonCardContent,
+  IonImg,
   IonAvatar,
   IonModal,
-onIonViewDidEnter,
-onIonViewWillEnter,
+  onIonViewDidEnter,
+  onIonViewWillEnter,
 } from "@ionic/vue";
 import {
   chatbubbleOutline,
@@ -168,6 +203,7 @@ import Business from "@/models/Business";
 import { useForm } from "@/composables/form";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import ProfilePhotoModal from "@/components/profile/ProfilePhotoModal.vue";
+import { usePhotoGallery, UserPhoto } from "@/composables/usePhotoGallery";
 
 const toastStore = useToastStore();
 const businessStore = useBusinessStore();
@@ -189,8 +225,12 @@ const form = useForm({
   location: "",
   email: "",
   phone_number: "",
+  id_card_number: "",
   business_types_id: 1,
+  id_card_photo: null,
 });
+
+const photo = ref<UserPhoto | null>(null);
 
 const viewCoverPhoto = (imageUrl: any) => {
   image.value = imageUrl;
@@ -204,6 +244,21 @@ const defaultBackRoute = computed(() => {
     return "/shopper/profile";
   }
 });
+const takePhoto = async () => {
+  const fields = form.fields;
+  const { takePhoto, photos, pickImages } = usePhotoGallery();
+
+  try {
+    await takePhoto();
+
+    photo.value = photos.value ? photos.value[0] : null;
+    if (photo.value) {
+      fields.id_card_photo = photo.value.base64Data as string;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 const formValid = computed(() => {
   const fields = form.fields;
@@ -211,7 +266,9 @@ const formValid = computed(() => {
   return (
     fields.name.length > 0 &&
     fields.location.length > 0 &&
-    fields.phone_number.length > 0
+    fields.phone_number.length > 0 &&
+    fields.id_card_number.length > 0 &&
+    fields.id_card_photo.length > 0
   );
 });
 const onLoadError = (event: Event) => {
@@ -237,13 +294,15 @@ const fetchCompany = async () => {
 };
 
 const getLocation = async () => {
-  const { getCurrentLocation } = useGeolocation();
+  const { getCurrentLocation, getDisplayName } = useGeolocation();
 
   try {
     const coordinates = await getCurrentLocation();
-    console.log(coordinates);
+    const displayName = await getDisplayName(coordinates);
 
-    if (coordinates) {
+    if (displayName) {
+      form.fields.location = displayName;
+    } else {
       form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
     }
   } catch (error) {
@@ -262,7 +321,12 @@ const updateProfile = async () => {
 
     if (company.value) {
       toastStore.unblockUI();
-      toastStore.showSuccess("Company profile has been updated successfully", "", "bottom", "edit-profile-save-btn");
+      toastStore.showSuccess(
+        "Company profile has been updated successfully",
+        "",
+        "bottom",
+        "edit-profile-save-btn"
+      );
       Object.assign(form.fields, {
         name: company.value?.name,
         location: company.value?.location,
@@ -286,7 +350,6 @@ const updateProfile = async () => {
 
 onIonViewWillEnter(() => fetchCompany());
 </script>
-
 
 <style lang="scss" scoped>
 ion-badge.badge {

@@ -17,7 +17,7 @@
         <IonCardContent class="product-list ion-no-padding">
           <IonList lines="none">
             <IonItem v-for="item in credit?.sale_items" :key="item.id">
-              <IonLabel class="ion-text-wrap font-medium">
+              <IonLabel slot="start" class="ion-text-wrap font-medium">
                 {{ item.product?.product_name }}
                 <section>
                   <IonText color="medium" class="font-medium">
@@ -27,7 +27,7 @@
               </IonLabel>
               <IonLabel
                 slot="end"
-                class="font-medium text-end ion-align-self-start"
+                class="font-medium text-end ion-align-self-start ion-text-end"
               >
                 {{
                   Filters.currency(

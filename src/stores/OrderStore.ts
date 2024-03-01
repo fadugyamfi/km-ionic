@@ -47,7 +47,7 @@ export const useOrderStore = defineStore("order", {
       let selectedCustomerData = await storage.get(
         KOLA_AGENT_SELECTED_CUSTOMER
       );
-
+console.log(newOrderData)
       Object.assign(this.editedOrder, data);
       Object.assign(this.newOrder, newOrderData);
       Object.assign({}, this.selectedCustomer, selectedCustomerData);

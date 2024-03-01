@@ -57,7 +57,10 @@
     </section>
 
     <IonContent>
-      <SelectedCustomer v-if="orderStore.selectedCustomer"></SelectedCustomer>
+      <SelectedCustomer
+        v-if="orderStore.selectedCustomer"
+        :customer="orderStore.selectedCustomer"
+      ></SelectedCustomer>
 
       <div class="ion-text-center" v-if="fetching">
         <IonSpinner name="crescent"></IonSpinner>
@@ -254,6 +257,7 @@ export default defineComponent({
         );
         return;
       }
+      this.orderStore.persist()
       if (this.userStore.user?.isSalesAssociate()) {
         this.$router.push("/agent/orders/place-order/configure-items");
       } else {

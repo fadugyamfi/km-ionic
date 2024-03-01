@@ -39,7 +39,7 @@
       </IonBadge>
     </IonTabButton>
 
-    <IonTabButton tab="tab4" href="/shopper/credits" disabled>
+    <IonTabButton tab="tab4" href="/shopper/credits">
       <img src="/images/navigation/credit.svg" width="25" height="25" />
       <img
         src="/images/navigation/credit_active.svg"

@@ -3,6 +3,7 @@ import TabsPage from "@/views/TabsPage.vue";
 import { ShopperHomeRoutes } from "./tabs/shopper-home.routes";
 import { ShopperOrdersRoutes } from "./tabs/shopper-orders.routes";
 import { ShopperCartRoutes } from "./tabs/shopper-cart.routes";
+import { ShopperCreditsRoutes } from "./tabs/shopper-credit.routes";
 
 let userStore: any = null;
 
@@ -13,7 +14,7 @@ export const ShopperModeRoutes = [
     beforeEnter: async function () {
       // to, from
 
-      if( userStore == null ) {
+      if (userStore == null) {
         userStore = useUserStore();
         await userStore.loadStoredData();
       }
@@ -56,6 +57,8 @@ export const ShopperModeRoutes = [
       ...ShopperOrdersRoutes,
 
       ...ShopperCartRoutes,
+
+      ...ShopperCreditsRoutes,
 
       // {
       //   path: "credits",

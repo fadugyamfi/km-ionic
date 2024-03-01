@@ -14,6 +14,7 @@
 
           <IonButtons slot="end">
             <NotificationButton></NotificationButton>
+            <ShareButton :title="promotion?.name || ''"></ShareButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -41,6 +42,7 @@ import PromotionItem from '@/models/PromotionItem';
 import ProductGridList from '@/components/modules/products/ProductGridList.vue';
 import { computed } from 'vue';
 import AppStorage from '@/stores/AppStorage';
+import ShareButton from "@/components/buttons/ShareButton.vue";
 
 const promotionStore = usePromotionStore();
 const route = useRoute();

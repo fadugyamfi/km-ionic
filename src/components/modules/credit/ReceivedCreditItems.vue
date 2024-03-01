@@ -27,7 +27,7 @@
             </IonLabel>
             <IonLabel
               slot="end"
-              class="font-medium text-end ion-align-self-start"
+              class="font-medium text-end ion-align-self-start ion-text-end"
             >
               {{
                 Filters.currency(
@@ -38,12 +38,12 @@
             </IonLabel>
           </IonItem>
           <IonItem>
-            <IonLabel class="ion-text-wrap font-medium fw-semibold">
+            <IonLabel slot="start" class="ion-text-wrap font-medium fw-semibold">
               Total amount due
             </IonLabel>
             <IonLabel
               slot="end"
-              class="font-medium text-end ion-align-self-start fw-semibold"
+              class="font-medium text-end ion-align-self-start fw-semibold ion-text-end"
             >
             {{ Filters.currency( Number(credit?.total_sales_price) ) }}
             </IonLabel>

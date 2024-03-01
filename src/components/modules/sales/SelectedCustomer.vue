@@ -39,7 +39,7 @@ import {
   IonLabel,
   IonRow,
 } from "@ionic/vue";
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import { mapStores } from "pinia";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useSaleStore } from "@/stores/SaleStore";
@@ -56,7 +56,6 @@ export default defineComponent({
     return {
       location,
       locationOutline,
-      customer: null as Business | null,
     };
   },
 
@@ -64,6 +63,12 @@ export default defineComponent({
     ...mapStores(useBusinessStore, useSaleStore, useUserStore, useOrderStore),
   },
 
+  props: {
+    customer: {
+      type: Object as PropType<Business>,
+      default: () => {},
+    },
+  },
   components: {
     IonCard,
     IonAvatar,
@@ -78,22 +83,16 @@ export default defineComponent({
   },
 
   methods: {
-    async loadSelectedCustomer() {
-      this.customer = this.saleStore.selectedCustomer;
-      if (!this.customer?.id) {
-        this.customer = this.orderStore.selectedCustomer;
-      }
-      // try {
-      //     const customers = await this.businessStore.getBusinessCustomers(this.userStore.activeBusiness as Business, 300);
-      //     this.customer = customers.find((c: Business) => c.id == this.saleStore.newSale.customer_id) as Business;
-      // } catch (error) {
-      //     handleAxiosRequestError(error);
-      // }
-    },
+    // async loadSelectedCustomer() {
+    //   this.customer = this.saleStore.selectedCustomer;
+    //   if (!this.customer?.id) {
+    //     this.customer = this.orderStore.selectedCustomer;
+    //   }
+    // },
   },
 
   mounted() {
-    this.loadSelectedCustomer();
+    // this.loadSelectedCustomer();
   },
 });
 </script>

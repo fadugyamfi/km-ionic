@@ -28,7 +28,6 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
       <form v-show="!fetching" @submit.prevent="createCustomer()">
-
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.name }"
@@ -72,7 +71,10 @@
             class="ion-margin-bottom use-location ion-text-start"
             @click="getLocation()"
           >
-            <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
+            <IonIcon
+              :icon="navigateOutline"
+              style="margin-right: 5px"
+            ></IonIcon>
             {{ $t("profile.customers.location.useCurrentLocation") }}
           </IonButton>
         </section>
@@ -106,7 +108,6 @@
             required
           ></IonInput>
         </section>
-
 
         <section class="ion-padding-vertical">
           <h6>{{ $t("profile.customers.assignToSalesAgentOrManager") }}</h6>
@@ -291,18 +292,21 @@ const fetchBusinessSalesAgent = async () => {
     50
   );
 
-  salesAgents.value.unshift( userStore.user as User );
+  salesAgents.value.unshift(userStore.user as User);
 
   fetching.value = false;
 };
 const getLocation = async () => {
   const toastStore = useToastStore();
-  const { getCurrentLocation } = useGeolocation();
+  const { getCurrentLocation, getDisplayName } = useGeolocation();
 
   try {
     const coordinates = await getCurrentLocation();
+    const displayName = await getDisplayName(coordinates);
 
-    if (coordinates) {
+    if (displayName) {
+      form.fields.location = displayName;
+    } else {
       form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
     }
   } catch (error) {

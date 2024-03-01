@@ -2,6 +2,7 @@
 export const ShopperHomeRoutes = [
     {
         path: "home",
+        name: 'ShopperHome',
         component: () => import("@/views/Shopper/Home/Home.vue"),
     },
     {

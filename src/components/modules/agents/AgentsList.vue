@@ -46,8 +46,7 @@
               @click="deleteAgent(agent)"
             >
               <IonIcon :icon="trashOutline"></IonIcon>
-              Delete Agent
-              <!-- {{ $t("profile.agents.removeCustomer") }} -->
+              {{ $t("profile.agent.deleteAgent") }}
             </IonItem>
           </IonList>
         </IonContent>

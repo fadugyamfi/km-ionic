@@ -31,6 +31,8 @@ export enum OrderStatus {
 
 export class Order {
   public id?: number | string;
+  public order_no?: string;
+  public ordered_at?: string;
   public businesses_id?: number;
   public cms_users_id?: number | string;
   public customer_id?: number;

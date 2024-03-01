@@ -49,7 +49,7 @@
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-
+      <OrderSyncStatus :show-syncing="true"></OrderSyncStatus>
       <section v-show="!fetching">
         <NoResults v-if="orderStore.orders?.length == 0"></NoResults>
 
@@ -89,6 +89,7 @@ import NotificationButton from "@/components/notifications/NotificationButton.vu
 import { defineComponent, ref } from "vue";
 import { useOrderStore } from "@/stores/OrderStore";
 import ReceivedOrderList from "@/components/modules/order/ReceivedOrderList.vue";
+import OrderSyncStatus from "@/components/modules/order/OrderSyncStatus.vue";
 import {
   search,
   arrowBack,
@@ -147,6 +148,7 @@ export default defineComponent({
     IonSpinner,
     IonFab,
     IonFabButton,
+    OrderSyncStatus,
   },
 
   computed: {
@@ -158,7 +160,8 @@ export default defineComponent({
       try {
         this.fetching = true;
         this.searchFilters.cms_users_id = this.userStore.user?.id;
-        this.searchFilters.businesses_id = this.userStore.activeBusiness?.id as number;
+        this.searchFilters.businesses_id = this.userStore.activeBusiness
+          ?.id as number;
 
         await this.orderStore.fetchPlacedOrders(this.searchFilters);
       } catch (error) {

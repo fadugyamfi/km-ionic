@@ -9,7 +9,7 @@ export const ProfileRoutes = [
     component: TabsPage,
     beforeEnter: async function () {
       // to, from
-      if( userStore == null ) {
+      if (userStore == null) {
         userStore = useUserStore();
         await userStore.loadStoredData();
       }
@@ -92,6 +92,11 @@ export const ProfileRoutes = [
                 component: () =>
                   import("@/views/Profile/SaleAgents/AgentSalesReport.vue"),
               },
+              {
+                path: ":id/agent-request",
+                component: () =>
+                  import("@/views/Profile/SaleAgents/AgentRequestDetails.vue"),
+              },
             ],
           },
 
@@ -139,25 +144,21 @@ export const ProfileRoutes = [
         children: [
           {
             path: "",
-            component: () =>
-              import("@/views/Profile/Address/AddressList.vue"),
+            component: () => import("@/views/Profile/Address/AddressList.vue"),
           },
           {
             path: "add-address",
-            component: () =>
-              import("@/views/Profile/Address/AddAddress.vue"),
+            component: () => import("@/views/Profile/Address/AddAddress.vue"),
           },
           {
             path: "business/:business_id/location/:id/edit-address",
-            component: () =>
-              import("@/views/Profile/Address/EditAddress.vue"),
+            component: () => import("@/views/Profile/Address/EditAddress.vue"),
           },
         ],
       },
       {
         path: "account-activity",
-        component: () =>
-          import("@/views/Profile/AccountActivity.vue"),
+        component: () => import("@/views/Profile/AccountActivity.vue"),
       },
     ],
   },

@@ -14,7 +14,7 @@ export const useAgentsStore = defineStore("agents", {
   state: () => ({
     agents: [] as Agent[],
     meta: {},
-    sales: [] as Sale[]
+    sales: [] as Sale[],
   }),
   actions: {
     async getBusinessSaleAgents(
@@ -123,18 +123,19 @@ export const useAgentsStore = defineStore("agents", {
       const params = {
         cms_users_id: userStore.user?.id,
         limit: 50,
-        ...options
+        ...options,
       };
 
-      return axios.get('/v2/sales', { params })
-        .then(response => {
+      return axios
+        .get("/v2/sales", { params })
+        .then((response) => {
           const sales = response.data.data.map((el: object) => new Sale(el));
 
           this.sales = [...sales];
 
           return sales;
         })
-        .catch(error => {
+        .catch((error) => {
           handleAxiosRequestError(error);
 
           return [];
