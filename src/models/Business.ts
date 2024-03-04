@@ -17,9 +17,13 @@ export default class Business {
     public currency_id: NullableNumber = null;
     public region_id: NullableNumber = null;
     public country_id: NullableNumber = null;
+    public id_card_number: NullableNumber = null;
+    public tax_number: NullableStringOrNumber = null;
     public state_id: NullableNumber = null;
     public _currency?: Currency;
     public logo?: string;
+    public id_card_photo?: string;
+    public city?: string;
     public cover_image?: string;
     public reviews_count?: number = 0;
     public rating?: number = 1;

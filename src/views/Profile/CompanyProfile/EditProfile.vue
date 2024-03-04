@@ -115,11 +115,77 @@
               style="margin-right: 5px"
             ></IonIcon>
             {{ $t("profile.customers.location.useCurrentLocation") }}
-            <IonSpinner class="spinner"
-          name="crescent"
-          v-if=userStore.locationLoading
-        ></IonSpinner>
+            <IonSpinner
+              class="spinner"
+              name="crescent"
+              v-if="userStore.locationLoading"
+            ></IonSpinner>
           </IonButton>
+          <IonSelect
+            class="kola-input ion-margin-bottom"
+            :label="$t('signup.vendor.country')"
+            :class="{ 'ion-invalid ion-touched': form.errors.country_id }"
+            labelPlacement="stacked"
+            fill="solid"
+            v-model="form.fields.country_id"
+            required
+            name="country_id"
+            @ion-change="onCountryChange($event)"
+          >
+            <IonSelectOption
+              v-for="country in countries"
+              :key="country.id"
+              :value="country.id"
+            >
+              {{ country.name }}
+            </IonSelectOption>
+          </IonSelect>
+
+          <IonSelect
+            class="kola-input ion-margin-bottom"
+            :label="$t('signup.vendor.region')"
+            :class="{ 'ion-invalid ion-touched': form.errors.region_id }"
+            labelPlacement="stacked"
+            fill="solid"
+            v-model="form.fields.region_id"
+            required
+            name="region_id"
+            @ion-change="form.validateSelectInput($event)"
+          >
+            <IonSelectOption
+              v-for="region in regions"
+              :key="region.id"
+              :value="region.id"
+            >
+              {{ region.name }}
+            </IonSelectOption>
+          </IonSelect>
+
+          <IonInput
+            class="kola-input ion-margin-bottom"
+            :class="{ 'ion-invalid ion-touched': form.errors.city }"
+            :label="$t('signup.vendor.city')"
+            labelPlacement="stacked"
+            fill="solid"
+            name="city"
+            v-model="form.fields.city"
+            @ionBlur="form.validate($event)"
+            @ionChange="form.validate($event)"
+            required
+          ></IonInput>
+
+          <IonInput
+            class="kola-input ion-margin-bottom"
+            :class="{ 'ion-invalid ion-touched': form.errors.tax_number }"
+            :label="$t('signup.vendor.tinNumber')"
+            labelPlacement="stacked"
+            fill="solid"
+            name="tax_number"
+            v-model="form.fields.tax_number"
+            @ionBlur="form.validate($event)"
+            @ionChange="form.validate($event)"
+            required
+          ></IonInput>
           <IonInput
             class="kola-input ion-margin-bottom"
             :class="{ 'ion-invalid ion-touched': form.errors.id_card_number }"
@@ -187,6 +253,8 @@ import {
   IonImg,
   IonAvatar,
   IonModal,
+  IonSelect,
+  IonSelectOption,
   onIonViewDidEnter,
   onIonViewWillEnter,
 } from "@ionic/vue";
@@ -208,9 +276,13 @@ import { useForm } from "@/composables/form";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import ProfilePhotoModal from "@/components/profile/ProfilePhotoModal.vue";
 import { usePhotoGallery, UserPhoto } from "@/composables/usePhotoGallery";
+import { useLocationStore } from "@/stores/LocationStore";
+import Country from "@/models/Country";
+import Region from "@/models/Region";
 
 const toastStore = useToastStore();
 const businessStore = useBusinessStore();
+const locationStore = useLocationStore();
 const userStore = useUserStore();
 
 const image = ref(null);
@@ -222,6 +294,8 @@ const router = useRouter();
 const defaultBanner = ref("/images/vendor/banner.png");
 
 const fetching = ref(false);
+const countries = ref(<Country[]>[]);
+const regions = ref(<Region[]>[]);
 
 const company = computed(() => userStore.activeBusiness);
 const form = useForm({
@@ -232,6 +306,10 @@ const form = useForm({
   id_card_number: "",
   business_types_id: 1,
   id_card_photo: null,
+  country_id: 83,
+  region_id: 54,
+  city: "",
+  tax_number: "",
 });
 
 const photo = ref<UserPhoto | null>(null);
@@ -268,11 +346,16 @@ const formValid = computed(() => {
   const fields = form.fields;
 
   return (
-    fields.name.length > 0 &&
-    fields.location.length > 0 &&
-    fields.phone_number.length > 0 &&
-    fields.id_card_number.length > 0 &&
-    fields.id_card_photo.length > 0
+    fields.name?.length > 0 &&
+    fields.location?.length > 0 &&
+    fields.phone_number?.length > 0 &&
+    fields.id_card_number?.length > 0 &&
+    fields.id_card_photo?.length > 0 &&
+    fields.country_id?.length > 0 &&
+    fields.region_id?.length > 0 &&
+    fields.city?.length > 0 &&
+    fields.tax_number?.length > 0 &&
+    fields.email?.length > 0
   );
 });
 const onLoadError = (event: Event) => {
@@ -292,6 +375,12 @@ const fetchCompany = async () => {
     phone_number: company.value?.phone_number,
     email: company.value?.email,
     business_types_id: 1,
+    id_card_number: company.value?.id_card_number,
+    id_card_photo: company.value?.id_card_photo,
+    country_id: company.value?.country_id,
+    region_id: company.value?.region_id,
+    city: company.value?.city,
+    tax_number: company.value?.tax_number,
   });
 
   fetching.value = false;
@@ -312,6 +401,10 @@ const getLocation = async () => {
   } catch (error) {
     toastStore.showError("Cannot retrieve location info");
   }
+};
+const onCountryChange = (event: any) => {
+  form.validateSelectInput(event);
+  loadRegions(form.fields.country_id);
 };
 
 const updateProfile = async () => {
@@ -352,7 +445,18 @@ const updateProfile = async () => {
   }
 };
 
-onIonViewWillEnter(() => fetchCompany());
+const fetchCountries = async () => {
+  countries.value = await locationStore.fetchCountries();
+};
+
+const loadRegions = async (country_id: number) => {
+  regions.value = await locationStore.fetchRegions(country_id);
+};
+
+onIonViewWillEnter(async () => {
+  await fetchCountries();
+  fetchCompany();
+});
 </script>
 
 <style lang="scss" scoped>
