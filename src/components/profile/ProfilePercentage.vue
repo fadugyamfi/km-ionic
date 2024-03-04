@@ -1,5 +1,5 @@
 <template>
-  <section class="ion-margin-top">
+  <section class="ion-margin-top" v-if="percentage < 100">
     <IonItem lines="none">
       <IonLabel class="ion-align-items-center">
         <IonText class="font-medium">Profile Completion</IonText>
