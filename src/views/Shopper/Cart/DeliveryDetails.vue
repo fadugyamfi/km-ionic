@@ -9,32 +9,10 @@
     <ion-content class="ion-padding">
       <form>
         <h6 style="margin-top: 0px">Add Delivery Address</h6>
-        <IonInput
-          class="kola-input delivery-details-input"
-          :class="{ 'ion-invalid ion-touched': form.errors.delivery_location }"
-          label="Town/Locality"
-          labelPlacement="stacked"
-          fill="solid"
+        <LocationInput
           v-model="form.fields.delivery_location"
-          name="location"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-
-        <IonButton
-          fill="clear"
-          size="small"
-          style="text-transform: none"
-          class="ion-margin-bottom use-location ion-text-start"
-          @click="getLocation()"
-        >
-          <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
-          {{ $t("signup.vendor.location.useCurrentLocation") }}
-          <IonSpinner class="spinner"
-          name="crescent"
-          v-if=userStore.locationLoading
-        ></IonSpinner>
-        </IonButton>
+          label="Town/Locality"
+        ></LocationInput>
 
         <IonInput
           class="kola-input delivery-details-input ion-margin-bottom"
@@ -91,13 +69,13 @@ import {
   IonIcon,
   IonPage,
   IonText,
-  IonInput,IonSpinner,
+  IonInput,
+  IonSpinner,
   onIonViewDidEnter,
 } from "@ionic/vue";
 import { navigateOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
-import { useGeolocation } from "@/composables/useGeolocation";
 import DeliveryDetailsHeader from "@/components/header/DeliveryDetailsHeader.vue";
 import { useCartStore } from "@/stores/CartStore";
 import { useForm } from "@/composables/form";
@@ -106,6 +84,7 @@ import { useRoute } from "vue-router";
 import { onMounted, computed } from "vue";
 import { Order } from "@/models/Order";
 import { useUserStore } from "@/stores/UserStore";
+import LocationInput from "@/components/forms/LocationInput.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -172,22 +151,7 @@ const formValid = computed(() => {
 
   return fields.delivery_nearest_landmark || fields.delivery_nearest_landmark;
 });
-const getLocation = async () => {
-  const { getCurrentLocation, getDisplayName } = useGeolocation();
 
-  try {
-    const coordinates = await getCurrentLocation();
-    const displayName = await getDisplayName(coordinates);
-
-    if (displayName) {
-      form.fields.delivery_location = displayName;
-    } else {
-      form.fields.delivery_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
-    }
-  } catch (error) {
-    toastStore.showError("Cannot retrieve location info");
-  }
-};
 onIonViewDidEnter(async () => {
   const cartStore = useCartStore();
   if (cartStore.orders.length == 0) {

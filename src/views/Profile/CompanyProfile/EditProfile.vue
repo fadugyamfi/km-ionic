@@ -92,35 +92,10 @@
             @ion-input="form.validate($event)"
             required
           ></IonInput>
-          <IonInput
-            class="kola-input"
-            :class="{ 'ion-invalid ion-touched': form.errors.location }"
-            :label="$t('profile.customers.businessLocation')"
-            labelPlacement="stacked"
-            fill="solid"
+          <LocationInput
             v-model="form.fields.location"
-            name="business_location"
-            @ion-input="form.validate($event)"
-            required
-          ></IonInput>
-          <IonButton
-            fill="clear"
-            size="small"
-            style="text-transform: none"
-            class="ion-margin-bottom use-location ion-text-start"
-            @click="getLocation()"
-          >
-            <IonIcon
-              :icon="navigateOutline"
-              style="margin-right: 5px"
-            ></IonIcon>
-            {{ $t("profile.customers.location.useCurrentLocation") }}
-            <IonSpinner
-              class="spinner"
-              name="crescent"
-              v-if="userStore.locationLoading"
-            ></IonSpinner>
-          </IonButton>
+            label="Business Location"
+          ></LocationInput>
           <IonSelect
             class="kola-input ion-margin-bottom"
             :label="$t('signup.vendor.country')"
@@ -264,12 +239,12 @@ import {
   navigateOutline,
 } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import LocationInput from "@/components/forms/LocationInput.vue";
 import { ref, onMounted, computed } from "vue";
 import { handleAxiosRequestError } from "@/utilities";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useToastStore } from "@/stores/ToastStore";
-import { useGeolocation } from "@/composables/useGeolocation";
 import { useRoute, useRouter } from "vue-router";
 import Business from "@/models/Business";
 import { useForm } from "@/composables/form";
@@ -386,22 +361,6 @@ const fetchCompany = async () => {
   fetching.value = false;
 };
 
-const getLocation = async () => {
-  const { getCurrentLocation, getDisplayName } = useGeolocation();
-
-  try {
-    const coordinates = await getCurrentLocation();
-    const displayName = await getDisplayName(coordinates);
-
-    if (displayName) {
-      form.fields.location = displayName;
-    } else {
-      form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
-    }
-  } catch (error) {
-    toastStore.showError("Cannot retrieve location info");
-  }
-};
 const onCountryChange = (event: any) => {
   form.validateSelectInput(event);
   loadRegions(form.fields.country_id);
