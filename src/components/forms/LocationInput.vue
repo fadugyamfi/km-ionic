@@ -35,8 +35,8 @@ import { useToastStore } from "@/stores/ToastStore";
 import { useUserStore } from "@/stores/UserStore";
 
 const props = defineProps({
-  label: String,
-  modelValue: { required: false },
+  label: { type: String, required: true },
+  modelValue: { type: String, required: false },
 });
 
 const emit = defineEmits(["update:modelValue"]);

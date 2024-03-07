@@ -1,15 +1,11 @@
 <template>
   <section class="ion-margin-top" v-if="percentage < 100">
-    <IonItem lines="none">
+    <IonItem lines="none" button router-link="/profile/company/edit-profile">
       <IonLabel class="ion-align-items-center">
         <IonText class="font-medium">Profile Completion</IonText>
         <h3 class="font-medium ion-no-margin">{{ percentage }}%</h3>
       </IonLabel>
-      <IonButton
-        fill="clear"
-        class="font-medium ion-text-capitalize"
-        router-link="/profile/company/edit-profile"
-      >
+      <IonButton fill="clear" class="font-medium ion-text-capitalize">
         Edit</IonButton
       >
       <IonProgressBar :value="progressPercentage"></IonProgressBar>
@@ -62,12 +58,11 @@ const percentage = computed(() => {
 });
 
 const progressPercentage = computed(() => percentage.value / 100);
-
 </script>
 
 <style scoped lang="scss">
 ion-item {
-  --min-height: 40px;
+  //--min-height: 40px;
   ion-label {
     margin: 0px;
     display: flex !important;
