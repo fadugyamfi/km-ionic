@@ -174,7 +174,7 @@
           ></IonInput>
           <IonCard color="light" style="margin: 0px">
             <IonImg
-              v-if="form.fields.id_card_photo"
+              v-if="form.fields.id_card_image"
               :src="photo?.webviewPath"
               @click="takePhoto()"
             ></IonImg>
@@ -280,7 +280,7 @@ const form = useForm({
   phone_number: "",
   id_card_number: "",
   business_types_id: 1,
-  id_card_photo: null,
+  id_card_image: null,
   country_id: 83,
   region_id: 54,
   city: "",
@@ -310,7 +310,7 @@ const takePhoto = async () => {
 
     photo.value = photos.value ? photos.value[0] : null;
     if (photo.value) {
-      fields.id_card_photo = photo.value.base64Data as string;
+      fields.id_card_image = photo.value.base64Data as string;
     }
   } catch (e) {
     console.log(e);
@@ -323,14 +323,14 @@ const formValid = computed(() => {
   return (
     fields.name?.length > 0 &&
     fields.location?.length > 0 &&
-    fields.phone_number?.length > 0 &&
-    fields.id_card_number?.length > 0 &&
-    fields.id_card_photo?.length > 0 &&
-    fields.country_id?.length > 0 &&
-    fields.region_id?.length > 0 &&
-    fields.city?.length > 0 &&
-    fields.tax_number?.length > 0 &&
-    fields.email?.length > 0
+    fields.phone_number?.length > 0
+    // fields.id_card_number?.length > 0 &&
+    // fields.id_card_image?.length > 0 &&
+    // fields.country_id?.length > 0 &&
+    // fields.region_id?.length > 0 &&
+    // fields.city?.length > 0 &&
+    // fields.tax_number?.length > 0 &&
+    // fields.email?.length > 0
   );
 });
 const onLoadError = (event: Event) => {
@@ -351,7 +351,7 @@ const fetchCompany = async () => {
     email: company.value?.email,
     business_types_id: 1,
     id_card_number: company.value?.id_card_number,
-    id_card_photo: company.value?.id_card_photo,
+    id_card_image: company.value?.id_card_image,
     country_id: company.value?.country_id,
     region_id: company.value?.region_id,
     city: company.value?.city,
@@ -409,12 +409,14 @@ const fetchCountries = async () => {
 };
 
 const loadRegions = async (country_id: number) => {
+  if (!country_id) return;
   regions.value = await locationStore.fetchRegions(country_id);
 };
 
 onIonViewWillEnter(async () => {
   await fetchCountries();
   fetchCompany();
+  loadRegions(form.fields.country_id);
 });
 </script>
 

@@ -35,7 +35,7 @@ const businessProfile = computed(() => {
     region_id: userStore.activeBusiness?.region_id,
     city: userStore.activeBusiness?.city,
     tax_number: userStore.activeBusiness?.tax_number,
-    id_card_photo: userStore.activeBusiness?.id_card_photo,
+    id_card_image: userStore.activeBusiness?.id_card_image,
     id_card_number: userStore.activeBusiness?.id_card_number,
   };
 });
