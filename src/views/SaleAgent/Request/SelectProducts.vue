@@ -198,10 +198,16 @@ export default defineComponent({
 
   methods: {
     async loadCachedInventory() {
-      this.products = await this.saleStore.fetchInventory();
-
-      if (!this.products || this.products.length == 0) {
-        this.fetchProducts();
+      try {
+        this.fetching = true;
+        this.products = await this.saleStore.fetchInventory();
+        if (!this.products || this.products.length == 0) {
+          this.fetchProducts();
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      } finally {
+        this.fetching = false;
       }
     },
 
@@ -247,7 +253,7 @@ export default defineComponent({
         );
         return;
       }
-      this.requestStore.persist()
+      this.requestStore.persist();
       this.$router.push("/agent/request/place-request/configure-items");
     },
 
