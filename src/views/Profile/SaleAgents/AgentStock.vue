@@ -9,16 +9,18 @@
               :icon="arrowBackOutline"
               text=""
               style="margin-left: 10px"
-              defaultHref="/vendor/profile"
+              defaultHref="/agent/profile"
             ></ion-back-button>
           </ion-buttons>
           <IonTitle size="small" class="fw-bold">{{
-            $t("profile.stock.stock")
+            $t("profile.stock.myStock")
           }}</IonTitle>
           <IonButtons slot="end">
             <IonButton
               color="dark"
-              @click="router.push(`/profile/company/stocks/add-stock`)"
+              @click="
+                router.push(`/agent/request/place-request/select-products`)
+              "
             >
               <IonIcon :icon="bagAddOutline"></IonIcon>
             </IonButton>
@@ -46,10 +48,14 @@
       <section v-if="!fetching" class="ion-margin-top">
         <Summary
           :total-value="stockSummary?.total_value"
-          :total-items="meta.total"
+          :total-items="meta?.total"
         />
-        <AvailableStock :stocks="stocks" />
-        <EmptyStock v-if="stocks?.length == 0"></EmptyStock>
+        <MyAvailableStock :stocks="stocks" />
+        <EmptyStock
+          description="Looks like your stock is currently empty. Start by adding new requests"
+          :showButton="false"
+          v-if="stocks?.length == 0"
+        ></EmptyStock>
       </section>
     </ion-content>
     <FilterStockSheet
@@ -95,16 +101,18 @@ import FilterStockSheet from "@/components/modules/stock/FilterStockSheet.vue";
 import Summary from "@/components/modules/stock/Summary.vue";
 import { formatMySQLDateTime } from "@/utilities";
 import { useRouter } from "vue-router";
-import AvailableStock from "@/components/modules/stock/AvailableStock.vue";
+import MyAvailableStock from "@/components/modules/stock/MyAvailableStock.vue";
 import { useStockStore } from "@/stores/StockStore";
 import { handleAxiosRequestError } from "@/utilities";
 import Stock from "@/models/Stock";
+import { useUserStore } from "@/stores/UserStore";
 
 const fetching = ref(false);
 const refreshing = ref(false);
 const showFilterSheet = ref(false);
 const router = useRouter();
 const stockStore = useStockStore();
+const userStore = useUserStore();
 
 const stocks = ref<Stock[]>();
 
@@ -138,7 +146,10 @@ const onFilterCategory = (event: number) => {
 const fetchStocks = async () => {
   try {
     fetching.value = true;
-    stocks.value = await stockStore.fetchStocks(searchFilters.value);
+    stocks.value = await stockStore.fetchStocks(
+      searchFilters.value,
+      `/v2/users/${userStore.user?.id}/products`
+    );
   } catch (error) {
     console.log(error);
   } finally {
@@ -148,7 +159,11 @@ const fetchStocks = async () => {
 const fetchSearchedStocks = async () => {
   fetching.value = true;
   try {
-    stocks.value = await stockStore.fetchSearchedStocks();
+    stocks.value = await stockStore.fetchSearchedStocks(
+      1,
+      50,
+      `/v2/users/${userStore.user?.id}/products`
+    );
   } catch (error) {
     handleAxiosRequestError(error);
   } finally {
@@ -161,7 +176,6 @@ const onSearch = (event: any) => {
   stocks.value = [];
   fetchSearchedStocks();
 };
-
 
 onIonViewDidEnter(() => {
   // onSegmentChanged(new CustomEvent("load", { detail: { value: "pastmonth" } }));

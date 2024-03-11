@@ -41,7 +41,7 @@
         :detail="true"
         :button="true"
         class="profile-item"
-        router-link="/profile/company/stocks"
+        :router-link="stockPath"
       >
         <IonAvatar slot="start">
           <img src="/images/ic_notification.svg" class="action-img" />
@@ -190,6 +190,11 @@ export default defineComponent({
         this.userStore.activeBusiness?.attributes?.applied_to.length > 0 ||
         this.userStore?.activeBusiness?.approved_vendor != null
       );
+    },
+    stockPath() {
+      return this.userStore.user?.isOwner()
+        ? "/profile/company/stocks"
+        : "/profile/company/agent/stocks";
     },
   },
 

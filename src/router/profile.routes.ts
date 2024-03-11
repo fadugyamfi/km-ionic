@@ -65,6 +65,10 @@ export const ProfileRoutes = [
             component: () => import("@/views/Vendor/Company/Stock/Stocks.vue"),
           },
           {
+            path: "agent/stocks",
+            component: () => import("@/views/Profile/SaleAgents/AgentStock.vue"),
+          },
+          {
             path: "stocks/add-stock",
             component: () =>
               import("@/views/Vendor/Company/Stock/AddStock.vue"),
