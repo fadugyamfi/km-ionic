@@ -22,7 +22,7 @@ export default class Business {
     public state_id: NullableNumber = null;
     public _currency?: Currency;
     public logo?: string;
-    public id_card_photo?: string;
+    public id_card_image?: string;
     public city?: string;
     public cover_image?: string;
     public reviews_count?: number = 0;
