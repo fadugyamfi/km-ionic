@@ -131,7 +131,6 @@ import { handleAxiosRequestError } from "@/utilities";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useToastStore } from "@/stores/ToastStore";
-import { useGeolocation } from "@/composables/useGeolocation";
 import { useRouter } from "vue-router";
 import User from "@/models/User";
 import { useForm } from "@/composables/form";

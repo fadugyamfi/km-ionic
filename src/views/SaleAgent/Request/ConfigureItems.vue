@@ -40,27 +40,10 @@
     </section>
     <IonContent>
       <section class="ion-padding-horizontal">
-        <IonInput
-          class="kola-input delivery-details-input"
-          :class="{ 'ion-invalid ion-touched': form.errors.delivery_location }"
-          label="Delivery Location"
-          labelPlacement="stacked"
-          fill="solid"
+        <LocationInput
           v-model="form.fields.delivery_location"
-          name="location"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-        <IonButton
-          fill="clear"
-          size="small"
-          style="text-transform: none"
-          class="use-location ion-text-start"
-          @click="getLocation()"
-        >
-          <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
-          {{ $t("signup.vendor.location.useCurrentLocation") }}
-        </IonButton>
+          label="Delivery Location"
+        ></LocationInput>
       </section>
       <IonCard>
         <IonCardContent>
@@ -108,6 +91,7 @@ import {
   IonTitle,
   IonToolbar,
   IonInput,
+  IonSpinner,
 } from "@ionic/vue";
 import {
   arrowBack,
@@ -117,6 +101,7 @@ import {
 } from "ionicons/icons";
 import { defineComponent } from "vue";
 import Image from "@/components/Image.vue";
+import LocationInput from "@/components/forms/LocationInput.vue";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
 import SaleItemView from "@/components/modules/sales/SaleItemView.vue";
 import { useSaleStore } from "@/stores/SaleStore";
@@ -129,7 +114,6 @@ import { useUserStore } from "@/stores/UserStore";
 import { useRequestStore } from "@/stores/RequestStore";
 import { OrderItem } from "@/models/OrderItem";
 import { useForm } from "@/composables/form";
-import { useGeolocation } from "@/composables/useGeolocation";
 
 export default defineComponent({
   data() {
@@ -171,6 +155,8 @@ export default defineComponent({
     IonFooter,
     KolaYellowButton,
     IonInput,
+    IonSpinner,
+    LocationInput
   },
 
   computed: {
@@ -235,22 +221,13 @@ export default defineComponent({
         this.toastStore.unblockUI();
       }
     },
-    async getLocation() {
-      const { getCurrentLocation, getDisplayName } = useGeolocation();
-
-      try {
-        const coordinates = await getCurrentLocation();
-        const displayName = await getDisplayName(coordinates);
-
-        if (displayName) {
-          this.form.fields.delivery_location = displayName;
-        } else {
-          this.form.fields.delivery_location = coordinates;
-        }
-      } catch (error) {
-        this.toastStore.showError("Cannot retrieve location info");
-      }
-    },
   },
 });
 </script>
+<style scoped>
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
+</style>

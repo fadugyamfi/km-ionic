@@ -60,27 +60,10 @@
           @ion-input="form.validate($event)"
           required
         ></IonInput>
-        <IonInput
-          class="kola-input"
-          :class="{ 'ion-invalid ion-touched': form.errors.location }"
-          :label="$t('profile.customers.businessLocation')"
-          labelPlacement="stacked"
-          fill="solid"
+        <LocationInput
           v-model="form.fields.location"
-          name="business_location"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-        <IonButton
-          fill="clear"
-          size="small"
-          style="text-transform: none"
-          class="ion-margin-bottom use-location ion-text-start"
-          @click="getLocation()"
-        >
-          <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
-          {{ $t("profile.customers.location.useCurrentLocation") }}
-        </IonButton>
+          label="Business Location"
+        ></LocationInput>
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.phone_number }"
@@ -176,7 +159,7 @@ import {
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
 import { useCustomerStore } from "@/stores/CustomerStore";
-import { useGeolocation } from "@/composables/useGeolocation";
+import LocationInput from "@/components/forms/LocationInput.vue";
 import { useForm } from "@/composables/form";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
@@ -251,23 +234,6 @@ const updateCustomer = async () => {
   }
 };
 
-const getLocation = async () => {
-  const toastStore = useToastStore();
-  const { getCurrentLocation, getDisplayName } = useGeolocation();
-
-  try {
-    const coordinates = await getCurrentLocation();
-    const displayName = await getDisplayName(coordinates);
-
-    if (displayName) {
-      form.fields.location = displayName;
-    } else {
-      form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
-    }
-  } catch (error) {
-    toastStore.showError("Cannot retrieve location info");
-  }
-};
 const fetchCustomer = async () => {
   fetching.value = true;
 
@@ -318,6 +284,11 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
 .use-location {
   --color: #666eed;
   --padding-start: 0px;

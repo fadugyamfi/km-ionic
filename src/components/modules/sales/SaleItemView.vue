@@ -61,8 +61,10 @@ import { SaleItem } from '@/models/SaleItem';
 import { OrderItem } from '@/models/OrderItem';
 import { mapStores } from 'pinia';
 import { useSaleStore } from '@/stores/SaleStore';
+import { useRequestStore } from '@/stores/RequestStore';
 import Product from '@/models/Product';
 import Filters from '@/utilities/Filters';
+import { useOrderStore } from '@/stores/OrderStore';
 
 
 export default defineComponent({
@@ -95,7 +97,7 @@ export default defineComponent({
     },
 
     computed: {
-        ...mapStores( useSaleStore )
+        ...mapStores( useSaleStore, useRequestStore, useOrderStore )
     },
 
     methods: {
@@ -108,6 +110,8 @@ export default defineComponent({
 
         removeItem() {
             this.saleStore.removeProductFromSale(this.saleItem?.product as Product);
+            this.requestStore.removeProductFromRequest(this.saleItem?.product as Product);
+            this.orderStore.removeProductFromOrder(this.saleItem?.product as Product);
         }
     }
 })

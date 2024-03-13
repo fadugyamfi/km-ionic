@@ -53,30 +53,10 @@
         ></IonInput>
 
         <section>
-          <IonInput
-            class="kola-input"
-            :class="{ 'ion-invalid ion-touched': form.errors.location }"
-            :label="$t('profile.customers.businessLocation')"
-            labelPlacement="stacked"
-            fill="solid"
-            v-model="form.fields.location"
-            name="business_location"
-            @ion-input="form.validate($event)"
-            required
-          ></IonInput>
-          <IonButton
-            fill="clear"
-            size="small"
-            style="text-transform: none"
-            class="ion-margin-bottom use-location ion-text-start"
-            @click="getLocation()"
-          >
-            <IonIcon
-              :icon="navigateOutline"
-              style="margin-right: 5px"
-            ></IonIcon>
-            {{ $t("profile.customers.location.useCurrentLocation") }}
-          </IonButton>
+          <LocationInput
+          v-model="form.fields.location"
+          label="Business Location"
+        ></LocationInput>
         </section>
 
         <section class="ion-margin-vertical">
@@ -201,7 +181,7 @@ import {
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
 import { useCustomerStore } from "@/stores/CustomerStore";
-import { useGeolocation } from "@/composables/useGeolocation";
+import LocationInput from "@/components/forms/LocationInput.vue";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useForm } from "@/composables/form";
@@ -283,9 +263,9 @@ const getPaymentModes = async () => {
     }
   } catch (error) {}
 };
+const userStore = useUserStore();
 const fetchBusinessSalesAgent = async () => {
   fetching.value = true;
-  const userStore = useUserStore();
   const businessStore = useBusinessStore();
   salesAgents.value = await businessStore.getBusinessSaleAgents(
     userStore.activeBusiness as Business,
@@ -296,23 +276,7 @@ const fetchBusinessSalesAgent = async () => {
 
   fetching.value = false;
 };
-const getLocation = async () => {
-  const toastStore = useToastStore();
-  const { getCurrentLocation, getDisplayName } = useGeolocation();
 
-  try {
-    const coordinates = await getCurrentLocation();
-    const displayName = await getDisplayName(coordinates);
-
-    if (displayName) {
-      form.fields.location = displayName;
-    } else {
-      form.fields.location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
-    }
-  } catch (error) {
-    toastStore.showError("Cannot retrieve location info");
-  }
-};
 onMounted(() => {
   getPaymentModes();
   fetchBusinessSalesAgent();
@@ -320,6 +284,11 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
 ion-input {
   color: #74787c;
   --padding-end: 10px;

@@ -25,7 +25,6 @@
             </IonButtons>
           </IonToolbar>
         </IonHeader>
-
         <IonCard class="ion-no-margin ion-margin-top">
           <IonCardContent>
             <section class="d-flex ion-justify-content-between fw-bold">
@@ -43,7 +42,6 @@
         </IonCard>
       </IonHeader>
     </section>
-
     <IonContent>
       <IonCard>
         <IonCardContent>
@@ -172,13 +170,12 @@ export default defineComponent({
         );
         return;
       }
-
-      this.orderStore.persist();
-      this.orderStore.newOrder = {
-        ...this.orderStore.newOrder,
+      Object.assign(this.orderStore.newOrder, {
         total_order_amount: this.cartTotalCost,
         total_items: this.orderStore.newOrder?.order_items?.length,
-      };
+      });
+      
+      this.orderStore.persist();
 
       if (this.userStore.user?.isSalesAssociate()) {
         this.$router.push("/agent/orders/place-order/delivery-details");

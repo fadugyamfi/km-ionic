@@ -7,6 +7,8 @@
 
       <PromoSpace></PromoSpace>
 
+      <ProfilePercentage></ProfilePercentage>
+
       <Promotions></Promotions>
 
       <TopCategories></TopCategories>
@@ -31,6 +33,7 @@ import TopCategories from "./TopCategories.vue";
 import CategoryPills from "./CategoryPills.vue";
 import PromoSpace from "./PromoSpace.vue";
 import { defineAsyncComponent } from "vue";
+import ProfilePercentage from "@/components/profile/ProfilePercentage.vue";
 
 // code split
 // const SuppliersNearYou = defineAsyncComponent(() => import("@/views/Shopper/Home/SuppliersNearYou.vue"));

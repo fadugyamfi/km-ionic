@@ -570,7 +570,16 @@ export const useBusinessStore = defineStore("business", {
         })
         .catch((error) => handleAxiosRequestError(error));
     },
-
+async addBusiness(businessInfo: object): Promise<Business | null> {
+      try {
+        const response = await axios.post(`/v2/businesses`, businessInfo);
+        const businesss = new Business(response.data.data);
+        return businesss;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return null;
+      }
+    },
     async getBusinessLocation(
       business_id: any,
       location_id: any

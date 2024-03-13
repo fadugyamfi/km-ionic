@@ -38,28 +38,10 @@
         ></IonInput>
 
         <h6>Add Delivery Address</h6>
-        <IonInput
-          class="kola-input delivery-details-input"
-          :class="{ 'ion-invalid ion-touched': form.errors.delivery_location }"
-          label="Town/Locality"
-          labelPlacement="stacked"
-          fill="solid"
+        <LocationInput
           v-model="form.fields.delivery_location"
-          name="location"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-
-        <IonButton
-          fill="clear"
-          size="small"
-          style="text-transform: none"
-          class="ion-margin-bottom use-location ion-text-start"
-          @click="getLocation()"
-        >
-          <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
-          {{ $t("signup.vendor.location.useCurrentLocation") }}
-        </IonButton>
+          label="Town/Locality"
+        ></LocationInput>
 
         <IonInput
           class="kola-input delivery-details-input ion-margin-bottom"
@@ -123,11 +105,12 @@ import {
   IonText,
   IonInput,
   onIonViewDidEnter,
+  IonSpinner,
 } from "@ionic/vue";
 import { navigateOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
-import { useGeolocation } from "@/composables/useGeolocation";
+import LocationInput from "@/components/forms/LocationInput.vue";
 import DeliveryDetailsHeader from "@/components/header/DeliveryDetailsHeader.vue";
 import { useCartStore } from "@/stores/CartStore";
 import { useForm } from "@/composables/form";
@@ -148,7 +131,7 @@ const form = useForm({
   delivery_date: "",
   delivery_method: "",
   payment_option_id: "2",
-  ordered_at: formatDateTimeForInput( new Date().toLocaleString() )
+  ordered_at: formatDateTimeForInput(new Date().toLocaleString()),
 });
 
 const selectDeliveryMethod = (method: string) => {
@@ -171,9 +154,9 @@ const selectDeliveryMethod = (method: string) => {
   }
 };
 
+const userStore = useUserStore();
 const recordOrder = async () => {
   const orderStore = useOrderStore();
-  const userStore = useUserStore();
 
   orderStore.newOrder = {
     ...orderStore.newOrder,
@@ -212,25 +195,10 @@ const formValid = computed(() => {
 
   return fields.delivery_nearest_landmark || fields.delivery_nearest_landmark;
 });
-const getLocation = async () => {
-  const { getCurrentLocation, getDisplayName } = useGeolocation();
 
-  try {
-    const coordinates = await getCurrentLocation();
-    const displayName = await getDisplayName(coordinates);
-
-    if (displayName) {
-      form.fields.delivery_location = displayName;
-    } else {
-      form.fields.delivery_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
-    }
-  } catch (error) {
-    toastStore.showError("Cannot retrieve location info");
-  }
-};
 onIonViewDidEnter(async () => {
   const orderStore = useOrderStore();
-  await orderStore.loadFromStorage();
+  // await orderStore.loadFromStorage();
   Object.assign(form.fields, orderStore.newOrder);
   // Set the delivery method here based on your requirement
   // For example, setting it to 'standard' when the component is mounted
@@ -240,6 +208,11 @@ onIonViewDidEnter(async () => {
 </script>
 
 <style scoped lang="scss">
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
 .delivery-details-input {
   color: #74787c;
   --padding-end: 10px;
