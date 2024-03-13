@@ -99,7 +99,45 @@ export const ProfileRoutes = [
               },
             ],
           },
-
+          {
+            path: "add-business",
+            component: () => import("@/views/Profile/Business/AddBusiness.vue"),
+          },
+          {
+            name: "ProfileSignupSummary",
+            path: "summary",
+            component: () => import("@/views/Signup/Vendor/Summary.vue"),
+          },
+          {
+            name: "ProfileSignupBusinessInfo",
+            path: "business-info",
+            component: () => import("@/views/Signup/Vendor/BusinessInfo.vue"),
+          },
+          {
+            name: "ProfileSignupBrandInfo",
+            path: "brand-info",
+            component: () => import("@/views/Signup/Vendor/BrandInfo.vue"),
+          },
+          {
+            name: "ProfileSignupLocationInfo",
+            path: "location-info",
+            component: () => import("@/views/Signup/Vendor/LocationInfo.vue"),
+          },
+          {
+            name: "ProfileSignupStockInfo",
+            path: "stock-info",
+            component: () => import("@/views/Signup/Vendor/StockInfo.vue"),
+          },
+          {
+            name: "ProfileSignupUploadPhoto",
+            path: "upload-photo",
+            component: () => import("@/views/Signup/Vendor/UploadPhoto.vue"),
+          },
+          {
+            name: "ProfileSignupSignupComplete",
+            path: "signup-complete",
+            component: () => import("@/views/Signup/Vendor/SignupComplete.vue"),
+          },
           {
             path: "edit-profile",
             component: () =>

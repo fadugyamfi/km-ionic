@@ -5,30 +5,10 @@
     </section>
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
       <form>
-        <IonInput
-          class="kola-input"
-          :class="{
-            'ion-invalid ion-touched': form.errors.address,
-          }"
-          label="Business Address"
-          labelPlacement="stacked"
-          fill="solid"
+        <LocationInput
           v-model="form.fields.address"
-          name="address"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-
-        <IonButton
-          fill="clear"
-          size="small"
-          style="text-transform: none"
-          class="ion-margin-bottom use-location ion-text-start"
-          @click="getLocation()"
-        >
-          <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
-          {{ $t("signup.vendor.location.useCurrentLocation") }}
-        </IonButton>
+          label="Business Address"
+        ></LocationInput>
 
         <IonSelect
           class="kola-input ion-margin-bottom"
@@ -98,13 +78,14 @@ import {
   IonInput,
   IonSelect,
   IonSelectOption,
+  IonSpinner,
 } from "@ionic/vue";
 import { navigateOutline, chevronDownOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
+import LocationInput from "@/components/forms/LocationInput.vue";
 import { useToastStore } from "@/stores/ToastStore";
 import { useLocationStore } from "@/stores/LocationStore";
-import { useGeolocation } from "@/composables/useGeolocation";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useForm } from "@/composables/form";
 import { useRoute, useRouter } from "vue-router";
@@ -180,24 +161,6 @@ const getRegions = async () => {
   } catch (error) {}
 };
 
-const getLocation = async () => {
-  const toastStore = useToastStore();
-  const { getCurrentLocation, getDisplayName } = useGeolocation();
-
-  try {
-    const coordinates = await getCurrentLocation();
-    const displayName = await getDisplayName(coordinates);
-
-    if (displayName) {
-      form.fields.address = displayName;
-    } else {
-      form.fields.address = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
-    }
-  } catch (error) {
-    toastStore.showError("Cannot retrieve Business Location info");
-  }
-};
-
 const fetchAddress = async () => {
   fetching.value = true;
   const businessStore = useBusinessStore();
@@ -227,6 +190,11 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
 ion-badge.badge {
   --background: rgba(245, 170, 41, 0.38);
   --color: #344054;

@@ -40,28 +40,10 @@
           required
         ></IonInput>
 
-        <IonInput
-          class="kola-input"
-          :class="{ 'ion-invalid ion-touched': form.errors.business_location }"
-          :label="$t('signup.shopper.businessLocation')"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.business_location"
-          name="business_location"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
-
-        <IonButton
-          fill="clear"
-          color="primary"
-          style="text-transform: none"
-          class="ion-margin-bottom ion-text-start"
-          @click="getLocation()"
-        >
-          <IonIcon :icon="navigateOutline" style="margin-right: 5px"></IonIcon>
-          {{ $t("signup.vendor.location.useCurrentLocation") }}
-        </IonButton>
+        <LocationInput
+        v-model="form.fields.business_location"
+        label="Business Location"
+      ></LocationInput>
 
         <PinEntryField
           name="pin"
@@ -110,7 +92,7 @@ import { useRouter } from "vue-router";
 import { useForm } from "@/composables/form";
 import { navigateOutline } from "ionicons/icons";
 import { handleAxiosRequestError } from "@/utilities";
-import { useGeolocation } from "@/composables/useGeolocation";
+import LocationInput from "@/components/forms/LocationInput.vue";
 import { useToastStore } from "@/stores/ToastStore";
 import PinEntryField from "../Auth/PinEntryField.vue";
 
@@ -196,21 +178,12 @@ const onContinue = async () => {
   }
 };
 
-const getLocation = async () => {
-  const toastStore = useToastStore();
-  const { getCurrentLocation, getDisplayName } = useGeolocation();
 
-  try {
-    const coordinates = await getCurrentLocation();
-    const displayName = await getDisplayName(coordinates);
-
-    if (displayName) {
-      form.fields.business_location = displayName;
-    } else {
-      form.fields.business_location = `${coordinates.coords.latitude}, ${coordinates.coords.longitude}`;
-    }
-  } catch (error) {
-    toastStore.showError("Cannot retrieve location info");
-  }
-};
 </script>
+<style scoped>
+.spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
+</style>
