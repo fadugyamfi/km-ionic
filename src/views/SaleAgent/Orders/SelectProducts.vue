@@ -166,7 +166,7 @@ export default defineComponent({
 
   async ionViewDidEnter() {
     this.loadCachedInventory();
-    this.orderStore.loadFromStorage();
+    // this.orderStore.loadFromStorage();
   },
 
   components: {

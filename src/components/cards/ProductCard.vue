@@ -10,7 +10,6 @@
         color="dark"
       >
       </FavoriteButton>
-
       <IonCheckbox
         v-if="showAddToSelected"
         mode="ios"
@@ -261,8 +260,11 @@ export default defineComponent({
     },
   },
 
-  beforeMount() {
-    this.selected = this.initiallySelected;
+  watch: {
+    initiallySelected(newValue) {
+      if (newValue) return;
+      this.selected = newValue;
+    },
   },
 });
 </script>

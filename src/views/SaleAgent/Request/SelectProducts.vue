@@ -155,9 +155,9 @@ export default defineComponent({
     };
   },
 
-  async ionViewDidEnter() {
-    await this.loadCachedInventory();
-    this.requestStore.loadFromStorage();
+  ionViewDidEnter() {
+    this.loadCachedInventory();
+    // this.requestStore.loadFromStorage();
   },
 
   components: {
@@ -198,16 +198,9 @@ export default defineComponent({
 
   methods: {
     async loadCachedInventory() {
-      try {
-        this.fetching = true;
-        this.products = await this.saleStore.fetchInventory();
-        if (!this.products || this.products.length == 0) {
-          this.fetchProducts();
-        }
-      } catch (error) {
-        handleAxiosRequestError(error);
-      } finally {
-        this.fetching = false;
+      this.products = await this.saleStore.fetchInventory();
+      if (!this.products || this.products.length == 0) {
+        this.fetchProducts();
       }
     },
 
