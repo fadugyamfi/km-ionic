@@ -12,7 +12,7 @@
     </IonItem>
   </section>
 </template>
-<script setup>
+<script lang="ts" setup>
 import { useUserStore } from "@/stores/UserStore";
 import {
   IonProgressBar,
