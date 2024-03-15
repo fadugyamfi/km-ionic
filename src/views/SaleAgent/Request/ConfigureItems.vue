@@ -157,6 +157,7 @@ export default defineComponent({
     IonInput,
     LocationInput,
     IonSpinner,
+    LocationInput
   },
 
   computed: {

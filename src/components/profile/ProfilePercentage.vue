@@ -1,18 +1,24 @@
 <template>
   <section class="ion-margin-top" v-if="percentage < 100">
     <IonItem lines="none" button router-link="/profile/company/edit-profile">
-      <IonLabel class="ion-align-items-center">
-        <IonText class="font-medium">Profile Completion</IonText>
-        <h3 class="font-medium ion-no-margin">{{ percentage }}%</h3>
+      <IonLabel class="d-flex flex-column w-100">
+        <section class="d-flex" style="margin-bottom: 5px">
+          <IonText class="font-medium">Profile Completion</IonText>
+          <h3 class="font-medium ion-no-margin">{{ percentage }}%</h3>
+        </section>
+        <IonProgressBar :value="progressPercentage"></IonProgressBar>
       </IonLabel>
-      <IonButton fill="clear" class="font-medium ion-text-capitalize">
+      <IonButton
+        fill="clear"
+        class="font-medium ion-text-capitalize"
+        style="margin-bottom: 5px"
+      >
         Edit</IonButton
       >
-      <IonProgressBar :value="progressPercentage"></IonProgressBar>
     </IonItem>
   </section>
 </template>
-<script setup>
+<script lang="ts" setup>
 import { useUserStore } from "@/stores/UserStore";
 import {
   IonProgressBar,

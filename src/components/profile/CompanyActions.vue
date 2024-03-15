@@ -62,7 +62,7 @@
         <IonLabel>Team</IonLabel>
       </IonItem>
 
-      <IonItem
+      <!-- <IonItem
         v-if="userStore.user?.isOwner()"
         :detail="true"
         class="profile-item"
@@ -83,7 +83,7 @@
           <IonIcon :icon="bagOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
         <IonLabel>Become a Seller</IonLabel>
-      </IonItem>
+      </IonItem> -->
       <IonItem
         v-if="userStore.user?.isOwner()"
         :detail="true"

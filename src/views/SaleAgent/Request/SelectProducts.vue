@@ -155,9 +155,9 @@ export default defineComponent({
     };
   },
 
-  async ionViewDidEnter() {
-    await this.loadCachedInventory();
-    this.requestStore.loadFromStorage();
+  ionViewDidEnter() {
+    this.loadCachedInventory();
+    // this.requestStore.loadFromStorage();
   },
 
   components: {
@@ -199,7 +199,6 @@ export default defineComponent({
   methods: {
     async loadCachedInventory() {
       this.products = await this.saleStore.fetchInventory();
-
       if (!this.products || this.products.length == 0) {
         this.fetchProducts();
       }
@@ -247,7 +246,7 @@ export default defineComponent({
         );
         return;
       }
-      this.requestStore.persist()
+      this.requestStore.persist();
       this.$router.push("/agent/request/place-request/configure-items");
     },
 

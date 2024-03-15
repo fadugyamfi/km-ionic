@@ -494,6 +494,7 @@ console.log(newOrderData)
         (item: OrderItem) => item.products_id == product.id
       );
       this.newOrder.order_items?.splice(index as number, 1);
+      this.persist()
     },
     async recordOrder(): Promise<Order | null> {
       const location = useGeolocation();

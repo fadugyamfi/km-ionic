@@ -198,7 +198,7 @@ const formValid = computed(() => {
 
 onIonViewDidEnter(async () => {
   const orderStore = useOrderStore();
-  await orderStore.loadFromStorage();
+  // await orderStore.loadFromStorage();
   Object.assign(form.fields, orderStore.newOrder);
   // Set the delivery method here based on your requirement
   // For example, setting it to 'standard' when the component is mounted
