@@ -62,7 +62,7 @@
         <IonLabel>Team</IonLabel>
       </IonItem>
 
-      <!-- <IonItem
+      <IonItem
         v-if="userStore.user?.isOwner()"
         :detail="true"
         class="profile-item"
@@ -83,7 +83,7 @@
           <IonIcon :icon="bagOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
         <IonLabel>Become a Seller</IonLabel>
-      </IonItem> -->
+      </IonItem>
       <IonItem
         v-if="userStore.user?.isOwner()"
         :detail="true"
@@ -188,7 +188,7 @@ export default defineComponent({
     hasAppliedToSell() {
       return (
         this.userStore.activeBusiness?.attributes?.applied_to.length > 0 ||
-        this.userStore?.activeBusiness?.approved_vendor != null
+        this.userStore?.activeBusiness?.approved_vendor != 0
       );
     },
     stockPath() {
