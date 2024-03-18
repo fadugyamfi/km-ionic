@@ -32,7 +32,7 @@
         router-link="/profile/company/customers"
       >
         <IonAvatar slot="start">
-          <img src="/images/ic_user.svg" class="action-img" />
+          <IonIcon :icon="peopleOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
         <IonLabel>Customers</IonLabel>
       </IonItem>
@@ -45,7 +45,7 @@
         router-link="/profile/company/stocks"
       >
         <IonAvatar slot="start">
-          <img src="/images/ic_password.svg" class="action-img" />
+          <IonIcon :icon="bagOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
         <IonLabel>Stock</IonLabel>
       </IonItem>
@@ -57,7 +57,7 @@
         router-link="/profile/company/agent/stocks"
       >
         <IonAvatar slot="start">
-          <img src="/images/ic_password.svg" class="action-img" />
+          <IonIcon :icon="bagOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
         <IonLabel>My Stock</IonLabel>
       </IonItem>
@@ -169,6 +169,7 @@ import {
   swapHorizontalOutline,
   addCircleOutline,
   personAddOutline,
+  peopleOutline,
 } from "ionicons/icons";
 import ProfileAvatar from "../ProfileAvatar.vue";
 import SwitchBusinessSheet from "@/components/modules/SwitchBusinessSheet.vue";
@@ -215,6 +216,7 @@ export default defineComponent({
     return {
       createOutline,
       repeatOutline,
+      peopleOutline,
       addCircleOutline,
       swapHorizontalOutline,
       bagOutline,
