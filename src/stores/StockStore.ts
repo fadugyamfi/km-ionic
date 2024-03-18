@@ -48,16 +48,16 @@ export const useStockStore = defineStore("stock", {
 
     async fetchStocks(
       options = {},
-      url: string = "/v2/products"
+      url: string = "/v2/products",
     ): Promise<Stock[]> {
       const userStore = useUserStore();
-      // const params = {
-      //   ...options,
-      //   businesses_id: userStore.activeBusiness?.id,
-      // };
+      const params = {
+        ...options,
+        businesses_id: userStore.activeBusiness?.id,
+      };
 
       try {
-        const response = await axios.get(url);
+        const response = await axios.get(url, { params });
         this.stocks = this.mapResponseToStocks(response);
         this.meta = response.data?.meta;
         this.stockSummary = response.data?.stock;
