@@ -5,7 +5,7 @@
         <IonToolbar>
           <IonButtons slot="start">
             <IonBackButton
-              defaultHref="/vendor/sales/add-sale/select-sale-type"
+              defaultHref="/vendor/sales/add-sale/select-payment-mode"
               :icon="arrowBack"
               mode="md"
             ></IonBackButton>
@@ -26,27 +26,27 @@
       <IonList lines="none" class="sales-select-list ion-padding-horizontal">
         <IonListHeader>
           <IonLabel class="fw-bold">{{
-            $t("vendor.sales.selectPaymentMethod")
+            $t("vendor.sales.selectInventories")
           }}</IonLabel>
         </IonListHeader>
 
         <IonItem
-          v-for="paymentMode in paymentModes"
-          :key="paymentMode.id"
-          @click="selectPaymentMethod(paymentMode)"
+          v-for="inventoryType in inventoryTypes"
+          :key="inventoryType.id"
+          @click="selectInventoryType(inventoryType)"
         >
           <IonLabel>
-            <p class="ion-no-margin">{{ paymentMode.name }}</p>
+            <p class="ion-no-margin">{{ inventoryType.name }}</p>
             <IonText color="medium" class="font-medium">
-              {{ paymentMode.description }}
+              {{ inventoryType.description }}
             </IonText>
           </IonLabel>
           <IonCheckbox
-            :aria-label="paymentMode.name"
+            :aria-label="inventoryType.name"
             slot="end"
             mode="ios"
-            :value="paymentMode.id"
-            :checked="saleStore.newSale.payment_modes_id == paymentMode.id"
+            :value="inventoryType.id"
+            :checked="saleStore.newSale.inventory_type_id == inventoryType.id"
           ></IonCheckbox>
         </IonItem>
       </IonList>
@@ -55,7 +55,7 @@
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton
         id="payment-mode-continue"
-        :disabled="!saleStore.newSale.payment_modes_id"
+        :disabled="!saleStore.newSale.inventory_type_id"
         @click="onContinue()"
       >
         {{ $t("general.continue") }}
@@ -85,12 +85,12 @@ import {
   IonFooter,
   IonSpinner,
 } from "@ionic/vue";
-import { arrowBack, close, refreshOutline, search } from "ionicons/icons";
+import { arrowBack, close, search } from "ionicons/icons";
 import { defineComponent } from "vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { mapStores } from "pinia";
 import { useSaleStore } from "@/stores/SaleStore";
-import { PaymentMode } from "@/models/PaymentMode";
+import { InventoryType } from "@/models/InventoryType";
 import { useToastStore } from "@/stores/ToastStore";
 import { useUserStore } from "../../../../stores/UserStore";
 
@@ -122,12 +122,18 @@ export default defineComponent({
       search,
       close,
       arrowBack,
-      paymentModes: [
-        new PaymentMode({ id: 1, name: this.$t("vendor.sales.cash") }),
-        new PaymentMode({ id: 2, name: this.$t("vendor.sales.mobileMoney") }),
-        new PaymentMode({ id: 3, name: this.$t("vendor.sales.cheque") }),
+      inventoryTypes: [
+        new InventoryType({ id: 1, name: this.$t("vendor.sales.myStock") }),
+        new InventoryType({
+          id: 2,
+          name: this.$t("vendor.sales.businessStock"),
+        }),
       ],
     };
+  },
+
+  ionViewDidEnter() {
+    this.saleStore.newSale.sale_items = [];
   },
 
   computed: {
@@ -135,26 +141,26 @@ export default defineComponent({
   },
 
   methods: {
-    selectPaymentMethod(paymentMode: PaymentMode) {
-      this.saleStore.newSale.payment_modes_id = paymentMode.id as number;
+    selectInventoryType(inventoryType: InventoryType) {
+      this.saleStore.newSale.inventory_type_id = inventoryType.id as number;
     },
 
     onContinue() {
-      if (!this.saleStore.newSale.payment_modes_id) {
+      if (!this.saleStore.newSale.inventory_type_id) {
         const toastStore = useToastStore();
         toastStore.showError(
-          this.$t("vendor.sales.selectPaymentModeToContinue"),
+          this.$t("vendor.sales.selectInventoryTypeToContinue"),
           "",
           "bottom",
-          "payment-mode-continue"
+          "inventory-type-continue"
         );
         return;
       }
 
-      if (this.userStore.user?.isSalesAssociate()) {
-        this.$router.push("/agent/sales/add-sale/select-inventories");
+      if (this.saleStore.newSale.inventory_type_id === 1) {
+        this.$router.push("/agent/sales/add-sale/select-agent-products");
       } else {
-        this.$router.push("/vendor/sales/add-sale/select-customer");
+        this.$router.push("/vendor/sales/add-sale/select-products");
       }
     },
 

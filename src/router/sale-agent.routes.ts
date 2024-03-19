@@ -120,9 +120,19 @@ export const SaleAgentRoutes = [
                   import("@/views/Vendor/Sales/AddSale/SelectCustomer.vue"),
               },
               {
+                path: "select-agent-products",
+                component: () =>
+                  import("@/views/Vendor/Sales/AddSale/SelectAgentProducts.vue"),
+              },
+              {
                 path: "select-products",
                 component: () =>
                   import("@/views/Vendor/Sales/AddSale/SelectProducts.vue"),
+              },
+              {
+                path: "select-inventories",
+                component: () =>
+                  import("@/views/Vendor/Sales/AddSale/SelectInventories.vue"),
               },
               {
                 path: "configure-items",

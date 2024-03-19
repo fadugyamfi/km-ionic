@@ -108,6 +108,7 @@ export const useSaleStore = defineStore("sale", {
         delivery_location: "Ghana",
         product_units_id: 1,
         payment_modes_id: 1,
+        inventory_type_id: 1,
         sale_types_id: 1,
         sale_started_at: formatMySQLDateTime(new Date().toISOString()),
         sale_ended_at: "",
