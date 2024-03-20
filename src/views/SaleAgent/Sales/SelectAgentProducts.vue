@@ -266,7 +266,7 @@
       },
   
       onSearch(event: Event) {
-        this.fetchProducts({
+        this.fetchAgentProducts({
           product_name_has: (event.target as HTMLIonSearchbarElement).value,
         });
       },
