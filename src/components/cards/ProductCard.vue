@@ -111,7 +111,7 @@
               v-if="product.quantity"
               class="d-flex ion-align-items-center"
             >
-              <IonIcon class="success" :icon="alertCircleOutline"></IonIcon>
+              <!-- <IonIcon class="success" :icon="alertCircleOutline"></IonIcon> -->
               {{ product?.quantity }} in stock
             </IonText>
             <IonText v-else class="d-flex ion-align-items-center">

@@ -87,7 +87,7 @@
             :showDescription="false"
             :showAddToCart="false"
             :showAddToFavorites="false"
-            :showAddToSelected="item.quantity"
+            :showAddToSelected="item.quantity > 0"
             :action="'toggleSelect'"
             :initially-selected="isSelected(item)"
             :showStockStatus="true"
