@@ -47,9 +47,17 @@ export const useProductStore = defineStore("product", {
       }
     },
 
-    async fetchProducts(options = {}): Promise<Product[]> {
+    async fetchApprovedVendorProducts(options = {}): Promise<Product[]> {
       const params = {
         approved_only: 1,
+        ...options,
+      };
+
+      return this.fetchProducts(params);
+    },
+
+    async fetchProducts(options = {}): Promise<Product[]> {
+      const params = {
         ...options,
       };
 
@@ -196,7 +204,7 @@ export const useProductStore = defineStore("product", {
         if( userStore.isInGuestMode() ) {
           this.trendingProducts = await this.fetchGuestProducts({ sort: 'top_selling', limit: 100 })
         } else {
-          this.trendingProducts = await this.fetchProducts({ sort: 'top_selling', limit: 100 });
+          this.trendingProducts = await this.fetchApprovedVendorProducts({ sort: 'top_selling', limit: 100 });
         }
         await storage.set(KOLA_TRENDING, this.products, 3, 'days')
       }
