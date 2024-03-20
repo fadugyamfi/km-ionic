@@ -106,6 +106,19 @@
               {{ product?.group_quantity }}pcs
             </span>
           </section>
+          <section class="stock-status" v-if="showStockStatus">
+            <IonText
+              v-if="product.quantity"
+              class="d-flex ion-align-items-center"
+            >
+              <IonIcon class="success" :icon="alertCircleOutline"></IonIcon>
+              {{ product?.quantity }} in stock
+            </IonText>
+            <IonText v-else class="d-flex ion-align-items-center">
+              <IonIcon class="warning" :icon="alertCircleOutline"></IonIcon>
+              out of stock
+            </IonText>
+          </section>
         </section>
 
         <section
@@ -134,7 +147,7 @@ import {
   IonText,
 } from "@ionic/vue";
 import { PropType, defineComponent } from "vue";
-import { locationOutline } from "ionicons/icons";
+import { locationOutline, alertCircleOutline } from "ionicons/icons";
 import Product from "@/models/Product";
 import { addCircleOutline } from "ionicons/icons";
 import Image from "@/components/Image.vue";
@@ -142,7 +155,7 @@ import { useCartStore } from "@/stores/CartStore";
 import FavoriteButton from "../modules/products/FavoriteButton.vue";
 import Business from "../../models/Business";
 import Filters from "../../utilities/Filters";
-import { useProductStore } from "../../stores/ProductStore";
+import { useProductStore } from "@/stores/ProductStore";
 
 export type ProductSelection = {
   selected: Boolean;
@@ -185,6 +198,10 @@ export default defineComponent({
       default: false,
       type: Boolean,
     },
+    showStockStatus: {
+      default: false,
+      type: Boolean,
+    },
 
     action: {
       default: "viewProduct",
@@ -201,6 +218,7 @@ export default defineComponent({
     return {
       locationOutline,
       addCircleOutline,
+      alertCircleOutline,
       imgLoaded: false,
       selected: false,
       noImage: "/images/product-placeholder.png",
@@ -330,6 +348,30 @@ export default defineComponent({
         font-size: 0.85em;
         margin-top: 5px;
         color: #9e9e9e;
+      }
+
+      .stock-status {
+        margin-top: 2px;
+        ion-icon {
+          font-size: 20px;
+          &.warning {
+            --background: #fdf0ed;
+            --border-color: #ef3e3233;
+            padding: 2px;
+            border-radius: 50%;
+            background-color: #fa2b3928;
+            color: #d92d20;
+            margin-right: 5px;
+          }
+          &.success {
+            --background: #fdf0ed;
+            padding: 2px;
+            border-radius: 50%;
+            background-color: #21d1882f;
+            color: #21d187;
+            margin-right: 5px;
+          }
+        }
       }
 
       ion-card-subtitle {
