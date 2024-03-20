@@ -220,7 +220,6 @@ export default defineComponent({
       try {
         const params = {
           businesses_id: this.userStore.activeBusiness?.id,
-          approved_only: 1,
           limit: 500,
           ...options,
         };
