@@ -11,6 +11,7 @@
         :tall="index % 2 == 0"
         @click="onStockSelected(stock)"
         :data-index="index"
+        :showDeleteButton="showDeleteButton"
       ></ProductStockCard>
     </section>
 
@@ -25,6 +26,7 @@
         :tall="index % 2 != 0"
         @click="onStockSelected(stock)"
         :data-index="index"
+        :showDeleteButton="showDeleteButton"
       ></ProductStockCard>
     </section>
   </section>
@@ -42,6 +44,14 @@ export default defineComponent({
     stocks: {
       default: () => [],
       type: Array as PropType<Stock[]>,
+    },
+    showDeleteButton: {
+      type: Boolean,
+      default: true,
+    },
+    clickable: {
+      type: Boolean,
+      default: true,
     },
   },
 
@@ -66,6 +76,7 @@ export default defineComponent({
     },
 
     onStockSelected(stock: Stock) {
+      if (!this.clickable) return;
       this.$router.push(`/profile/company/stocks/${stock.id}/stock-details`);
     },
   },

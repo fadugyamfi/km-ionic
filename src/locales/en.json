@@ -322,6 +322,7 @@
     },
     "stock": {
       "stock": "Stock",
+      "myStock": "My Stock",
       "addStock": "Add Stock",
       "addProductImage": "Add Product Image",
       "category": "Product category",
@@ -343,6 +344,7 @@
       "totalValueStock": "Total value of stock",
       "availableStock": "Available Stock",
       "addNewStock": "Add New Stock",
+      "addNewRequest": "Add New Request",
       "stockIsEmpty": "Stock Is Empty",
       "noStock": "Looks like your stock is currently empty. Start by adding new products to keep your inventory up to date.",
       "filterStock": "Filter Available Stocks",

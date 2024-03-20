@@ -12,6 +12,7 @@
             </p>
 
             <IonButton
+              v-if="showDeleteButton"
               fill="clear"
               color="medium"
               @click.prevent.stop="removeFromStock(stock)"
@@ -33,7 +34,7 @@
             <IonText class="d-flex ion-align-items-center">
               <IonIcon class="warning" :icon="alertCircleOutline"></IonIcon>
               out of stock
-              </IonText>
+            </IonText>
           </section>
           <section v-else>
             <IonText class="d-flex ion-align-items-center">
@@ -90,6 +91,10 @@ export default defineComponent({
       default: false,
       type: Boolean,
     },
+    showDeleteButton: {
+      default: true,
+      type: Boolean,
+    },
   },
 
   data() {
@@ -143,7 +148,7 @@ export default defineComponent({
         );
       }
     },
-  }
+  },
 });
 </script>
 
@@ -172,6 +177,7 @@ export default defineComponent({
     ion-card-header {
       text-align: left;
       padding: 0px 5px 5px 5px;
+      margin-top: 5px;
       .product-title {
         font-size: 0.95em;
         font-weight: 500;
