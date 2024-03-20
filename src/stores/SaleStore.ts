@@ -24,6 +24,7 @@ const storage = new AppStorage();
 const KOLA_SALES = "kola.sales";
 const KOLA_SALE_AGENT_SALE = "kola.sale-agent-sale";
 const KOLA_INVENTORY = "kola.sales.inventory";
+const KOLA_AGENT_INVENTORY = "kola.sales.agent-inventory";
 const KOLA_RECORDED_SALES = "kola.recorded-sales";
 
 export const useSaleStore = defineStore("sale", {
@@ -35,6 +36,7 @@ export const useSaleStore = defineStore("sale", {
       selectedCustomer: {} as Business,
       saleSyncTimer: null as any,
       inventory: [] as Product[],
+      agentInventory: [] as Product[],
     };
   },
 
@@ -108,7 +110,7 @@ export const useSaleStore = defineStore("sale", {
         delivery_location: "Ghana",
         product_units_id: 1,
         payment_modes_id: 1,
-        inventory_type_id: 1,
+        inventory_id: 1,
         sale_types_id: 1,
         sale_started_at: formatMySQLDateTime(new Date().toISOString()),
         sale_ended_at: "",
@@ -233,6 +235,37 @@ export const useSaleStore = defineStore("sale", {
       if (products) {
         storage.set(CACHE_KEY, products, 7, "days");
         this.inventory = products;
+      }
+
+      return products;
+    },
+    async fetchAgentInventory(options = {}) {
+      if (this.agentInventory.length > 0) {
+        return this.agentInventory;
+      }
+
+      const userStore = useUserStore();
+      const productStore = useProductStore();
+
+      const CACHE_KEY = `${KOLA_AGENT_INVENTORY}.${userStore.activeBusiness?.id}`;
+
+      if (await storage.has(CACHE_KEY)) {
+        const data = await storage.get(CACHE_KEY);
+        this.agentInventory = data.map((p: object) => new Product(p));
+        return this.agentInventory;
+      }
+
+      const params = {
+        limit: 500,
+        sort: "latest",
+        ...options,
+      };
+
+      const products = await productStore.fetchAgentProducts(params);
+
+      if (products) {
+        storage.set(CACHE_KEY, products, 7, "days");
+        this.agentInventory = products;
       }
 
       return products;

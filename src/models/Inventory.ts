@@ -1,8 +1,6 @@
-export class InventoryType {
+export default class Inventory {
   public id?: number | string;
   public name?: number;
-  public description?: string;
-  public icon?: string;
 
   constructor(data: object) {
     Object.assign(this, data);

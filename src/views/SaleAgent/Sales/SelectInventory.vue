@@ -5,7 +5,7 @@
         <IonToolbar>
           <IonButtons slot="start">
             <IonBackButton
-              defaultHref="/vendor/sales/add-sale/select-payment-mode"
+              defaultHref="/agent/sales/add-sale/select-payment-mode"
               :icon="arrowBack"
               mode="md"
             ></IonBackButton>
@@ -26,27 +26,24 @@
       <IonList lines="none" class="sales-select-list ion-padding-horizontal">
         <IonListHeader>
           <IonLabel class="fw-bold">{{
-            $t("vendor.sales.selectInventories")
+            $t("vendor.sales.selectInventory")
           }}</IonLabel>
         </IonListHeader>
 
         <IonItem
-          v-for="inventoryType in inventoryTypes"
-          :key="inventoryType.id"
-          @click="selectInventoryType(inventoryType)"
+          v-for="inventory in inventories"
+          :key="inventory.id"
+          @click="selectInventory(inventory)"
         >
           <IonLabel>
-            <p class="ion-no-margin">{{ inventoryType.name }}</p>
-            <IonText color="medium" class="font-medium">
-              {{ inventoryType.description }}
-            </IonText>
+            <p class="ion-no-margin">{{ inventory.name }}</p>
           </IonLabel>
           <IonCheckbox
-            :aria-label="inventoryType.name"
+            :aria-label="inventory.name"
             slot="end"
             mode="ios"
-            :value="inventoryType.id"
-            :checked="saleStore.newSale.inventory_type_id == inventoryType.id"
+            :value="inventory.id"
+            :checked="saleStore?.newSale?.inventory_id == inventory.id"
           ></IonCheckbox>
         </IonItem>
       </IonList>
@@ -55,7 +52,7 @@
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton
         id="payment-mode-continue"
-        :disabled="!saleStore.newSale.inventory_type_id"
+        :disabled="!saleStore.newSale.inventory_id"
         @click="onContinue()"
       >
         {{ $t("general.continue") }}
@@ -90,9 +87,9 @@ import { defineComponent } from "vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { mapStores } from "pinia";
 import { useSaleStore } from "@/stores/SaleStore";
-import { InventoryType } from "@/models/InventoryType";
+import Inventory from "@/models/Inventory";
 import { useToastStore } from "@/stores/ToastStore";
-import { useUserStore } from "../../../../stores/UserStore";
+import { useUserStore } from "@/stores/UserStore";
 
 export default defineComponent({
   components: {
@@ -122,12 +119,9 @@ export default defineComponent({
       search,
       close,
       arrowBack,
-      inventoryTypes: [
-        new InventoryType({ id: 1, name: this.$t("vendor.sales.myStock") }),
-        new InventoryType({
-          id: 2,
-          name: this.$t("vendor.sales.businessStock"),
-        }),
+      inventories: [
+        new Inventory({ id: 1, name: this.$t("profile.stock.myStock") }),
+        new Inventory({ id: 2, name: this.$t("vendor.sales.businessStock") }),
       ],
     };
   },
@@ -141,15 +135,15 @@ export default defineComponent({
   },
 
   methods: {
-    selectInventoryType(inventoryType: InventoryType) {
-      this.saleStore.newSale.inventory_type_id = inventoryType.id as number;
+    selectInventory(inventory: Inventory) {
+      this.saleStore.newSale.inventory_id = inventory.id as number;
     },
 
     onContinue() {
-      if (!this.saleStore.newSale.inventory_type_id) {
+      if (!this.saleStore.newSale.inventory_id) {
         const toastStore = useToastStore();
         toastStore.showError(
-          this.$t("vendor.sales.selectInventoryTypeToContinue"),
+          this.$t("vendor.sales.selectInventoryToContinue"),
           "",
           "bottom",
           "inventory-type-continue"
@@ -157,14 +151,12 @@ export default defineComponent({
         return;
       }
 
-      if (this.saleStore.newSale.inventory_type_id === 1) {
+      if (this.saleStore.newSale.inventory_id == 1) {
         this.$router.push("/agent/sales/add-sale/select-agent-products");
       } else {
         this.$router.push("/vendor/sales/add-sale/select-products");
       }
     },
-
-    refresh() {},
   },
 
   mounted() {},

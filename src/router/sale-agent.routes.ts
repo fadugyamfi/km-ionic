@@ -122,7 +122,7 @@ export const SaleAgentRoutes = [
               {
                 path: "select-agent-products",
                 component: () =>
-                  import("@/views/Vendor/Sales/AddSale/SelectAgentProducts.vue"),
+                  import("@/views/SaleAgent/Sales/SelectAgentProducts.vue"),
               },
               {
                 path: "select-products",
@@ -130,9 +130,9 @@ export const SaleAgentRoutes = [
                   import("@/views/Vendor/Sales/AddSale/SelectProducts.vue"),
               },
               {
-                path: "select-inventories",
+                path: "select-inventory",
                 component: () =>
-                  import("@/views/Vendor/Sales/AddSale/SelectInventories.vue"),
+                  import("@/views/SaleAgent/Sales/SelectInventory.vue"),
               },
               {
                 path: "configure-items",

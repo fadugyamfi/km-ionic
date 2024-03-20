@@ -68,7 +68,6 @@ export const useProductStore = defineStore("product", {
       const userStore = useUserStore();
 
       const params = {
-        approved_only: 1,
         ...options,
       };
 

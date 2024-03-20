@@ -21,7 +21,7 @@ export class Sale {
   public total_discount?: number = 0;
   public created_at?: string;
   public uuid?: string;
-  public inventory_type_id?: number | string;
+  public inventory_id?: number | string;
 
   public _sale_items?: SaleItem[] = [];
   public sale_items_count?: number = 0;

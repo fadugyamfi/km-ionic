@@ -6,7 +6,7 @@
             <IonToolbar>
               <IonButtons slot="start">
                 <IonBackButton
-                  defaultHref="/vendor/sales/add-sale/select-customer"
+                  defaultHref="/agent/sales/add-sale/select-inventory"
                   :icon="arrowBack"
                   mode="md"
                 >
@@ -161,9 +161,9 @@
     },
   
     ionViewDidEnter() {
-    //   this.loadCachedInventory();
+      this.loadCachedInventory();
       // this.saleStore.loadFromStorage();
-      this.fetchProducts();
+
     },
   
     components: {
@@ -205,20 +205,18 @@
   
     methods: {
       async loadCachedInventory() {
-        this.products = await this.saleStore.fetchInventory();
+        this.products = await this.saleStore.fetchAgentInventory();
   
         if (!this.products || this.products.length == 0) {
-          this.fetchProducts();
+          this.fetchAgentProducts();
         }
       },
   
-      async fetchProducts(options = {}) {
+      async fetchAgentProducts(options = {}) {
         this.fetching = true;
         try {
             
           const params = {
-            businesses_id: this.userStore.activeBusiness?.id,
-            approved_only: 1,
             limit: 500,
             ...options,
           };
