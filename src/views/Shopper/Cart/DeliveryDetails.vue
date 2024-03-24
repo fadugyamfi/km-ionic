@@ -40,7 +40,7 @@
           @ion-input="form.validate && form.validate($event)"
           readonly
         ></IonInput>
-        <!-- <section>
+        <section>
           <h6 class="fw-semibold" style="margin-bottom: 6px">Delivery</h6>
           <IonText color="medium" class="font-medium">
             Select delivery method
@@ -50,7 +50,7 @@
             :delivery-date="form.fields.delivery_date"
             @onSelectDeliveryMethod="selectDeliveryMethod"
           />
-        </section> -->
+        </section>
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
@@ -85,6 +85,7 @@ import { onMounted, computed } from "vue";
 import { Order } from "@/models/Order";
 import { useUserStore } from "@/stores/UserStore";
 import LocationInput from "@/components/forms/LocationInput.vue";
+import DeliveryMethod from "@/components/modules/deliveryDetails/DeliveryMethod.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -137,7 +138,8 @@ const storeDeliveryDetails = () => {
         ...form.fields,
       };
       cartStore.persist();
-      router.push(`/shopper/cart/business/${route.params.id}/item-review`);
+      // router.push(`/shopper/cart/business/${route.params.id}/item-review`);
+      router.push(`/shopper/cart/business/${route.params.id}/payment-options`);
     } else {
       console.error("Business ID not found in cartStore.orders");
     }

@@ -39,7 +39,7 @@
           </section>
         </section>
       </ion-radio>
-      <!-- <ion-radio value="express" class="wrapper ion-padding ion-margin-bottom">
+      <ion-radio value="express" class="wrapper ion-padding ion-margin-bottom">
         <section>
           <section
             class="d-flex ion-justify-content-between ion-align-items-center"
@@ -64,7 +64,7 @@
             </IonText>
           </section>
         </section>
-      </ion-radio> -->
+      </ion-radio>
     </ion-radio-group>
   </section>
 </template>
