@@ -8,7 +8,7 @@
     <!-- Main Content -->
     <ion-content class="ion-padding">
       <form>
-        <h6 style="margin-top: 0px">Add Delivery Address</h6>
+        <h6 style="margin-top: 0px" class="fw-semibold ">Add Delivery Address</h6>
         <LocationInput
           v-model="form.fields.delivery_location"
           label="Town/Locality"
@@ -28,7 +28,7 @@
           required
         >
         </IonInput>
-        <h6>Delivery Date</h6>
+        <h6s class="fw-semibold font-medium">Delivery Date</h6s>
         <IonInput
           class="kola-input delivery-details-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.delivery_date }"
@@ -40,17 +40,17 @@
           @ion-input="form.validate && form.validate($event)"
           readonly
         ></IonInput>
-        <section>
-          <h6 class="fw-semibold" style="margin-bottom: 6px">Delivery</h6>
+        <section class="d-flex flex-column">
+          <IonText class="fw-semibold" style="margin-bottom: 6px">Delivery</IonText>
           <IonText color="medium" class="font-medium">
             Select delivery method
           </IonText>
+        </section>
           <DeliveryMethod
             :location="form.fields.location"
             :delivery-date="form.fields.delivery_date"
             @onSelectDeliveryMethod="selectDeliveryMethod"
           />
-        </section>
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">

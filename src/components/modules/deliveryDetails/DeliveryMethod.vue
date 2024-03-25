@@ -1,70 +1,67 @@
 <template>
-  <section style="margin-top: 10px;">
+  <section style="margin-top: 10px">
     <ion-radio-group v-model="selectedDelivery">
-      <ion-radio value="standard" class="wrapper ion-padding ion-margin-bottom">
-        <section style="width: 100%">
+      <section style="margin-left: 16px; margin-top: 24px">
+        <section
+          class="d-flex ion-justify-content-between ion-align-items-center"
+          style="margin-bottom: 8px"
+        >
+          <IonText class="fw-semibold">Standard Delivery</IonText>
           <section
             class="d-flex ion-justify-content-between ion-align-items-center"
-            style="margin-bottom: 8px"
           >
-            <IonText class="fw-semibold" style="margin-right: 70px"
-              >Standard Delivery</IonText
-            >
-            <section class="d-flex ion-align-items-center">
-              <IonText class="fw-semibold ion-margin-end">
-                {{ Filters.currency(0, "GHS") }}
-              </IonText>
-            </section>
-          </section>
-          <section class="d-flex flex-column">
             <IonText
-              color="medium"
-              class="font-medium"
-              style="margin-bottom: 8px"
+              class="fw-semibold d-flex ion-justify-content-between ion-align-items-center"
+              style="margin-right: 16px"
             >
-              <IonIcon
-                :icon="locationOutline"
-                style="margin-right: 3px"
-              ></IonIcon
-              >{{ location || "Not available" }}
+              {{ Filters.currency(0, "GHS") }}
             </IonText>
-            <IonText
-              color="medium"
-              class="font-medium"
-              style="margin-bottom: 8px"
-            >
-              <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon
-              >{{ deliveryDate || "Not available" }}
-            </IonText>
+            <ion-radio value="standard"> </ion-radio>
           </section>
         </section>
-      </ion-radio>
-      <ion-radio value="express" class="wrapper ion-padding ion-margin-bottom">
+        <section class="d-flex flex-column">
+          <IonText
+            color="medium"
+            class="font-medium d-flex ion-align-items-center"
+            style="margin-bottom: 8px"
+          >
+            <IonIcon :icon="locationOutline" style="margin-right: 6px"></IonIcon
+            >{{ location || "Not available" }}
+          </IonText>
+          <IonText
+            color="medium"
+            class="font-medium d-flex ion-align-items-center"
+            style="margin-bottom: 8px"
+          >
+            <IonIcon :icon="timeOutline" style="margin-right: 6px"></IonIcon>
+            {{ deliveryDate || "Not available" }}
+          </IonText>
+        </section>
+      </section>
+      <section style="margin-left: 16px; margin-top: 24px">
+        <section
+          class="d-flex ion-justify-content-between ion-align-items-center"
+          style="margin-bottom: 8px"
+        >
+          <IonText class="fw-semibold" style="margin-right: 5px"
+            >Express Delivery</IonText
+          >
+          <section
+            class="d-flex ion-justify-content-between ion-align-items-center"
+          >
+            <IonText class="fw-semibold" style="margin-right: 16px">
+              {{ Filters.currency(0, "GHS") }}
+            </IonText>
+            <ion-radio value="express"> </ion-radio>
+          </section>
+        </section>
         <section>
-          <section
-            class="d-flex ion-justify-content-between ion-align-items-center"
-            style="margin-bottom: 8px"
-          >
-            <IonText class="fw-semibold" style="margin-right: 5px"
-              >Express Delivery</IonText
-            >
-            <section class="d-flex ion-align-items-center">
-              <IonText class="fw-semibold">
-                {{ Filters.currency(0, "GHS") }}
-              </IonText>
-            </section>
-          </section>
-          <section>
-            <IonText
-              color="medium"
-              class="font-medium"
-              style="margin-bottom: 8px"
-              >Want to speed up delivery and receive <br />
-              your order today? We can do that for you
-            </IonText>
-          </section>
+          <IonText color="medium" class="font-medium" style="margin-bottom: 8px"
+            >Want to speed up delivery and receive <br />
+            your order today? We can do that for you
+          </IonText>
         </section>
-      </ion-radio>
+      </section>
     </ion-radio-group>
   </section>
 </template>
@@ -93,7 +90,7 @@ watch(selectedDelivery, (newValue) => {
   border: solid 1px #f4f4f4;
   border-radius: 12px;
   margin-bottom: 4px;
-  box-shadow: 0px 4px 24px 0px rgba(105, 111, 130, 0.10);
+  box-shadow: 0px 4px 24px 0px rgba(105, 111, 130, 0.1);
   width: 100%;
 }
 ion-radio::part(container) {
@@ -119,7 +116,6 @@ ion-radio.radio-checked::part(container) {
 ion-radio.radio-checked::part(mark) {
   width: 6px;
   height: 9px;
-
   border-width: 0px 2px 2px 0px;
   border-style: solid;
   border-color: #fff;
