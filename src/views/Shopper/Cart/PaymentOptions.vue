@@ -8,24 +8,23 @@
     <!-- Main Content -->
     <ion-content>
       <form>
-
         <ion-radio-group v-model="form.fields.payment_option_id">
           <section class="d-flex flex-column ion-margin-horizontal">
             <IonText class="fw-semibold">Pay Now</IonText>
-            <IonText color="medium" class="font-medium">Select a payment method</IonText>
+            <IonText color="medium" class="font-medium"
+              >Select a payment method</IonText
+            >
           </section>
-
 
           <section class="d-flex flex-column ion-margin-bottom">
             <PayOnDelivery />
           </section>
 
-          <section class="d-flex flex-column ion-margin-horizontal">
+          <!-- <section class="d-flex flex-column ion-margin-horizontal">
             <IonText class="fw-semibold">Pay Later</IonText>
             <IonText color="medium" class="font-medium">Select a pay later option</IonText>
           </section>
           <section class="d-flex flex-column ion-margin-bottom">
-            <!-----------Pay over 2 weeks----------------->
             <ion-card style="margin-bottom: 0px;">
               <ion-card-content @click="toggleDropdown('pay2Weeks')">
                 <section class="d-flex ion-justify-content-between ion-align-items-center">
@@ -61,7 +60,6 @@
                 </p>
               </IonCardContent>
             </ion-card>
-            <!-----------Pay over 4 weeks----------------->
             <ion-card style="margin-bottom: 0px;">
               <ion-card-content @click="toggleDropdown('pay4Weeks')">
                 <section class="d-flex ion-justify-content-between ion-align-items-center">
@@ -105,12 +103,14 @@
                 </p>
               </IonCardContent>
             </ion-card>
-          </section>
+          </section> -->
         </ion-radio-group>
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="storePaymentOption">{{ buttonText }}</KolaYellowButton>
+      <KolaYellowButton @click="storePaymentOption"
+        >Proceed To Checkout</KolaYellowButton
+      >
     </IonFooter>
   </ion-page>
 </template>
@@ -163,7 +163,6 @@ import PaymentOptionsHeader from "@/components/header/PaymentOptionsHeader.vue";
 import PayOnDelivery from "@/components/modules/deliveryDetails/PayOnDelivery.vue";
 import { useCartStore } from "@/stores/CartStore";
 import { Order } from "@/models/Order";
-
 
 type DropdownName = "pay2Weeks" | "pay4Weeks";
 
@@ -230,37 +229,38 @@ export default defineComponent({
   computed: {
     buttonText(): string {
       return this.form.fields.payment_option_id === "1"
-        ? "Proceed To Checkout"
-        : "Place Order";
+        ? "Place Order"
+        : "Proceed To Checkout";
     },
   },
   methods: {
-  storePaymentOption() {
-    const cartStore = useCartStore();
-    
-    // Find the order based on the business ID
-    const order = cartStore.orders.find(
-      (b) => b.businesses_id === Number(this.$route.params.id)
-    );
+    storePaymentOption() {
+      const cartStore = useCartStore();
 
-    if (order) {
-      // Update the payment option ID
-      order.payment_option_id = +this.form.fields.payment_option_id;
+      // Find the order based on the business ID
+      const order = cartStore.orders.find(
+        (b) => b.businesses_id === Number(this.$route.params.id)
+      );
 
-      // Persist the changes
-      cartStore.persist();
+      if (order) {
+        // Update the payment option ID
+        order.payment_option_id = +this.form.fields.payment_option_id;
 
-      // Define the route path based on payment_option_id
-      const routePath = this.form.fields.payment_option_id === "1"
-        ? `/shopper/cart/business/${this.$route.params.id}/payment-method`
-        : `/shopper/cart/business/${this.$route.params.id}/item-review`;
+        // Persist the changes
+        cartStore.persist();
 
-      // Push the new route
-      this.$router.push(routePath);
-    } else {
-      console.error('Order not found for the specified business ID');
-    }
-  },
+        // Define the route path based on payment_option_id
+        const routePath =
+          this.form.fields.payment_option_id === "1"
+            ? `/shopper/cart/business/${this.$route.params.id}/item-review`
+            : `/shopper/cart/business/${this.$route.params.id}/payment-method`;
+
+        // Push the new route
+        this.$router.push(routePath);
+      } else {
+        console.error("Order not found for the specified business ID");
+      }
+    },
 
     toggleDropdown(dropdownName: DropdownName) {
       this.showDropdown[dropdownName] = !this.showDropdown[dropdownName];
@@ -268,7 +268,7 @@ export default defineComponent({
   },
 
   mounted() {
-    const cartStore = useCartStore()
+    const cartStore = useCartStore();
     if (cartStore.orders.length == 0) {
       cartStore.loadFromStorage();
     }
@@ -277,7 +277,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-
 ion-card {
   color: #000000;
 }

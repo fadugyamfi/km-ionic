@@ -9,6 +9,8 @@ import { useUserStore } from "./UserStore";
 import { OrderItem } from "../models/OrderItem";
 import { handleAxiosRequestError } from "@/utilities";
 import { useOrderStore } from "./OrderStore";
+import { Capacitor } from "@capacitor/core";
+import { Browser } from "@capacitor/browser";
 
 const storage = new AppStorage();
 const KOLA_CART = "kola.cart";
@@ -35,19 +37,37 @@ export const useCartStore = defineStore("cart", {
 
   actions: {
     async createOrder(postData: Object): Promise<Order | null> {
-      // const userStore = useUserStore();
-      return axios
-        .post(`/v2/orders`, postData)
-        .then((response) => {
-          if (response.status >= 200 && response.status < 300) {
-            this.placedOrder = new Order(response.data.data);
-            return this.placedOrder;
-          } else return null;
-        })
-        .catch((error) => {
-          handleAxiosRequestError(error);
-          return null;
-        });
+      try {
+        const response = await axios.post(`/v2/orders`, postData);
+        if (response.status >= 200 && response.status < 300) {
+          this.placedOrder = new Order(response.data.data);
+          await this.checkout();
+          return this.placedOrder;
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return null;
+      }
+    },
+    async checkout() {
+      try {
+        const response = await axios.post(
+          "/hubtel-sales/create-checkout-invoice",
+          {
+            total_amount: this.placedOrder.total_order_amount,
+            sale_id: this.placedOrder.id,
+          }
+        );
+        if (response) {
+          const checkoutUrl = response.data.data.checkoutUrl;
+          if (!Capacitor.isNativePlatform()) {
+            window.open(checkoutUrl, "_blank");
+          }
+          if (Capacitor.isNativePlatform()) {
+            await Browser.open({ url: checkoutUrl });
+          }
+        }
+      } catch (error) {}
     },
 
     async loadFromStorage() {
@@ -110,7 +130,6 @@ export const useCartStore = defineStore("cart", {
         (order) => order.businesses_id == product.businesses_id
       );
 
-
       if (!order) {
         order = new Order({
           businesses_id: product.businesses_id,
@@ -126,7 +145,9 @@ export const useCartStore = defineStore("cart", {
         (item: OrderItem) => item.products_id == product.id
       );
 
-      const productPrice = product.is_on_sale ? product.sale_price : product.product_price;
+      const productPrice = product.is_on_sale
+        ? product.sale_price
+        : product.product_price;
 
       if (!orderItem) {
         orderItem = new OrderItem({
@@ -149,7 +170,8 @@ export const useCartStore = defineStore("cart", {
         toastStore.showSuccess("Added To Cart");
       } else {
         orderItem.quantity = orderItem.quantity ? orderItem.quantity + 1 : 1;
-        orderItem.total_price = orderItem.quantity * (productPrice ? productPrice : 0)
+        orderItem.total_price =
+          orderItem.quantity * (productPrice ? productPrice : 0);
         toastStore.showInfo("Increased quantity in cart");
       }
       console.log(this.orders);
@@ -221,7 +243,9 @@ export const useCartStore = defineStore("cart", {
 
       this.orders.push(newOrder);
       let orderItems = order.order_items.map((item) => {
-        const productPrice = item?.product?.is_on_sale ? item?.product?.sale_price : item?.product?.product_price;
+        const productPrice = item?.product?.is_on_sale
+          ? item?.product?.sale_price
+          : item?.product?.product_price;
 
         return new OrderItem({
           businesses_id: item.businesses_id,

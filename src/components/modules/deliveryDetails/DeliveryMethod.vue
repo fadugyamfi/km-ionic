@@ -19,8 +19,8 @@
           <section class="d-flex flex-column">
             <IonText
               color="medium"
-              class="font-medium"
-              style="margin-bottom: 8px"
+              class="font-medium ellipsis"
+              style="margin-bottom: 8px; width: 250px;"
             >
               <IonIcon
                 :icon="locationOutline"

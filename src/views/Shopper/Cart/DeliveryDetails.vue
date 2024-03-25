@@ -46,7 +46,7 @@
             Select delivery method
           </IonText>
           <DeliveryMethod
-            :location="form.fields.location"
+            :location="form.fields.delivery_location"
             :delivery-date="form.fields.delivery_date"
             @onSelectDeliveryMethod="selectDeliveryMethod"
           />
