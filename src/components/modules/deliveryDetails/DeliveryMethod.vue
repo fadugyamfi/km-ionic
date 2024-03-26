@@ -38,7 +38,7 @@
     <IonItem lines="none" @click="selectedDeliveryMethod('express')">
       <IonLabel class="ion-no-margin">
         <p class="ion-no-margin" style="margin-bottom: 8px">Express Delivery</p>
-        <IonText color="medium" class="font-medium" style="margin-bottom: 8px">
+        <IonText color="medium" class="font-medium">
           Want to speed up delivery and receive your order today? We can do that
           for you
         </IonText>
