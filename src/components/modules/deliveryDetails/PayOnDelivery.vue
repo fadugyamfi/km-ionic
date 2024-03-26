@@ -1,98 +1,118 @@
 <template>
-  <section>
-    <ion-card>
-      <ion-card-content>
-      <ion-radio value="1">
-        <section
-          class="d-flex ion-justify-content-between ion-align-items-center"
+  <section style="margin-top: 10px">
+    <IonItem lines="none" @click="selectPaymentOption('pay-now')">
+      <IonLabel class="ion-no-margin">
+        <p class="ion-no-margin" style="margin-bottom: 8px">Pay now</p>
+        <IonText
+          color="medium"
+          class="font-medium location"
           style="margin-bottom: 8px"
         >
-          <IonText class="fw-semibold">Pay Now</IonText>
-          <section class="d-flex ion-align-items-center">
-            <IonText class="fw-semibold ion-margin-end"></IonText>
-          </section>
-        </section>
-
-        <section class="d-flex flex-column">
-          <IonText
-            color="medium"
-            class="font-medium"
-            style="margin-bottom: 8px"
-          >
-            <IonIcon :icon="locationOutline" style="margin-right: 3px"></IonIcon
-            >1% Discount Per Box
-          </IonText>
-          <IonText
-            color="medium"
-            class="font-medium"
-            style="margin-bottom: 8px"
-          >
-            <IonIcon :icon="timeOutline" style="margin-right: 3px"></IonIcon
-            >Guaranteed 3-Day Delivery
-          </IonText>
-        </section>
-      </ion-radio>
-    </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-content>
-      <ion-radio value="2">
-        <section
-          class="d-flex ion-justify-content-between ion-align-items-center"
+          1% Discount Per Box
+        </IonText>
+        <IonText
+          color="medium"
+          class="font-medium d-flex ion-align-items-center"
           style="margin-bottom: 8px"
         >
-          <IonText class="fw-semibold">Pay on Delivery</IonText>
-          <section class="d-flex ion-align-items-center"></section>
-        </section>
-        <section class="d-flex flex-column">
-          <IonText color="medium" class="font-medium" style="margin-bottom: 8px"
-            >Standard Pricing</IonText
-          >
-        </section>
-      </ion-radio>
-    </ion-card-content>
-    </ion-card>
+          <IonIcon :icon="timeOutline" style="margin-right: 6px"></IonIcon>
+          Guaranteed 3-Day Delivery
+        </IonText>
+      </IonLabel>
+      <div class="d-flex metadata-end-wrapper" slot="end">
+        <IonCheckbox
+          aria-label="standard-delivery"
+          justify="end"
+          mode="ios"
+          value="pay-now"
+          :checked="selectedPayment == 'pay-now'"
+        ></IonCheckbox>
+      </div>
+    </IonItem>
+    <IonItem lines="none" @click="selectPaymentOption('pay-on-delivery')">
+      <IonLabel class="ion-no-margin">
+        <p class="ion-no-margin" style="margin-bottom: 8px">Pay on Delivery</p>
+        <IonText color="medium" class="font-medium"> Standard Pricing </IonText>
+      </IonLabel>
+      <div class="d-flex metadata-end-wrapper" slot="end">
+        <IonCheckbox
+          aria-label="express-delivery"
+          justify="end"
+          mode="ios"
+          value="pay-on-delivery"
+          :checked="selectedPayment == 'pay-on-delivery'"
+        ></IonCheckbox>
+      </div>
+    </IonItem>
   </section>
 </template>
 
 <script setup lang="ts">
 import { locationOutline, timeOutline } from "ionicons/icons";
-import { IonText, IonRadioGroup, IonIcon, IonRadio, IonCard, IonCardContent } from "@ionic/vue";
+import { IonIcon, IonText, IonItem, IonLabel, IonCheckbox } from "@ionic/vue";
 import { ref, watch } from "vue";
+import Filters from "@/utilities/Filters";
 
+const emit = defineEmits();
+const selectedPayment = ref("pay-now");
+
+const props = defineProps(["location", "deliveryDate"]);
+
+const selectPaymentOption = (method: string) => {
+  selectedPayment.value = method;
+};
+
+watch(selectedPayment, (newValue) => {
+  if (newValue) {
+    emit("onSelectDeliveryMethod", newValue);
+  }
+});
 </script>
 
 <style lang="scss" scoped>
-// ion-card {
-//    margin: 10px 0px;
-//    padding: 9px;
-// }
-ion-radio {
-  width: 100%;
-}
-ion-radio::part(container) {
-  width: 18px;
-  height: 18px;
-  border-radius: 20px;
-  border: 1.5px solid #e7eaec;
-}
-ion-radio::part(mark) {
-  background: none;
-  transition: none;
-  transform: none;
-  border-radius: 0;
-}
-ion-radio.radio-checked::part(container) {
-  background: #21d187;
-  border-color: transparent;
-}
-ion-radio.radio-checked::part(mark) {
-  width: 6px;
-  height: 9px;
-  border-width: 0px 2px 2px 0px;
-  border-style: solid;
-  border-color: #fff;
-  transform: rotate(45deg);
+ion-item {
+  --background: #ffffff;
+
+  border: solid 1px #f4f4f4;
+  border-radius: 12px;
+  margin-bottom: 0.5em;
+  box-shadow: 0px 4px 12px 0px #696f821a;
+
+  &::part(native) {
+    padding: 16px;
+    --padding-start: 0px;
+    --inner-padding-end: 0px;
+  }
+
+  ion-label {
+    ion-text {
+      &.location {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    line-height: 1em;
+
+    p {
+      font-weight: 500;
+      color: #111;
+    }
+  }
+  .metadata-end-wrapper {
+    position: absolute;
+    top: 0px;
+    inset-inline-end: 10px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    p {
+      margin: 0px 10px 0px 0px;
+      font-size: 14px;
+    }
+  }
 }
 </style>
