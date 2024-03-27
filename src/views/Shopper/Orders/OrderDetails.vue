@@ -157,7 +157,9 @@ export default defineComponent({
       ) {
         return;
       }
-
+      this.fetchOrder();
+    },
+    async fetchOrder() {
       this.loading = true;
       const order_id = +this.$route.params.id;
 
@@ -173,7 +175,10 @@ export default defineComponent({
     async payNow(order: Order) {
       try {
         this.checking = true;
-        await this.cartStore.checkout(order);
+        const response = await this.cartStore.checkout(order);
+        if (response) {
+          this.fetchOrder();
+        }
       } catch (error) {
       } finally {
         this.checking = false;

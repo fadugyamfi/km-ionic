@@ -66,6 +66,7 @@ export class Order {
   public _customer?: Business;
   public _business?: Business;
   public _currency?: Currency;
+  public _sale?: Sale;
 
   constructor(data: object) {
     this.update(data);
@@ -96,6 +97,13 @@ export class Order {
 
   set customer(value: object) {
     this._customer = new Business(value || {});
+  }
+  get sale(): Sale | undefined {
+    return this._sale;
+  }
+
+  set sale(value: object) {
+    this._sale = new Sale(value || {});
   }
 
   get business(): Business | undefined {

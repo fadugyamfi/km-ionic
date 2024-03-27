@@ -52,7 +52,7 @@ export const useCartStore = defineStore("cart", {
         return null;
       }
     },
-    async checkout(order: Order) {
+    async checkout(order: Order): Promise<Object | null> {
       try {
         const response = await axios.post(
           "/hubtel-sales/create-checkout-invoice",
@@ -64,14 +64,24 @@ export const useCartStore = defineStore("cart", {
         if (response) {
           const checkoutUrl = response.data.data.checkoutUrl;
           if (!Capacitor.isNativePlatform()) {
-            window.open(checkoutUrl, "_blank");
+            var new_window = window.open(checkoutUrl, "_blank") as Window;
+            new_window.window.onunload = () => {
+              alert('hi')
+              return response.data.data;
+            };
           }
           if (Capacitor.isNativePlatform()) {
             await Browser.open({ url: checkoutUrl });
+            Browser.addListener("browserFinished", () => {
+              return response.data.data;
+            });
           }
+          return response.data.data;
         }
+        return null;
       } catch (error) {
         handleAxiosRequestError(error);
+        return null;
       }
     },
 

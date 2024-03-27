@@ -38,14 +38,25 @@
         </IonChip>
         <span v-if="order?.isPayNow()">
           <IonChip
-            v-if="!order?.amountOwed()"
+            v-if="order?.order_status_id == 5"
             color="success"
             class="font-medium"
           >
             {{ "Paid" }}
           </IonChip>
+          <IonChip
+            v-if="order?.order_status_id == 11"
+            color="warning"
+            class="font-medium"
+          >
+            {{ "Payment Processing" }}
+          </IonChip>
 
-          <IonChip v-else color="danger" class="font-medium">
+          <IonChip
+            v-if="order?.amountOwed()"
+            color="danger"
+            class="font-medium"
+          >
             {{ "Owing" }}
           </IonChip>
         </span>
