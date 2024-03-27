@@ -164,13 +164,13 @@ export class Order {
       return false;
     }
 
-    if (!this.total_amount_recovered && this.total_sales_amount) {
+    if (!this.total_amount_recovered && this.total_order_amount) {
       return true;
     }
 
     return (
       (this.total_amount_recovered as number) <
-      (this.total_sales_amount as number)
+      (this.total_order_amount as number)
     );
   }
 }

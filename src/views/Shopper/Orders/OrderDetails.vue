@@ -50,6 +50,7 @@
       </section>
       <section class="ion-padding" v-if="order?.isPayNow()">
         <CreditPaymentList
+          :showPopover="false"
           :creditPayments="(order?.sale_payments as SalePayment[])"
         ></CreditPaymentList>
       </section>
