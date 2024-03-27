@@ -10,8 +10,8 @@
           style="height: 100%"
           class="d-flex ion-justify-content-between"
         >
-          <section class="d-flex flex-column business-description">
-            <IonText class="fw-bold ellipsis font-medium">
+          <section class="d-flex flex-column ion-justify-content-start business-description">
+            <IonText class="fw-semibold ellipsis font-medium">
               {{ order?.business?.name || "Kola Market" }}
             </IonText>
 
@@ -20,12 +20,12 @@
               {{ Filters.currency(itemTotal as number) }}
             </IonText>
 
-            <IonText color="medium" class="font-medium">
+            <!-- <IonText color="medium" class="font-medium">
               <BusinessMinimumOrderReached
                 :business="order?.business"
                 :total-cost="(itemTotal as number)"
               ></BusinessMinimumOrderReached>
-            </IonText>
+            </IonText> -->
 
             <section class="d-flex">
               <IonThumbnail

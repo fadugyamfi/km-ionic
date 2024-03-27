@@ -114,9 +114,7 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="createOrder">
-        Place Order
-      </KolaYellowButton>
+      <KolaYellowButton @click="createOrder"> Place Order </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -219,6 +217,10 @@ const createOrder = async () => {
       order_items: orderBusiness.value._order_items,
     });
     if (placedOrder) {
+      cartStore.orders = cartStore.orders.filter(
+        (item) => item.businesses_id !== placedOrder.businesses_id
+      );
+      cartStore.persist();
       router.replace(
         `/shopper/cart/business/${placedOrder.id}/order-confirmation`
       );
@@ -228,7 +230,7 @@ const createOrder = async () => {
         "",
         "bottom"
       );
-      cartStore.clearCart();
+      // cartStore.clearCart();
     } else {
       toastStore.unblockUI();
       toastStore.showError(

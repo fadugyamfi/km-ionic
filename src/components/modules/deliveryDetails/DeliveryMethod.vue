@@ -100,7 +100,7 @@ ion-item {
     ion-text {
       &.location {
         display: block;
-        width: 100%;
+        width: 90%;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
