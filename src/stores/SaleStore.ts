@@ -224,13 +224,14 @@ export const useSaleStore = defineStore("sale", {
         businesses_id: userStore.activeBusiness?.id,
         limit: 500,
         sort: "latest",
+        stock_quantity_gt: 0,
         ...options,
       };
 
       const products = await productStore.fetchProducts(params);
 
       if (products) {
-        storage.set(CACHE_KEY, products, 7, "days");
+        storage.set(CACHE_KEY, products, 1, "days");
         this.inventory = products;
       }
 

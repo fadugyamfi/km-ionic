@@ -217,6 +217,7 @@ export default defineComponent({
         const params = {
           businesses_id: this.userStore.activeBusiness?.id,
           approved_only: 1,
+          stock_quantity_gt: 0,
           limit: 500,
           ...options,
         };
