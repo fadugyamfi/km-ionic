@@ -41,9 +41,12 @@ export const useCartStore = defineStore("cart", {
         const response = await axios.post(`/v2/orders`, postData);
         if (response.status >= 200 && response.status < 300) {
           this.placedOrder = new Order(response.data.data);
-          await this.checkout();
+          if (this.placedOrder.payment_option_id == 1) {
+            await this.checkout();
+          }
           return this.placedOrder;
         }
+        return null;
       } catch (error) {
         handleAxiosRequestError(error);
         return null;

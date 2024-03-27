@@ -109,7 +109,7 @@
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton @click="storePaymentOption"
-        >Proceed To Checkout</KolaYellowButton
+        >{{buttonText}}</KolaYellowButton
       >
     </IonFooter>
   </ion-page>
@@ -229,8 +229,8 @@ export default defineComponent({
   computed: {
     buttonText(): string {
       return this.form.fields.payment_option_id === "1"
-        ? "Place Order"
-        : "Proceed To Checkout";
+        ? "Proceed to checkout"
+        : "Continue";
     },
   },
   methods: {

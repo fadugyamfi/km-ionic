@@ -50,7 +50,7 @@
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton @click="storePaymentOption"
-        >Make Payment</KolaYellowButton
+        >Proceed to checkout</KolaYellowButton
       >
     </IonFooter>
   </ion-page>
@@ -190,9 +190,9 @@ export default defineComponent({
       }
 
       cartStore.persist();
-      // this.$router.push(
-      //   `/shopper/cart/business/${this.$route.params.id}/delivery-details`
-      // );
+      this.$router.push(
+        `/shopper/cart/business/${this.$route.params.id}/item-review`
+      );
     },
   },
 
