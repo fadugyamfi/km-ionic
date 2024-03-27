@@ -30,7 +30,7 @@
             slot="end"
             mode="ios"
             :value="paymentMode.id"
-            :checked="form.fields?.payment_option_id == paymentMode?.id"
+            :checked="form.fields?.payment_modes_id == paymentMode?.id"
           ></IonCheckbox>
         </IonItem>
       </IonList>
@@ -153,7 +153,7 @@ export default defineComponent({
       showPayDropdown: false,
       form: {
         fields: {
-          payment_option_id: 1,
+          payment_modes_id: 1,
         },
       },
       paymentModes: [
@@ -177,7 +177,7 @@ export default defineComponent({
   },
   methods: {
     selectPaymentMethod(paymentMode: PaymentMode) {
-      this.form.fields.payment_option_id = paymentMode.id as number;
+      this.form.fields.payment_modes_id = paymentMode.id as number;
     },
     storePaymentOption() {
       const cartStore = useCartStore();
@@ -186,7 +186,7 @@ export default defineComponent({
       );
 
       if (order) {
-        order.payment_option_id = +this.form.fields.payment_option_id;
+        order.payment_modes_id = +this.form.fields.payment_modes_id;
       }
 
       cartStore.persist();

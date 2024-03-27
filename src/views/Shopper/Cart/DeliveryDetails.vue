@@ -28,7 +28,7 @@
           required
         >
         </IonInput>
-        <h6s class="fw-semibold font-medium">Delivery Date</h6s>
+        <h6 class="fw-semibold font-medium">Delivery Date</h6>
         <IonInput
           class="kola-input delivery-details-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.delivery_date }"
@@ -41,7 +41,7 @@
           readonly
         ></IonInput>
         <section class="d-flex flex-column">
-          <IonText class="fw-semibold" style="margin-bottom: 6px">Delivery</IonText>
+          <IonText class="fw-semibold font-medium" style="margin-bottom: 6px">Delivery</IonText>
           <IonText color="medium" class="font-medium">
             Select delivery method
           </IonText>
@@ -96,13 +96,7 @@ const form = useForm({
   delivery_nearest_landmark: "",
   delivery_date: "",
   delivery_method: "",
-  payment_option_id: "2",
-});
-const props = defineProps({
-  order: {
-    type: Object as () => Order,
-    required: true,
-  },
+  payment_option_id: 1,
 });
 
 const selectDeliveryMethod = (method: string) => {

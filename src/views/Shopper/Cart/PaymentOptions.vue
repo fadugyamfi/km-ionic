@@ -6,7 +6,7 @@
 
     <ion-content class="ion-padding">
       <form>
-        <section class="d-flex flex-column ion-margin-horizontal">
+        <section class="d-flex flex-column">
           <IonText class="fw-semibold">Pay Now</IonText>
           <IonText color="medium" class="font-medium"
             >Select a payment method</IonText
@@ -14,7 +14,7 @@
         </section>
 
         <section style="margin-top: 10px">
-          <IonItem lines="none" @click="selectPaymentOption('pay-now')">
+          <IonItem lines="none" @click="selectPaymentOption(1)">
             <IonLabel class="ion-no-margin">
               <p class="ion-no-margin" style="margin-bottom: 8px">Pay now</p>
               <IonText
@@ -42,12 +42,12 @@
                 justify="end"
                 mode="ios"
                 value="pay-now"
-                :checked="selectedPayment == 'pay-now'"
+                :checked="form.fields?.payment_option_id == 1"
               ></IonCheckbox>
             </div>
           </IonItem>
-          <IonItem lines="none" @click="selectPaymentOption('pay-on-delivery')">
-            <IonLabel class="ion-no-margin" style="margin-top: 20px">
+          <IonItem lines="none" @click="selectPaymentOption(2)">
+            <IonLabel class="ion-no-margin">
               <p class="ion-no-margin" style="margin-bottom: 8px">
                 Pay on Delivery
               </p>
@@ -61,7 +61,7 @@
                 justify="end"
                 mode="ios"
                 value="pay-on-delivery"
-                :checked="selectedPayment == 'pay-on-delivery'"
+                :checked="form.fields?.payment_option_id == 2"
               ></IonCheckbox>
             </div>
           </IonItem>
@@ -230,13 +230,12 @@
             </IonCardContent>
           </ion-card>
         </section> -->
-        <!-- </ion-radio-group> -->
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="storePaymentOption"
-        >{{buttonText}}</KolaYellowButton
-      >
+      <KolaYellowButton @click="storePaymentOption">{{
+        buttonText
+      }}</KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
@@ -353,21 +352,21 @@ export default defineComponent({
       showPayDropdown: false,
       form: {
         fields: {
-          payment_option_id: "1",
+          payment_option_id: 1,
         },
       },
     };
   },
   computed: {
     buttonText(): string {
-      return this.form.fields.payment_option_id === "1"
+      return this.form.fields.payment_option_id == 1
         ? "Proceed to checkout"
         : "Continue";
     },
   },
   methods: {
-    selectPaymentOption(method: string) {
-      this.selectedPayment = method; // Update selectedPayment directly
+    selectPaymentOption(id: number) {
+      this.form.fields.payment_option_id = id; // Update selectedPayment directly
     },
 
     storePaymentOption() {
@@ -387,7 +386,7 @@ export default defineComponent({
 
         // Define the route path based on payment_option_id
         const routePath =
-          this.form.fields.payment_option_id === "1"
+          this.form.fields.payment_option_id == 1
             ? `/shopper/cart/business/${this.$route.params.id}/item-review`
             : `/shopper/cart/business/${this.$route.params.id}/payment-method`;
 
@@ -414,6 +413,52 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+ion-item {
+  --background: #ffffff;
+  margin-bottom: 4px !important;
+  border: solid 1px #f4f4f4;
+  border-radius: 12px;
+  margin-bottom: 0.5em;
+  box-shadow: 0px 4px 12px 0px #696f821a;
+
+  &::part(native) {
+    padding: 16px;
+    --padding-start: 0px;
+    --inner-padding-end: 0px;
+  }
+
+  ion-label {
+    ion-text {
+      &.location {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    line-height: 1em;
+
+    p {
+      font-weight: 500;
+      color: #111;
+    }
+  }
+  .metadata-end-wrapper {
+    position: absolute;
+    top: 0px;
+    inset-inline-end: 10px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    p {
+      margin: 0px 10px 0px 0px;
+      font-size: 14px;
+    }
+  }
+}
+
 ion-card {
   color: #000000;
 }

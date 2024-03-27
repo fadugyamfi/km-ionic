@@ -6,17 +6,10 @@
     <ion-content>
       <section class="ion-padding">
         <IonText> {{ order?.business?.name || "Kola Market" }} </IonText>
-        <BusinessMinimumOrderReached
+        <!-- <BusinessMinimumOrderReached
           :business="order?.business"
           :totalCost="totalCost"
-        ></BusinessMinimumOrderReached>
-        <!-- <p v-if="minOrderAmountReached">
-          {{ Filters.currency(order?.business?.min_order_amount as number, order?.currency?.symbol as string) }} minimum reached
-        </p>
-        <p v-else="minOrderAmountReached">
-          <IonIcon :icon="alertCircleOutline" color="danger"></IonIcon>
-          {{ Filters.currency(order?.business?.min_order_amount as number, order?.currency?.symbol as string) }} minimum not reached
-        </p> -->
+        ></BusinessMinimumOrderReached> -->
       </section>
       <IonList lines="none">
         <IonItem
@@ -121,7 +114,7 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="createOrder" :disabled="!minOrderAmountReached">
+      <KolaYellowButton @click="createOrder">
         Place Order
       </KolaYellowButton>
     </IonFooter>
