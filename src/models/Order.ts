@@ -15,6 +15,9 @@ import Business from "./Business";
 import Currency from "./Currency";
 import { OrderItem } from "./OrderItem";
 import { OrderStatusHistory } from "./OrderStatusHistory";
+import { Sale } from "./Sale";
+import { SalePayment } from "./SalePayment";
+import { SaleTypes } from "./SaleType";
 
 export enum OrderStatus {
   PENDING = 1,
@@ -54,6 +57,9 @@ export class Order {
   public days_overdue?: number | string;
   public due_date?: number | string;
   public order_items_count = 0;
+  public total_amount_recovered = 0;
+  public total_sales_amount = 0;
+  public sale_payments?: SalePayment[];
 
   public _order_status_histories: OrderStatusHistory[] = [];
   public _order_items: OrderItem[] = [];
@@ -148,5 +154,23 @@ export class Order {
 
   isDelivered() {
     return this.order_status_id == OrderStatus.DELIVERED;
+  }
+
+  isPayNow() {
+    return this.payment_option_id == 1;
+  }
+  amountOwed() {
+    if (!this.isPayNow()) {
+      return false;
+    }
+
+    if (!this.total_amount_recovered && this.total_sales_amount) {
+      return true;
+    }
+
+    return (
+      (this.total_amount_recovered as number) <
+      (this.total_sales_amount as number)
+    );
   }
 }

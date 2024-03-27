@@ -36,6 +36,19 @@
         >
           {{ getStatusInfo(order.order_status_id)?.label }}
         </IonChip>
+        <span v-if="order?.isPayNow()">
+          <IonChip
+            v-if="!order?.amountOwed()"
+            color="success"
+            class="font-medium"
+          >
+            {{ "Paid" }}
+          </IonChip>
+
+          <IonChip v-else color="danger" class="font-medium">
+            {{ "Owing" }}
+          </IonChip>
+        </span>
       </p>
     </IonLabel>
     <IonButton

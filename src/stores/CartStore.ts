@@ -42,7 +42,7 @@ export const useCartStore = defineStore("cart", {
         if (response.status >= 200 && response.status < 300) {
           this.placedOrder = new Order(response.data.data);
           if (this.placedOrder.payment_option_id == 1) {
-            await this.checkout();
+            await this.checkout(this.placedOrder);
           }
           return this.placedOrder;
         }
@@ -52,13 +52,13 @@ export const useCartStore = defineStore("cart", {
         return null;
       }
     },
-    async checkout() {
+    async checkout(order: Order) {
       try {
         const response = await axios.post(
           "/hubtel-sales/create-checkout-invoice",
           {
-            total_amount: this.placedOrder.total_order_amount,
-            sale_id: this.placedOrder.id,
+            total_amount: order.total_order_amount,
+            sale_id: order.sale?.id,
           }
         );
         if (response) {
@@ -70,7 +70,9 @@ export const useCartStore = defineStore("cart", {
             await Browser.open({ url: checkoutUrl });
           }
         }
-      } catch (error) {}
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
     },
 
     async loadFromStorage() {
