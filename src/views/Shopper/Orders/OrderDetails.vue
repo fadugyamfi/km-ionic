@@ -130,6 +130,11 @@ export default defineComponent({
   ionViewWillEnter() {
     // retrieve the currently loaded order info from the history if available
     this.order = this.orderStore.selectedOrder;
+    this.order = new Order({
+      ...this.order,
+      order_status_id:
+        this.order?.order_status_id == 11 ? 2 : this.order?.order_status_id,
+    });
   },
 
   async mounted() {
@@ -166,6 +171,11 @@ export default defineComponent({
       // fetch full order info from backend to overwrite the basic data
       try {
         this.order = await this.orderStore.fetchOrder(order_id);
+        this.order = new Order({
+          ...this.order,
+          order_status_id:
+            this.order?.order_status_id == 11 ? 2 : this.order?.order_status_id,
+        });
       } catch (error) {
         handleAxiosRequestError(error);
       } finally {

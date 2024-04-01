@@ -36,20 +36,13 @@
         >
           {{ getStatusInfo(order.order_status_id)?.label }}
         </IonChip>
-        <span v-if="order?.isPayNow()">
+        <span v-if="order?.isPayNow() && order.order_status_id !== 11">
           <IonChip
             v-if="order?.order_status_id == 5"
             color="success"
             class="font-medium"
           >
             {{ "Paid" }}
-          </IonChip>
-          <IonChip
-            v-if="order?.order_status_id == 11"
-            color="warning"
-            class="font-medium"
-          >
-            {{ "Payment Processing" }}
           </IonChip>
 
           <IonChip
@@ -157,6 +150,11 @@ export default defineComponent({
           return {
             color: "danger",
             label: "Cancelled",
+          };
+        case 11:
+          return {
+            color: "warning",
+            label: "Payment processing",
           };
         default:
           return {
