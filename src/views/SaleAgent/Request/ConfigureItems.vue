@@ -156,8 +156,7 @@ export default defineComponent({
     KolaYellowButton,
     IonInput,
     LocationInput,
-    IonSpinner,
-    LocationInput
+    IonSpinner
   },
 
   computed: {

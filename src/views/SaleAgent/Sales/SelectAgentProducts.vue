@@ -6,17 +6,14 @@
           <IonToolbar>
             <IonButtons slot="start">
               <IonBackButton
-                defaultHref="/agent/orders/place-order/select-customer"
+                defaultHref="/agent/sales/add-sale/select-inventory"
                 :icon="arrowBack"
                 mode="md"
               >
               </IonBackButton>
             </IonButtons>
-            <IonTitle v-if="$route.fullPath.includes('record')" size="small"
-              ><b>Record New Order</b></IonTitle
-            >
-            <IonTitle v-else size="small"
-              ><b>{{ $t("shopper.cart.placeNewOrder") }}</b></IonTitle
+            <IonTitle size="small"
+              ><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle
             >
             <IonButtons slot="end">
               <IonButton color="dark" @click="toggleSearchEnabled()">
@@ -47,7 +44,7 @@
             <IonLabel class="fw-bold ion-text-end" color="medium">
               {{
                 $t("vendor.sales.itemsSelected", {
-                  total: orderStore.newOrder.order_items?.length,
+                  total: saleStore.newSale.sale_items?.length,
                 })
               }}
             </IonLabel>
@@ -58,8 +55,8 @@
 
     <IonContent>
       <SelectedCustomer
-        v-if="orderStore.selectedCustomer"
-        :customer="orderStore.selectedCustomer"
+        v-if="saleStore.selectedCustomer"
+        :customer="saleStore.selectedCustomer"
       ></SelectedCustomer>
 
       <div class="ion-text-center" v-if="fetching">
@@ -70,7 +67,7 @@
         <NoResults
           v-if="products?.length == 0"
           title="No Products Available"
-          description="Add products to your inventory to populate this list"
+          description="Add new request to populate this list"
         ></NoResults>
 
         <RecycleScroller
@@ -78,7 +75,8 @@
           class="scroller"
           :items="products"
           :grid-items="2"
-          :item-size="210"
+          :item-size="240"
+          :minItemSize="210"
           :item-secondary-size="cardWidth"
           :item-class="'product-card-item'"
           key-field="id"
@@ -89,9 +87,10 @@
             :showDescription="false"
             :showAddToCart="false"
             :showAddToFavorites="false"
-            :showAddToSelected="true"
+            :showAddToSelected="item.quantity > 0"
             :action="'toggleSelect'"
             :initially-selected="isSelected(item)"
+            :showStockStatus="true"
             @toggleSelect="selectProduct($event)"
           ></ProductCard>
         </RecycleScroller>
@@ -101,7 +100,7 @@
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton
         id="select-products-continue"
-        :disabled="orderStore.newOrder.order_items?.length == 0"
+        :disabled="saleStore.newSale.sale_items?.length == 0"
         @click="onContinue()"
       >
         {{ $t("general.continue") }}
@@ -151,7 +150,6 @@ import { useProductStore } from "@/stores/ProductStore";
 import { useUserStore } from "@/stores/UserStore";
 import NoResults from "@/components/layout/NoResults.vue";
 import { RecycleScroller } from "vue-virtual-scroller";
-import { useOrderStore } from "@/stores/OrderStore";
 
 export default defineComponent({
   data() {
@@ -164,9 +162,9 @@ export default defineComponent({
     };
   },
 
-  async ionViewDidEnter() {
+  ionViewDidEnter() {
     this.loadCachedInventory();
-    // this.orderStore.loadFromStorage();
+    // this.saleStore.loadFromStorage();
   },
 
   components: {
@@ -199,7 +197,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useSaleStore, useProductStore, useUserStore, useOrderStore),
+    ...mapStores(useSaleStore, useProductStore, useUserStore),
 
     cardWidth() {
       return window.document.documentElement.clientWidth / 2;
@@ -208,23 +206,22 @@ export default defineComponent({
 
   methods: {
     async loadCachedInventory() {
-      this.products = await this.saleStore.fetchInventory();
+      this.products = await this.saleStore.fetchAgentInventory();
 
       if (!this.products || this.products.length == 0) {
-        this.fetchProducts();
+        this.fetchAgentProducts();
       }
     },
 
-    async fetchProducts(options = {}) {
+    async fetchAgentProducts(options = {}) {
       this.fetching = true;
       try {
         const params = {
-          businesses_id: this.userStore.activeBusiness?.id,
           limit: 500,
           ...options,
         };
 
-        this.products = await this.productStore.fetchProducts(params);
+        this.products = await this.productStore.fetchAgentProducts(params);
         this.saleStore.inventory = this.products;
       } catch (error) {
         handleAxiosRequestError(error);
@@ -234,19 +231,22 @@ export default defineComponent({
     },
 
     isSelected(product: Product): boolean {
-      return this.orderStore.isProductSelected(product);
+      return this.saleStore.isProductSelected(product);
     },
 
     selectProduct(selection: ProductSelection) {
+      if (!selection.product.quantity) {
+        return;
+      }
       if (selection.selected) {
-        this.orderStore.addProductToOrder(selection.product);
+        this.saleStore.addProductToSale(selection.product);
       } else {
-        this.orderStore.removeProductFromOrder(selection.product);
+        this.saleStore.removeProductFromSale(selection.product);
       }
     },
 
     onContinue() {
-      if (this.orderStore.newOrder.order_items?.length == 0) {
+      if (this.saleStore.newSale.sale_items?.length == 0) {
         const toastStore = useToastStore();
         toastStore.showError(
           this.$t("vendor.sales.selectProductsToContinue"),
@@ -256,11 +256,11 @@ export default defineComponent({
         );
         return;
       }
-      this.orderStore.persist()
+      this.saleStore.persist();
       if (this.userStore.user?.isSalesAssociate()) {
-        this.$router.push("/agent/orders/place-order/configure-items");
+        this.$router.push("/agent/sales/add-sale/configure-items");
       } else {
-        this.$router.push("/vendor/orders/record-order/configure-items");
+        this.$router.push("/vendor/sales/add-sale/configure-items");
       }
     },
 
@@ -269,7 +269,7 @@ export default defineComponent({
     },
 
     onSearch(event: Event) {
-      this.fetchProducts({
+      this.fetchAgentProducts({
         product_name_has: (event.target as HTMLIonSearchbarElement).value,
       });
     },

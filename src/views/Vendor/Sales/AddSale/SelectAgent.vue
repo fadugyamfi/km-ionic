@@ -1,33 +1,43 @@
 <template>
   <IonPage>
-    <section class="ion-padding">
-      <IonHeader class="ion-no-border" style="box-shadow: none;">
-        <IonToolbar class="inner-header">
+    <IonHeader class="ion-padding ion-no-border">
+      <IonHeader class="inner-header">
+        <IonToolbar class="ion-align-items-center">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/vendor/sales" :icon="arrowBack" mode="md"></IonBackButton>
+            <IonBackButton
+              defaultHref="/vendor/sales"
+              :icon="arrowBack"
+              mode="md"
+            ></IonBackButton>
           </IonButtons>
-          <IonTitle size="small"><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle>
+          <IonTitle size="small"
+            ><b>{{ $t("vendor.sales.addSale") }}</b></IonTitle
+          >
           <IonButtons slot="end">
             <ion-button @click="searchEnabled = !searchEnabled" color="dark">
               <IonIcon :icon="search"></IonIcon>
             </ion-button>
           </IonButtons>
         </IonToolbar>
-        <IonToolbar v-if="searchEnabled">
-          <IonSearchbar
-              :placeholder="$t('vendor.sales.filterAgents') + '...'"
-              class="search-input"
-              @keyup="onSearch($event)"
-              @ion-change="onSearch($event)"
-              @ion-clear="onSearch($event)"
-              @ion-cancel="onSearch($event)"
-          ></IonSearchbar>
-        </IonToolbar>
       </IonHeader>
-    </section>
+      <IonToolbar v-if="searchEnabled">
+        <IonSearchbar
+          :placeholder="$t('vendor.sales.filterAgents') + '...'"
+          class="search-input"
+          @keyup="onSearch($event)"
+          @ion-change="onSearch($event)"
+          @ion-clear="onSearch($event)"
+          @ion-cancel="onSearch($event)"
+        ></IonSearchbar>
+      </IonToolbar>
+    </IonHeader>
 
     <IonContent>
-      <IonRefresher ref="refresher" slot="fixed" @ionRefresh="handleRefresh($event)">
+      <IonRefresher
+        ref="refresher"
+        slot="fixed"
+        @ionRefresh="handleRefresh($event)"
+      >
         <IonRefresherContent pullingIcon="crescent"></IonRefresherContent>
       </IonRefresher>
 
@@ -35,19 +45,33 @@
         <IonSpinner name="crescent"></IonSpinner>
       </div>
 
-      <IonList v-if="!fetching" lines="none" class="ion-padding-horizontal sales-select-list simple">
+      <IonList
+        v-if="!fetching"
+        lines="none"
+        class="ion-padding-horizontal sales-select-list simple"
+      >
         <IonListHeader>
-          <IonLabel class="fw-semibold">{{ $t("vendor.sales.selectSaleAgent") }}</IonLabel>
+          <IonLabel class="fw-semibold">{{
+            $t("vendor.sales.selectSaleAgent")
+          }}</IonLabel>
         </IonListHeader>
 
-        <IonItem v-for="agent in filteredAgents" :key="agent.id" @click="selectAgent(agent)">
-          <ProfileAvatar slot="start" :image="agent?.image"
-                           :username="agent?.name" customSize="40px"></ProfileAvatar>
+        <IonItem
+          v-for="agent in filteredAgents"
+          :key="agent.id"
+          @click="selectAgent(agent)"
+        >
+          <ProfileAvatar
+            slot="start"
+            :image="agent?.image"
+            :username="agent?.name"
+            customSize="40px"
+          ></ProfileAvatar>
 
           <IonLabel>
             <p class="ion-no-margin">{{ agent.name }}</p>
             <IonText color="medium" class="font-medium">
-              {{ agent.role?.name || $t('vendor.sales.saleAgent') }}
+              {{ agent.role?.name || $t("vendor.sales.saleAgent") }}
             </IonText>
           </IonLabel>
           <IonCheckbox
@@ -62,33 +86,60 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton id="agent-continue" :disabled="!saleStore.newSale.cms_users_id" @click="onContinue()">
-        {{ $t('general.continue') }}
+      <KolaYellowButton
+        id="agent-continue"
+        :disabled="!saleStore.newSale.cms_users_id"
+        @click="onContinue()"
+      >
+        {{ $t("general.continue") }}
       </KolaYellowButton>
     </IonFooter>
   </IonPage>
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonButton, IonToolbar, IonIcon, IonTitle, IonButtons, IonHeader, IonBackButton, IonList, IonItem, IonListHeader, IonLabel, IonAvatar, IonCheckbox, IonText, IonFooter, IonImg, IonSpinner, RefresherCustomEvent, IonRefresher, IonRefresherContent, IonSearchbar } from '@ionic/vue';
-import { arrowBack, close, refreshOutline, search } from 'ionicons/icons';
-import { defineComponent } from 'vue';
-import User from '@/models/User';
-import axios from 'axios';
-import { useUserStore } from '@/stores/UserStore';
-import { handleAxiosRequestError } from '@/utilities';
-import KolaYellowButton from '@/components/KolaYellowButton.vue';
-import { mapStores } from 'pinia';
-import { useSaleStore } from '@/stores/SaleStore';
-import { useToastStore } from '@/stores/ToastStore';
-import Image from '@/components/Image.vue';
-import { useBusinessStore } from '@/stores/BusinessStore';
-import Business from '@/models/Business';
-import ProfileAvatar from '../../../../components/ProfileAvatar.vue';
-import { useGeolocation } from '../../../../composables/useGeolocation';
+import {
+  IonPage,
+  IonContent,
+  IonButton,
+  IonToolbar,
+  IonIcon,
+  IonTitle,
+  IonButtons,
+  IonHeader,
+  IonBackButton,
+  IonList,
+  IonItem,
+  IonListHeader,
+  IonLabel,
+  IonAvatar,
+  IonCheckbox,
+  IonText,
+  IonFooter,
+  IonImg,
+  IonSpinner,
+  RefresherCustomEvent,
+  IonRefresher,
+  IonRefresherContent,
+  IonSearchbar,
+} from "@ionic/vue";
+import { arrowBack, close, refreshOutline, search } from "ionicons/icons";
+import { defineComponent } from "vue";
+import User from "@/models/User";
+import axios from "axios";
+import { useUserStore } from "@/stores/UserStore";
+import { handleAxiosRequestError } from "@/utilities";
+import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import { mapStores } from "pinia";
+import { useSaleStore } from "@/stores/SaleStore";
+import { useToastStore } from "@/stores/ToastStore";
+import Image from "@/components/Image.vue";
+import { useBusinessStore } from "@/stores/BusinessStore";
+import Business from "@/models/Business";
+import ProfileAvatar from "../../../../components/ProfileAvatar.vue";
+import { useGeolocation } from "../../../../composables/useGeolocation";
 
 export default defineComponent({
-
   components: {
     IonPage,
     IonHeader,
@@ -114,22 +165,24 @@ export default defineComponent({
     IonRefresher,
     IonRefresherContent,
     IonSearchbar,
-    ProfileAvatar
-},
+    ProfileAvatar,
+  },
 
   data() {
     return {
-      search, close, arrowBack,
+      search,
+      close,
+      arrowBack,
       fetching: false,
       refreshing: false,
       searchEnabled: false,
       agents: [] as User[],
-      filteredAgents: [] as User[]
-    }
+      filteredAgents: [] as User[],
+    };
   },
 
   computed: {
-    ...mapStores( useUserStore, useSaleStore, useBusinessStore )
+    ...mapStores(useUserStore, useSaleStore, useBusinessStore),
   },
 
   methods: {
@@ -144,11 +197,15 @@ export default defineComponent({
       this.fetching = true;
 
       try {
-        this.agents = await this.businessStore.getBusinessSaleAgents(this.userStore.activeBusiness as Business, 200, this.refreshing)
-        this.agents.unshift( this.userStore.user as User );
+        this.agents = await this.businessStore.getBusinessSaleAgents(
+          this.userStore.activeBusiness as Business,
+          200,
+          this.refreshing
+        );
+        this.agents.unshift(this.userStore.user as User);
 
         this.filteredAgents = this.agents;
-      } catch(error) {
+      } catch (error) {
         handleAxiosRequestError(error);
       } finally {
         this.fetching = false;
@@ -160,32 +217,39 @@ export default defineComponent({
     },
 
     onContinue() {
-      if( !this.saleStore.newSale.cms_users_id ) {
+      if (!this.saleStore.newSale.cms_users_id) {
         const toastStore = useToastStore();
-        toastStore.showError( this.$t("vendor.sales.selectAgentToContinue"), '', 'bottom', 'agent-continue');
+        toastStore.showError(
+          this.$t("vendor.sales.selectAgentToContinue"),
+          "",
+          "bottom",
+          "agent-continue"
+        );
         return;
       }
 
-      if( this.userStore.user?.isSalesAssociate() ) {
-        this.$router.replace('/agent/sales/add-sale/select-customer');
+      if (this.userStore.user?.isSalesAssociate()) {
+        this.$router.replace("/agent/sales/add-sale/select-customer");
       } else {
-        this.$router.push('/vendor/sales/add-sale/select-sale-type');
+        this.$router.push("/vendor/sales/add-sale/select-sale-type");
       }
     },
 
     onSearch(event: Event) {
       const term = (event.target as HTMLIonSearchbarElement)?.value as string;
-      this.filteredAgents = this.agents.filter(agent => agent.name?.toLowerCase().includes(term.toLowerCase()))
-    }
+      this.filteredAgents = this.agents.filter((agent) =>
+        agent.name?.toLowerCase().includes(term.toLowerCase())
+      );
+    },
   },
 
   ionViewDidEnter() {
-    if( this.userStore.user?.isSalesAssociate() ) {
+    if (this.userStore.user?.isSalesAssociate()) {
       this.selectAgent(this.userStore.user);
       this.onContinue();
     } else {
       this.fetchSaleAgents();
     }
-  }
-})
+  },
+});
 </script>

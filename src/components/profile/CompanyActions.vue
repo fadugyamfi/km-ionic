@@ -234,7 +234,7 @@ export default defineComponent({
         this.userStore.toggleAppMode();
       }
 
-      this.$router.push("/vendor/sales/add-sale/select-agent");
+      this.$router.replace("/vendor/sales/add-sale/select-agent");
     },
   },
 });
