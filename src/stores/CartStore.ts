@@ -66,7 +66,6 @@ export const useCartStore = defineStore("cart", {
           if (!Capacitor.isNativePlatform()) {
             var new_window = window.open(checkoutUrl, "_blank") as Window;
             new_window.window.onunload = () => {
-              alert('hi')
               return response.data.data;
             };
           }
