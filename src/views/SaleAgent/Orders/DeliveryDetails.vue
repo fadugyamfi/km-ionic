@@ -64,10 +64,10 @@
           label="DD/MM/YY"
           labelPlacement="stacked"
           fill="solid"
+          type="date"
           v-model="form.fields.delivery_date"
           name="delivery-date"
           @ion-input="form.validate && form.validate($event)"
-          readonly
         ></IonInput>
         <!-- <section>
             <h6 class="fw-semibold" style="margin-bottom: 6px">Delivery</h6>

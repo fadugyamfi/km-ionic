@@ -201,7 +201,7 @@ export default defineComponent({
 
     hasAppliedToSell() {
       return (
-        this.userStore.activeBusiness?.attributes?.applied_to.length > 0 ||
+        this.userStore.activeBusiness?.attributes?.applied_to?.length > 0 ||
         this.userStore?.activeBusiness?.approved_vendor != 0
       );
     },
