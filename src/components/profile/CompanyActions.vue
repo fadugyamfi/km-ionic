@@ -8,7 +8,7 @@
         customSize="32px"
       ></ProfileAvatar>
       <IonLabel>{{ userStore.activeBusiness?.name }}</IonLabel>
-      <!-- <IonIcon slot="end" :icon="createOutline"></IonIcon> -->
+      <IonSpinner v-if="fetching" slot="end" name="crescent"></IonSpinner>
     </IonItem>
 
     <IonList lines="none">
@@ -156,7 +156,7 @@
 </template>
 
 <script lang="ts">
-import { IonIcon, IonLabel, IonItem, IonAvatar, IonList } from "@ionic/vue";
+import { IonIcon, IonLabel, IonItem, IonAvatar, IonList, IonSpinner } from "@ionic/vue";
 import { computed, defineComponent } from "vue";
 import { useUserStore } from "@/stores/UserStore";
 import { mapStores } from "pinia";
@@ -187,6 +187,7 @@ export default defineComponent({
     SwitchBusinessSheet,
     ModeToggleCard,
     GeneralActions,
+    IonSpinner
   },
 
   computed: {
@@ -205,6 +206,7 @@ export default defineComponent({
         this.userStore?.activeBusiness?.approved_vendor != 0
       );
     },
+
     stockPath() {
       return this.userStore.user?.isOwner()
         ? "/profile/company/stocks"
@@ -237,5 +239,13 @@ export default defineComponent({
       this.$router.replace("/vendor/sales/add-sale/select-agent");
     },
   },
+
+  async mounted() {
+    if( !this.userStore.activeBusiness ) {
+      this.fetching = true;
+      await this.userStore.refreshUserBusinesses();
+      this.fetching = false;
+    }
+  }
 });
 </script>

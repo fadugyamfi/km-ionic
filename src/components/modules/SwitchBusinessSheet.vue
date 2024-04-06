@@ -12,8 +12,17 @@
               :checked="activeBusiness?.id == business.id"
               :disabled="!business.name"
               mode="ios"
-              >{{ business.name || "No business" }}</ion-toggle
-            >
+              >
+              <IonLabel>
+                {{ business.name || "No business" }}
+
+                <div>
+                  <IonText class="font-medium" color="medium">
+                    {{ business?.location }}
+                  </IonText>
+                </div>
+              </IonLabel>
+              </ion-toggle>
           </ion-item>
         </ion-list>
       </main>
@@ -32,6 +41,8 @@ import {
   IonItem,
   IonIcon,
   IonSelectOption,
+  IonLabel,
+IonText,
 } from "@ionic/vue";
 import { defineComponent, PropType } from "vue";
 import { chevronDownOutline, chevronUpOutline } from "ionicons/icons";
@@ -51,6 +62,8 @@ export default defineComponent({
     IonItem,
     IonIcon,
     IonToggle,
+    IonLabel,
+    IonText
   },
 
   data() {
