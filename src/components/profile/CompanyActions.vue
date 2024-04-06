@@ -201,7 +201,7 @@ export default defineComponent({
 
     hasAppliedToSell() {
       return (
-        this.userStore.activeBusiness?.attributes?.applied_to.length > 0 ||
+        this.userStore.activeBusiness?.attributes?.applied_to?.length > 0 ||
         this.userStore?.activeBusiness?.approved_vendor != 0
       );
     },
@@ -234,7 +234,7 @@ export default defineComponent({
         this.userStore.toggleAppMode();
       }
 
-      this.$router.push("/vendor/sales/add-sale/select-agent");
+      this.$router.replace("/vendor/sales/add-sale/select-agent");
     },
   },
 });
