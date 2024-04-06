@@ -14,6 +14,7 @@
                 <IonSearchbar
                     class="search-input"
                     placeholder="Search..."
+                    v-model="productStore.searchTerm"
                     @keyup.enter="onSearch($event)"
                     @ion-change="onSearch($event)"
                     @ion-clear="onSearch($event)"
@@ -59,6 +60,11 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import ProductCard from '@/components/cards/ProductCard.vue';
 import NoResults from '../../components/layout/NoResults.vue';
 import { handleAxiosRequestError } from '../../utilities';
+import AppStorage from '../../stores/AppStorage';
+
+const storage = new AppStorage();
+
+const SEARCHED_PRODUCTS = 'kola.searched-products';
 
 export default defineComponent({
 
@@ -114,11 +120,19 @@ export default defineComponent({
                 handleAxiosRequestError(error);
             } finally {
                 this.fetching = false;
+
+                if( !this.products && await storage.has(SEARCHED_PRODUCTS) ) {
+                    this.products = await storage.get(SEARCHED_PRODUCTS);
+                    return;
+                }
+
+                storage.set(SEARCHED_PRODUCTS, this.products, 1, 'day');
             }
         },
 
         onSearch(event: any) {
-            this.productStore.searchTerm = event.target?.value;
+            this.productStore.setSearchTerm(event.target.value);
+
             this.products = [];
             this.fetchSearchedProducts();
         },
@@ -132,7 +146,7 @@ export default defineComponent({
         }
     },
 
-    mounted() {
+    async mounted() {
         this.fetchSearchedProducts();
     }
 })

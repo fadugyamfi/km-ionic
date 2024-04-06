@@ -15,6 +15,7 @@
       <IonSearchbar
             placeholder="Search..."
             class="search-input"
+            v-model="productStore.searchTerm"
             @keyup.enter="onSearch($event)"
             @ion-change="onSearch($event)"
         ></IonSearchbar>
@@ -56,13 +57,12 @@ export default defineComponent({
 },
 
   computed: {
-    ...mapStores(useUserStore)
+    ...mapStores(useUserStore, useProductStore)
   },
 
   methods: {
     onSearch(event: any) {
-      const productStore = useProductStore();
-      productStore.searchTerm = event.target.value;
+      this.productStore.setSearchTerm(event.target.value);
       this.$router.push('/shopper/search-results')
     }
   }

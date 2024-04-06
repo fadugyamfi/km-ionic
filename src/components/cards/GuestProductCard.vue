@@ -25,7 +25,7 @@
         :src="product?.image"
         :path="product?.product_banner_image"
         :no-img-src="noImage"
-        w="150"
+        w="180"
         @loaded="imgLoaded = true"
       />
 
@@ -285,7 +285,7 @@ export default defineComponent({
     overflow: hidden;
 
     .product-image {
-      height: 100px;
+      height: 165px;
       object-fit: contain;
       padding: 5px;
 
@@ -311,9 +311,10 @@ export default defineComponent({
 
       .pricing {
         font-size: 0.93em;
-        font-weight: 400;
-        color: #212121;
+        font-weight: 600;
+        color: #265da5;
       }
+
       .product-weight {
         font-weight: 400;
         font-size: 0.85em;

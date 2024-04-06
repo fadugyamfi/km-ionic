@@ -1,5 +1,5 @@
 <template>
-    <RecycleScroller class="scroller" :items="products" :grid-items="2" :item-size="210" :item-secondary-size="cardWidth"
+    <RecycleScroller class="scroller" :items="products" :grid-items="2" :item-size="280" :item-secondary-size="cardWidth"
                      :item-class="'product-card-item'" key-field="id" v-slot="{ item }">
 
         <GuestProductCard v-if="userStore.isInGuestMode()" :product="item" :showDescription="false">

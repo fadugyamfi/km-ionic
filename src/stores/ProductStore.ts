@@ -10,6 +10,7 @@ import AppStorage from "./AppStorage";
 const storage = new AppStorage();
 const KOLA_TRENDING = "kola.trending";
 const RECENTLY_VIEWED = "kola.recently-viewed";
+const SEARCH_TERM = 'kola.search-term';
 
 export const useProductStore = defineStore("product", {
   state: () => {
@@ -23,10 +24,23 @@ export const useProductStore = defineStore("product", {
   },
 
   actions: {
+    async setSearchTerm(term: string) {
+      this.searchTerm = term;
+      storage.set(SEARCH_TERM, this.searchTerm, 1, 'day');
+    },
+
+    async getSearchTerm() {
+      if( !this.searchTerm && await storage.has(SEARCH_TERM) ) {
+        this.searchTerm = await storage.get(SEARCH_TERM);
+      }
+
+      return this.searchTerm;
+    },
+
     async fetchSearchedProducts(page = 1, limit = 50): Promise<Product[]> {
       const userStore = useUserStore();
       const params = {
-        product_name_has: this.searchTerm,
+        product_name_has: await this.getSearchTerm(),
         approved_only: 1,
         limit,
         page,
@@ -115,8 +129,8 @@ export const useProductStore = defineStore("product", {
     async fetchRecentlyViewedProducts(options = {}): Promise<Product[]> {
       const products = await storage.get(RECENTLY_VIEWED);
 
-      if (products) {
-        return products.map((el: object) => new Product(el));
+      if( products ) {
+          return products.map((el: object) => new Product(el));
       }
 
       const params = {
@@ -225,7 +239,7 @@ export const useProductStore = defineStore("product", {
           (el: object) => new Product(el)
         );
       } else {
-        if (userStore.isInGuestMode()) {
+        if( userStore.isInGuestMode() ) {
           this.trendingProducts = await this.fetchGuestProducts({
             sort: "top_selling",
             limit: 100,
