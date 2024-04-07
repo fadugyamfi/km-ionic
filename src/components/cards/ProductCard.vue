@@ -44,68 +44,71 @@
               - {{ product?.discountApplied }}% {{ $t("general.discount") }}
             </span>
           </p>
-
-          <IonButton
-            v-if="showAddToCart"
-            fill="clear"
-            color="medium"
-            @click.prevent.stop="addToCart()"
-            class="ion-no-padding ion-no-margin"
-          >
-            <IonIcon
-              size="large"
-              slot="icon-only"
-              :icon="addCircleOutline"
-            ></IonIcon>
-          </IonButton>
         </section>
 
         <section class="pricing d-flex flex-column">
-          <section>
-            <section v-if="product?.is_on_sale && product.sale_price > 0">
-              <span class="font-medium" style="margin-right: 5px">
-                <s>
+          <section class="d-flex ion-align-items-center ion-justify-content-between">
+            <aside>
+              <section v-if="product?.is_on_sale && product.sale_price > 0">
+                <span class="font-medium" style="margin-right: 5px">
+                  <s>
+                    {{
+                      Filters.currency(
+                        Number(product?.product_price),
+                        String(product?.currency?.symbol || "GHS")
+                      )
+                    }}
+                  </s>
+                </span>
+
+                <IonText class="fw-medium" color="danger">
                   {{
                     Filters.currency(
-                      Number(product?.product_price),
+                      Number(product?.sale_price),
                       String(product?.currency?.symbol || "GHS")
                     )
                   }}
-                </s>
-              </span>
+                </IonText>
+              </section>
 
-              <IonText class="fw-medium" color="danger">
+              <section v-else class="fw-medium">
                 {{
                   Filters.currency(
-                    Number(product?.sale_price),
+                    Number(product?.product_price),
                     String(product?.currency?.symbol || "GHS")
                   )
                 }}
-              </IonText>
-            </section>
+              </section>
 
-            <section v-else class="fw-medium">
-              {{
-                Filters.currency(
-                  Number(product?.product_price),
-                  String(product?.currency?.symbol || "GHS")
-                )
-              }}
-            </section>
-          </section>
+              <section class="product-weight">
+                <span v-if="product?.weight_value">
+                  {{ product?.weight_value
+                  }}{{ product?.weight_unit?.symbol || "g" }}
+                </span>
+                <span v-if="product?.weight_value && product?.group_quantity"
+                  >/</span
+                >
+                <span v-if="product?.group_quantity">
+                  {{ product?.group_quantity }}pcs
+                </span>
+              </section>
+            </aside>
 
-          <section class="product-weight">
-            <span v-if="product?.weight_value">
-              {{ product?.weight_value
-              }}{{ product?.weight_unit?.symbol || "g" }}
-            </span>
-            <span v-if="product?.weight_value && product?.group_quantity"
-              >/</span
+            <IonButton
+              v-if="showAddToCart"
+              fill="clear"
+              color="medium"
+              @click.prevent.stop="addToCart()"
+              class="ion-no-padding ion-no-margin"
             >
-            <span v-if="product?.group_quantity">
-              {{ product?.group_quantity }}pcs
-            </span>
+              <IonIcon
+                size="large"
+                slot="icon-only"
+                :icon="addCircleOutline"
+              ></IonIcon>
+            </IonButton>
           </section>
+
           <section class="stock-status" v-if="showStockStatus">
             <IonText
               v-if="product.quantity"
@@ -324,8 +327,8 @@ export default defineComponent({
       padding: 10px 10px;
 
       .product-title {
-        font-size: 0.95em;
-        font-weight: 500;
+        font-size: 1em;
+        // font-weight: 500;
         margin-top: 0px;
         margin-bottom: 5px;
         text-overflow: ellipsis;
@@ -335,13 +338,13 @@ export default defineComponent({
       }
 
       .pricing {
-        font-size: 0.95em;
+        font-size: 1em;
         font-weight: 600;
-        color: #265da5;
+        color: #333;
       }
       .product-weight {
         font-weight: 400;
-        font-size: 0.85em;
+        font-size: 0.9em;
         color: #9e9e9e;
       }
       .product-description {

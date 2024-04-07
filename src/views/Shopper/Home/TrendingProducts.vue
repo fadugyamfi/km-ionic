@@ -73,7 +73,7 @@ export default defineComponent({
       this.fetching = true;
 
       const storage = new AppStorage();
-      this.products = await this.productStore.fetchApprovedVendorProducts({ sort: 'top_selling', limit: 100 });
+      this.products = await this.productStore.fetchApprovedVendorProducts({ refresh: true, sort: 'top_selling', limit: 100 });
       await storage.set(KOLA_TRENDING, this.products, 3, 'days')
 
       this.fetching = false;
