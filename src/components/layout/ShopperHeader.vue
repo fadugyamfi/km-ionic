@@ -63,7 +63,12 @@ export default defineComponent({
   methods: {
     onSearch(event: any) {
       this.productStore.setSearchTerm(event.target.value);
-      this.$router.push('/shopper/search-results')
+
+      if( this.userStore.isInGuestMode() ) {
+        this.$router.push('/guest/search-results')
+      } else {
+        this.$router.push('/shopper/search-results')
+      }
     }
   }
 })

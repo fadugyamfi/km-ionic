@@ -14,6 +14,7 @@
                 <IonSearchbar
                     class="search-input"
                     placeholder="Search..."
+                    v-model="productStore.searchTerm"
                     @keyup.enter="onSearch($event)"
                     @ion-change="onSearch($event)"
                     @ion-clear="onSearch($event)"
@@ -37,7 +38,7 @@
             <IonGrid v-if="!fetching && products">
                 <IonRow>
                     <IonCol size="6" v-for="product in products" :key="product.id">
-                        <ProductCard :product="product" :show-description="false"></ProductCard>
+                        <GuestProductCard :product="product" :show-description="false"></GuestProductCard>
                     </IonCol>
                 </IonRow>
             </IonGrid>
@@ -52,13 +53,9 @@ import { close, heartOutline, heart, cart, cartOutline, shareOutline } from 'ion
 import Product from '@/models/Product';
 import { mapStores } from 'pinia';
 import { useProductStore } from '@/stores/ProductStore';
-import KolaYellowButton from '@/components/KolaYellowButton.vue';
-import KolaWhiteButton from '@/components/KolaWhiteButton.vue';
-import Image from '@/components/Image.vue';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import ProductCard from '@/components/cards/ProductCard.vue';
-import NoResults from '../../components/layout/NoResults.vue';
-import { handleAxiosRequestError } from '../../utilities';
+import NoResults from '@/components/layout/NoResults.vue';
+import { handleAxiosRequestError } from '@/utilities';
+import GuestProductCard from '@/components/cards/GuestProductCard.vue';
 
 export default defineComponent({
 
@@ -73,22 +70,17 @@ export default defineComponent({
         IonIcon,
         IonContent,
         IonFooter,
-        KolaYellowButton,
-        KolaWhiteButton,
-        Image,
-        Swiper,
-        SwiperSlide,
         IonAvatar,
         IonList,
         IonItem,
         IonLabel,
         IonSearchbar,
         IonSkeletonText,
-        ProductCard,
         IonGrid,
         IonRow,
         IonCol,
-        NoResults
+        NoResults,
+        GuestProductCard
     },
 
     data() {
