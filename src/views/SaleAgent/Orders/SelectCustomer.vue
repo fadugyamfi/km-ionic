@@ -209,7 +209,8 @@ export default defineComponent({
 
       if (this.userStore.user?.isSaleAgent()) {
         this.customers = await userStore.fetchAssignedBusinesses(
-          userStore.user?.id
+          userStore.user?.id,
+          options
         );
       } else {
         this.customers = await businessStore.getBusinessCustomers(
@@ -248,6 +249,7 @@ export default defineComponent({
     },
 
     async onSearch(event: Event) {
+      console.log('hii')
       this.refreshing = true;
       await this.fetchCustomers({
         name_like: (event.target as HTMLIonSearchbarElement).value,

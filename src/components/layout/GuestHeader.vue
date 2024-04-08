@@ -3,7 +3,7 @@
       <ion-toolbar>
         <IonTitle>
           <IonText class="welcome">
-            Welcome To Kola Market👋
+            Welcome To Kola Market 👋
           </IonText>
         </IonTitle>
 
@@ -65,7 +65,7 @@
       onSearch(event: any) {
         const productStore = useProductStore();
         productStore.searchTerm = event.target.value;
-        this.$router.push('/shopper/search-results')
+        this.$router.push('/guest/search-results')
       }
     }
   })

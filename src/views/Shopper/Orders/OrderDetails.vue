@@ -7,7 +7,7 @@
             <IonBackButton defaultHref="/shopper/orders"></IonBackButton>
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
-            {{ $t("shopper.orders.yourOrder") }} #{{ order?.id }}
+            {{ $t('shopper.orders.yourOrder') }} #{{ order?.order_no || order?.id }}
           </IonTitle>
           <IonButtons slot="end">
             <IonButton>

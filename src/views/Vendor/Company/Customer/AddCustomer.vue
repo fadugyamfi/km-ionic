@@ -166,10 +166,11 @@
               {{ agent.name }}
             </IonSelectOption>
           </IonSelect>
-          <h6>{{ $t("profile.customers.howDoTheyUsuallyPay") }}</h6>
+          <!-- <h6>{{ $t("profile.customers.howDoTheyUsuallyPay") }}</h6> -->
+          <h6>{{ "What type of customer are they" }}</h6>
           <IonSelect
             class="kola-input ion-margin-bottom"
-            :label="$t('profile.customers.selectPaymentMethod')"
+            label="Select customer type"
             :class="{
               'ion-invalid ion-touched': form.errors.business_types_id,
             }"
@@ -182,10 +183,10 @@
             @ion-change="form.validateSelectInput($event)"
           >
             <IonSelectOption
-              v-for="mode in paymentModes"
-              :key="mode.id"
-              :value="mode.id"
-              >{{ mode.name }}</IonSelectOption
+              v-for="t in customerTypes"
+              :key="t.id"
+              :value="t.id"
+              >{{ t.type }}</IonSelectOption
             >
           </IonSelect>
         </section>
@@ -261,6 +262,13 @@ const router = useRouter();
 
 const paymentModes = ref<any>([]);
 const salesAgents = ref<User[]>([]);
+const customerTypes = ref([
+  { id: 1, type: "Retailer" },
+  {
+    id: 2,
+    type: "Wholesaler",
+  },
+]);
 
 const form = useForm({
   name: "",

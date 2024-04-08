@@ -8,8 +8,9 @@ import { useUserStore } from "./UserStore";
 import AppStorage from "./AppStorage";
 
 const storage = new AppStorage();
-const KOLA_TRENDING = 'kola.trending';
-const RECENTLY_VIEWED = 'kola.recently-viewed';
+const KOLA_TRENDING = "kola.trending";
+const RECENTLY_VIEWED = "kola.recently-viewed";
+const SEARCH_TERM = 'kola.search-term';
 
 export const useProductStore = defineStore("product", {
   state: () => {
@@ -18,15 +19,28 @@ export const useProductStore = defineStore("product", {
       selectedProduct: null as Product | null,
       recentlyViewedProducts: [] as Product[],
       searchTerm: "",
-      trendingProducts: [] as Product[]
+      trendingProducts: [] as Product[],
     };
   },
 
   actions: {
+    async setSearchTerm(term: string) {
+      this.searchTerm = term;
+      storage.set(SEARCH_TERM, this.searchTerm, 1, 'day');
+    },
+
+    async getSearchTerm() {
+      if( !this.searchTerm && await storage.has(SEARCH_TERM) ) {
+        this.searchTerm = await storage.get(SEARCH_TERM);
+      }
+
+      return this.searchTerm;
+    },
+
     async fetchSearchedProducts(page = 1, limit = 50): Promise<Product[]> {
       const userStore = useUserStore();
       const params = {
-        product_name_has: this.searchTerm,
+        product_name_has: await this.getSearchTerm(),
         approved_only: 1,
         limit,
         page,
@@ -47,9 +61,17 @@ export const useProductStore = defineStore("product", {
       }
     },
 
-    async fetchProducts(options = {}): Promise<Product[]> {
+    async fetchApprovedVendorProducts(options = {}): Promise<Product[]> {
       const params = {
         approved_only: 1,
+        ...options,
+      };
+
+      return this.fetchProducts(params);
+    },
+
+    async fetchProducts(options = {}): Promise<Product[]> {
+      const params = {
         ...options,
       };
 
@@ -64,6 +86,28 @@ export const useProductStore = defineStore("product", {
         return [];
       }
     },
+    async fetchAgentProducts(options = {}): Promise<Product[]> {
+      const userStore = useUserStore();
+
+      const params = {
+        ...options,
+      };
+
+      try {
+        const response = await axios.get(
+          `/v2/users/${userStore.user?.id}/products`,
+          { params }
+        );
+        this.products = this.mapResponseToProducts(response);
+
+        return this.products;
+      } catch (error) {
+        handleAxiosRequestError(error);
+
+        return [];
+      }
+    },
+
     async fetchGuestProducts(options = {}): Promise<Product[]> {
       const params = {
         approved_only: 1,
@@ -101,7 +145,7 @@ export const useProductStore = defineStore("product", {
           (el: { product: any }) => new Product(el.product)
         );
 
-        storage.set(RECENTLY_VIEWED, this.products, 15, 'minutes');
+        storage.set(RECENTLY_VIEWED, this.products, 15, "minutes");
       } catch (error) {
         handleAxiosRequestError(error);
       }
@@ -191,14 +235,19 @@ export const useProductStore = defineStore("product", {
       const trendingProducts = await storage.get(KOLA_TRENDING);
 
       if (trendingProducts) {
-        this.trendingProducts = trendingProducts.map((el: object) => new Product(el));
+        this.trendingProducts = trendingProducts.map(
+          (el: object) => new Product(el)
+        );
       } else {
         if( userStore.isInGuestMode() ) {
-          this.trendingProducts = await this.fetchGuestProducts({ sort: 'top_selling', limit: 100 })
+          this.trendingProducts = await this.fetchGuestProducts({
+            sort: "top_selling",
+            limit: 100,
+          });
         } else {
-          this.trendingProducts = await this.fetchProducts({ sort: 'top_selling', limit: 100 });
+          this.trendingProducts = await this.fetchApprovedVendorProducts({ sort: 'top_selling', limit: 100 });
         }
-        await storage.set(KOLA_TRENDING, this.products, 3, 'days')
+        await storage.set(KOLA_TRENDING, this.products, 3, "days");
       }
 
       return this.trendingProducts;

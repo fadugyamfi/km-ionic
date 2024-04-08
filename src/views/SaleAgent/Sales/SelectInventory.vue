@@ -5,7 +5,7 @@
         <IonToolbar>
           <IonButtons slot="start">
             <IonBackButton
-              defaultHref="/vendor/sales/add-sale/select-agent"
+              defaultHref="/agent/sales/add-sale/select-payment-mode"
               :icon="arrowBack"
               mode="md"
             ></IonBackButton>
@@ -26,27 +26,24 @@
       <IonList lines="none" class="sales-select-list ion-padding-horizontal">
         <IonListHeader>
           <IonLabel class="fw-bold">{{
-            $t("vendor.sales.selectSaleType")
+            $t("vendor.sales.selectInventory")
           }}</IonLabel>
         </IonListHeader>
 
         <IonItem
-          v-for="saleType in saleTypes"
-          :key="saleType.id"
-          @click="selectSaleType(saleType)"
+          v-for="inventory in inventories"
+          :key="inventory.id"
+          @click="selectInventory(inventory)"
         >
           <IonLabel>
-            <p class="ion-no-margin">{{ saleType.name }}</p>
-            <IonText color="medium" class="font-medium">
-              {{ saleType.description }}
-            </IonText>
+            <p class="ion-no-margin">{{ inventory.name }}</p>
           </IonLabel>
           <IonCheckbox
-            :aria-label="saleType.name"
+            :aria-label="inventory.name"
             slot="end"
             mode="ios"
-            :value="saleType.id"
-            :checked="saleStore.newSale.sale_types_id == saleType.id"
+            :value="inventory.id"
+            :checked="saleStore?.newSale?.inventory_id == inventory.id"
           ></IonCheckbox>
         </IonItem>
       </IonList>
@@ -54,8 +51,8 @@
 
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton
-        id="sale-type-continue"
-        :disabled="!saleStore.newSale.sale_types_id"
+        id="payment-mode-continue"
+        :disabled="!saleStore.newSale.inventory_id"
         @click="onContinue()"
       >
         {{ $t("general.continue") }}
@@ -83,15 +80,16 @@ import {
   IonCheckbox,
   IonText,
   IonFooter,
+  IonSpinner,
 } from "@ionic/vue";
-import { arrowBack, close, refreshOutline, search } from "ionicons/icons";
+import { arrowBack, close, search } from "ionicons/icons";
 import { defineComponent } from "vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { mapStores } from "pinia";
 import { useSaleStore } from "@/stores/SaleStore";
-import { SaleType } from "@/models/SaleType";
+import Inventory from "@/models/Inventory";
 import { useToastStore } from "@/stores/ToastStore";
-import { useUserStore } from "../../../../stores/UserStore";
+import { useUserStore } from "@/stores/UserStore";
 
 export default defineComponent({
   components: {
@@ -113,6 +111,7 @@ export default defineComponent({
     IonText,
     IonFooter,
     KolaYellowButton,
+    IonSpinner,
   },
 
   data() {
@@ -120,11 +119,15 @@ export default defineComponent({
       search,
       close,
       arrowBack,
-      saleTypes: [
-        new SaleType({ id: 1, name: this.$t("vendor.sales.cashSale") }),
-        new SaleType({ id: 5, name: this.$t("vendor.sales.creditSale") }),
+      inventories: [
+        new Inventory({ id: 1, name: this.$t("profile.stock.myStock") }),
+        new Inventory({ id: 2, name: this.$t("vendor.sales.businessStock") }),
       ],
     };
+  },
+
+  ionViewDidEnter() {
+    this.saleStore.newSale.sale_items = [];
   },
 
   computed: {
@@ -132,30 +135,28 @@ export default defineComponent({
   },
 
   methods: {
-    selectSaleType(saleType: SaleType) {
-      this.saleStore.newSale.sale_types_id = saleType.id as number;
+    selectInventory(inventory: Inventory) {
+      this.saleStore.newSale.inventory_id = inventory.id as number;
     },
 
     onContinue() {
-      if (!this.saleStore.newSale.sale_types_id) {
+      if (!this.saleStore.newSale.inventory_id) {
         const toastStore = useToastStore();
         toastStore.showError(
-          this.$t("vendor.sales.selectSaleTypeToContinue"),
+          this.$t("vendor.sales.selectInventoryToContinue"),
           "",
           "bottom",
-          "sale-type-continue"
+          "inventory-type-continue"
         );
         return;
       }
 
-      if (this.userStore.user?.isSalesAssociate()) {
-        this.$router.push("/agent/sales/add-sale/select-payment-mode");
+      if (this.saleStore.newSale.inventory_id == 1) {
+        this.$router.push("/agent/sales/add-sale/select-agent-products");
       } else {
-        this.$router.push("/vendor/sales/add-sale/select-payment-mode");
+        this.$router.push("/vendor/sales/add-sale/select-products");
       }
     },
-
-    refresh() {},
   },
 
   mounted() {},

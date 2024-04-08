@@ -13,7 +13,7 @@ export const useStockStore = defineStore("stock", {
       meta: { total: null as number | null },
       stockSummary: {
         total_value: 0,
-        out_of_stock: 0
+        out_of_stock: 0,
       },
       selectedStock: null as Stock | null,
       recentlyViewedStocks: [] as Stock[],
@@ -25,13 +25,20 @@ export const useStockStore = defineStore("stock", {
   },
 
   actions: {
-    async fetchSearchedStocks(page = 1, limit = 50): Promise<Stock[]> {
+    async fetchSearchedStocks(
+      page = 1,
+      limit = 50,
+      url: string = "/v2/products"
+    ): Promise<Stock[]> {
       try {
-        const products = await this.fetchStocks({
-          product_name_has: this.searchTerm,
-          limit,
-          page,
-        });
+        const products = await this.fetchStocks(
+          {
+            product_name_has: this.searchTerm,
+            limit,
+            page,
+          },
+          url
+        );
 
         return products;
       } catch (error) {
@@ -39,18 +46,21 @@ export const useStockStore = defineStore("stock", {
       }
     },
 
-    async fetchStocks(options = {}): Promise<Stock[]> {
-      const business_id = useUserStore().activeBusiness?.id;
+    async fetchStocks(
+      options = {},
+      url: string = "/v2/products",
+    ): Promise<Stock[]> {
+      const userStore = useUserStore();
       const params = {
         ...options,
-        businesses_id: business_id,
+        businesses_id: userStore.activeBusiness?.id,
       };
 
       try {
-        const response = await axios.get("/v2/products", { params });
+        const response = await axios.get(url, { params });
         this.stocks = this.mapResponseToStocks(response);
-        this.meta = response.data.meta;
-        this.stockSummary = response.data.stock;
+        this.meta = response.data?.meta;
+        this.stockSummary = response.data?.stock;
 
         return this.stocks;
       } catch (error) {
@@ -61,7 +71,9 @@ export const useStockStore = defineStore("stock", {
     },
 
     mapResponseToStocks(response: { data: any }): Stock[] {
-      return response.data.data.map((el: object) => new Stock(el));
+      return response.data.data.map(
+        (el: any) => new Stock({ ...el, ...el.product })
+      );
     },
 
     async getProducts(): Promise<Stock[]> {
@@ -99,7 +111,7 @@ export const useStockStore = defineStore("stock", {
     },
     async fetchProductGroups() {
       try {
-        const response = await axios.get("v2/product-groups");
+        const response = await axios.get("/v2/product-groups");
         if (response) {
           this.productGroups = response.data.data;
           return this.productGroups;
@@ -110,7 +122,7 @@ export const useStockStore = defineStore("stock", {
     },
     async fetchProductVariations() {
       try {
-        const response = await axios.get("v2/product-variations");
+        const response = await axios.get("/v2/product-variations");
         if (response) {
           this.productVariations = response.data.data;
           return this.productVariations;
@@ -121,7 +133,7 @@ export const useStockStore = defineStore("stock", {
     },
     async fetchProductUnits() {
       try {
-        const response = await axios.get("v2/product-units");
+        const response = await axios.get("/v2/product-units");
         if (response) {
           this.productUnits = response.data.data;
           return this.productUnits;

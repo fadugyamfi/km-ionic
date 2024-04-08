@@ -330,11 +330,7 @@ export const useUserStore = defineStore("user", {
 
           const user = await this.fetchUserInfo();
 
-          if (this.user?.isOwner()) {
-            this.fetchUserBusinesses();
-          } else {
-            this.fetchUserBusinesses(user?.parent_users_id);
-          }
+          this.refreshUserBusinesses();
 
           return user;
         })
@@ -343,6 +339,14 @@ export const useUserStore = defineStore("user", {
 
           throw new Error(error.response?.data?.api_message);
         });
+    },
+
+    async refreshUserBusinesses() {
+      if (this.user?.isOwner()) {
+        this.fetchUserBusinesses();
+      } else {
+        this.fetchUserBusinesses(this.user?.parent_users_id);
+      }
     },
 
     async deleteUser() {

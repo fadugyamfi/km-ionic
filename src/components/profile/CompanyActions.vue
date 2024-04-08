@@ -8,7 +8,7 @@
         customSize="32px"
       ></ProfileAvatar>
       <IonLabel>{{ userStore.activeBusiness?.name }}</IonLabel>
-      <!-- <IonIcon slot="end" :icon="createOutline"></IonIcon> -->
+      <IonSpinner v-if="fetching" slot="end" name="crescent"></IonSpinner>
     </IonItem>
 
     <IonList lines="none">
@@ -20,7 +20,7 @@
         router-link="/profile/company/edit-profile"
       >
         <IonAvatar slot="start">
-          <img src="/images/ic_location.svg" class="action-img" />
+          <img src="/images/ic_user.svg" class="action-img" />
         </IonAvatar>
         <IonLabel>Company Profile</IonLabel>
       </IonItem>
@@ -32,21 +32,34 @@
         router-link="/profile/company/customers"
       >
         <IonAvatar slot="start">
-          <img src="/images/ic_password.svg" class="action-img" />
+          <IonIcon :icon="peopleOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
         <IonLabel>Customers</IonLabel>
       </IonItem>
 
       <IonItem
+        v-if="userStore.user?.isOwner()"
         :detail="true"
         :button="true"
         class="profile-item"
         router-link="/profile/company/stocks"
       >
         <IonAvatar slot="start">
-          <img src="/images/ic_notification.svg" class="action-img" />
+          <IonIcon :icon="bagOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
         <IonLabel>Stock</IonLabel>
+      </IonItem>
+      <IonItem
+        v-if="!userStore.user?.isOwner()"
+        :detail="true"
+        :button="true"
+        class="profile-item"
+        router-link="/profile/company/agent/stocks"
+      >
+        <IonAvatar slot="start">
+          <IonIcon :icon="bagOutline" style="font-size: 21px"></IonIcon>
+        </IonAvatar>
+        <IonLabel>My Stock</IonLabel>
       </IonItem>
 
       <IonItem
@@ -62,7 +75,7 @@
         <IonLabel>Team</IonLabel>
       </IonItem>
 
-      <!-- <IonItem
+      <IonItem
         v-if="userStore.user?.isOwner()"
         :detail="true"
         class="profile-item"
@@ -83,7 +96,7 @@
           <IonIcon :icon="bagOutline" style="font-size: 21px"></IonIcon>
         </IonAvatar>
         <IonLabel>Become a Seller</IonLabel>
-      </IonItem> -->
+      </IonItem>
       <IonItem
         v-if="userStore.user?.isOwner()"
         :detail="true"
@@ -143,7 +156,7 @@
 </template>
 
 <script lang="ts">
-import { IonIcon, IonLabel, IonItem, IonAvatar, IonList } from "@ionic/vue";
+import { IonIcon, IonLabel, IonItem, IonAvatar, IonList, IonSpinner } from "@ionic/vue";
 import { computed, defineComponent } from "vue";
 import { useUserStore } from "@/stores/UserStore";
 import { mapStores } from "pinia";
@@ -156,6 +169,7 @@ import {
   swapHorizontalOutline,
   addCircleOutline,
   personAddOutline,
+  peopleOutline,
 } from "ionicons/icons";
 import ProfileAvatar from "../ProfileAvatar.vue";
 import SwitchBusinessSheet from "@/components/modules/SwitchBusinessSheet.vue";
@@ -173,6 +187,7 @@ export default defineComponent({
     SwitchBusinessSheet,
     ModeToggleCard,
     GeneralActions,
+    IonSpinner
   },
 
   computed: {
@@ -187,9 +202,15 @@ export default defineComponent({
 
     hasAppliedToSell() {
       return (
-        this.userStore.activeBusiness?.attributes?.applied_to.length > 0 ||
-        this.userStore?.activeBusiness?.approved_vendor != null
+        this.userStore.activeBusiness?.attributes?.applied_to?.length > 0 ||
+        this.userStore?.activeBusiness?.approved_vendor != 0
       );
+    },
+
+    stockPath() {
+      return this.userStore.user?.isOwner()
+        ? "/profile/company/stocks"
+        : "/profile/company/agent/stocks";
     },
   },
 
@@ -197,6 +218,7 @@ export default defineComponent({
     return {
       createOutline,
       repeatOutline,
+      peopleOutline,
       addCircleOutline,
       swapHorizontalOutline,
       bagOutline,
@@ -214,8 +236,16 @@ export default defineComponent({
         this.userStore.toggleAppMode();
       }
 
-      this.$router.push("/vendor/sales/add-sale/select-agent");
+      this.$router.replace("/vendor/sales/add-sale/select-agent");
     },
   },
+
+  async mounted() {
+    if( !this.userStore.activeBusiness ) {
+      this.fetching = true;
+      await this.userStore.refreshUserBusinesses();
+      this.fetching = false;
+    }
+  }
 });
 </script>

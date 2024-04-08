@@ -24,7 +24,7 @@
         :src="product?.image"
         :path="product?.product_banner_image"
         :no-img-src="noImage"
-        w="150"
+        w="180"
         @loaded="imgLoaded = true"
       />
 
@@ -44,67 +44,83 @@
               - {{ product?.discountApplied }}% {{ $t("general.discount") }}
             </span>
           </p>
-
-          <IonButton
-            v-if="showAddToCart"
-            fill="clear"
-            color="medium"
-            @click.prevent.stop="addToCart()"
-            class="ion-no-padding ion-no-margin"
-          >
-            <IonIcon
-              size="large"
-              slot="icon-only"
-              :icon="addCircleOutline"
-            ></IonIcon>
-          </IonButton>
         </section>
 
         <section class="pricing d-flex flex-column">
-          <section>
-            <section v-if="product?.is_on_sale && product.sale_price > 0">
-              <span class="font-medium" style="margin-right: 5px">
-                <s>
+          <section class="d-flex ion-align-items-center ion-justify-content-between">
+            <aside>
+              <section v-if="product?.is_on_sale && product.sale_price > 0">
+                <span class="font-medium" style="margin-right: 5px">
+                  <s>
+                    {{
+                      Filters.currency(
+                        Number(product?.product_price),
+                        String(product?.currency?.symbol || "GHS")
+                      )
+                    }}
+                  </s>
+                </span>
+
+                <IonText class="fw-medium" color="danger">
                   {{
                     Filters.currency(
-                      Number(product?.product_price),
+                      Number(product?.sale_price),
                       String(product?.currency?.symbol || "GHS")
                     )
                   }}
-                </s>
-              </span>
+                </IonText>
+              </section>
 
-              <IonText class="fw-medium" color="danger">
+              <section v-else class="fw-medium">
                 {{
                   Filters.currency(
-                    Number(product?.sale_price),
+                    Number(product?.product_price),
                     String(product?.currency?.symbol || "GHS")
                   )
                 }}
-              </IonText>
-            </section>
+              </section>
 
-            <section v-else class="fw-medium">
-              {{
-                Filters.currency(
-                  Number(product?.product_price),
-                  String(product?.currency?.symbol || "GHS")
-                )
-              }}
-            </section>
+              <section class="product-weight">
+                <span v-if="product?.weight_value">
+                  {{ product?.weight_value
+                  }}{{ product?.weight_unit?.symbol || "g" }}
+                </span>
+                <span v-if="product?.weight_value && product?.group_quantity"
+                  >/</span
+                >
+                <span v-if="product?.group_quantity">
+                  {{ product?.group_quantity }}pcs
+                </span>
+              </section>
+            </aside>
+
+            <IonButton
+              v-if="showAddToCart"
+              fill="clear"
+              color="medium"
+              @click.prevent.stop="addToCart()"
+              class="ion-no-padding ion-no-margin"
+            >
+              <IonIcon
+                size="large"
+                slot="icon-only"
+                :icon="addCircleOutline"
+              ></IonIcon>
+            </IonButton>
           </section>
 
-          <section class="product-weight">
-            <span v-if="product?.weight_value">
-              {{ product?.weight_value
-              }}{{ product?.weight_unit?.symbol || "g" }}
-            </span>
-            <span v-if="product?.weight_value && product?.group_quantity"
-              >/</span
+          <section class="stock-status" v-if="showStockStatus">
+            <IonText
+              v-if="product.quantity"
+              class="d-flex ion-align-items-center"
             >
-            <span v-if="product?.group_quantity">
-              {{ product?.group_quantity }}pcs
-            </span>
+              <!-- <IonIcon class="success" :icon="alertCircleOutline"></IonIcon> -->
+              {{ product?.quantity }} in stock
+            </IonText>
+            <IonText v-else class="d-flex ion-align-items-center">
+              <IonIcon class="warning" :icon="alertCircleOutline"></IonIcon>
+              out of stock
+            </IonText>
           </section>
         </section>
 
@@ -134,7 +150,7 @@ import {
   IonText,
 } from "@ionic/vue";
 import { PropType, defineComponent } from "vue";
-import { locationOutline } from "ionicons/icons";
+import { locationOutline, alertCircleOutline } from "ionicons/icons";
 import Product from "@/models/Product";
 import { addCircleOutline } from "ionicons/icons";
 import Image from "@/components/Image.vue";
@@ -142,7 +158,7 @@ import { useCartStore } from "@/stores/CartStore";
 import FavoriteButton from "../modules/products/FavoriteButton.vue";
 import Business from "../../models/Business";
 import Filters from "../../utilities/Filters";
-import { useProductStore } from "../../stores/ProductStore";
+import { useProductStore } from "@/stores/ProductStore";
 
 export type ProductSelection = {
   selected: Boolean;
@@ -185,6 +201,10 @@ export default defineComponent({
       default: false,
       type: Boolean,
     },
+    showStockStatus: {
+      default: false,
+      type: Boolean,
+    },
 
     action: {
       default: "viewProduct",
@@ -201,6 +221,7 @@ export default defineComponent({
     return {
       locationOutline,
       addCircleOutline,
+      alertCircleOutline,
       imgLoaded: false,
       selected: false,
       noImage: "/images/product-placeholder.png",
@@ -286,7 +307,7 @@ export default defineComponent({
     overflow: hidden;
 
     .product-image {
-      height: 100px;
+      height: 165px;
       width: 100%;
       object-fit: contain;
       padding: 5px;
@@ -306,8 +327,8 @@ export default defineComponent({
       padding: 10px 10px;
 
       .product-title {
-        font-size: 0.95em;
-        font-weight: 500;
+        font-size: 1em;
+        // font-weight: 500;
         margin-top: 0px;
         margin-bottom: 5px;
         text-overflow: ellipsis;
@@ -317,19 +338,43 @@ export default defineComponent({
       }
 
       .pricing {
-        font-size: 0.93em;
-        font-weight: 400;
-        color: #212121;
+        font-size: 1em;
+        font-weight: 600;
+        color: #333;
       }
       .product-weight {
         font-weight: 400;
-        font-size: 0.85em;
+        font-size: 0.9em;
         color: #9e9e9e;
       }
       .product-description {
         font-size: 0.85em;
         margin-top: 5px;
         color: #9e9e9e;
+      }
+
+      .stock-status {
+        margin-top: 2px;
+        ion-icon {
+          font-size: 20px;
+          &.warning {
+            --background: #fdf0ed;
+            --border-color: #ef3e3233;
+            padding: 2px;
+            border-radius: 50%;
+            background-color: #fa2b3928;
+            color: #d92d20;
+            margin-right: 5px;
+          }
+          &.success {
+            --background: #fdf0ed;
+            padding: 2px;
+            border-radius: 50%;
+            background-color: #21d1882f;
+            color: #21d187;
+            margin-right: 5px;
+          }
+        }
       }
 
       ion-card-subtitle {

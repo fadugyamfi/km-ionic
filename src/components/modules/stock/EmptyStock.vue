@@ -8,11 +8,11 @@
         <b> {{ $t("profile.stock.stockIsEmpty") }}</b>
       </h5>
       <p class="ion-margin-top" style="font-size: 0.88em; color: #74787c">
-        {{ $t("profile.stock.noStock") }}
+        {{ description || $t("profile.stock.noStock") }}
       </p>
     </div>
   </div>
-  <IonFooter class="ion-padding-vertical ion-no-border">
+  <IonFooter v-if="showButton" class="ion-padding-vertical ion-no-border">
     <KolaYellowButton @click="addStock()" class="ion-margin-bottom">
       {{ $t("profile.stock.addStock") }}
     </KolaYellowButton>
@@ -25,6 +25,16 @@ import { IonText, IonFooter } from "@ionic/vue";
 import { defineComponent } from "vue";
 
 export default defineComponent({
+  props: {
+    description: {
+      type: String,
+    },
+    showButton: {
+      type: Boolean,
+      default: true,
+    },
+  },
+
   components: { IonText, IonFooter, KolaYellowButton },
 
   methods: {

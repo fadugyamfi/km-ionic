@@ -23,6 +23,7 @@ export default class Product {
     public weight_unit?: WeightUnit;
     public volume_unit?: VolumeUnit;
     public group_quantity?: number;
+    public quantity?: number;
     private _currency?: Currency | null;
     public _business?: Business | null
     public _tags?: Tag[] | null;
