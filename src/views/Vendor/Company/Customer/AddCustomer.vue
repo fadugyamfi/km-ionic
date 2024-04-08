@@ -59,137 +59,133 @@
           ></LocationInput>
         </section>
 
-        <section class="ion-margin-vertical">
-          <IonInput
-            class="kola-input ion-margin-bottom"
-            :class="{
-              'ion-invalid ion-touched': form.errors.business_owner_name,
-            }"
-            :label="$t('profile.customers.fullName')"
-            labelPlacement="stacked"
-            fill="solid"
-            v-model="form.fields.business_owner_name"
-            name="business_owner_name"
-            @ion-input="form.validate($event)"
-            required
-          ></IonInput>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{
+            'ion-invalid ion-touched': form.errors.business_owner_name,
+          }"
+          :label="$t('profile.customers.fullName')"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.business_owner_name"
+          name="business_owner_name"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
 
-          <IonInput
-            class="kola-input ion-margin-bottom"
-            :class="{
-              'ion-invalid ion-touched': form.errors.business_owner_phone,
-            }"
-            label="Owner's Phone Number"
-            labelPlacement="stacked"
-            fill="solid"
-            v-model="form.fields.business_owner_phone"
-            name="business_owner_phone"
-            @ion-input="form.validate($event)"
-            required
-          ></IonInput>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{
+            'ion-invalid ion-touched': form.errors.business_owner_phone,
+          }"
+          label="Owner's Phone Number"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.business_owner_phone"
+          name="business_owner_phone"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
 
-          <IonSelect
-            class="kola-input ion-margin-bottom"
-            :label="$t('signup.vendor.country')"
-            :class="{ 'ion-invalid ion-touched': form.errors.country_id }"
-            labelPlacement="stacked"
-            fill="solid"
-            v-model="form.fields.country_id"
-            required
-            name="country_id"
-            @ion-change="onCountryChange($event)"
+        <IonSelect
+          class="kola-input ion-margin-bottom"
+          :label="$t('signup.vendor.country')"
+          :class="{ 'ion-invalid ion-touched': form.errors.country_id }"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.country_id"
+          required
+          name="country_id"
+          @ion-change="onCountryChange($event)"
+        >
+          <IonSelectOption
+            v-for="country in countries"
+            :key="country.id"
+            :value="country.id"
           >
-            <IonSelectOption
-              v-for="country in countries"
-              :key="country.id"
-              :value="country.id"
-            >
-              {{ country.name }}
-            </IonSelectOption>
-          </IonSelect>
+            {{ country.name }}
+          </IonSelectOption>
+        </IonSelect>
 
-          <IonSelect
-            class="kola-input ion-margin-bottom"
-            :label="$t('signup.vendor.region')"
-            :class="{ 'ion-invalid ion-touched': form.errors.region_id }"
-            labelPlacement="stacked"
-            fill="solid"
-            v-model="form.fields.region_id"
-            required
-            name="region_id"
-            @ion-change="form.validateSelectInput($event)"
+        <IonSelect
+          class="kola-input ion-margin-bottom"
+          :label="$t('signup.vendor.region')"
+          :class="{ 'ion-invalid ion-touched': form.errors.region_id }"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.region_id"
+          required
+          name="region_id"
+          @ion-change="form.validateSelectInput($event)"
+        >
+          <IonSelectOption
+            v-for="region in regions"
+            :key="region.id"
+            :value="region.id"
           >
-            <IonSelectOption
-              v-for="region in regions"
-              :key="region.id"
-              :value="region.id"
-            >
-              {{ region.name }}
-            </IonSelectOption>
-          </IonSelect>
+            {{ region.name }}
+          </IonSelectOption>
+        </IonSelect>
 
-          <IonInput
-            class="kola-input ion-margin-bottom"
-            :class="{ 'ion-invalid ion-touched': form.errors.city }"
-            :label="$t('signup.vendor.city')"
-            labelPlacement="stacked"
-            fill="solid"
-            name="city"
-            v-model="form.fields.city"
-            @ionBlur="form.validate($event)"
-            @ionChange="form.validate($event)"
-            required
-          ></IonInput>
-        </section>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.city }"
+          :label="$t('signup.vendor.city')"
+          labelPlacement="stacked"
+          fill="solid"
+          name="city"
+          v-model="form.fields.city"
+          @ionBlur="form.validate($event)"
+          @ionChange="form.validate($event)"
+          required
+        ></IonInput>
 
-        <section class="ion-padding-vertical">
-          <h6>{{ $t("profile.customers.assignToSalesAgentOrManager") }}</h6>
-          <IonSelect
-            class="kola-input ion-margin-bottom"
-            :label="$t('profile.customers.selectSaleAgent')"
-            :class="{
-              'ion-invalid ion-touched': form.errors.cms_users_id,
-            }"
-            labelPlacement="stacked"
-            fill="solid"
-            v-model="form.fields.cms_users_id"
-            required
-            name="sales-agent"
-            :toggle-icon="chevronDownOutline"
-            @ion-change="form.validateSelectInput($event)"
+        <h6>{{ $t("profile.customers.assignToSalesAgentOrManager") }}</h6>
+        <IonSelect
+          class="kola-input ion-margin-bottom"
+          :label="$t('profile.customers.selectSaleAgent')"
+          :class="{
+            'ion-invalid ion-touched': form.errors.cms_users_id,
+          }"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.cms_users_id"
+          required
+          name="sales-agent"
+          :toggle-icon="chevronDownOutline"
+          @ion-change="form.validateSelectInput($event)"
+        >
+          <IonSelectOption
+            v-for="agent in salesAgents"
+            :key="agent.id"
+            :value="agent.id"
           >
-            <IonSelectOption
-              v-for="agent in salesAgents"
-              :key="agent.id"
-              :value="agent.id"
-            >
-              {{ agent.name }}
-            </IonSelectOption>
-          </IonSelect>
-          <!-- <h6>{{ $t("profile.customers.howDoTheyUsuallyPay") }}</h6> -->
-          <h6>{{ "What type of customer are they" }}</h6>
-          <IonSelect
-            class="kola-input ion-margin-bottom"
-            label="Select customer type"
-            :class="{
-              'ion-invalid ion-touched': form.errors.business_types_id,
-            }"
-            labelPlacement="stacked"
-            :toggle-icon="chevronDownOutline"
-            fill="solid"
-            v-model="form.fields.business_types_id"
-            required
-            name="payment-method"
-            @ion-change="form.validateSelectInput($event)"
+            {{ agent.name }}
+          </IonSelectOption>
+        </IonSelect>
+        <!-- <h6>{{ $t("profile.customers.howDoTheyUsuallyPay") }}</h6> -->
+        <h6>{{ "What type of customer are they" }}</h6>
+        <IonSelect
+          class="kola-input ion-margin-bottom"
+          label="Select customer type"
+          :class="{
+            'ion-invalid ion-touched': form.errors.business_types_id,
+          }"
+          labelPlacement="stacked"
+          :toggle-icon="chevronDownOutline"
+          fill="solid"
+          v-model="form.fields.business_types_id"
+          required
+          name="payment-method"
+          @ion-change="form.validateSelectInput($event)"
+        >
+          <IonSelectOption
+            v-for="t in customerTypes"
+            :key="t.id"
+            :value="t.id"
+            >{{ t.type }}</IonSelectOption
           >
-            <IonSelectOption
-              v-for="t in customerTypes"
-              :key="t.id"
-              :value="t.id"
-              >{{ t.type }}</IonSelectOption
-            >
-          </IonSelect>
-        </section>
+        </IonSelect>
 
         <IonFooter class="ion-padding-top ion-no-border">
           <KolaYellowButton
