@@ -10,7 +10,7 @@ import AppStorage from "./AppStorage";
 const storage = new AppStorage();
 const KOLA_TRENDING = "kola.trending";
 const RECENTLY_VIEWED = "kola.recently-viewed";
-const SEARCH_TERM = 'kola.search-term';
+const SEARCH_TERM = "kola.search-term";
 
 export const useProductStore = defineStore("product", {
   state: () => {
@@ -20,30 +20,30 @@ export const useProductStore = defineStore("product", {
       recentlyViewedProducts: [] as Product[],
       searchTerm: "",
       trendingProducts: [] as Product[],
+      nextLink: null,
     };
   },
 
   actions: {
     async setSearchTerm(term: string) {
       this.searchTerm = term;
-      storage.set(SEARCH_TERM, this.searchTerm, 1, 'day');
+      storage.set(SEARCH_TERM, this.searchTerm, 1, "day");
     },
 
     async getSearchTerm() {
-      if( !this.searchTerm && await storage.has(SEARCH_TERM) ) {
+      if (!this.searchTerm && (await storage.has(SEARCH_TERM))) {
         this.searchTerm = await storage.get(SEARCH_TERM);
       }
 
       return this.searchTerm;
     },
 
-    async fetchSearchedProducts(page = 1, limit = 50): Promise<Product[]> {
+    async fetchSearchedProducts(limit = 50): Promise<Product[]> {
       const userStore = useUserStore();
       const params = {
         product_name_has: await this.getSearchTerm(),
         approved_only: 1,
         limit,
-        page,
       };
 
       let products = [];
@@ -76,8 +76,19 @@ export const useProductStore = defineStore("product", {
       };
 
       try {
-        const response = await axios.get("/v2/products", { params });
-        this.products = this.mapResponseToProducts(response);
+        if (this.products.length && !this.nextLink) {
+          return this.products;
+        }
+        const link = this.nextLink || "/v2/products";
+        const response = await axios.get(link, { params });
+        if (response) {
+          const { links } = response.data;
+          this.nextLink = links.next;
+          this.products = [
+            ...this.products,
+            ...this.mapResponseToProducts(response),
+          ];
+        }
 
         return this.products;
       } catch (error) {
@@ -129,8 +140,8 @@ export const useProductStore = defineStore("product", {
     async fetchRecentlyViewedProducts(options = {}): Promise<Product[]> {
       const products = await storage.get(RECENTLY_VIEWED);
 
-      if( products ) {
-          return products.map((el: object) => new Product(el));
+      if (products) {
+        return products.map((el: object) => new Product(el));
       }
 
       const params = {
@@ -239,13 +250,16 @@ export const useProductStore = defineStore("product", {
           (el: object) => new Product(el)
         );
       } else {
-        if( userStore.isInGuestMode() ) {
+        if (userStore.isInGuestMode()) {
           this.trendingProducts = await this.fetchGuestProducts({
             sort: "top_selling",
             limit: 100,
           });
         } else {
-          this.trendingProducts = await this.fetchApprovedVendorProducts({ sort: 'top_selling', limit: 100 });
+          this.trendingProducts = await this.fetchApprovedVendorProducts({
+            sort: "top_selling",
+            limit: 100,
+          });
         }
         await storage.set(KOLA_TRENDING, this.products, 3, "days");
       }
