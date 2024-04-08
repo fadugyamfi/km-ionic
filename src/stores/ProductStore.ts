@@ -38,7 +38,7 @@ export const useProductStore = defineStore("product", {
       return this.searchTerm;
     },
 
-    async fetchSearchedProducts(limit = 50): Promise<Product[]> {
+    async fetchSearchedProducts(limit = 5): Promise<Product[]> {
       const userStore = useUserStore();
       const params = {
         product_name_has: await this.getSearchTerm(),
@@ -126,8 +126,19 @@ export const useProductStore = defineStore("product", {
       };
 
       try {
-        const response = await axios.get("/v2/guest/products", { params });
-        this.products = this.mapResponseToProducts(response);
+        if (this.products.length && !this.nextLink) {
+          return this.products;
+        }
+        const link = this.nextLink || "/v2/guest/products";
+        const response = await axios.get(link, { params });
+        if (response) {
+          const { links } = response.data;
+          this.nextLink = links.next;
+          this.products = [
+            ...this.products,
+            ...this.mapResponseToProducts(response),
+          ];
+        }
 
         return this.products;
       } catch (error) {
