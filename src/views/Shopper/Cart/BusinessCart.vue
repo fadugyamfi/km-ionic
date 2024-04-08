@@ -30,9 +30,9 @@
     </section>
 
     <ion-content class="ion-padding-horizontal">
-      <!-- <section class="ion-margin-top">
+      <section class="ion-margin-top">
         <BusinessMinimumOrderReached :business="order?.business" :totalCost="totalCost"></BusinessMinimumOrderReached>
-      </section> -->
+      </section>
       <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
 
       <section v-else>
@@ -90,6 +90,7 @@
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton
         v-if="orderBusiness?.order_items?.length > 0"
+        :disabled="!minOrderAmountReached"
         @click="viewDeliveryDetails()"
       >
         {{ $t("shopper.cart.proceedToCheckout") }}

@@ -20,12 +20,12 @@
               {{ Filters.currency(itemTotal as number) }}
             </IonText>
 
-            <!-- <IonText color="medium" class="font-medium">
+            <IonText color="medium" class="font-medium">
               <BusinessMinimumOrderReached
                 :business="order?.business"
                 :total-cost="(itemTotal as number)"
               ></BusinessMinimumOrderReached>
-            </IonText> -->
+            </IonText>
 
             <section class="d-flex">
               <IonThumbnail

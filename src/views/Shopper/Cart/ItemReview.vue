@@ -6,10 +6,10 @@
     <ion-content>
       <section class="ion-padding">
         <IonText> {{ order?.business?.name || "Kola Market" }} </IonText>
-        <!-- <BusinessMinimumOrderReached
+        <BusinessMinimumOrderReached
           :business="order?.business"
           :totalCost="totalCost"
-        ></BusinessMinimumOrderReached> -->
+        ></BusinessMinimumOrderReached>
       </section>
       <IonList lines="none">
         <IonItem
@@ -125,7 +125,9 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="createOrder"> Place Order </KolaYellowButton>
+      <KolaYellowButton :disabled="!minOrderAmountReached" @click="createOrder">
+        Place Order
+      </KolaYellowButton>
     </IonFooter>
   </ion-page>
 </template>
