@@ -104,7 +104,7 @@ export default defineComponent({
 
   data() {
     return {
-      viewing: "general",
+      viewing: "orders",
       name: null,
       close,
       refreshOutline,

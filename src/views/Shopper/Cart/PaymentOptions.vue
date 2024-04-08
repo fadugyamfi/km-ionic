@@ -7,7 +7,7 @@
     <ion-content class="ion-padding">
       <form>
         <section class="d-flex flex-column">
-          <IonText class="fw-semibold">Pay Now</IonText>
+          <h6 style="margin-top: 0px" class="fw-semibold">Pay Now</h6>
           <IonText color="medium" class="font-medium"
             >Select a payment method</IonText
           >
@@ -16,7 +16,9 @@
         <section style="margin-top: 10px">
           <IonItem lines="none" @click="selectPaymentOption(1)">
             <IonLabel class="ion-no-margin">
-              <p class="ion-no-margin" style="margin-bottom: 8px">Pay now</p>
+              <p class="ion-no-margin font-medium" style="margin-bottom: 8px">
+                Pay now
+              </p>
               <IonText
                 color="medium"
                 class="font-medium location"
@@ -48,7 +50,7 @@
           </IonItem>
           <IonItem lines="none" @click="selectPaymentOption(2)">
             <IonLabel class="ion-no-margin">
-              <p class="ion-no-margin" style="margin-bottom: 8px">
+              <p class="ion-no-margin font-medium" style="margin-bottom: 8px">
                 Pay on Delivery
               </p>
               <IonText color="medium" class="font-medium">
@@ -67,11 +69,8 @@
           </IonItem>
         </section>
 
-        <!-- <section
-          class="d-flex flex-column ion-margin-horizontal"
-          style="margin-top: 20px"
-        >
-          <IonText class="fw-semibold">Pay Later</IonText>
+        <!-- <section class="d-flex flex-column" style="margin-top: 20px">
+          <h6 class="fw-semibold">Pay Later</h6>
           <IonText color="medium" class="font-medium"
             >Select a pay later option</IonText
           >
@@ -93,56 +92,49 @@
               </section>
             </ion-card-content>
           </ion-card>
-          <ion-card v-if="showDropdown.pay2Weeks">
-            <IonCardContent>
-              <IonItem
-                lines="none"
-                @click="selectPaymentOption('pay-50-percent')"
-              >
-                <IonLabel class="ion-no-margin">
-                  <IonText
-                    color="medium"
-                    class="font-medium location"
-                    style="margin-bottom: 8px"
-                  >
-                    Pay 50% installment each week
-                  </IonText>
-                </IonLabel>
-                <div class="d-flex metadata-end-wrapper" slot="end">
-                  <IonCheckbox
-                    aria-label="standard-delivery"
-                    justify="end"
-                    mode="ios"
-                    value="pay-50-percent"
-                    :checked="selectedPayment == 'pay-50-percent'"
-                  ></IonCheckbox>
-                </div>
-              </IonItem>
-              <IonItem
-                lines="none"
-                @click="selectPaymentOption('pay-100-percent')"
-              >
-                <IonLabel class="ion-no-margin">
-                  <IonText color="medium" class="font-medium">
-                    Pay 100% on the due date
-                  </IonText>
-                </IonLabel>
-                <div class="d-flex metadata-end-wrapper" slot="end">
-                  <IonCheckbox
-                    aria-label="express-delivery"
-                    justify="end"
-                    mode="ios"
-                    value="pay-100-percent"
-                    :checked="selectedPayment == 'pay-100-percent'"
-                  ></IonCheckbox>
-                </div>
-              </IonItem>
-              <p class="radio-text info-text">
-                Subject to Approval. Markup of 2.5% will be added to the total
-                price
-              </p>
-            </IonCardContent>
-          </ion-card>
+          <IonCardContent v-if="showDropdown.pay2Weeks">
+            <IonItem lines="none" @click="selectPaymentOption(3)">
+              <IonLabel class="ion-no-margin">
+                <IonText
+                  color="medium"
+                  class="font-medium location"
+                  style="margin-bottom: 8px"
+                >
+                  Pay 50% installment each week
+                </IonText>
+              </IonLabel>
+              <div class="d-flex metadata-end-wrapper" slot="end">
+                <IonCheckbox
+                  aria-label="standard-delivery"
+                  justify="end"
+                  mode="ios"
+                  value="pay-50-percent"
+                  :checked="form.fields?.payment_option_id == 3"
+                ></IonCheckbox>
+              </div>
+            </IonItem>
+            <IonItem lines="none" @click="selectPaymentOption(4)">
+              <IonLabel class="ion-no-margin">
+                <IonText color="medium" class="font-medium">
+                  Pay 100% on the due date
+                </IonText>
+              </IonLabel>
+              <div class="d-flex metadata-end-wrapper" slot="end">
+                <IonCheckbox
+                  aria-label="express-delivery"
+                  justify="end"
+                  mode="ios"
+                  value="pay-100-percent"
+                  :checked="form.fields?.payment_option_id == 4"
+                ></IonCheckbox>
+              </div>
+            </IonItem>
+            <p class="radio-text info-text">
+              Subject to Approval. Markup of 2.5% will be added to the total
+              price
+            </p>
+          </IonCardContent>
+
           <ion-card style="margin-bottom: 0px">
             <ion-card-content @click="toggleDropdown('pay4Weeks')">
               <section
@@ -161,10 +153,7 @@
           </ion-card>
           <ion-card v-if="showDropdown.pay4Weeks">
             <IonCardContent>
-              <IonItem
-                lines="none"
-                @click="selectPaymentOption('pay-25-percent-per-week')"
-              >
+              <IonItem lines="none" @click="selectPaymentOption(5)">
                 <IonLabel class="ion-no-margin">
                   <IonText
                     color="medium"
@@ -180,14 +169,11 @@
                     justify="end"
                     mode="ios"
                     value="pay-25-percent-per-week"
-                    :checked="selectedPayment == 'pay-25-percent-per-week'"
+                    :checked="form.fields?.payment_option_id == 5"
                   ></IonCheckbox>
                 </div>
               </IonItem>
-              <IonItem
-                lines="none"
-                @click="selectPaymentOption('pay-50-percent-per-two-week')"
-              >
+              <IonItem lines="none" @click="selectPaymentOption(6)">
                 <IonLabel class="ion-no-margin">
                   <IonText color="medium" class="font-medium">
                     Pay 50% instalment every 2 weeks
@@ -199,14 +185,11 @@
                     justify="end"
                     mode="ios"
                     value="pay-50-percent-per-two-week"
-                    :checked="selectedPayment == 'pay-50-percent-per-two-week'"
+                    :checked="form.fields?.payment_option_id == 6"
                   ></IonCheckbox>
                 </div>
               </IonItem>
-              <IonItem
-                lines="none"
-                @click="selectPaymentOption('pay-100-percent-on-due-date')"
-              >
+              <IonItem lines="none" @click="selectPaymentOption(7)">
                 <IonLabel class="ion-no-margin">
                   <IonText color="medium" class="font-medium">
                     Pay 100% on the due date
@@ -218,7 +201,7 @@
                     justify="end"
                     mode="ios"
                     value="pay-100-percent-on-due-date"
-                    :checked="selectedPayment == 'pay-100-percent-on-due-date'"
+                    :checked="form.fields?.payment_option_id == 7"
                   ></IonCheckbox>
                 </div>
               </IonItem>
@@ -518,5 +501,9 @@ ion-radio.radio-checked::part(mark) {
   border-style: solid;
   border-color: #fff;
   transform: rotate(45deg);
+}
+h6 {
+  font-size: 14px;
+  margin-top: 24px;
 }
 </style>

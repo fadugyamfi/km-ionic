@@ -54,9 +54,9 @@
 
         <section>
           <LocationInput
-          v-model="form.fields.location"
-          label="Business Location"
-        ></LocationInput>
+            v-model="form.fields.location"
+            label="Business Location"
+          ></LocationInput>
         </section>
 
         <section class="ion-margin-vertical">
@@ -85,6 +85,59 @@
             v-model="form.fields.business_owner_phone"
             name="business_owner_phone"
             @ion-input="form.validate($event)"
+            required
+          ></IonInput>
+
+          <IonSelect
+            class="kola-input ion-margin-bottom"
+            :label="$t('signup.vendor.country')"
+            :class="{ 'ion-invalid ion-touched': form.errors.country_id }"
+            labelPlacement="stacked"
+            fill="solid"
+            v-model="form.fields.country_id"
+            required
+            name="country_id"
+            @ion-change="onCountryChange($event)"
+          >
+            <IonSelectOption
+              v-for="country in countries"
+              :key="country.id"
+              :value="country.id"
+            >
+              {{ country.name }}
+            </IonSelectOption>
+          </IonSelect>
+
+          <IonSelect
+            class="kola-input ion-margin-bottom"
+            :label="$t('signup.vendor.region')"
+            :class="{ 'ion-invalid ion-touched': form.errors.region_id }"
+            labelPlacement="stacked"
+            fill="solid"
+            v-model="form.fields.region_id"
+            required
+            name="region_id"
+            @ion-change="form.validateSelectInput($event)"
+          >
+            <IonSelectOption
+              v-for="region in regions"
+              :key="region.id"
+              :value="region.id"
+            >
+              {{ region.name }}
+            </IonSelectOption>
+          </IonSelect>
+
+          <IonInput
+            class="kola-input ion-margin-bottom"
+            :class="{ 'ion-invalid ion-touched': form.errors.city }"
+            :label="$t('signup.vendor.city')"
+            labelPlacement="stacked"
+            fill="solid"
+            name="city"
+            v-model="form.fields.city"
+            @ionBlur="form.validate($event)"
+            @ionChange="form.validate($event)"
             required
           ></IonInput>
         </section>
@@ -166,6 +219,7 @@ import {
   IonCheckbox,
   IonHeader,
   IonSpinner,
+  onIonViewWillEnter,
 } from "@ionic/vue";
 import {
   close,
@@ -184,17 +238,23 @@ import { useCustomerStore } from "@/stores/CustomerStore";
 import LocationInput from "@/components/forms/LocationInput.vue";
 import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
+import { useLocationStore } from "@/stores/LocationStore";
 import { useForm } from "@/composables/form";
 import Business from "@/models/Business";
 import User from "@/models/User";
 import axios from "axios";
 import { useRoute, useRouter } from "vue-router";
 import { computed, onMounted, ref } from "vue";
+import Country from "@/models/Country";
+import Region from "@/models/Region";
 
 const toastStore = useToastStore();
 const customerStore = useCustomerStore();
+const locationStore = useLocationStore();
 
 const fetching = ref(false);
+const countries = ref(<Country[]>[]);
+const regions = ref(<Region[]>[]);
 
 const route = useRoute();
 const router = useRouter();
@@ -210,6 +270,9 @@ const form = useForm({
   business_owner_phone: "",
   cms_users_id: "",
   business_types_id: "",
+  country_id: 83,
+  region_id: 54,
+  city: "",
 });
 
 const formValid = computed(() => {
@@ -222,6 +285,9 @@ const formValid = computed(() => {
     isNaN(Number(fields.cms_users_id)) == false &&
     fields.phone_number.length > 0 &&
     fields.business_owner_phone.length > 0 &&
+    fields.country_id &&
+    fields.region_id &&
+    fields.city.length > 0 &&
     fields.business_types_id
   );
 });
@@ -253,6 +319,18 @@ const createCustomer = async () => {
   }
 };
 
+const fetchCountries = async () => {
+  countries.value = await locationStore.fetchCountries();
+};
+const loadRegions = async (country_id: number) => {
+  if (!country_id) return;
+  regions.value = await locationStore.fetchRegions(country_id);
+};
+const onCountryChange = (event: any) => {
+  form.validateSelectInput(event);
+  loadRegions(form.fields.country_id);
+};
+
 const getPaymentModes = async () => {
   try {
     fetching.value = true;
@@ -280,6 +358,10 @@ const fetchBusinessSalesAgent = async () => {
 onMounted(() => {
   getPaymentModes();
   fetchBusinessSalesAgent();
+});
+onIonViewWillEnter(async () => {
+  await fetchCountries();
+  loadRegions(form.fields.country_id);
 });
 </script>
 

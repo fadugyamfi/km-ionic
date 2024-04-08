@@ -109,7 +109,18 @@
           </section>
         </section>
       </IonCard>
-
+      <IonTextarea
+        class="kola-input ion-margin-bottom ion-padding"
+        :class="{
+          'ion-invalid ion-touched': form.errors.notes,
+        }"
+        label="Leave a note"
+        labelPlacement="stacked"
+        fill="solid"
+        v-model="form.fields.notes"
+        name="description"
+        @ion-input="form.validate($event)"
+      ></IonTextarea>
       <!-- <ItemReview :order="order" :orderBusiness="orderBusiness" /> -->
     </ion-content>
 
@@ -134,6 +145,7 @@ import {
   IonFooter,
   IonText,
   IonCard,
+  IonTextarea,
   onIonViewDidEnter,
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
@@ -156,12 +168,17 @@ import BusinessMinimumOrderReached from "../../../components/modules/business/Bu
 import Filters from "@/utilities/Filters";
 import { useToastStore } from "@/stores/ToastStore";
 import { handleAxiosRequestError } from "@/utilities";
+import { useForm } from "@/composables/form";
 
 const route = useRoute();
 
 const router = useRouter();
 const toastStore = useToastStore();
 const cartStore = useCartStore();
+
+const form = useForm({
+  notes: "",
+});
 
 const orderBusiness = computed((): Order | any => {
   return cartStore.orders.find(
@@ -215,6 +232,7 @@ const createOrder = async () => {
       payment_modes_id: orderBusiness.value.payment_option_id,
       total_items: orderBusiness.value._order_items.length,
       order_items: orderBusiness.value._order_items,
+      notes: form.fields.notes,
     });
     if (placedOrder) {
       cartStore.orders = cartStore.orders.filter(
@@ -339,6 +357,10 @@ ion-badge {
   --background: rgba(245, 170, 41, 0.38);
   --color: #344054;
   margin-left: 8px;
+}
+
+.text-area {
+  color: black;
 }
 
 .custom-thumbnail {

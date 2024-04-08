@@ -199,7 +199,10 @@ const formValid = computed(() => {
 onIonViewDidEnter(async () => {
   const orderStore = useOrderStore();
   // await orderStore.loadFromStorage();
-  Object.assign(form.fields, orderStore.newOrder);
+  Object.assign(form.fields, {
+    ...orderStore.newOrder,
+    ordered_at: formatDateTimeForInput(new Date().toLocaleString()),
+  });
   // Set the delivery method here based on your requirement
   // For example, setting it to 'standard' when the component is mounted
   const initialDeliveryMethod = "standard";

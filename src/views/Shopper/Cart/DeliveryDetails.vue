@@ -28,6 +28,21 @@
           required
         >
         </IonInput>
+        <IonInput
+          class="kola-input delivery-details-input ion-margin-bottom"
+          :class="{
+            'ion-invalid ion-touched': form.errors.phone_number,
+          }"
+          type="number"
+          label="Phone Number"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.phone_number"
+          name="phone-number"
+          @ion-input="form.validate($event)"
+          required
+        >
+        </IonInput>
         <h6 class="fw-semibold font-medium">Delivery Date</h6>
         <IonInput
           class="kola-input delivery-details-input ion-margin-bottom"
@@ -94,6 +109,7 @@ const userStore = useUserStore();
 const form = useForm({
   delivery_location: "",
   delivery_nearest_landmark: "",
+  phone_number: "",
   delivery_date: "",
   delivery_method: "",
   payment_option_id: 1,
