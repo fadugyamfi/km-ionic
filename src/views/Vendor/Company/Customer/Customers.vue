@@ -17,7 +17,9 @@
               class="d-flex ion-align-items-center ion-justify-content-center"
             >
               <IonLabel>{{ $t("profile.customers.customers") }}</IonLabel>
-              <ion-badge class="badge">{{ customers?.length }}</ion-badge>
+              <ion-badge class="badge">{{
+                customerStore.meta?.total
+              }}</ion-badge>
             </section></IonTitle
           >
           <ion-buttons slot="end">
@@ -108,6 +110,8 @@ const searchEnabled = ref(false);
 const customers = ref<any[]>([]);
 const paginatedCustomers = ref<Business[]>([]);
 
+const customerStore = useCustomerStore();
+
 const handleRefresh = async (event: RefresherCustomEvent) => {
   refreshing.value = true;
   fetching.value = true;
@@ -139,7 +143,6 @@ const fetchCustomers = async (options: any = {}) => {
     fetching.value = true;
   }
   const userStore = useUserStore();
-  const customerStore = useCustomerStore();
 
   if (userStore.user?.isSalesAssociate()) {
     options = Object.assign(options, { limit: 100 });
@@ -150,7 +153,7 @@ const fetchCustomers = async (options: any = {}) => {
   } else {
     customers.value = await customerStore.getBusinessCustomers(
       userStore.activeBusiness as Business,
-      100,
+      50,
       options,
       refreshing.value
     );
@@ -164,7 +167,6 @@ onIonViewDidEnter(() => {
 });
 
 onIonViewWillEnter(() => {
-  const customerStore = useCustomerStore();
   customerStore.clearCustomers();
 });
 </script>

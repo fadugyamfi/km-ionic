@@ -16,8 +16,10 @@ export const useCustomerStore = defineStore("customer", {
     nextLink: null as string | null,
     orders: [] as Order[],
     creditPayments: [] as any,
-    meta: {},
-    selectedCustomer: null as Customer | null
+    meta: {
+      total: 0,
+    },
+    selectedCustomer: null as Customer | null,
   }),
   actions: {
     async getBusinessCustomers(
@@ -97,20 +99,25 @@ export const useCustomerStore = defineStore("customer", {
         .catch((error) => handleAxiosRequestError(error));
     },
 
-    async getCustomer(business: Business, customer_id: any): Promise<Customer | null> {
+    async getCustomer(
+      business: Business,
+      customer_id: any
+    ): Promise<Customer | null> {
       const cacheKey = `kola.business.${business.id}.customers`;
 
-      if( await storage.has(cacheKey) ) {
+      if (await storage.has(cacheKey)) {
         const data = await storage.get(cacheKey);
 
-        if( data ) {
+        if (data) {
           const customers = data.map((el: object) => new Business(el));
           const customer = customers.find((c: Customer) => c.id == customer_id);
           return new Customer(customer);
         }
       }
 
-      const response = await axios.get(`/v2/businesses/${business.id}/customers/${customer_id}`);
+      const response = await axios.get(
+        `/v2/businesses/${business.id}/customers/${customer_id}`
+      );
       if (response.status >= 200 && response.status < 300) {
         const data = response.data.data;
         return new Customer(data);
@@ -150,7 +157,6 @@ export const useCustomerStore = defineStore("customer", {
 
         const ordersData = response.data.data;
         this.orders = ordersData.map((data: any) => new Order(data));
-
       } catch (error) {
         handleAxiosRequestError(error);
       }
@@ -169,7 +175,6 @@ export const useCustomerStore = defineStore("customer", {
 
         const creditData = response.data.data;
         this.creditPayments = creditData.map((data: any) => new Order(data));
-
       } catch (error) {
         handleAxiosRequestError(error);
       }
