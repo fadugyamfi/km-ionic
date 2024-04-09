@@ -9,12 +9,15 @@ import User from "@/models/User";
 import AppStorage from "./AppStorage";
 
 const storage = new AppStorage();
+const CUSTOMERS_RESPONSE = "kola.customers.response";
+const SEARCH_TERM = "kola.customer-search-term";
 
 export const useCustomerStore = defineStore("customer", {
   state: () => ({
     customers: [] as Customer[],
     nextLink: null as string | null,
     orders: [] as Order[],
+    searchTerm: "",
     creditPayments: [] as any,
     meta: {
       total: 0,
@@ -22,25 +25,44 @@ export const useCustomerStore = defineStore("customer", {
     selectedCustomer: null as Customer | null,
   }),
   actions: {
+    async setSearchTerm(term: string) {
+      this.searchTerm = term;
+      storage.set(SEARCH_TERM, this.searchTerm, 1, "day");
+    },
+
+    async getSearchTerm() {
+      if (!this.searchTerm && (await storage.has(SEARCH_TERM))) {
+        this.searchTerm = await storage.get(SEARCH_TERM);
+      }
+
+      return this.searchTerm;
+    },
     async getBusinessCustomers(
       business: Business,
       limit: number = 100,
       options = {},
-      refresh = false
+      refresh = false,
+      fetchingMore = false
     ): Promise<any> {
       try {
         const params = {
           limit,
           sort: "name:asc",
-          name_like: "",
+          name_like: await this.getSearchTerm(),
           ...options,
         };
+        const res = await storage.get(CUSTOMERS_RESPONSE);
+        if (res && res.customers && !refresh && !fetchingMore) {
+          this.customers = res.customers;
+          this.nextLink = res.links.next;
+          return this.customers;
+        }
         if (refresh) {
           this.nextLink = null;
           this.customers = [];
         }
         if (this.customers.length && !this.nextLink) {
-          return;
+          return this.customers;
         }
         if (params.name_like) {
           this.nextLink = null;
@@ -56,7 +78,12 @@ export const useCustomerStore = defineStore("customer", {
           ];
           this.meta = meta;
           this.nextLink = links.next;
-
+          await storage.set(
+            CUSTOMERS_RESPONSE,
+            { ...response.data, customers: this.customers },
+            1,
+            "days"
+          );
           return this.customers;
         }
       } catch (error) {

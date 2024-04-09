@@ -3,8 +3,13 @@
     <IonCard>
       <IonCardHeader class="ion-no-padding">
         <IonItem lines="none">
-          <ProfileAvatar slot="start" class="ion-align-self-start ion-margin-top" :image="order?.customer?.logo"
-                       :username="order?.customer?.name" size="xs"></ProfileAvatar>
+          <ProfileAvatar
+            slot="start"
+            class="ion-align-self-start ion-margin-top"
+            :image="order?.customer?.logo"
+            :username="order?.customer?.name"
+            size="xs"
+          ></ProfileAvatar>
 
           <IonLabel class="font-medium">{{ order?.customer?.name }}</IonLabel>
         </IonItem>
@@ -13,21 +18,35 @@
       <IonCardContent class="product-list ion-no-padding">
         <IonList lines="none">
           <IonItem v-for="item in order?.order_items" :key="item.id">
-            <IonLabel class="ion-text-wrap font-medium">
+            <IonLabel class="ion-text-wrap font-medium" slot="start">
               {{ item.product?.product_name }}
+              <section>
+                <IonText color="medium" class="font-medium">
+                  {{
+                    Filters.currency(
+                      item.unit_price as number,
+                      item.currency?.symbol as string
+                    )
+                  }}
+                </IonText>
+              </section>
               <section>
                 <IonText color="medium" class="font-medium">
                   {{ item.quantity }} {{ getItemUnit(item) }}
                 </IonText>
               </section>
             </IonLabel>
-            <IonLabel slot="end" class="font-medium text-end ion-align-self-start">
-              {{ Filters.currency(item.total_price as number, item.currency?.symbol as string) }}
-            </IonLabel>
+            <IonText slot="end" class="font-medium ion-align-self-start">
+              {{
+                Filters.currency(
+                  item.total_price as number,
+                  item.currency?.symbol as string
+                )
+              }}
+            </IonText>
           </IonItem>
         </IonList>
       </IonCardContent>
-
     </IonCard>
 
     <section>
@@ -40,12 +59,25 @@
   </section>
 </template>
 
-
-
-<script lang=ts>
+<script lang="ts">
 import { Order } from "@/models/Order";
-import { IonAccordion, IonItem, IonLabel, IonThumbnail, IonIcon, IonGrid, IonRow, IonCol, IonCard, IonCardHeader, IonCardContent, IonList, IonText, IonButton } from "@ionic/vue";
-import { PropType, defineComponent } from 'vue';
+import {
+  IonAccordion,
+  IonItem,
+  IonLabel,
+  IonThumbnail,
+  IonIcon,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonCard,
+  IonCardHeader,
+  IonCardContent,
+  IonList,
+  IonText,
+  IonButton,
+} from "@ionic/vue";
+import { PropType, defineComponent } from "vue";
 import Image from "@/components/Image.vue";
 import Filters from "@/utilities/Filters";
 import { OrderItem } from "../../../models/OrderItem";
@@ -70,12 +102,12 @@ export default defineComponent({
     IonText,
     IonButton,
     OrderDeliverySummary,
-    ProfileAvatar
-},
+    ProfileAvatar,
+  },
 
   props: {
     order: {
-      type: Object as PropType<Order | null>
+      type: Object as PropType<Order | null>,
     },
   },
 
@@ -92,21 +124,23 @@ export default defineComponent({
 
     showChangeAddress() {
       return false;
-    }
+    },
   },
 
   methods: {
-
     getItemUnit(orderItem: OrderItem) {
       if (orderItem.product_units_id == 2) {
-        return this.$tc('general.units.piece', orderItem.quantity as number);
+        return this.$tc("general.units.piece", orderItem.quantity as number);
       }
 
-      return this.$tc('general.units.box', orderItem.quantity as number);
+      return this.$tc("general.units.box", orderItem.quantity as number);
     },
 
     update() {
-      this.$router.push({ name: 'OrderUpdate', params: { id: this.order?.id } });
+      this.$router.push({
+        name: "OrderUpdate",
+        params: { id: this.order?.id },
+      });
     },
   },
 });

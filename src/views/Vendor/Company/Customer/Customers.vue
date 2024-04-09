@@ -17,9 +17,7 @@
               class="d-flex ion-align-items-center ion-justify-content-center"
             >
               <IonLabel>{{ $t("profile.customers.customers") }}</IonLabel>
-              <ion-badge class="badge">{{
-                customerStore.meta?.total
-              }}</ion-badge>
+              <ion-badge class="badge">{{ customers.length }}</ion-badge>
             </section></IonTitle
           >
           <ion-buttons slot="end">
@@ -36,10 +34,11 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <IonToolbar v-if="searchEnabled">
+      <IonToolbar v-if="searchEnabled || customerStore?.searchTerm?.length > 0">
         <IonSearchbar
           :placeholder="$t('profile.customers.searchCustomers') + '...'"
           class="search-input"
+          v-model="customerStore.searchTerm"
           @keyup.enter="onSearch($event)"
           @ion-change="onSearch($event)"
         ></IonSearchbar>
@@ -104,11 +103,10 @@ import { useCustomerStore } from "@/stores/CustomerStore";
 
 const fetching = ref(false);
 const refreshing = ref(false);
-const currentPage = ref(1);
+const fetchingMore = ref(false);
 const router = useRouter();
 const searchEnabled = ref(false);
 const customers = ref<any[]>([]);
-const paginatedCustomers = ref<Business[]>([]);
 
 const customerStore = useCustomerStore();
 
@@ -120,9 +118,11 @@ const handleRefresh = async (event: RefresherCustomEvent) => {
   event.target.complete();
 };
 
-const onSearch = async (event: Event) => {
+const onSearch = async (event: any) => {
+  if (fetching.value) return;
   refreshing.value = true;
   fetching.value = true;
+  customerStore.setSearchTerm(event.target.value);
   await fetchCustomers({
     name_like: (event.target as HTMLIonSearchbarElement).value,
   });
@@ -134,8 +134,10 @@ const addCustomer = () => {
 };
 
 const ionInfinite = async (ev: InfiniteScrollCustomEvent) => {
+  fetchingMore.value = true;
   await fetchCustomers();
   ev.target.complete();
+  fetchingMore.value = false;
 };
 
 const fetchCustomers = async (options: any = {}) => {
@@ -155,7 +157,8 @@ const fetchCustomers = async (options: any = {}) => {
       userStore.activeBusiness as Business,
       50,
       options,
-      refreshing.value
+      refreshing.value,
+      fetchingMore.value
     );
   }
 
@@ -166,9 +169,9 @@ onIonViewDidEnter(() => {
   fetchCustomers();
 });
 
-onIonViewWillEnter(() => {
-  customerStore.clearCustomers();
-});
+// onIonViewWillEnter(() => {
+//   customerStore.clearCustomers();
+// });
 </script>
 
 <style lang="scss" scoped>
