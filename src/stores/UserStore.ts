@@ -388,13 +388,18 @@ export const useUserStore = defineStore("user", {
 
     async fetchAssignedBusinesses(
       user_id: number | null = null,
-      options: any = {}
+      options: any = {},
+      refresh = false
     ): Promise<Business[]> {
       let user = user_id || this.user?.id;
 
       const params = {
         ...options,
       };
+      const assignedBusinesses = await storage.get("kola.assigned-businesses");
+      if (assignedBusinesses && !refresh) {
+        return assignedBusinesses;
+      }
 
       return axios
         .get(`/v2/users/${user}/businesses`, { params })
@@ -402,7 +407,7 @@ export const useUserStore = defineStore("user", {
           const businesses = response.data.data.map(
             (el: any) => new Business(el.business)
           );
-
+          await storage.set("kola.assigned-businesses", businesses, 1, "days");
           return businesses;
         })
         .catch((error) => {
