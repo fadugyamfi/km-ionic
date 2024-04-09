@@ -17,7 +17,7 @@
               class="d-flex ion-align-items-center ion-justify-content-center"
             >
               <IonLabel>{{ $t("profile.customers.customers") }}</IonLabel>
-              <ion-badge class="badge">{{ customers.length }}</ion-badge>
+              <ion-badge class="badge">{{ customerStore.totalCustomers }}</ion-badge>
             </section></IonTitle
           >
           <ion-buttons slot="end">

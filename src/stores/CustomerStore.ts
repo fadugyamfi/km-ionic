@@ -19,9 +19,7 @@ export const useCustomerStore = defineStore("customer", {
     orders: [] as Order[],
     searchTerm: "",
     creditPayments: [] as any,
-    meta: {
-      total: 0,
-    },
+    totalCustomers: 0,
     selectedCustomer: null as Customer | null,
   }),
   actions: {
@@ -55,6 +53,7 @@ export const useCustomerStore = defineStore("customer", {
         if (res && res.customers && !refresh && !fetchingMore) {
           this.customers = res.customers;
           this.nextLink = res.links.next;
+          this.totalCustomers = res.meta.total;
           return this.customers;
         }
         if (refresh) {
@@ -76,8 +75,8 @@ export const useCustomerStore = defineStore("customer", {
             ...this.customers,
             ...data.map((el: any) => new Customer(el)),
           ];
-          this.meta = meta;
           this.nextLink = links.next;
+          this.totalCustomers = meta.total
           await storage.set(
             CUSTOMERS_RESPONSE,
             { ...response.data, customers: this.customers },
