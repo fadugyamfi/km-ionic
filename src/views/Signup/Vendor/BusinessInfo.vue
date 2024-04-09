@@ -50,8 +50,7 @@
             }"
             labelPlacement="stacked"
             fill="solid"
-            v-model="
-              businessStore.registration.attributes.primary_product_category_id
+            v-model="businessStore.registration.attributes.primary_product_category_id
             "
             required
             name="primary_product_category_id"
