@@ -27,6 +27,7 @@
       }}</IonText></IonLabel
     >
     <IonButton
+      v-if="showPopover"
       slot="end"
       fill="clear"
       color="dark"
@@ -63,6 +64,10 @@ const props = defineProps({
   credit: {
     type: SalePayment,
     default: () => [],
+  },
+  showPopover: {
+    type: Boolean,
+    default: true,
   },
 });
 

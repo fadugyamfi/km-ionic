@@ -9,36 +9,59 @@ import User from "@/models/User";
 import AppStorage from "./AppStorage";
 
 const storage = new AppStorage();
+const CUSTOMERS_RESPONSE = "kola.customers.response";
+const SEARCH_TERM = "kola.customer-search-term";
 
 export const useCustomerStore = defineStore("customer", {
   state: () => ({
     customers: [] as Customer[],
     nextLink: null as string | null,
     orders: [] as Order[],
+    searchTerm: "",
     creditPayments: [] as any,
-    meta: {},
-    selectedCustomer: null as Customer | null
+    totalCustomers: 0,
+    selectedCustomer: null as Customer | null,
   }),
   actions: {
+    async setSearchTerm(term: string) {
+      this.searchTerm = term;
+      storage.set(SEARCH_TERM, this.searchTerm, 1, "day");
+    },
+
+    async getSearchTerm() {
+      if (!this.searchTerm && (await storage.has(SEARCH_TERM))) {
+        this.searchTerm = await storage.get(SEARCH_TERM);
+      }
+
+      return this.searchTerm;
+    },
     async getBusinessCustomers(
       business: Business,
       limit: number = 100,
       options = {},
-      refresh = false
+      refresh = false,
+      fetchingMore = false
     ): Promise<any> {
       try {
         const params = {
           limit,
           sort: "name:asc",
-          name_like: "",
+          name_like: await this.getSearchTerm(),
           ...options,
         };
+        const res = await storage.get(CUSTOMERS_RESPONSE);
+        if (res && res.customers && !refresh && !fetchingMore) {
+          this.customers = res.customers;
+          this.nextLink = res.links.next;
+          this.totalCustomers = res.meta.total;
+          return this.customers;
+        }
         if (refresh) {
           this.nextLink = null;
           this.customers = [];
         }
         if (this.customers.length && !this.nextLink) {
-          return;
+          return this.customers;
         }
         if (params.name_like) {
           this.nextLink = null;
@@ -52,9 +75,14 @@ export const useCustomerStore = defineStore("customer", {
             ...this.customers,
             ...data.map((el: any) => new Customer(el)),
           ];
-          this.meta = meta;
           this.nextLink = links.next;
-
+          this.totalCustomers = meta.total
+          await storage.set(
+            CUSTOMERS_RESPONSE,
+            { ...response.data, customers: this.customers },
+            1,
+            "days"
+          );
           return this.customers;
         }
       } catch (error) {
@@ -97,20 +125,25 @@ export const useCustomerStore = defineStore("customer", {
         .catch((error) => handleAxiosRequestError(error));
     },
 
-    async getCustomer(business: Business, customer_id: any): Promise<Customer | null> {
+    async getCustomer(
+      business: Business,
+      customer_id: any
+    ): Promise<Customer | null> {
       const cacheKey = `kola.business.${business.id}.customers`;
 
-      if( await storage.has(cacheKey) ) {
+      if (await storage.has(cacheKey)) {
         const data = await storage.get(cacheKey);
 
-        if( data ) {
+        if (data) {
           const customers = data.map((el: object) => new Business(el));
           const customer = customers.find((c: Customer) => c.id == customer_id);
           return new Customer(customer);
         }
       }
 
-      const response = await axios.get(`/v2/businesses/${business.id}/customers/${customer_id}`);
+      const response = await axios.get(
+        `/v2/businesses/${business.id}/customers/${customer_id}`
+      );
       if (response.status >= 200 && response.status < 300) {
         const data = response.data.data;
         return new Customer(data);
@@ -150,7 +183,6 @@ export const useCustomerStore = defineStore("customer", {
 
         const ordersData = response.data.data;
         this.orders = ordersData.map((data: any) => new Order(data));
-
       } catch (error) {
         handleAxiosRequestError(error);
       }
@@ -169,7 +201,6 @@ export const useCustomerStore = defineStore("customer", {
 
         const creditData = response.data.data;
         this.creditPayments = creditData.map((data: any) => new Order(data));
-
       } catch (error) {
         handleAxiosRequestError(error);
       }

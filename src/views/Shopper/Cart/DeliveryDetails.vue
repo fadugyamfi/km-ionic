@@ -8,7 +8,7 @@
     <!-- Main Content -->
     <ion-content class="ion-padding">
       <form>
-        <h6 style="margin-top: 0px">Add Delivery Address</h6>
+        <h6 style="margin-top: 0px" class="fw-semibold ">Add Delivery Address</h6>
         <LocationInput
           v-model="form.fields.delivery_location"
           label="Town/Locality"
@@ -28,7 +28,22 @@
           required
         >
         </IonInput>
-        <h6>Delivery Date</h6>
+        <IonInput
+          class="kola-input delivery-details-input ion-margin-bottom"
+          :class="{
+            'ion-invalid ion-touched': form.errors.phone_number,
+          }"
+          type="number"
+          label="Phone Number"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.phone_number"
+          name="phone-number"
+          @ion-input="form.validate($event)"
+          required
+        >
+        </IonInput>
+        <h6 class="fw-semibold font-medium">Delivery Date</h6>
         <IonInput
           class="kola-input delivery-details-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.delivery_date }"
@@ -40,17 +55,17 @@
           @ion-input="form.validate && form.validate($event)"
           readonly
         ></IonInput>
-        <!-- <section>
-          <h6 class="fw-semibold" style="margin-bottom: 6px">Delivery</h6>
+        <section class="d-flex flex-column">
+          <IonText class="fw-semibold font-medium" style="margin-bottom: 6px">Delivery</IonText>
           <IonText color="medium" class="font-medium">
             Select delivery method
           </IonText>
+        </section>
           <DeliveryMethod
-            :location="form.fields.location"
+            :location="form.fields.delivery_location"
             :delivery-date="form.fields.delivery_date"
             @onSelectDeliveryMethod="selectDeliveryMethod"
           />
-        </section> -->
       </form>
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
@@ -85,6 +100,7 @@ import { onMounted, computed } from "vue";
 import { Order } from "@/models/Order";
 import { useUserStore } from "@/stores/UserStore";
 import LocationInput from "@/components/forms/LocationInput.vue";
+import DeliveryMethod from "@/components/modules/deliveryDetails/DeliveryMethod.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -93,15 +109,10 @@ const userStore = useUserStore();
 const form = useForm({
   delivery_location: "",
   delivery_nearest_landmark: "",
+  phone_number: "",
   delivery_date: "",
   delivery_method: "",
-  payment_option_id: "2",
-});
-const props = defineProps({
-  order: {
-    type: Object as () => Order,
-    required: true,
-  },
+  payment_option_id: 1,
 });
 
 const selectDeliveryMethod = (method: string) => {
@@ -137,7 +148,8 @@ const storeDeliveryDetails = () => {
         ...form.fields,
       };
       cartStore.persist();
-      router.push(`/shopper/cart/business/${route.params.id}/item-review`);
+      // router.push(`/shopper/cart/business/${route.params.id}/item-review`);
+      router.push(`/shopper/cart/business/${route.params.id}/payment-options`);
     } else {
       console.error("Business ID not found in cartStore.orders");
     }

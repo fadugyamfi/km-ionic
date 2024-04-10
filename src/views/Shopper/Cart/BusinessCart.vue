@@ -3,11 +3,20 @@
     <section class="ion-padding">
       <CartHeader>
         <template v-slot:toolbars>
-          <section style="padding-top: 10px;">
-            <IonSegment value="personal" mode="ios" v-model="viewing" class="segment-margin">
+          <section style="padding-top: 10px">
+            <IonSegment
+              value="personal"
+              mode="ios"
+              v-model="viewing"
+              class="segment-margin"
+            >
               <IonSegmentButton value="cart">
                 <div class="segment-button">
-                  <IonLabel color="dark" :class="{ 'yellow-circle': segmentValue === 'cart' }">Cart</IonLabel>
+                  <IonLabel
+                    color="dark"
+                    :class="{ 'yellow-circle': segmentValue === 'cart' }"
+                    >Cart</IonLabel
+                  >
                   <IonBadge>{{ orderBusiness?.order_items?.length }}</IonBadge>
                 </div>
               </IonSegmentButton>
@@ -21,7 +30,6 @@
     </section>
 
     <ion-content class="ion-padding-horizontal">
-
       <section class="ion-margin-top">
         <BusinessMinimumOrderReached :business="order?.business" :totalCost="totalCost"></BusinessMinimumOrderReached>
       </section>
@@ -29,7 +37,10 @@
 
       <section v-else>
         <IonList>
-          <IonItem v-for="(item, index) in orderBusiness?.order_items" :key="item.product?.id">
+          <IonItem
+            v-for="(item, index) in orderBusiness?.order_items"
+            :key="item.product?.id"
+          >
             <ion-thumbnail slot="start" class="custom-thumbnail">
               <Image :src="item.product_image" w="150"></Image>
             </ion-thumbnail>
@@ -52,11 +63,21 @@
                 </p>
               </ion-col>
               <ion-col size="2" class="d-flex ion-align-items-start">
-                <ion-button fill="clear" color="" @click.prevent.stop="removeFromCart(index)">
-                  <ion-icon class="remove-icon" :icon="closeCircleOutline"></ion-icon>
+                <ion-button
+                  fill="clear"
+                  color=""
+                  @click.prevent.stop="removeFromCart(index)"
+                >
+                  <ion-icon
+                    class="remove-icon"
+                    :icon="closeCircleOutline"
+                  ></ion-icon>
                 </ion-button>
               </ion-col>
-              <ProductQuantitySelector :initial-quantity="item.quantity" @change="updateQuantity(item, $event)">
+              <ProductQuantitySelector
+                :initial-quantity="item.quantity"
+                @change="updateQuantity(item, $event)"
+              >
               </ProductQuantitySelector>
             </ion-row>
           </IonItem>
@@ -67,8 +88,11 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton v-if="orderBusiness?.order_items?.length > 0" @click="viewDeliveryDetails()"
-                        :disabled="!minOrderAmountReached">
+      <KolaYellowButton
+        v-if="orderBusiness?.order_items?.length > 0"
+        :disabled="!minOrderAmountReached"
+        @click="viewDeliveryDetails()"
+      >
         {{ $t("shopper.cart.proceedToCheckout") }}
       </KolaYellowButton>
     </IonFooter>
