@@ -18,46 +18,81 @@
       </IonHeader>
     </section>
     <ion-content>
-      <section v-if="loading" class="d-flex ion-justify-content-center ion-padding">
+      <section
+        v-if="loading"
+        class="d-flex ion-justify-content-center ion-padding"
+      >
         <IonSpinner name="crescent"></IonSpinner>
       </section>
 
       <section v-else>
         <OrderImages :order="(order as Order)" />
         <PlacedOrderItems :order="(order as Order)" />
-
-        <section class="ion-padding-horizontal update-button-section" v-if="canUpdate">
+        <section
+          class="ion-padding-horizontal update-button-section"
+          v-if="canUpdate"
+        >
           <KolaYellowButton>
-            {{ 'Update' }}
+            {{ "Update" }}
           </KolaYellowButton>
         </section>
 
-        <section class="ion-padding-horizontal update-button-section" v-if="canReorder">
+        <section
+          class="ion-padding-horizontal update-button-section"
+          v-if="canReorder"
+        >
           <KolaYellowButton>
-            {{ 'Reorder' }}
+            {{ "Reorder" }}
           </KolaYellowButton>
         </section>
 
         <OrderStatusHistoryView :order="(order as Order)" />
       </section>
+      <section class="ion-padding" v-if="order?.isPayNow()">
+        <CreditPaymentList
+          :showPopover="false"
+          :creditPayments="(order?.sale_payments as SalePayment[])"
+        ></CreditPaymentList>
+      </section>
     </ion-content>
+    <IonFooter v-if="order?.amountOwed()" class="ion-padding ion-no-border">
+      <KolaYellowButton @click="payNow(order)">
+        <IonSpinner v-if="checking" name="crescent"></IonSpinner>
+        <IonText v-else>{{ "Pay now" }}</IonText>
+      </KolaYellowButton>
+    </IonFooter>
   </IonPage>
 </template>
 
 <script lang="ts">
-import { Order } from '@/models/Order';
-import { IonIcon, IonContent, IonPage, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle, IonButton, IonSpinner } from '@ionic/vue';
-import { IonSelect, IonSelectOption, IonAvatar, IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
-import { defineComponent } from 'vue';
-import UpdateButon from '@/components/modules/order/UpdateButon.vue';
-import { mapStores } from 'pinia';
-import { useOrderStore } from '@/stores/OrderStore';
-import { handleAxiosRequestError } from '@/utilities';
-import { chatbubbleOutline } from 'ionicons/icons';
-import OrderImages from '@/components/modules/order/OrderImages.vue';
-import PlacedOrderItems from '@/components/modules/order/PlacedOrderItems.vue';
-import KolaYellowButton from '@/components/KolaYellowButton.vue';
-import OrderStatusHistoryView from '@/components/modules/order/OrderStatusHistoryView.vue';
+import { Order } from "@/models/Order";
+import {
+  IonIcon,
+  IonContent,
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonTitle,
+  IonButton,
+  IonFooter,
+  IonSpinner,
+  IonText,
+} from "@ionic/vue";
+import { defineComponent } from "vue";
+import UpdateButon from "@/components/modules/order/UpdateButon.vue";
+import { mapStores } from "pinia";
+import { useOrderStore } from "@/stores/OrderStore";
+import { handleAxiosRequestError } from "@/utilities";
+import { chatbubbleOutline } from "ionicons/icons";
+import OrderImages from "@/components/modules/order/OrderImages.vue";
+import PlacedOrderItems from "@/components/modules/order/PlacedOrderItems.vue";
+import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import OrderStatusHistoryView from "@/components/modules/order/OrderStatusHistoryView.vue";
+import { useCartStore } from "@/stores/CartStore";
+import { SalePayment } from "@/models/SalePayment";
+import CreditPaymentList from "@/components/modules/customers/credit/CreditPaymentList.vue";
 
 export default defineComponent({
   components: {
@@ -65,32 +100,41 @@ export default defineComponent({
     IonToolbar,
     IonButtons,
     IonBackButton,
-    IonTitle, IonPage, IonSelect, IonSelectOption, IonAvatar,
-    IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle,
+    IonTitle,
+    IonPage,
     IonIcon,
     IonContent,
     UpdateButon,
     IonButton,
     OrderImages,
     IonSpinner,
+    IonText,
     PlacedOrderItems,
     KolaYellowButton,
-    OrderStatusHistoryView
+    OrderStatusHistoryView,
+    CreditPaymentList,
+    IonFooter,
   },
 
-  name: 'OrderDetails',
+  name: "OrderDetails",
 
   data() {
     return {
       loading: false,
+      checking: false,
       chatbubbleOutline,
-      order: null as Order | null
-    }
+      order: null as Order | null,
+    };
   },
 
   ionViewWillEnter() {
     // retrieve the currently loaded order info from the history if available
     this.order = this.orderStore.selectedOrder;
+    this.order = new Order({
+      ...this.order,
+      order_status_id:
+        this.order?.order_status_id == 11 ? 2 : this.order?.order_status_id,
+    });
   },
 
   async mounted() {
@@ -98,7 +142,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useOrderStore),
+    ...mapStores(useOrderStore, useCartStore),
 
     canUpdate() {
       return false;
@@ -106,30 +150,51 @@ export default defineComponent({
 
     canReorder() {
       return false;
-    }
+    },
   },
 
   methods: {
     async loadFullOrderDetails() {
-      if( this.order && this.order.order_items?.length > 0 && this.order?.customer ) {
+      if (
+        this.order &&
+        this.order.order_items?.length > 0 &&
+        this.order?.customer
+      ) {
         return;
       }
-
+      this.fetchOrder();
+    },
+    async fetchOrder() {
       this.loading = true;
       const order_id = +this.$route.params.id;
 
       // fetch full order info from backend to overwrite the basic data
       try {
         this.order = await this.orderStore.fetchOrder(order_id);
+        this.order = new Order({
+          ...this.order,
+          order_status_id:
+            this.order?.order_status_id == 11 ? 2 : this.order?.order_status_id,
+        });
       } catch (error) {
         handleAxiosRequestError(error);
       } finally {
         this.loading = false;
       }
-    }
-  }
-
-
+    },
+    async payNow(order: Order) {
+      try {
+        this.checking = true;
+        const response = await this.cartStore.checkout(order);
+        if (response) {
+          this.fetchOrder();
+        }
+      } catch (error) {
+      } finally {
+        this.checking = false;
+      }
+    },
+  },
 });
 </script>
 

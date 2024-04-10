@@ -4,6 +4,7 @@
       v-for="(payment, index) in creditPayments"
       :key="payment?.id"
       :credit="payment"
+      :showPopover=showPopover
       @click="viewDetails(payment)"
       @openMenu="openMenu($event, index)"
     >
@@ -94,6 +95,10 @@ export default defineComponent({
     creditPayments: {
       type: Array as PropType<SalePayment[]>,
       required: true,
+    },
+    showPopover: {
+      type: Boolean,
+      default: true,
     },
   },
 

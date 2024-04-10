@@ -11,7 +11,7 @@
       ></ProfileAvatar>
       <IonLabel @click="viewCustomer(customer)">
         <p class="ion-no-margin">{{ customer.name }}</p>
-        <IonText color="medium" class="font-medium">
+        <IonText color="medium" class="font-medium ellipsis" style="width: 200px;">
           {{ customer.location || $t("profile.customers.locationUnknown") }}
         </IonText>
         <IonText v-if="isNewCustomer(customer.created_at)"

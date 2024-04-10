@@ -12,14 +12,14 @@
       </ion-buttons>
     </section>
     <IonItem class="sub-header" lines="none">
-      <div class="d-flex" style="margin-right: 10px;">
+      <div class="d-flex" style="margin-right: 10px">
         <IonIcon
           size="small"
           :icon="locationOutline"
           slot="start"
           class="ion-no-margin"
         ></IonIcon>
-        <IonText color="medium" class="font-medium">{{
+        <IonText color="medium" style="max-width: 200px;" class="font-medium ellipsis">{{
           customer?.location
         }}</IonText>
       </div>

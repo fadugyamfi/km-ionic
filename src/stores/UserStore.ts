@@ -4,6 +4,7 @@ import axios from "axios";
 import User from "@/models/User";
 import Business from "@/models/Business";
 import AppStorage from "./AppStorage";
+import { useCustomerStore } from "./CustomerStore";
 
 const meta = (key: string) => {
   const meta = document.querySelector(`meta[name="${key}"]`);
@@ -388,13 +389,20 @@ export const useUserStore = defineStore("user", {
 
     async fetchAssignedBusinesses(
       user_id: number | null = null,
-      options: any = {}
+      options: any = {},
+      refresh = false
     ): Promise<Business[]> {
       let user = user_id || this.user?.id;
 
       const params = {
         ...options,
       };
+      const customerStore = useCustomerStore();
+      const data = await storage.get("kola.assigned-businesses");
+      if (data.businesses && !refresh) {
+        customerStore.totalCustomers = data.total
+        return data.businesses;
+      }
 
       return axios
         .get(`/v2/users/${user}/businesses`, { params })
@@ -402,7 +410,13 @@ export const useUserStore = defineStore("user", {
           const businesses = response.data.data.map(
             (el: any) => new Business(el.business)
           );
-
+          customerStore.totalCustomers = response.data.meta.total;
+          await storage.set(
+            "kola.assigned-businesses",
+            { businesses: businesses, total: response.data.meta.total },
+            1,
+            "days"
+          );
           return businesses;
         })
         .catch((error) => {

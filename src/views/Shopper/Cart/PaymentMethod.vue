@@ -7,7 +7,34 @@
 
     <!-- Main Content -->
     <ion-content>
-      <form>
+      <IonList lines="none" class="sales-select-list ion-padding-horizontal">
+        <IonListHeader>
+          <IonLabel class="fw-bold">{{
+            $t("vendor.sales.selectPaymentMethod")
+          }}</IonLabel>
+        </IonListHeader>
+
+        <IonItem
+          v-for="paymentMode in paymentModes"
+          :key="paymentMode.id"
+          @click="selectPaymentMethod(paymentMode)"
+        >
+          <IonLabel>
+            <p class="ion-no-margin">{{ paymentMode.name }}</p>
+            <IonText color="medium" class="font-medium">
+              {{ paymentMode.description }}
+            </IonText>
+          </IonLabel>
+          <IonCheckbox
+            :aria-label="paymentMode.name"
+            slot="end"
+            mode="ios"
+            :value="paymentMode.id"
+            :checked="form.fields?.payment_modes_id == paymentMode?.id"
+          ></IonCheckbox>
+        </IonItem>
+      </IonList>
+      <!-- <form>
         <ion-radio-group v-model="form.fields.payment_option_id">
           <section class="d-flex flex-column ion-margin-horizontal">
             <IonText class="fw-semibold">Pay Method</IonText>
@@ -19,11 +46,11 @@
             <SelectPaymentMethod />
           </section>
         </ion-radio-group>
-      </form>
+      </form> -->
     </ion-content>
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton @click="storePaymentOption"
-        >Make Payment</KolaYellowButton
+        >Proceed to checkout</KolaYellowButton
       >
     </IonFooter>
   </ion-page>
@@ -41,6 +68,7 @@ import {
   IonIcon,
   IonCardContent,
   IonContent,
+  IonListHeader,
   IonFooter,
   IonAvatar,
   IonList,
@@ -48,6 +76,7 @@ import {
   IonLabel,
   IonSearchbar,
   IonSkeletonText,
+  IonCheckbox,
   IonRow,
   IonCol,
   IonInput,
@@ -74,9 +103,9 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import NoResults from "../../../components/layout/NoResults.vue";
 import PaymentOptionsHeader from "@/components/header/PaymentOptionsHeader.vue";
 import { useCartStore } from "@/stores/CartStore";
+import { PaymentMode } from "@/models/PaymentMode";
 import PaymentMethodHeader from "@/components/header/PaymentMethodHeader.vue";
 import SelectPaymentMethod from "@/components/modules/PaymentMethod/SelectPaymentMethod.vue";
-
 
 export default defineComponent({
   components: {
@@ -97,6 +126,7 @@ export default defineComponent({
     Swiper,
     SwiperSlide,
     IonAvatar,
+    IonListHeader,
     IonList,
     IonItem,
     IonLabel,
@@ -104,6 +134,7 @@ export default defineComponent({
     IonSkeletonText,
     IonRow,
     IonCol,
+    IonCheckbox,
     NoResults,
     IonInput,
     IonCardHeader,
@@ -117,18 +148,37 @@ export default defineComponent({
     PaymentMethodHeader,
   },
 
-  
   data() {
     return {
       showPayDropdown: false,
       form: {
         fields: {
-          payment_option_id: "1",
+          payment_modes_id: 1,
         },
       },
+      paymentModes: [
+        new PaymentMode({
+          id: 1,
+          name: this.$t("vendor.sales.cash"),
+          description: "Pay cash on delivery",
+        }),
+        new PaymentMode({
+          id: 2,
+          name: this.$t("vendor.sales.mobileMoney"),
+          description: "Pay cash on delivery",
+        }),
+        new PaymentMode({
+          id: 3,
+          name: this.$t("vendor.sales.cheque"),
+          description: "Pay cash on delivery",
+        }),
+      ],
     };
   },
   methods: {
+    selectPaymentMethod(paymentMode: PaymentMode) {
+      this.form.fields.payment_modes_id = paymentMode.id as number;
+    },
     storePaymentOption() {
       const cartStore = useCartStore();
       const order = cartStore.orders.find(
@@ -136,15 +186,14 @@ export default defineComponent({
       );
 
       if (order) {
-        order.payment_option_id = +this.form.fields.payment_option_id;
+        order.payment_modes_id = +this.form.fields.payment_modes_id;
       }
 
       cartStore.persist();
       this.$router.push(
-        `/shopper/cart/business/${this.$route.params.id}/delivery-details`
+        `/shopper/cart/business/${this.$route.params.id}/item-review`
       );
     },
-
   },
 
   mounted() {
@@ -158,11 +207,11 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .new-card {
-  color: #666EED !important;
-font-size: 14px;
-font-style: normal;
-font-weight: 500;
-line-height: normal;
+  color: #666eed !important;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
 }
 
 .ion-margin-bottom {

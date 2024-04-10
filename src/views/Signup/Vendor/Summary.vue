@@ -134,11 +134,26 @@ export default defineComponent({
   methods: {
     onContinue() {
       if (this.userStore.appMode !== "guest") {
+        this.businessStore.cacheRegistrationInfo();
         this.$router.push("/profile/company/business-info");
         return;
       }
       this.$router.push("/signup/vendor/personal-info");
     },
+    autoFillDetails() {
+      Object.assign(
+        this.businessStore.registration,
+        { ...this.userStore.activeBusiness, country_id: 83, region_id: 54 },
+        { attributes: this.businessStore.registration.attributes },
+        { socials: this.businessStore.registration.socials },
+        { user: this.businessStore.registration.user }
+      );
+    },
+  },
+  mounted() {
+    if (this.userStore.appMode !== "guest") {
+      this.autoFillDetails();
+    }
   },
 });
 </script>

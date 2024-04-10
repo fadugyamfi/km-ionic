@@ -167,9 +167,9 @@ export default defineComponent({
   },
 
   ionViewDidEnter() {
-    if( this.orderStore.orders?.length == 0 ) {
+    // if( this.orderStore.orders?.length == 0 ) {
       this.onSegmentChanged(new CustomEvent('load', { detail: { value: 'thisweek' } }));
-    }
+    // }
 
     if (this.orderStore.editing && this.orderStore.editedOrder) {
       this.$router.push(

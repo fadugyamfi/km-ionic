@@ -210,7 +210,8 @@ export default defineComponent({
       if (this.userStore.user?.isSaleAgent()) {
         this.customers = await userStore.fetchAssignedBusinesses(
           userStore.user?.id,
-          options
+          options,
+          this.refreshing
         );
       } else {
         this.customers = await businessStore.getBusinessCustomers(
