@@ -45,6 +45,7 @@
       </header>
 
       <main>
+
         <section class="section title-section d-flex ion-align-items-start">
           <span class="product-name">
             {{ product?.product_name }}
@@ -98,7 +99,14 @@
           </IonText>
         </section>
 
-        <section class="section business-section">
+        <section v-if="product?.product_description" class="section description-section">
+          <IonText color="medium">
+            {{ product.product_description || "No Description Available" }}
+          </IonText>
+        </section>
+
+
+        <section class="section business-section ion-margin-top">
           <section class="d-flex ion-align-items-center">
             <ProfileAvatar
               :image="product?.business?.logo"
@@ -112,12 +120,6 @@
           <!-- <BusinessRatingAndReviews
             :business="product?.business"
           ></BusinessRatingAndReviews> -->
-        </section>
-
-        <section class="section description-section">
-          <IonText color="medium">{{
-            product?.product_description || "No Description Available"
-          }}</IonText>
         </section>
 
         <section class="section min-order-section">
@@ -342,12 +344,12 @@ main {
   border-radius: 10px;
   background-color: white;
   margin-top: 15px;
-  padding: 10px;
+  padding: 10px 0px;
   color: #111;
 
   .section {
     padding: 4px 5px;
-    font-size: 0.8em;
+    font-size: 0.95em;
   }
   .title-section {
     font-weight: 500;

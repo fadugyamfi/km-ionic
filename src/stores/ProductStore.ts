@@ -38,7 +38,7 @@ export const useProductStore = defineStore("product", {
       return this.searchTerm;
     },
 
-    async fetchSearchedProducts(limit = 5): Promise<Product[]> {
+    async fetchSearchedProducts(limit = 20): Promise<Product[]> {
       const userStore = useUserStore();
       const params = {
         product_name_has: await this.getSearchTerm(),

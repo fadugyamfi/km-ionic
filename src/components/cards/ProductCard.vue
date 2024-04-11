@@ -340,7 +340,7 @@ export default defineComponent({
       .pricing {
         font-size: 1em;
         font-weight: 600;
-        color: #333;
+        color: #265da5;
       }
       .product-weight {
         font-weight: 400;
