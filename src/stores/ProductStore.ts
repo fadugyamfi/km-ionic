@@ -27,6 +27,7 @@ export const useProductStore = defineStore("product", {
   actions: {
     async setSearchTerm(term: string) {
       this.searchTerm = term;
+      this.nextLink = null; // reset
       storage.set(SEARCH_TERM, this.searchTerm, 1, "day");
     },
 
