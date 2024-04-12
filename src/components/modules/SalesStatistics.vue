@@ -10,12 +10,22 @@
         </IonCardContent>
       </IonCard>
     </IonCol>
-    <IonCol size="6">
+    <IonCol size="6" v-if="!showTotalOrderValue">
       <IonCard class="ion-no-margin">
         <IonCardContent class="d-flex flex-column">
           <IonText color="medium">{{ $t("general.avgSalesValue") }}</IonText>
           <IonText color="dark" class="fw-semibold">
             {{ Filters.currency(avgSales as number) }}
+          </IonText>
+        </IonCardContent>
+      </IonCard>
+    </IonCol>
+    <IonCol size="6" v-else>
+      <IonCard class="ion-no-margin">
+        <IonCardContent class="d-flex flex-column">
+          <IonText color="medium">{{ $t("general.totalOrderValue") }}</IonText>
+          <IonText color="dark" class="fw-semibold">
+            {{ Filters.currency(totalOrderValue as number) }}
           </IonText>
         </IonCardContent>
       </IonCard>
@@ -44,6 +54,14 @@ export default defineComponent({
     avgSales: {
       type: [Number, String],
       default: 0,
+    },
+    totalOrderValue: {
+      type: [Number, String],
+      default: 0,
+    },
+    showTotalOrderValue: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
