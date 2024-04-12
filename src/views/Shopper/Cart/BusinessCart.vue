@@ -90,7 +90,6 @@
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton
         v-if="orderBusiness?.order_items?.length > 0"
-        :disabled="!minOrderAmountReached"
         @click="viewDeliveryDetails()"
       >
         {{ $t("shopper.cart.proceedToCheckout") }}
