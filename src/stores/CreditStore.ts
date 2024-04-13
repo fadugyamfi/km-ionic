@@ -12,6 +12,7 @@ export const useCreditStore = defineStore("credit", {
   state: () => {
     return {
       credits: [] as Credit[] | null,
+      credit: {} as Credit | null,
       creditSummary: {},
       recordedRepayments: [] as SalePayment[] | null,
     };
@@ -62,7 +63,7 @@ export const useCreditStore = defineStore("credit", {
       }
     },
     async deleteCredit(id: string | number) {
-      if( !this.credits ) {
+      if (!this.credits) {
         return;
       }
 

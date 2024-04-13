@@ -29,8 +29,7 @@
               <p class="font-medium">
                 <IonText
                   color="medium"
-                  class="d-flex ion-align-items-center"
-                  style="gap: 5px"
+                  style="gap: 5px;"
                 >
                   <ion-icon :icon="locationOutline"></ion-icon>
                   {{ credit?.order?.delivery_location || "Unknown" }}</IonText
