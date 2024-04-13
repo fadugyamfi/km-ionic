@@ -31,7 +31,10 @@
 
     <ion-content class="ion-padding-horizontal">
       <section class="ion-margin-top">
-        <BusinessMinimumOrderReached :business="order?.business" :totalCost="totalCost"></BusinessMinimumOrderReached>
+        <BusinessMinimumOrderReached
+          :business="order?.business"
+          :totalCost="totalCost"
+        ></BusinessMinimumOrderReached>
       </section>
       <EmptyCart v-if="orderBusiness?.order_items?.length < 1"></EmptyCart>
 
@@ -89,6 +92,7 @@
 
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton
+        :disabled="!minOrderAmountReached"
         v-if="orderBusiness?.order_items?.length > 0"
         @click="viewDeliveryDetails()"
       >

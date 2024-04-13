@@ -186,7 +186,6 @@ export default defineComponent({
         });
 
         const response = await this.saleStore.recordRepayment(payment);
-        console.log(response, "Hello");
 
         if (response) {
           await this.cartStore.checkout({
@@ -194,20 +193,17 @@ export default defineComponent({
             sale: { id: response.sales_id },
             total_order_amount: response.total_sales_price,
           });
+          if (userStore?.isInShoppingMode()) {
+            this.$router.push(
+              `/shopper/credits/${this.$route.params.id}/credit-details`
+            );
+          } else {
+            this.$router.push(
+              `/vendor/credits/${this.$route.params.id}/credit-details`
+            );
+          }
           toastStore.showSuccess(
             this.$t("vendor.sales.paymentRecordedSuccessfully")
-          );
-          this.$router.push(
-            `/vendor/credits/${this.$route.params.id}/credit-details`
-          );
-          toastStore.unblockUI();
-        } else {
-          toastStore.unblockUI();
-          toastStore.showError(
-            "Failed to place make payment. Please try again",
-            "",
-            "bottom",
-            "footer"
           );
         }
       } catch (error) {
@@ -216,7 +212,6 @@ export default defineComponent({
         console.log(error);
       } finally {
         toastStore.unblockUI();
-
         this.processing = false;
       }
     },
