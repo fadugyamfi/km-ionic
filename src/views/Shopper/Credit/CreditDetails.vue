@@ -33,7 +33,7 @@
         <section>
           <PlacedCreditDetails :credit="credit"></PlacedCreditDetails>
           <section class="ion-padding-horizontal update-button-section">
-            <KolaYellowButton @click="makePayment" disabled>
+            <KolaYellowButton v-if="isOwing" @click="makePayment">
               {{ "Pay credit due" }}
             </KolaYellowButton>
             <p class="font-medium d-flex flex-column">
@@ -153,6 +153,13 @@ export default defineComponent({
 
   computed: {
     ...mapStores(useCreditStore),
+    isOwing() {
+      if (this.credit) {
+        return (
+          this.credit.sale_payments_sum_amount < this.credit.total_sales_price
+        );
+      }
+    },
   },
 
   methods: {
@@ -181,7 +188,9 @@ export default defineComponent({
         this.loading = false;
       }
     },
+
     makePayment() {
+      this.creditStore.credit = this.credit;
       this.$router.push(`/shopper/credits/${this.credit?.id}/payment`);
     },
   },

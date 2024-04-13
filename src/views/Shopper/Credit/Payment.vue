@@ -41,7 +41,6 @@
                 </p>
               </div>
             </IonLabel>
-            <!--  -->
             <IonCheckbox
               :aria-label="paymentMode.name"
               slot="end"
@@ -97,6 +96,8 @@ import { SalePayment } from "@/models/SalePayment";
 import { useUserStore } from "@/stores/UserStore";
 import { handleAxiosRequestError } from "@/utilities";
 import { useToastStore } from "@/stores/ToastStore";
+import { useCartStore } from "@/stores/CartStore";
+import { useCreditStore } from "@/stores/CreditStore";
 import Image from "@/components/Image.vue";
 
 export default defineComponent({
@@ -106,27 +107,27 @@ export default defineComponent({
       optionsOutline,
       processing: false,
       paymentModes: [
-        new PaymentMode({
-          id: 1,
-          name: this.$t("vendor.sales.cash"),
-          description: "Pay credit with cash",
-          icon: "/images/cash.svg",
-        }),
+        // new PaymentMode({
+        //   id: 1,
+        //   name: this.$t("vendor.sales.cash"),
+        //   description: "Pay credit with cash",
+        //   icon: "/images/cash.svg",
+        // }),
         new PaymentMode({
           id: 2,
           name: this.$t("vendor.sales.mobileMoney"),
           description: "Pay With Mobile Money",
           icon: "/images/momo.svg",
         }),
-        new PaymentMode({
-          id: 3,
-          name: this.$t("vendor.sales.bankTransfer"),
-          description: "***********2343",
-          icon: "/images/bank_transfer.svg",
-        }),
+        // new PaymentMode({
+        //   id: 3,
+        //   name: this.$t("vendor.sales.bankTransfer"),
+        //   description: "***********2343",
+        //   icon: "/images/bank_transfer.svg",
+        // }),
       ],
       form: useForm({
-        payment_modes_id: 1,
+        payment_modes_id: 2,
         currencies_id: 1,
       }),
     };
@@ -156,7 +157,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useSaleStore),
+    ...mapStores(useSaleStore, useCartStore, useCreditStore),
   },
 
   methods: {
@@ -169,36 +170,50 @@ export default defineComponent({
     },
 
     async addPayment() {
-    //   const toastStore = useToastStore();
-    //   this.processing = true;
+      const toastStore = useToastStore();
+      this.processing = true;
 
-    //   try {
-    //     const userStore = useUserStore();
+      try {
+        toastStore.blockUI("Hold On As We Make Your Payment ");
+        const userStore = useUserStore();
 
-    //     const payment = new SalePayment({
-    //       cms_users_id: userStore.user?.id,
-    //       sales_id: +this.$route.params.id,
-    //       businesses_id: userStore.activeBusiness?.id,
-    //       ...this.form.fields,
-    //     });
+        const payment = new SalePayment({
+          cms_users_id: userStore.user?.id,
+          sales_id: +this.$route.params.id,
+          businesses_id: userStore.activeBusiness?.id,
+          total_sales_price: this.creditStore.credit?.total_sales_price,
+          ...this.form.fields,
+        });
 
-    //     const response = await this.saleStore.recordRepayment(payment);
+        const response = await this.saleStore.recordRepayment(payment);
 
-    //     if (response) {
-    //       toastStore.showSuccess(
-    //         this.$t("vendor.sales.paymentRecordedSuccessfully")
-    //       );
-    //       this.$router.push(
-    //         `/vendor/credits/${this.$route.params.id}/credit-details`
-    //       );
-    //     }
-    //   } catch (error) {
-    //     toastStore.showError(this.$t("vendor.sales.paymentRecordingFailed"));
-    //     handleAxiosRequestError(error);
-    //     console.log(error);
-    //   } finally {
-    //     this.processing = false;
-    //   }
+        if (response) {
+          await this.cartStore.checkout({
+            ...response,
+            sale: { id: response.sales_id },
+            total_order_amount: response.total_sales_price,
+          });
+          if (userStore?.isInShoppingMode()) {
+            this.$router.push(
+              `/shopper/credits/${this.$route.params.id}/credit-details`
+            );
+          } else {
+            this.$router.push(
+              `/vendor/credits/${this.$route.params.id}/credit-details`
+            );
+          }
+          toastStore.showSuccess(
+            this.$t("vendor.sales.paymentRecordedSuccessfully")
+          );
+        }
+      } catch (error) {
+        toastStore.showError(this.$t("vendor.sales.paymentRecordingFailed"));
+        handleAxiosRequestError(error);
+        console.log(error);
+      } finally {
+        toastStore.unblockUI();
+        this.processing = false;
+      }
     },
   },
 });
