@@ -43,6 +43,17 @@ import { createI18n } from "vue-i18n";
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
 import { RecycleScroller } from "vue-virtual-scroller";
 import VueGtag from "vue-gtag";
+import { Capacitor } from "@capacitor/core";
+
+// initialize clarity
+var success = function (message: string) {};
+var failure = function (message: string) {};
+
+declare let ClarityPlugin: any;
+
+if (Capacitor.getPlatform() === "android") {
+  ClarityPlugin.initialize("lnbp07y1u3", success, failure, { isIonic: true });
+}
 
 // Above the createApp() line
 defineCustomElements(window);
