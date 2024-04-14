@@ -71,13 +71,17 @@ export const useProductStore = defineStore("product", {
       return this.fetchProducts(params);
     },
 
-    async fetchProducts(options = {}): Promise<Product[]> {
+    async fetchProducts(options = {} as any): Promise<Product[]> {
       const params = {
         ...options,
       };
 
       try {
-        if (this.products.length && !this.nextLink) {
+        if (params?.refresh) {
+          this.nextLink = null;
+          this.products = [];
+        }
+        if (this.products.length && !this.nextLink && !params?.refresh) {
           return this.products;
         }
         const link = this.nextLink || "/v2/products";
