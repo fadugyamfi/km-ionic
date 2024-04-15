@@ -46,6 +46,7 @@ export class Order {
   public order_ended_at?: string;
   public total_items?: string | number;
   public uuid?: string;
+  public order_type_id?: number | string;
 
   public created_at: any;
   public order_status: any;

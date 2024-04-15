@@ -245,7 +245,9 @@ export default defineComponent({
       if (this.userStore.user?.isSalesAssociate()) {
         this.$router.push("/agent/orders/place-order/select-products");
       } else {
-        this.$router.push("/vendor/orders/record-order/select-products");
+        this.$router.push("/vendor/orders/record-order/select-order-type");
+        // this.$router.push("/vendor/orders/record-order/select-products");
+
       }
     },
 
