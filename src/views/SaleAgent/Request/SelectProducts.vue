@@ -70,7 +70,7 @@
           class="scroller"
           :items="products"
           :grid-items="2"
-          :item-size="210"
+          :item-size="280"
           :item-secondary-size="cardWidth"
           :item-class="'product-card-item'"
           key-field="id"
