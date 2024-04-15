@@ -399,7 +399,7 @@ export const useUserStore = defineStore("user", {
       };
       const customerStore = useCustomerStore();
       const data = await storage.get("kola.assigned-businesses");
-      if (data.businesses && !refresh) {
+      if (data?.businesses && !refresh) {
         customerStore.totalCustomers = data.total
         return data.businesses;
       }
