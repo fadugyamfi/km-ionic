@@ -146,9 +146,8 @@ export default defineComponent({
       }
 
       if (this.userStore.user?.isSalesAssociate()) {
-        this.$router.push("/agent/sales/add-sale/select-payment-mode");
+        this.$router.push("/agent/orders/place-order/select-products");
       } else {
-        // this.$router.push("/vendor/sales/add-sale/select-payment-mode");
         this.$router.push("/vendor/orders/record-order/select-products");
       }
     },
