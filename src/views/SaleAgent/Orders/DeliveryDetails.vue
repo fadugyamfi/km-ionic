@@ -118,7 +118,7 @@ import { useRouter } from "vue-router";
 import { useRoute } from "vue-router";
 import { onMounted, computed } from "vue";
 import { Order } from "@/models/Order";
-import { formatDateTimeForInput, handleAxiosRequestError } from "@/utilities";
+import { formatMySQLDateTime,formatDateTimeForInput, handleAxiosRequestError } from "@/utilities";
 import { useOrderStore } from "@/stores/OrderStore";
 import { useUserStore } from "@/stores/UserStore";
 
@@ -131,7 +131,7 @@ const form = useForm({
   delivery_date: "",
   delivery_method: "",
   payment_option_id: "2",
-  ordered_at: formatDateTimeForInput(new Date().toLocaleString()),
+  ordered_at: "",
 });
 
 const selectDeliveryMethod = (method: string) => {
@@ -201,7 +201,7 @@ onIonViewDidEnter(async () => {
   // await orderStore.loadFromStorage();
   Object.assign(form.fields, {
     ...orderStore.newOrder,
-    ordered_at: formatDateTimeForInput(new Date().toLocaleString()),
+    ordered_at: formatMySQLDateTime(new Date().toISOString()),
   });
   // Set the delivery method here based on your requirement
   // For example, setting it to 'standard' when the component is mounted
