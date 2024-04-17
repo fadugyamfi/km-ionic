@@ -83,9 +83,11 @@ const onSearch = async (event: any) => {
 
 onMounted(async () => {
   fetching.value = true;
-  business.value = await businessStore.getBusiness(+route.params.id);
+  business.value = await businessStore.getGuestBusiness(+route.params.id);
   products.value = await businessStore.getBusinessProducts(
-    business.value as Business
+    business.value as Business,
+    50,
+    "/v2/guest/products"
   );
   fetching.value = false;
 });

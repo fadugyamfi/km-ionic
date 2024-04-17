@@ -31,6 +31,8 @@
         </section>
       </section>
 
+      <ShareProfileButton />
+      
       <section class="intro-point">
         <span class="icon">
           <IonImg src="/images/vendor/phone-outgoing.svg"></IonImg>
@@ -70,6 +72,8 @@ import {
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import InviteCustomerButton from "@/components/buttons/InviteCustomerButton.vue";
+import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
+import ShareProfileButton from "@/components/buttons/ShareProfileButton.vue";
 export default defineComponent({
   data() {
     return {};
@@ -85,6 +89,8 @@ export default defineComponent({
     IonImg,
     IonButton,
     InviteCustomerButton,
+    KolaWhiteButton,
+    ShareProfileButton,
   },
   methods: {
     openWhatsAppChat() {
@@ -147,7 +153,6 @@ ion-card ion-card-content {
   --border-radius: 8px;
   margin-bottom: 3em;
 }
-
 .intro-btn.warning {
   --background: #f5aa29;
   --color: #101828;
