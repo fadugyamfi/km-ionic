@@ -48,7 +48,7 @@ const share = async () => {
   --background: #fff;
   --color: #101828;
   --box-shadow: none;
-  --border: 0.5px;
+  --border-width: 1px;
   --border-style: solid;
   --border-radius: 8px;
   margin-bottom: 3em;
