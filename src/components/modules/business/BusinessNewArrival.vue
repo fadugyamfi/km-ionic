@@ -5,7 +5,7 @@
 
       <IonText
         color="primary"
-        :router-link="`/shopper/home/businesses/${$route.params.id}/products`"
+        :router-link="`/${mode}/home/businesses/${$route.params.id}/products`"
       >
         {{ $t("shopper.home.showAll") }}
       </IonText>

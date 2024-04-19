@@ -9,7 +9,7 @@ export const VendorHomeRoutes = [
     component: () => import("@/views/Vendor/Businesses/BusinessDetails.vue"),
   },
   {
-    path: "home/business/:id/products",
+    path: "home/businesses/:id/products",
     component: () => import("@/views/Shopper/Businesses/BusinessProducts.vue"),
   },
 ];

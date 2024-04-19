@@ -34,7 +34,11 @@
       <IonGrid v-if="!fetching">
         <IonRow>
           <IonCol size="6" v-for="product in products" :key="product.id">
-            <ProductCard :product="product"></ProductCard>
+            <ProductCard
+              :show-add-to-cart="!isVendorMode"
+              :show-add-to-favorites="!isVendorMode"
+              :product="product"
+            ></ProductCard>
           </IonCol>
         </IonRow>
       </IonGrid>
@@ -60,16 +64,20 @@ import {
 import NotificationButton from "@/components/notifications/NotificationButton.vue";
 import Business from "@/models/Business";
 import Product from "@/models/Product";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { useUserStore } from "@/stores/UserStore";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import { useRoute } from "vue-router";
 import ProductCard from "@/components/cards/ProductCard.vue";
 
 const businessStore = useBusinessStore();
+const userStore = useUserStore();
 const route = useRoute();
 const business = ref<Business | null>();
 const products = ref<Product[]>([]);
 const fetching = ref(false);
+
+const isVendorMode = computed(() => userStore.appMode == "vendor");
 
 const onSearch = async (event: any) => {
   fetching.value = true;
