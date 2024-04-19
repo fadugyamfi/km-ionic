@@ -1,10 +1,11 @@
 <template>
   <IonButton
-    expand="block"
-    class="intro-btn white ion-margin-bottom"
+    class="kola-white-button"
+    type="button"
+    fill="clear"
     @click="share"
   >
-    {{ $t("vendor.home.shareYourProfile") }}
+    {{ $t("vendor.home.share") }}
   </IonButton>
 </template>
 <script setup lang="ts">
@@ -39,18 +40,20 @@ const share = async () => {
 };
 </script>
 <style lang="scss" scoped>
-.intro-btn {
-  text-transform: none;
-  font-weight: 500;
-  font-size: 0.85em;
-}
-.intro-btn.white {
-  --background: #fff;
+ion-button {
+  --background: #fff !important;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  --padding-start: 16px !important;
+  --padding-end: 16px !important;
   --color: #101828;
-  --box-shadow: none;
-  --border-width: 1px;
   --border-style: solid;
-  --border-radius: 8px;
-  margin-bottom: 3em;
+  --border-color: #101828;
+  --border-width: 1px;
+  --border-radius: 0.8em;
+  --box-shadow: none;
+  text-transform: none;
+  font-weight: 600;
+  font-size: 0.75em;
 }
 </style>
