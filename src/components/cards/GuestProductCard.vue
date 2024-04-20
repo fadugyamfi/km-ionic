@@ -44,30 +44,30 @@
           </p>
         </section>
 
-        <section class="pricing d-flex ion-align-items-center ion-justify-content-between">
+        <section
+          class="pricing d-flex ion-align-items-center ion-justify-content-between"
+        >
           <aside class="d-flex flex-column">
-            <section
-            v-if="product?.is_on_sale && product.sale_price > 0"
-          >
-            <span style="margin-right: 5px">
-              <s>
+            <section v-if="product?.is_on_sale && product.sale_price > 0">
+              <span style="margin-right: 5px">
+                <s>
+                  {{
+                    Filters.currency(
+                      Number(product?.product_price),
+                      String(product?.currency?.symbol || "GHS")
+                    )
+                  }}
+                </s>
+              </span>
+
+              <IonText class="fw-medium" color="danger">
                 {{
                   Filters.currency(
-                    Number(product?.product_price),
+                    Number(product?.sale_price),
                     String(product?.currency?.symbol || "GHS")
                   )
                 }}
-              </s>
-            </span>
-
-            <IonText class="fw-medium" color="danger">
-              {{
-                Filters.currency(
-                  Number(product?.sale_price),
-                  String(product?.currency?.symbol || "GHS")
-                )
-              }}
-            </IonText>
+              </IonText>
             </section>
             <section v-else>
               {{
@@ -91,7 +91,6 @@
             </section>
           </aside>
 
-
           <IonButton
             v-if="showAddToCart"
             fill="clear"
@@ -105,7 +104,6 @@
               :icon="addCircleOutline"
             ></IonIcon>
           </IonButton>
-
         </section>
 
         <section

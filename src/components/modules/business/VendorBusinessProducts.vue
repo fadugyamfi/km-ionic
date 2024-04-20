@@ -1,30 +1,34 @@
 <template>
   <section class="shopper-home-section ion-padding-top">
-    <header class="d-flex ion-justify-content-between ion-align-items-center ion-padding-bottom">
-      <h6>{{ $t("shopper.home.newArrivals") }}</h6>
+    <header
+      class="d-flex ion-justify-content-between ion-align-items-center ion-padding-bottom"
+    >
+      <h6>Products</h6>
 
-      <!-- <IonText
+      <IonText
         color="primary"
         :router-link="`/${mode}/home/businesses/${$route.params.id}/products`"
       >
         {{ $t("shopper.home.showAll") }}
-      </IonText> -->
+      </IonText>
     </header>
 
     <p v-if="fetching" class="ion-text-center">
       <IonSpinner name="crescent"></IonSpinner>
     </p>
 
-    <Swiper v-if="!fetching" :slides-per-view="2">
-      <SwiperSlide v-for="product of products" :key="product.id">
-        <ProductCard
-          :product="product"
-          :show-description="false"
-          :show-add-to-cart="mode == 'shopper'"
-          :show-add-to-favorites="mode == 'shopper'"
-        ></ProductCard>
-      </SwiperSlide>
-    </Swiper>
+    <IonGrid v-if="!fetching">
+      <IonRow>
+        <IonCol size="6" v-for="product in products" :key="product.id">
+          <ProductCard
+            :product="product"
+            :show-description="false"
+            :show-add-to-cart="mode == 'shopper'"
+            :show-add-to-favorites="mode == 'shopper'"
+          ></ProductCard>
+        </IonCol>
+      </IonRow>
+    </IonGrid>
   </section>
 </template>
 
@@ -33,8 +37,7 @@ import { PropType, defineComponent } from "vue";
 import Product from "@/models/Product";
 import { useProductStore } from "@/stores/ProductStore";
 import { mapStores } from "pinia";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import { IonSpinner, IonText } from "@ionic/vue";
+import { IonSpinner, IonText, IonGrid, IonCol, IonRow } from "@ionic/vue";
 import ProductCard from "@/components/cards/ProductCard.vue";
 import Business from "@/models/Business";
 
@@ -56,7 +59,14 @@ export default defineComponent({
     };
   },
 
-  components: { Swiper, SwiperSlide, IonText, ProductCard, IonSpinner },
+  components: {
+    IonText,
+    ProductCard,
+    IonSpinner,
+    IonGrid,
+    IonCol,
+    IonRow,
+  },
 
   computed: {
     ...mapStores(useProductStore),
@@ -67,23 +77,18 @@ export default defineComponent({
       this.$router.push(`/shopper/home/products/${product.id}`);
     },
 
-    async fetchNewArrivals() {
+    async fetchNewProducts() {
       this.fetching = true;
       this.products = await this.productStore.fetchProducts({
         businesses_id: this.business?.id,
-        limit: 6,
-        sort: "latest",
+        limit: 10,
       });
       this.fetching = false;
     },
   },
 
-  watch: {
-    business: function (newBusiness, oldBusiness) {
-      if (newBusiness) {
-        this.fetchNewArrivals();
-      }
-    },
-  },
+  mounted(){
+    this.fetchNewProducts();
+  }
 });
 </script>
