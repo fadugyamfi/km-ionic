@@ -243,9 +243,13 @@ export default defineComponent({
       }
       this.orderStore.persist();
       if (this.userStore.user?.isSalesAssociate()) {
-        this.$router.push("/agent/orders/place-order/select-products");
+        // this.$router.push("/agent/orders/place-order/select-products");
+        this.$router.push("/agent/orders/place-order/select-order-type");
+
       } else {
-        this.$router.push("/vendor/orders/record-order/select-products");
+        this.$router.push("/vendor/orders/record-order/select-order-type");
+        // this.$router.push("/vendor/orders/record-order/select-products");
+
       }
     },
 
