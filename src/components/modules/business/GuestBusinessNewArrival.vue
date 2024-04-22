@@ -1,7 +1,7 @@
 <template>
     <section class="shopper-home-section ion-padding-top">
         <header class="d-flex ion-justify-content-between ion-align-items-center ion-padding-bottom">
-            <h6>{{ $t("shopper.home.newArrivals") }}</h6>
+            <h6 class="ion-no-margin">{{ $t("shopper.home.newArrivals") }}</h6>
 
             <!-- <IonText color="primary" :router-link="`/guest/home/businesses/${$route.params.id}/products`">
                 {{ $t("shopper.home.showAll") }}

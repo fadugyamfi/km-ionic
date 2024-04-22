@@ -19,7 +19,6 @@
           class="search-input"
           placeholder="Search..."
           @keyup.enter="onSearch($event)"
-          @ion-change="onSearch($event)"
         ></IonSearchbar>
       </IonToolbar>
     </section>
@@ -74,9 +73,10 @@ const fetching = ref(false);
 const onSearch = async (event: any) => {
   fetching.value = true;
   businessStore.searchQuery = event.target?.value;
-  // stocks.value = [];
   products.value = await businessStore.getBusinessProducts(
-    business.value as Business
+    business.value as Business,
+    50,
+    "/v2/guest/products"
   );
   fetching.value = false;
 };

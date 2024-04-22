@@ -19,7 +19,6 @@
           class="search-input"
           placeholder="Search..."
           @keyup.enter="onSearch($event)"
-          @ion-change="onSearch($event)"
         ></IonSearchbar>
       </IonToolbar>
     </section>
@@ -38,6 +37,7 @@
               :show-add-to-cart="!isVendorMode"
               :show-add-to-favorites="!isVendorMode"
               :product="product"
+              :action="isVendorMode ? 'return' : 'viewProduct'"
             ></ProductCard>
           </IonCol>
         </IonRow>
@@ -82,7 +82,6 @@ const isVendorMode = computed(() => userStore.appMode == "vendor");
 const onSearch = async (event: any) => {
   fetching.value = true;
   businessStore.searchQuery = event.target?.value;
-  // stocks.value = [];
   products.value = await businessStore.getBusinessProducts(
     business.value as Business
   );

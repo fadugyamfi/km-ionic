@@ -1,9 +1,9 @@
 <template>
-  <section class="shopper-home-section ion-padding-top">
+  <section class="ion-padding-top">
     <header
       class="d-flex ion-justify-content-between ion-align-items-center ion-padding-bottom"
     >
-      <h6>Products</h6>
+      <h6 class="ion-no-margin">Products</h6>
 
       <IonText
         color="primary"
@@ -24,6 +24,7 @@
             :show-description="false"
             :show-add-to-cart="mode == 'shopper'"
             :show-add-to-favorites="mode == 'shopper'"
+            :action="mode == 'vendor' ? 'return' : 'viewProduct'"
           ></ProductCard>
         </IonCol>
       </IonRow>
@@ -89,3 +90,9 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="scss" scoped>
+  ion-grid {
+    padding: 0px;
+
+  }
+</style>

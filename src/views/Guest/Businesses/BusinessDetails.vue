@@ -57,7 +57,7 @@
           ></GuestBusinessNewArrival>
         </section>
         <section class="section arrival-section">
-          <GuestBusinessProducts :business="business"></GuestBusinessProducts>
+          <GuestBusinessProducts></GuestBusinessProducts>
         </section>
       </main>
     </ion-content>

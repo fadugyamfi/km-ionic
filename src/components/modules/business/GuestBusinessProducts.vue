@@ -3,7 +3,7 @@
     <header
       class="d-flex ion-justify-content-between ion-align-items-center ion-padding-bottom"
     >
-      <h6>Products</h6>
+      <h6 class="ion-no-margin">Products</h6>
 
       <IonText
         color="primary"
@@ -41,11 +41,6 @@ import GuestProductCard from "@/components/cards/GuestProductCard.vue";
 import Business from "@/models/Business";
 
 export default defineComponent({
-  props: {
-    business: {
-      type: Object as PropType<Business | null>,
-    },
-  },
 
   data() {
     return {
@@ -68,10 +63,6 @@ export default defineComponent({
   },
 
   methods: {
-    viewProduct(product: Product) {
-      this.$router.push(`/shopper/home/products/${product.id}`);
-    },
-
     async fetchGuestBusinessProducts() {
       this.fetching = true;
       this.products = await this.businessStore.getBusinessProducts(

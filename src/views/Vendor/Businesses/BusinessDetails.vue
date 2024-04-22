@@ -58,9 +58,9 @@
           ></BusinessNewArrival>
         </section>
         <section class="section arrival-section">
-          <VendorBusinessProducts
+          <BusinessInventory
             mode="vendor"
-          ></VendorBusinessProducts>
+          ></BusinessInventory>
         </section>
       </main>
     </ion-content>
@@ -86,7 +86,7 @@ import BusinessLocation from "@/components/modules/business/BusinessLocation.vue
 import BusinessDeliveryTime from "@/components/modules/business/BusinessDeliveryTime.vue";
 import BusinessTags from "@/components/modules/business/BusinessTags.vue";
 import BusinessNewArrival from "@/components/modules/business/BusinessNewArrival.vue";
-import VendorBusinessProducts from "@/components/modules/business/VendorBusinessProducts.vue";
+import BusinessInventory from "@/components/modules/business/BusinessInventory.vue";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import Business from "@/models/Business";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -123,7 +123,7 @@ export default defineComponent({
     BusinessTags,
     BusinessDeliveryTime,
     BusinessNewArrival,
-    VendorBusinessProducts,
+    BusinessInventory,
     Swiper,
     SwiperSlide,
     ProductCard,

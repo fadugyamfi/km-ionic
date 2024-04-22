@@ -8,7 +8,6 @@
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
             {{ business?.name }}
-
           </IonTitle>
 
           <IonButtons slot="end">
@@ -21,14 +20,19 @@
       <section class="banner">
         <img :src="defaultBanner" @error="onLoadError" />
         <aside>
-          <ProfileAvatar :image="business?.logo"
-                           :username="business?.name"
-                           customSize="90px"
-                           font-size="40px" textColor="#111" ></ProfileAvatar>
+          <ProfileAvatar
+            :image="business?.logo"
+            :username="business?.name"
+            customSize="90px"
+            font-size="40px"
+            textColor="#111"
+          ></ProfileAvatar>
         </aside>
       </section>
       <main>
-        <section class="section title-section d-flex ion-align-items-center ion-justify-content-between">
+        <section
+          class="section title-section d-flex ion-align-items-center ion-justify-content-between"
+        >
           <span class="product-name"> {{ business?.name }} </span>
           <FollowButton :business="business"></FollowButton>
         </section>
@@ -36,7 +40,7 @@
           <BusinessRatingAndReviews :business="business"></BusinessRatingAndReviews>
         </section> -->
         <section class="section">
-          <BusinessLocation :business=business></BusinessLocation>
+          <BusinessLocation :business="business"></BusinessLocation>
         </section>
         <section class="section">
           <BusinessMinimumOrder :business="business"></BusinessMinimumOrder>
@@ -50,37 +54,49 @@
         <section class="section arrival-section">
           <BusinessNewArrival :business="business"></BusinessNewArrival>
         </section>
+        <section class="section arrival-section">
+          <BusinessInventory></BusinessInventory>
+        </section>
       </main>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonAvatar } from '@ionic/vue';
-import { defineComponent } from 'vue';
-import { IonPage, IonContent, IonHeader, IonToolbar, IonButtons, IonBackButton, IonTitle } from '@ionic/vue';
-import NotificationButton from '@/components/notifications/NotificationButton.vue';
-import BusinessRatingAndReviews from '@/components/modules/business/BusinessRatingAndReviews.vue';
-import BusinessMinimumOrder from '@/components/modules/business/BusinessMinimumOrder.vue';
-import BusinessLocation from '@/components/modules/business/BusinessLocation.vue';
-import BusinessDeliveryTime from '@/components/modules/business/BusinessDeliveryTime.vue';
-import BusinessTags from '@/components/modules/business/BusinessTags.vue';
-import BusinessNewArrival from '@/components/modules/business/BusinessNewArrival.vue';
-import { useBusinessStore } from '@/stores/BusinessStore';
-import Business from '@/models/Business';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import ProductCard from '@/components/cards/ProductCard.vue';
-import { IonIcon, IonText } from '@ionic/vue';
-import { locationOutline } from 'ionicons/icons';
-import { handleAxiosRequestError } from '@/utilities';
-import FollowButton from '@/components/modules/business/FollowButton.vue';
-import { mapStores } from 'pinia';
-import ProfileAvatar from '../../../components/ProfileAvatar.vue';
+import { IonAvatar } from "@ionic/vue";
+import { defineComponent } from "vue";
+import {
+  IonPage,
+  IonContent,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonTitle,
+} from "@ionic/vue";
+import NotificationButton from "@/components/notifications/NotificationButton.vue";
+import BusinessRatingAndReviews from "@/components/modules/business/BusinessRatingAndReviews.vue";
+import BusinessMinimumOrder from "@/components/modules/business/BusinessMinimumOrder.vue";
+import BusinessLocation from "@/components/modules/business/BusinessLocation.vue";
+import BusinessDeliveryTime from "@/components/modules/business/BusinessDeliveryTime.vue";
+import BusinessTags from "@/components/modules/business/BusinessTags.vue";
+import BusinessNewArrival from "@/components/modules/business/BusinessNewArrival.vue";
+import { useBusinessStore } from "@/stores/BusinessStore";
+import Business from "@/models/Business";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import ProductCard from "@/components/cards/ProductCard.vue";
+import { IonIcon, IonText } from "@ionic/vue";
+import { locationOutline } from "ionicons/icons";
+import { handleAxiosRequestError } from "@/utilities";
+import FollowButton from "@/components/modules/business/FollowButton.vue";
+import { mapStores } from "pinia";
+import BusinessInventory from "@/components/modules/business/BusinessInventory.vue";
+import ProfileAvatar from "@/components/ProfileAvatar.vue";
 
 export default defineComponent({
   data() {
     return {
-      defaultBanner: '/images/vendor/banner.png',
+      defaultBanner: "/images/vendor/banner.png",
       business: null as Business | null,
       locationOutline,
     };
@@ -109,11 +125,12 @@ export default defineComponent({
     NotificationButton,
     IonIcon,
     IonText,
-    ProfileAvatar
-},
+    ProfileAvatar,
+    BusinessInventory
+  },
 
   computed: {
-    ...mapStores( useBusinessStore )
+    ...mapStores(useBusinessStore),
   },
 
   methods: {
@@ -137,7 +154,6 @@ export default defineComponent({
   },
 });
 </script>
-
 
 <style scoped lang="scss">
 main {
@@ -177,14 +193,14 @@ main {
   }
 
   .section.tags {
-    border-top: solid 1px #F1F1F1;
+    border-top: solid 1px #f1f1f1;
     padding-top: 5px;
     padding-left: 0px;
     padding-right: 0px;
   }
 
   .section.tags {
-    border-top: solid 1px #F1F1F1;
+    border-top: solid 1px #f1f1f1;
     padding-top: 5px;
     padding-left: 0px;
     padding-right: 0px;
