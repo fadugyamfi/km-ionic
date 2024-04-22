@@ -30,33 +30,35 @@
         </aside>
       </section>
       <main>
-        <section
-          class="section title-section d-flex ion-align-items-center ion-justify-content-between"
-        >
-          <span class="product-name"> {{ business?.name }} </span>
-          <FollowButton :business="business"></FollowButton>
-        </section>
-        <!-- <section class="section review">
+        <section style="padding: 10px">
+          <section
+            class="section title-section d-flex ion-align-items-center ion-justify-content-between"
+          >
+            <span class="product-name"> {{ business?.name }} </span>
+            <FollowButton :business="business"></FollowButton>
+          </section>
+          <!-- <section class="section review">
           <BusinessRatingAndReviews :business="business"></BusinessRatingAndReviews>
         </section> -->
-        <section class="section">
-          <BusinessLocation :business="business"></BusinessLocation>
+          <section class="section">
+            <BusinessLocation :business="business"></BusinessLocation>
+          </section>
+          <section class="section">
+            <BusinessMinimumOrder :business="business"></BusinessMinimumOrder>
+          </section>
+          <section class="section">
+            <BusinessDeliveryTime :business="business"></BusinessDeliveryTime>
+          </section>
+          <section class="section tags">
+            <BusinessTags :business="business"></BusinessTags>
+          </section>
         </section>
-        <section class="section">
-          <BusinessMinimumOrder :business="business"></BusinessMinimumOrder>
-        </section>
-        <section class="section">
-          <BusinessDeliveryTime :business="business"></BusinessDeliveryTime>
-        </section>
-        <section class="section tags">
-          <BusinessTags :business="business"></BusinessTags>
-        </section>
-        <section class="section arrival-section">
+        <section class="arrival-section">
           <GuestBusinessNewArrival
             :business="business"
           ></GuestBusinessNewArrival>
         </section>
-        <section class="section arrival-section">
+        <section class="arrival-section">
           <GuestBusinessProducts></GuestBusinessProducts>
         </section>
       </main>
@@ -161,8 +163,6 @@ export default defineComponent({
 main {
   border-radius: 30px;
   background-color: white;
-  margin-top: 15px;
-  padding: 10px;
   color: #111;
 
   .section {

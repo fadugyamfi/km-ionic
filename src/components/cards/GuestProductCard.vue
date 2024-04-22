@@ -278,6 +278,7 @@ export default defineComponent({
 }
 
 .product-card {
+  width: 100%;
   ion-card {
     width: 96%;
     min-width: 148px;

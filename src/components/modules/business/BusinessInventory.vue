@@ -1,8 +1,6 @@
 <template>
   <section class="ion-padding-top">
-    <header
-      class="d-flex ion-justify-content-between ion-align-items-center ion-padding-bottom"
-    >
+    <header class="d-flex ion-justify-content-between ion-align-items-center">
       <h6 class="ion-no-margin">Products</h6>
 
       <IonText
@@ -91,8 +89,26 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-  ion-grid {
-    padding: 0px;
-
+header {
+  padding: 16px 16px 10px;
+  h6 {
+    font-weight: 500;
+    font-size: 0.9em;
+    margin: 0px;
   }
+  ion-text {
+    font-weight: 500;
+    font-size: 0.9em;
+    margin: 0px;
+  }
+}
+
+ion-grid {
+  padding: 0px;
+
+  ion-col {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
 </style>

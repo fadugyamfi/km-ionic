@@ -32,13 +32,16 @@
       </section>
 
       <!-- <ShareProfileButton /> -->
-      <IonButton
-        expand="block"
-        class="intro-btn white ion-margin-bottom"
-        :router-link="`/vendor/home/businesses/${userStore?.activeBusiness?.id}`"
-      >
-        {{ $t("vendor.home.shareYourProfile") }}
-      </IonButton>
+      <section class="d-flex">
+        <IonButton
+          expand="block"
+          class="intro-btn white ion-margin-bottom"
+          :router-link="`/vendor/home/businesses/${userStore?.activeBusiness?.id}`"
+        >
+          {{ $t("vendor.home.viewYourStock") }}
+        </IonButton>
+        <ShareProfileButton></ShareProfileButton>
+      </section>
 
       <section class="intro-point">
         <span class="icon">
@@ -83,6 +86,7 @@ import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 // import ShareProfileButton from "@/components/buttons/ShareProfileButton.vue";
 import { useUserStore } from "@/stores/UserStore";
 import { mapStores } from "pinia";
+import ShareProfileButton from "@/components/buttons/ShareProfileButton.vue";
 export default defineComponent({
   data() {
     return {};
@@ -99,7 +103,7 @@ export default defineComponent({
     IonButton,
     InviteCustomerButton,
     KolaWhiteButton,
-    // ShareProfileButton,
+    ShareProfileButton,
   },
   computed: {
     ...mapStores(useUserStore),
@@ -156,6 +160,7 @@ ion-card ion-card-content {
   text-transform: none;
   font-weight: 500;
   font-size: 0.85em;
+  width: 100%;
 }
 
 .intro-btn.success {

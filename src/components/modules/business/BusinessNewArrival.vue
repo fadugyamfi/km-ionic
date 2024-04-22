@@ -1,7 +1,7 @@
 <template>
   <section class="ion-padding-top">
     <header
-      class="d-flex ion-justify-content-between ion-align-items-center ion-padding-bottom"
+      class="d-flex ion-justify-content-between ion-align-items-center ion-padding"
     >
       <h6 class="ion-no-margin">{{ $t("shopper.home.newArrivals") }}</h6>
 
@@ -24,7 +24,7 @@
           :show-description="false"
           :show-add-to-cart="mode == 'shopper'"
           :show-add-to-favorites="mode == 'shopper'"
-          action="return"
+          :action="mode == 'vendor' ? 'return' : 'viewProduct'"
         ></ProductCard>
       </SwiperSlide>
     </Swiper>
@@ -91,9 +91,17 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-h6 {
-  font-weight: 500;
-  font-size: 1em;
-  margin: 0px;
+header {
+  padding: 16px 16px 10px;
+  h6 {
+    font-weight: 500;
+    font-size: 0.9em;
+    margin: 0px;
+  }
+  ion-text {
+    font-weight: 500;
+    font-size: 0.9em;
+    margin: 0px;
+  }
 }
 </style>

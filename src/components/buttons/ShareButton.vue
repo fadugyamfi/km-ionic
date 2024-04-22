@@ -30,7 +30,7 @@ const share = async () => {
       url: shareUrl.value,
     });
   } else {
-    navigator.share({
+    await navigator.share({
       title: `${props.title} | Kola Market`,
       text: `${props.title} | Kola Market`,
       url: shareUrl.value,

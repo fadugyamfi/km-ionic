@@ -1,7 +1,7 @@
 <template>
-  <section class="shopper-home-section ion-padding-top">
+  <section class="ion-padding-top">
     <header
-      class="d-flex ion-justify-content-between ion-align-items-center ion-padding-bottom"
+      class="d-flex ion-justify-content-between ion-align-items-center ion-padding"
     >
       <h6 class="ion-no-margin">Products</h6>
 
@@ -41,7 +41,6 @@ import GuestProductCard from "@/components/cards/GuestProductCard.vue";
 import Business from "@/models/Business";
 
 export default defineComponent({
-
   data() {
     return {
       fetching: false,
@@ -79,3 +78,26 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="scss" scoped>
+header {
+  padding: 16px 16px 10px;
+  h6 {
+    font-weight: 500;
+    font-size: 0.9em;
+    margin: 0px;
+  }
+  ion-text {
+    font-weight: 500;
+    font-size: 0.9em;
+    margin: 0px;
+  }
+}
+ion-grid {
+  padding: 0px;
+
+  ion-col {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+</style>
