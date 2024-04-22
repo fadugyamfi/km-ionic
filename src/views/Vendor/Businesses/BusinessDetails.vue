@@ -60,7 +60,6 @@
         <section class="section arrival-section">
           <VendorBusinessProducts
             mode="vendor"
-            :business="business"
           ></VendorBusinessProducts>
         </section>
       </main>

@@ -16,7 +16,6 @@
     <p v-if="fetching" class="ion-text-center">
       <IonSpinner name="crescent"></IonSpinner>
     </p>
-
     <IonGrid v-if="!fetching">
       <IonRow>
         <IonCol size="6" v-for="product in products" :key="product.id">
@@ -36,6 +35,7 @@
 import { PropType, defineComponent } from "vue";
 import Product from "@/models/Product";
 import { useProductStore } from "@/stores/ProductStore";
+import { useBusinessStore } from "@/stores/BusinessStore";
 import { mapStores } from "pinia";
 import { IonSpinner, IonText, IonGrid, IonCol, IonRow } from "@ionic/vue";
 import ProductCard from "@/components/cards/ProductCard.vue";
@@ -43,9 +43,6 @@ import Business from "@/models/Business";
 
 export default defineComponent({
   props: {
-    business: {
-      type: Object as PropType<Business | null>,
-    },
     mode: {
       type: String,
       default: "shopper",
@@ -69,7 +66,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useProductStore),
+    ...mapStores(useProductStore, useBusinessStore),
   },
 
   methods: {
@@ -77,18 +74,18 @@ export default defineComponent({
       this.$router.push(`/shopper/home/products/${product.id}`);
     },
 
-    async fetchNewProducts() {
+    async fetchBusinessProducts() {
       this.fetching = true;
-      this.products = await this.productStore.fetchProducts({
-        businesses_id: this.business?.id,
-        limit: 10,
-      });
+      this.products = await this.businessStore.getBusinessProducts(
+        { id: this.$route.params.id } as Business,
+        10
+      );
       this.fetching = false;
     },
   },
 
-  mounted(){
-    this.fetchNewProducts();
-  }
+  mounted() {
+    this.fetchBusinessProducts();
+  },
 });
 </script>

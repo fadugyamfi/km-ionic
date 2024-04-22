@@ -34,6 +34,7 @@
 import { PropType, defineComponent } from "vue";
 import Product from "@/models/Product";
 import { useProductStore } from "@/stores/ProductStore";
+import { useBusinessStore } from "@/stores/BusinessStore";
 import { mapStores } from "pinia";
 import { IonSpinner, IonText, IonGrid, IonCol, IonRow } from "@ionic/vue";
 import GuestProductCard from "@/components/cards/GuestProductCard.vue";
@@ -63,7 +64,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useProductStore),
+    ...mapStores(useProductStore, useBusinessStore),
   },
 
   methods: {
@@ -71,18 +72,19 @@ export default defineComponent({
       this.$router.push(`/shopper/home/products/${product.id}`);
     },
 
-    async fetchNewProducts() {
+    async fetchGuestBusinessProducts() {
       this.fetching = true;
-      this.products = await this.productStore.fetchGuestProducts({
-        businesses_id: this.business?.id,
-        limit: 10,
-      });
+      this.products = await this.businessStore.getBusinessProducts(
+        { id: this.$route.params.id } as Business,
+        10,
+        "/v2/guest/products"
+      );
       this.fetching = false;
     },
   },
 
-  mounted(){
-    this.fetchNewProducts();
-  }
+  mounted() {
+    this.fetchGuestBusinessProducts();
+  },
 });
 </script>
