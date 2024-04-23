@@ -52,7 +52,11 @@ var failure = function (message: string) {};
 declare let ClarityPlugin: any;
 
 if (Capacitor.getPlatform() === "android") {
-  ClarityPlugin.initialize("lnbp07y1u3", success, failure, { isIonic: true });
+  ClarityPlugin.initialize("lnbp07y1u3", success, failure, {
+    logLevel: ClarityPlugin.LogLevel.None,
+    allowMeteredNetworkUsage: true,
+    isIonic: true
+  });
 }
 
 // Above the createApp() line
