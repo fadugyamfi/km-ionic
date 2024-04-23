@@ -25,6 +25,11 @@ export const VendorOrdersRoutes = [
             import("@/views/SaleAgent/Orders/SelectCustomer.vue"),
     },
     {
+        path: "orders/record-order/select-order-type",
+        component: () =>
+            import("@/views/SaleAgent/Orders/SelectOrderType.vue"),
+    },
+    {
         path: "orders/record-order/delivery-details",
         component: () =>
             import("@/views/SaleAgent/Orders/DeliveryDetails.vue"),

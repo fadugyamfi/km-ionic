@@ -75,7 +75,7 @@
           class="scroller"
           :items="products"
           :grid-items="2"
-          :item-size="240"
+          :item-size="305"
           :minItemSize="210"
           :item-secondary-size="cardWidth"
           :item-class="'product-card-item'"

@@ -69,6 +69,11 @@ export const SaleAgentRoutes = [
                   import("@/views/SaleAgent/Orders/DeliveryDetails.vue"),
               },
               {
+                path: "select-order-type",
+                component: () =>
+                    import("@/views/SaleAgent/Orders/SelectOrderType.vue"),
+            },
+              {
                 path: "select-products",
                 component: () =>
                   import("@/views/SaleAgent/Orders/SelectProducts.vue"),

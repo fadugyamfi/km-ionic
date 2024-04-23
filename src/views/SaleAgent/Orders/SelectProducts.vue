@@ -6,7 +6,7 @@
           <IonToolbar>
             <IonButtons slot="start">
               <IonBackButton
-                defaultHref="/agent/orders/place-order/select-customer"
+                defaultHref="/agent/orders/place-order/select-order-type"
                 :icon="arrowBack"
                 mode="md"
               >
@@ -78,7 +78,7 @@
           class="scroller"
           :items="products"
           :grid-items="2"
-          :item-size="240"
+          :item-size="280"
           :item-secondary-size="cardWidth"
           :item-class="'product-card-item'"
           key-field="id"

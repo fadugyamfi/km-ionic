@@ -17,7 +17,9 @@
               class="d-flex ion-align-items-center ion-justify-content-center"
             >
               <IonLabel>{{ $t("profile.customers.customers") }}</IonLabel>
-              <ion-badge class="badge">{{ customerStore.totalCustomers }}</ion-badge>
+              <ion-badge class="badge">{{
+                customerStore.totalCustomers
+              }}</ion-badge>
             </section></IonTitle
           >
           <ion-buttons slot="end">
@@ -150,7 +152,8 @@ const fetchCustomers = async (options: any = {}) => {
     options = Object.assign(options, { limit: 100 });
     customers.value = await userStore.fetchAssignedBusinesses(
       userStore.user?.id,
-      options
+      options,
+      refreshing.value
     );
   } else {
     customers.value = await customerStore.getBusinessCustomers(
