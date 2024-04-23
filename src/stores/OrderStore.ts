@@ -243,6 +243,7 @@ console.log(newOrderData)
         payment_modes_id: 1,
         order_started_at: formatMySQLDateTime(new Date().toISOString()),
         order_ended_at: "",
+        order_type_id: 1,
         total_items: 0,
         total_sales_price: 0,
         total_discount: 0,
