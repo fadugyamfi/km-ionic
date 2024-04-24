@@ -1,9 +1,9 @@
-const CASH_SALE = 1;
-const CREDIT_SALE = 5;
+const CASH_ORDER = 1;
+const CREDIT_ORDER = 2;
 
 export const OrderTypes = {
-    CASH_SALE,
-    CREDIT_SALE
+    CASH_ORDER,
+    CREDIT_ORDER
 }
 
 export class OrderType {
