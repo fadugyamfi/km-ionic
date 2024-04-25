@@ -2,7 +2,7 @@
   <IonButton
     @click="inviteCustomer()"
     expand="block"
-    class="invite-customer ion-margin-bottom"
+    class="intro-btn green ion-margin-bottom"
   >
     {{ $t("vendor.home.inviteCustomers") }}
   </IonButton>
@@ -47,15 +47,16 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-.invite-customer {
-  --background: #66f48e;
-  --padding-top: 16px;
-  --padding-bottom: 16px;
-  --color: #101828;
-  --border-radius: 0.8em;
-  --box-shadow: none;
+.intro-btn {
   text-transform: none;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.85em;
+}
+.intro-btn.green {
+  --background: #66f48e;
+  --color: #101828;
+  --box-shadow: none;
+  --border-radius: 8px;
+  margin-bottom: 3em;
 }
 </style>

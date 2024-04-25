@@ -33,16 +33,13 @@
         >
           <IonLabel>
             <p class="ion-no-margin">{{ orderType.name }}</p>
-            <IonText color="medium" class="font-medium">
-              {{ orderType.description }}
-            </IonText>
           </IonLabel>
           <IonCheckbox
             :aria-label="orderType.name"
             slot="end"
             mode="ios"
             :value="orderType.id"
-            :checked="orderStore.newOrder.order_type_id == orderType.id"
+            :checked="orderStore?.newOrder?.order_type_id == orderType.id"
           ></IonCheckbox>
         </IonItem>
       </IonList>
@@ -51,7 +48,7 @@
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton
         id="order-type-continue"
-        :disabled="!orderStore.newOrder.order_type_id"
+        :disabled="!orderStore?.newOrder?.order_type_id"
         @click="onContinue()"
       >
         {{ $t("general.continue") }}
@@ -119,7 +116,7 @@ export default defineComponent({
       arrowBack,
       OrderTypes: [
         new OrderType({ id: 1, name: "Cash Order" }),
-        new OrderType({ id: 5, name: "Credit Order" }),
+        new OrderType({ id: 2, name: "Credit Order" }),
       ],
     };
   },
@@ -134,27 +131,13 @@ export default defineComponent({
     },
 
     onContinue() {
-      if (!this.orderStore.newOrder) {
-        const toastStore = useToastStore();
-        toastStore.showError(
-          this.$t("vendor.sales.selectSaleTypeToContinue"),
-          "",
-          "bottom",
-          "order-type-continue"
-        );
-        return;
-      }
-
       if (this.userStore.user?.isSalesAssociate()) {
         this.$router.push("/agent/orders/place-order/select-products");
       } else {
         this.$router.push("/vendor/orders/record-order/select-products");
       }
     },
-
-    refresh() {},
   },
 
-  mounted() {},
 });
 </script>

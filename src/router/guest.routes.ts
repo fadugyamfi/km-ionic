@@ -8,23 +8,26 @@ export const GuestModeRoutes = [
   {
     path: "/guest/",
     component: TabsPage,
-    beforeEnter: async function () {
+    beforeEnter: async function (to: any, from: any) {
       // to, from
-      if( userStore == null ) {
+      if (userStore == null) {
         userStore = useUserStore();
         await userStore.loadStoredData();
       }
 
-      if(!userStore.onboarded && !userStore.user) {
-        return { name: 'Onboarding' };
+      if (!userStore.onboarded && !userStore.user) {
+        return { name: "Onboarding" };
       }
 
-      if(userStore.user && (userStore.user?.isSalesAssociate() || userStore.user?.isSalesManager())) {
-        return { name: 'SaleAgentHome' };
+      if (
+        userStore.user &&
+        (userStore.user?.isSalesAssociate() || userStore.user?.isSalesManager())
+      ) {
+        return { name: "SaleAgentHome" };
       }
 
-      if(userStore.user && userStore.appMode != "vendor") {
-        return { name: "ShopperHome" };
+      if (userStore.user && userStore.appMode != "vendor") {
+        return to.path.replace("guest", "shopper");
       }
 
       if (userStore.user && userStore.appMode == "vendor") {

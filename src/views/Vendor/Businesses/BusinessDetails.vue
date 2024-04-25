@@ -4,7 +4,7 @@
       <IonHeader class="inner-header">
         <IonToolbar class="ion-align-items-center">
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/shopper/home"></IonBackButton>
+            <IonBackButton defaultHref="/vendor/home"></IonBackButton>
           </IonButtons>
           <IonTitle size="small" class="fw-bold">
             {{ business?.name }}
@@ -35,7 +35,7 @@
             class="section title-section d-flex ion-align-items-center ion-justify-content-between"
           >
             <span class="product-name"> {{ business?.name }} </span>
-            <FollowButton :business="business"></FollowButton>
+            <ShareProfileButton></ShareProfileButton>
           </section>
           <!-- <section class="section review">
           <BusinessRatingAndReviews :business="business"></BusinessRatingAndReviews>
@@ -54,10 +54,13 @@
           </section>
         </section>
         <section class="arrival-section">
-          <BusinessNewArrival :business="business"></BusinessNewArrival>
+          <BusinessNewArrival
+            mode="vendor"
+            :business="business"
+          ></BusinessNewArrival>
         </section>
         <section class="arrival-section">
-          <BusinessInventory></BusinessInventory>
+          <BusinessInventory mode="vendor"></BusinessInventory>
         </section>
       </main>
     </ion-content>
@@ -83,6 +86,7 @@ import BusinessLocation from "@/components/modules/business/BusinessLocation.vue
 import BusinessDeliveryTime from "@/components/modules/business/BusinessDeliveryTime.vue";
 import BusinessTags from "@/components/modules/business/BusinessTags.vue";
 import BusinessNewArrival from "@/components/modules/business/BusinessNewArrival.vue";
+import BusinessInventory from "@/components/modules/business/BusinessInventory.vue";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import Business from "@/models/Business";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -90,10 +94,9 @@ import ProductCard from "@/components/cards/ProductCard.vue";
 import { IonIcon, IonText } from "@ionic/vue";
 import { locationOutline } from "ionicons/icons";
 import { handleAxiosRequestError } from "@/utilities";
-import FollowButton from "@/components/modules/business/FollowButton.vue";
+import ShareProfileButton from "@/components/buttons/ShareProfileButton.vue";
 import { mapStores } from "pinia";
-import BusinessInventory from "@/components/modules/business/BusinessInventory.vue";
-import ProfileAvatar from "@/components/ProfileAvatar.vue";
+import ProfileAvatar from "../../../components/ProfileAvatar.vue";
 
 export default defineComponent({
   data() {
@@ -120,15 +123,15 @@ export default defineComponent({
     BusinessTags,
     BusinessDeliveryTime,
     BusinessNewArrival,
+    BusinessInventory,
     Swiper,
     SwiperSlide,
     ProductCard,
-    FollowButton,
+    ShareProfileButton,
     NotificationButton,
     IonIcon,
     IonText,
     ProfileAvatar,
-    BusinessInventory,
   },
 
   computed: {

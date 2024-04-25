@@ -3,6 +3,7 @@ import TabsPage from "@/views/TabsPage.vue";
 import { VendorOrdersRoutes } from "./tabs/vendor-orders.routes";
 import { VendorSalesRoutes } from "./tabs/vendor-sales.routes";
 import { VendorCreditsRoutes } from "./tabs/vendor-credits.routes";
+import { VendorHomeRoutes } from "./tabs/vendor-home.routes";
 
 let userStore: any = null;
 
@@ -34,11 +35,8 @@ export const VendorModeRoutes = [
         path: "",
         redirect: "/vendor/home",
       },
-      {
-        path: "home",
-        name: 'VendorHome',
-        component: () => import("@/views/Vendor/Home/Home.vue"),
-      },
+
+      ...VendorHomeRoutes,
 
       ...VendorOrdersRoutes,
 
