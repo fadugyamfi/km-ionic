@@ -31,6 +31,18 @@
         </section>
       </section>
 
+      <!-- <ShareProfileButton /> -->
+      <section class="d-flex">
+        <IonButton
+          expand="block"
+          class="intro-btn white ion-margin-bottom"
+          :router-link="`/vendor/home/businesses/${userStore?.activeBusiness?.id}`"
+        >
+          {{ $t("vendor.home.viewYourStock") }}
+        </IonButton>
+        <ShareProfileButton></ShareProfileButton>
+      </section>
+
       <section class="intro-point">
         <span class="icon">
           <IonImg src="/images/vendor/phone-outgoing.svg"></IonImg>
@@ -70,6 +82,11 @@ import {
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import InviteCustomerButton from "@/components/buttons/InviteCustomerButton.vue";
+import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
+// import ShareProfileButton from "@/components/buttons/ShareProfileButton.vue";
+import { useUserStore } from "@/stores/UserStore";
+import { mapStores } from "pinia";
+import ShareProfileButton from "@/components/buttons/ShareProfileButton.vue";
 export default defineComponent({
   data() {
     return {};
@@ -85,6 +102,11 @@ export default defineComponent({
     IonImg,
     IonButton,
     InviteCustomerButton,
+    KolaWhiteButton,
+    ShareProfileButton,
+  },
+  computed: {
+    ...mapStores(useUserStore),
   },
   methods: {
     openWhatsAppChat() {
@@ -138,6 +160,7 @@ ion-card ion-card-content {
   text-transform: none;
   font-weight: 500;
   font-size: 0.85em;
+  width: 100%;
 }
 
 .intro-btn.success {
@@ -147,12 +170,20 @@ ion-card ion-card-content {
   --border-radius: 8px;
   margin-bottom: 3em;
 }
-
 .intro-btn.warning {
   --background: #f5aa29;
   --color: #101828;
   --box-shadow: none;
   --border-radius: 8px;
   margin-top: 1em;
+}
+.intro-btn.white {
+  --background: #fff;
+  --color: #101828;
+  --box-shadow: none;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-radius: 8px;
+  margin-bottom: 3em;
 }
 </style>

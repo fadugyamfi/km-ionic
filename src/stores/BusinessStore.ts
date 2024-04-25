@@ -65,7 +65,7 @@ export const useBusinessStore = defineStore("business", {
     searchQuery: "",
     SearchResults: [] as Business[],
     businessSummary: null as any | null,
-    business:  null as any | null,
+    business: null as any | null,
   }),
 
   actions: {
@@ -192,7 +192,7 @@ export const useBusinessStore = defineStore("business", {
 
         if (response) {
           const { data } = response.data;
-          this.business = data
+          this.business = data;
           return new Business(data);
         }
 
@@ -230,7 +230,7 @@ export const useBusinessStore = defineStore("business", {
 
         if (response) {
           const { data } = response.data;
-          this.business = data
+          this.business = data;
           const business = new Business(data);
 
           userStore.setActiveBusiness(business);
@@ -247,7 +247,8 @@ export const useBusinessStore = defineStore("business", {
 
     async getBusinessProducts(
       business: Business,
-      limit: number = 50
+      limit: number = 50,
+      url = "/v2/products"
     ): Promise<Product[]> {
       try {
         const params = {
@@ -256,7 +257,7 @@ export const useBusinessStore = defineStore("business", {
           product_name_has: this.searchQuery,
         };
 
-        const response = await axios.get(`/v2/products`, { params });
+        const response = await axios.get(url, { params });
         if (response) {
           const { data } = response.data;
           const products: Product[] = data.map((el: any) => new Product(el));
@@ -570,7 +571,7 @@ export const useBusinessStore = defineStore("business", {
         })
         .catch((error) => handleAxiosRequestError(error));
     },
-async addBusiness(businessInfo: object): Promise<Business | null> {
+    async addBusiness(businessInfo: object): Promise<Business | null> {
       try {
         const response = await axios.post(`/v2/businesses`, businessInfo);
         const businesss = new Business(response.data.data);

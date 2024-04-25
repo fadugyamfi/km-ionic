@@ -47,7 +47,9 @@
         </section>
 
         <section class="pricing d-flex flex-column">
-          <section class="d-flex ion-align-items-center ion-justify-content-between">
+          <section
+            class="d-flex ion-align-items-center ion-justify-content-between"
+          >
             <aside>
               <section v-if="product?.is_on_sale && product.sale_price > 0">
                 <span class="font-medium" style="margin-right: 5px">
@@ -208,7 +210,7 @@ export default defineComponent({
 
     action: {
       default: "viewProduct",
-      type: String as PropType<"viewProduct" | "toggleSelect">,
+      type: String as PropType<"viewProduct" | "toggleSelect" | "return">,
     },
 
     business: {
@@ -256,6 +258,9 @@ export default defineComponent({
       if (this.action == "toggleSelect") {
         this.toggleSelected();
       }
+      if (this.action == "return") {
+        return;
+      }
     },
 
     viewProduct() {
@@ -299,6 +304,7 @@ export default defineComponent({
 }
 
 .product-card {
+  width: 100%;
   ion-card {
     width: 96%;
     min-width: 148px;

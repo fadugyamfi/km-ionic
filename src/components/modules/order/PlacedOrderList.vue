@@ -208,7 +208,7 @@ export default defineComponent({
     },
 
     canReorder(order: Order): Boolean {
-      return order.order_status_id as number >= 7;
+      return order.order_status_id as number >= 7 && order.order_status_id !== 11;
     },
   },
 });

@@ -132,7 +132,7 @@ export default defineComponent({
         case 6:
           return {
             color: "primary",
-            label: "Processing",
+            label: "Order Processing",
           };
         case 3:
           return {

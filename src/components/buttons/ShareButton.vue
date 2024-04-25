@@ -9,7 +9,6 @@ import { shareOutline } from "ionicons/icons";
 import { Share } from "@capacitor/share";
 import { computed, PropType } from "vue";
 import { useRoute } from "vue-router";
-import { useUserStore } from "@/stores/UserStore";
 import { Capacitor } from "@capacitor/core";
 
 const route = useRoute();
@@ -24,7 +23,6 @@ const shareUrl = computed(() => `https://m.kola.market${route.fullPath}`);
 
 const share = async () => {
   if (Capacitor.isNativePlatform()) {
-    const userStore = useUserStore();
     await Share.share({
       title: `${props.title} | Kola Market`,
       dialogTitle: `${props.title} | Kola Market`,
@@ -32,7 +30,7 @@ const share = async () => {
       url: shareUrl.value,
     });
   } else {
-    navigator.share({
+    await navigator.share({
       title: `${props.title} | Kola Market`,
       text: `${props.title} | Kola Market`,
       url: shareUrl.value,
