@@ -112,12 +112,12 @@
       <IonTextarea
         class="kola-input ion-margin-bottom ion-padding"
         :class="{
-          'ion-invalid ion-touched': form.errors.notes,
+          'ion-invalid ion-touched': form.errors.delivery_notes,
         }"
         label="Leave a note"
         labelPlacement="stacked"
         fill="solid"
-        v-model="form.fields.notes"
+        v-model="form.fields.delivery_notes"
         name="description"
         @ion-input="form.validate($event)"
       ></IonTextarea>
@@ -179,7 +179,7 @@ const toastStore = useToastStore();
 const cartStore = useCartStore();
 
 const form = useForm({
-  notes: "",
+  delivery_notes: "",
 });
 
 const orderBusiness = computed((): Order | any => {
@@ -234,7 +234,7 @@ const createOrder = async () => {
       payment_modes_id: orderBusiness.value.payment_option_id,
       total_items: orderBusiness.value._order_items.length,
       order_items: orderBusiness.value._order_items,
-      notes: form.fields.notes,
+      delivery_notes: form.fields.delivery_notes,
     });
     if (placedOrder) {
       cartStore.orders = cartStore.orders.filter(
