@@ -8,7 +8,7 @@ on:
       - develop
   # pull_request:
   #   branches:
-  #     - main
+  #     - develop
 
 # Authenticate to the the server via ssh
 # and run our deployment script
@@ -24,4 +24,4 @@ jobs:
           username: ${{ vars.USERNAME }}
           port: ${{ vars.PORT }}
           key: ${{ secrets.SSHKEY }}
-          script: "cd /var/www/m-dev.kola.market && sh ./.scripts/deploy-main.sh"
+          script: "cd /var/www/m-dev.kola.market && sh ./.scripts/deploy-staging.sh"
