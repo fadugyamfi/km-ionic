@@ -1,0 +1,27 @@
+name: Deploy Staging/Dev
+
+# Trigger the workflow on push and
+# pull request events on the production branch
+on:
+  push:
+    branches:
+      - develop
+  # pull_request:
+  #   branches:
+  #     - main
+
+# Authenticate to the the server via ssh
+# and run our deployment script
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ vars.STAGING_HOST }}
+          username: ${{ vars.USERNAME }}
+          port: ${{ vars.PORT }}
+          key: ${{ secrets.SSHKEY }}
+          script: "cd /var/www/m-dev.kola.market && sh ./.scripts/deploy-main.sh"
