@@ -12,7 +12,7 @@ git restore package-lock.json
 git pull
 npm install -g @ionic/cli
 npm install
-npm run build --prod
+npm run build-staging
 
 # cp ../public/manifest.webmanifest ../dist/manifest.webmanifest
 # TODO: Make the following line server agnostic
