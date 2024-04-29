@@ -32,22 +32,23 @@
             :key="paymentMode.id"
             @click="selectPaymentMethod(paymentMode)"
           >
-            <IonLabel style="display: flex; align-items: center">
-              <Image class="mode-icon" :src="paymentMode?.icon"></Image>
-              <div>
-                <p class="ion-no-margin">{{ paymentMode.name }}</p>
-                <p class="description">
-                  {{ paymentMode.description }}
-                </p>
-              </div>
-            </IonLabel>
             <IonCheckbox
               :aria-label="paymentMode.name"
-              slot="end"
+              justify="space-between"
               mode="ios"
               :value="paymentMode.id"
               :checked="form.fields.payment_modes_id == paymentMode.id"
-            ></IonCheckbox>
+            >
+              <IonLabel style="display: flex; align-items: center">
+                <Image class="mode-icon" :src="paymentMode?.icon"></Image>
+                <div>
+                  <p class="ion-no-margin">{{ paymentMode.name }}</p>
+                  <p class="description">
+                    {{ paymentMode.description }}
+                  </p>
+                </div>
+              </IonLabel>
+            </IonCheckbox>
           </IonItem>
         </IonList>
       </form>

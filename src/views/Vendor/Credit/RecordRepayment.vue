@@ -74,18 +74,18 @@
             :key="paymentMode.id"
             @click="selectPaymentMethod(paymentMode)"
           >
-            <IonLabel style="display: flex; align-items: center">
-              <Image class="mode-icon" :src="paymentMode?.icon"></Image>
-              <p class="ion-no-margin">{{ paymentMode.name }}</p>
-            </IonLabel>
-            <!--  -->
             <IonCheckbox
               :aria-label="paymentMode.name"
-              slot="end"
+              justify="space-between"
               mode="ios"
               :value="paymentMode.id"
               :checked="form.fields.payment_modes_id == paymentMode.id"
-            ></IonCheckbox>
+            >
+              <IonLabel style="display: flex; align-items: center">
+                <Image class="mode-icon" :src="paymentMode?.icon"></Image>
+                <p class="ion-no-margin">{{ paymentMode.name }}</p>
+              </IonLabel>
+            </IonCheckbox>
           </IonItem>
         </IonList>
       </form>
@@ -229,7 +229,9 @@ export default defineComponent({
           toastStore.showSuccess(
             this.$t("vendor.sales.paymentRecordedSuccessfully")
           );
-          this.$router.push(`/vendor/credits/${this.$route.params.id}/credit-details`);
+          this.$router.push(
+            `/vendor/credits/${this.$route.params.id}/credit-details`
+          );
         }
       } catch (error) {
         toastStore.showError(this.$t("vendor.sales.paymentRecordingFailed"));

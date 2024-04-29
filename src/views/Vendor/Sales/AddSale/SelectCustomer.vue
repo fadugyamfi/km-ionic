@@ -76,19 +76,21 @@
               :username="customer?.name"
               customSize="40px"
             ></ProfileAvatar>
-            <IonLabel>
-              <p class="ion-no-margin">{{ customer.name }}</p>
-              <IonText color="medium" class="font-medium">
-                {{ customer.location || "Location Unknown" }}
-              </IonText>
-            </IonLabel>
+
             <IonCheckbox
               :aria-label="customer.name"
-              slot="end"
+              justify="space-between"
               mode="ios"
               :value="customer.id"
               :checked="saleStore.newSale.customer_id == customer.id"
-            ></IonCheckbox>
+            >
+              <IonLabel>
+                <p class="ion-no-margin">{{ customer.name }}</p>
+                <IonText color="medium" class="font-medium">
+                  {{ customer.location || "Location Unknown" }}
+                </IonText>
+              </IonLabel>
+            </IonCheckbox>
           </IonItem>
         </IonList>
       </section>
@@ -208,7 +210,7 @@ export default defineComponent({
         this.customers = await userStore.fetchAssignedBusinesses(
           userStore.user?.id,
           options,
-         this.refreshing
+          this.refreshing
         );
       } else {
         this.customers = await businessStore.getBusinessCustomers(

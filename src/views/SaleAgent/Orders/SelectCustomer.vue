@@ -79,19 +79,20 @@
               :username="customer?.name"
               customSize="40px"
             ></ProfileAvatar>
-            <IonLabel>
-              <p class="ion-no-margin">{{ customer.name }}</p>
-              <IonText color="medium" class="font-medium">
-                {{ customer.location || "Location Unknown" }}
-              </IonText>
-            </IonLabel>
             <IonCheckbox
               :aria-label="customer.name"
-              slot="end"
+              justify="space-between"
               mode="ios"
               :value="customer.id"
               :checked="orderStore.newOrder.customer_id == customer.id"
-            ></IonCheckbox>
+            >
+              <IonLabel>
+                <p class="ion-no-margin">{{ customer.name }}</p>
+                <IonText color="medium" class="font-medium">
+                  {{ customer.location || "Location Unknown" }}
+                </IonText>
+              </IonLabel>
+            </IonCheckbox>
           </IonItem>
         </IonList>
       </section>
@@ -245,11 +246,9 @@ export default defineComponent({
       if (this.userStore.user?.isSalesAssociate()) {
         // this.$router.push("/agent/orders/place-order/select-products");
         this.$router.push("/agent/orders/place-order/select-order-type");
-
       } else {
         this.$router.push("/vendor/orders/record-order/select-order-type");
         // this.$router.push("/vendor/orders/record-order/select-products");
-
       }
     },
 

@@ -35,16 +35,17 @@
           :key="saleType.id"
           @click="selectSaleType(saleType)"
         >
-          <IonLabel>
-            <p class="ion-no-margin">{{ saleType.name }}</p>
-          </IonLabel>
           <IonCheckbox
             :aria-label="saleType.name"
-            slot="end"
+            justify="space-between"
             mode="ios"
             :value="saleType.id"
             :checked="saleStore.newSale.sale_types_id == saleType.id"
-          ></IonCheckbox>
+          >
+            <IonLabel>
+              <p class="ion-no-margin">{{ saleType.name }}</p>
+            </IonLabel>
+          </IonCheckbox>
         </IonItem>
       </IonList>
     </IonContent>

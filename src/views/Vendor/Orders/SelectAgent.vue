@@ -65,20 +65,20 @@
             :username="agent?.name"
             customSize="40px"
           ></ProfileAvatar>
-
-          <IonLabel>
-            <p class="ion-no-margin">{{ agent.name }}</p>
-            <IonText color="medium" class="font-medium">
-              {{ agent.role?.name || $t("vendor.sales.saleAgent") }}
-            </IonText>
-          </IonLabel>
           <IonCheckbox
             :aria-label="agent.name"
-            slot="end"
+            justify="space-between"
             mode="ios"
             :value="agent.id"
             :checked="orderStore.newOrder.cms_users_id == agent.id"
-          ></IonCheckbox>
+          >
+            <IonLabel>
+              <p class="ion-no-margin">{{ agent.name }}</p>
+              <IonText color="medium" class="font-medium">
+                {{ agent.role?.name || $t("vendor.sales.saleAgent") }}
+              </IonText>
+            </IonLabel>
+          </IonCheckbox>
         </IonItem>
       </IonList>
     </IonContent>
