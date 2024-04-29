@@ -69,29 +69,12 @@
 import {
   IonContent,
   IonFooter,
-  IonIcon,
   IonPage,
-  IonTitle,
-  IonToolbar,
-  IonText,
   IonInput,
   IonSelect,
-  IonSelectOption,
-  IonCheckbox,
-  IonHeader,
-  IonSpinner,
-  IonButton,
-  IonItem,
+  IonSelectOption
 } from "@ionic/vue";
 import {
-  close,
-  heartOutline,
-  heart,
-  cart,
-  cartOutline,
-  shareOutline,
-  navigateOutline,
-  arrowBackOutline,
   chevronDownOutline,
 } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
