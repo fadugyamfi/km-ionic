@@ -3,7 +3,7 @@
     <ion-row class="row">
       <ion-col size="auto">
         <ion-text class="item-text">
-          Item total
+          {{ $t('general.totalCost') }}
         </ion-text>
       </ion-col>
       <ion-col class="ion-text-end">
@@ -14,7 +14,7 @@
     </ion-row>
     <ion-row class="row">
       <ion-col size="auto">
-        <ion-text class="item-text">Delivery</ion-text>
+        <ion-text class="item-text"> {{ $t('general.delivery') }}</ion-text>
       </ion-col>
       <ion-col class="ion-text-end">
         <ion-text class="item-price">{{ delivery }}</ion-text>

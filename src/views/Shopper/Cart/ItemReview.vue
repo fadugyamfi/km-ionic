@@ -21,10 +21,21 @@
           </ion-thumbnail>
 
           <ion-row class="item-row">
-            <ion-col size="10 ">
-              <p class="text-product">{{ item.product_name }}</p>
+            <ion-col size="10">
+              <p class="text-product ion-margin-top">
+                {{ item.product_name }}
+              </p>
               <p>{{ $t("general.quantity") }}: {{ item.quantity }}</p>
-              <p class="price">
+              <p class="unit-price">
+                Unit Price:
+                {{
+                  Filters.currency(
+                    item.product_price || 0,
+                    item.currency_symbol
+                  )
+                }}
+              </p>
+              <p class="price" style="color: #000 !important">
                 {{
                   Filters.currency(
                     item.quantity * (item.product_price || 0),
@@ -46,8 +57,10 @@
               </ion-button>
             </ion-col>
             <ProductQuantitySelector
+              :initial-product-unit-id="item.product_units_id"
               :initialQuantity="item.quantity"
               @change="updateQuantity(item, $event)"
+              @onselectProductUnit="updateUnitPrice(item, $event)"
             >
             </ProductQuantitySelector>
           </ion-row>
@@ -212,17 +225,15 @@ const updateQuantity = (item: CartItem, newQuantity: number) => {
 const removeFromCart = (index: number) => {
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
-
-// const getOrderBusiness = () => {
-//   console.log("jello");
-//   const business = orders.value.find(
-//     (order: any) => order?.businesses_id == route.params.id
-//   );
-//   console.log("Found business:", business); // Add this line for debugging
-//   orderBusiness.value = business;
-// };
-
-// const cartStore = useCartStore(orderBusiness.value);
+const updateUnitPrice = (item: CartItem, productUnitId: number) => {
+  if (productUnitId == 2) {
+    item.product_price = item.single_piece_price;
+  } else {
+    item.product_price = item.unit_price;
+  }
+  item.product_units_id = productUnitId;
+  item.total_price = item.quantity * item.product_price;
+};
 
 const createOrder = async () => {
   try {

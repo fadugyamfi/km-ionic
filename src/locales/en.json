@@ -32,12 +32,15 @@
     "accept": "Accept",
     "update": "Update",
     "edit": "Edit",
+    "delivery": "Delivery",
     "reorder": "Reorder",
     "totalRepaid": "Total Repaid",
     "amountOwed": "Amount Owed",
     "units": {
       "box": "Box | Boxes",
-      "piece": "Piece | Pieces"
+      "piece": "Piece | Pieces",
+      "case": "Case",
+      "pieces": "Pieces"
     },
     "thisMonth": "This Month",
     "allTime": "All Time",
@@ -180,8 +183,7 @@
     "orders": {
       "orderDetails": "Order Details",
       "yourOrder": "Your Order",
-      "orderStatus": "Order Status",
-      "delivery": "Delivery"
+      "orderStatus": "Order Status"
     },
     "cart": {
       "proceedToCheckout": "Proceed To Checkout",

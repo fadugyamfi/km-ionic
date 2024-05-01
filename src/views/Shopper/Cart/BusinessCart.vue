@@ -20,7 +20,7 @@
                   <IonBadge>{{ orderBusiness?.order_items?.length }}</IonBadge>
                 </div>
               </IonSegmentButton>
-              <IonSegmentButton value="saved">
+              <IonSegmentButton value="saved" disabled>
                 <ion-label color="dark">Saved</ion-label>
               </IonSegmentButton>
             </IonSegment>
@@ -53,10 +53,17 @@
                 <p class="text-product ion-margin-top">
                   {{ item.product_name }}
                 </p>
-                <p class="">
-                  {{ $t("general.quantity") }}: {{ item.quantity }}
+                <p>{{ $t("general.quantity") }}: {{ item.quantity }}</p>
+                <p class="unit-price">
+                  Unit Price:
+                  {{
+                    Filters.currency(
+                      item.product_price || 0,
+                      item.currency_symbol
+                    )
+                  }}
                 </p>
-                <p class="price">
+                <p class="price" style="color: #000 !important">
                   {{
                     Filters.currency(
                       item.quantity * (item.product_price || 0),
@@ -79,7 +86,9 @@
               </ion-col>
               <ProductQuantitySelector
                 :initial-quantity="item.quantity"
+                :initial-product-unit-id="item.product_units_id"
                 @change="updateQuantity(item, $event)"
+                @onselectProductUnit="updateUnitPrice(item, $event)"
               >
               </ProductQuantitySelector>
             </ion-row>
@@ -108,7 +117,6 @@ import {
   IonSegmentButton,
   IonLabel,
   IonThumbnail,
-  IonImg,
   IonBadge,
   IonItem,
   IonList,
@@ -124,14 +132,12 @@ import {
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
-import OrderItemView from "@/components/modules/carts/OrderItemView.vue";
 import { closeCircleOutline } from "ionicons/icons";
 import CartHeader from "@/components/header/CartHeader.vue";
 import EmptyCart from "@/components/cards/EmptyCart.vue";
 import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import BusinessMinimumOrderReached from "../../../components/modules/business/BusinessMinimumOrderReached.vue";
-import { formatAmountWithCommas } from "@/utilities";
 import Image from "@/components/Image.vue";
 import Filters from "@/utilities/Filters";
 import { useRouter } from "vue-router";
@@ -148,7 +154,6 @@ const orderBusiness = computed((): Order | any => {
     (order: any) => order?.businesses_id == route.params.id
   );
 });
-const orders = computed(() => cartStore.orders);
 
 const viewing = ref("cart");
 
@@ -197,8 +202,14 @@ const viewDeliveryDetails = () => {
   router.push(`/shopper/cart/business/${route.params.id}/delivery-details`);
 };
 
-const viewPaymentMethod = () => {
-  router.push(`/shopper/cart/business/${route.params.id}/payment-method`);
+const updateUnitPrice = (item: CartItem, productUnitId: number) => {
+  if (productUnitId == 2) {
+    item.product_price = item.single_piece_price;
+  } else {
+    item.product_price = item.unit_price;
+  }
+  item.product_units_id = productUnitId;
+  item.total_price = item.quantity * item.product_price;
 };
 
 onIonViewDidEnter(async () => {
@@ -265,23 +276,20 @@ ion-badge {
 }
 
 .custom-label {
-  color: black;
-
   p {
     font-size: 14px;
     font-family: "Poppins";
     font-weight: 400;
     text-transform: capitalize;
+    word-wrap: break-word;
     line-height: 22px;
-    word-wrap: break-word;
-  }
 
-  .price {
-    font-size: 14px;
-    font-weight: 400;
-    text-transform: capitalize;
-    line-height: 18px;
-    word-wrap: break-word;
+    &.unit-price {
+      line-height: 18px !important;
+    }
+    &.price {
+      line-height: 18px !important;
+    }
   }
 }
 
@@ -292,10 +300,6 @@ ion-icon.remove-icon {
 
 .remove-button {
   text-align: end;
-}
-
-.text-product {
-  color: black;
 }
 
 .text-product {
