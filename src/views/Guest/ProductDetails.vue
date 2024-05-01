@@ -99,7 +99,7 @@
         </section>
 
         <section v-if="!hideCartFunctions" class="section product-quantity-selection">
-          <ProductQuantitySelector @change="updateQuantity($event)"></ProductQuantitySelector>
+          <ProductQuantitySelector :hide-product-unit-selector="true" @change="updateQuantity($event)"></ProductQuantitySelector>
         </section>
 
         <section class="section tags">

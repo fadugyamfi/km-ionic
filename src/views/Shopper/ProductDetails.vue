@@ -45,7 +45,6 @@
       </header>
 
       <main>
-
         <section class="section title-section d-flex ion-align-items-start">
           <span class="product-name">
             {{ product?.product_name }}
@@ -99,12 +98,14 @@
           </IonText>
         </section>
 
-        <section v-if="product?.product_description" class="section description-section">
+        <section
+          v-if="product?.product_description"
+          class="section description-section"
+        >
           <IonText color="medium">
             {{ product.product_description || "No Description Available" }}
           </IonText>
         </section>
-
 
         <section class="section business-section ion-margin-top">
           <section class="d-flex ion-align-items-center">
@@ -133,6 +134,7 @@
           class="section product-quantity-selection"
         >
           <ProductQuantitySelector
+            :hide-product-unit-selector="true"
             @change="updateQuantity($event)"
           ></ProductQuantitySelector>
         </section>

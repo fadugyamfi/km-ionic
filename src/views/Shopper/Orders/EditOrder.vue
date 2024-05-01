@@ -26,10 +26,16 @@
           <IonText class="fw-semibold">
             {{ order?._business?.name || "No Business" }}
           </IonText>
-          <BusinessMinimumOrderReached :business="order?.business" :totalCost="totalCost"></BusinessMinimumOrderReached>
+          <BusinessMinimumOrderReached
+            :business="order?.business"
+            :totalCost="totalCost"
+          ></BusinessMinimumOrderReached>
         </section>
         <IonList lines="none">
-          <IonItem v-for="(item, index) in order?._order_items" :key="item.products_id">
+          <IonItem
+            v-for="(item, index) in order?._order_items"
+            :key="item.products_id"
+          >
             <ion-thumbnail slot="start" class="custom-thumbnail">
               <Image :src="item.product_image" w="150"></Image>
             </ion-thumbnail>
@@ -37,29 +43,57 @@
             <ion-row class="item-row">
               <ion-col size="10 ">
                 <h6 class="text-product">{{ item.product?.product_name }}</h6>
-                <p class="price">
+                <p>{{ $t("general.quantity") }}: {{ item.quantity }}</p>
+                <p>
+                  {{ $t("general.unitPrice") }}:
                   {{
                     Filters.currency(
-                      (item.quantity || 0) *
-                      (item.unit_price || 0),
+                      item.product_price || 0,
                       item.currency_symbol
                     )
                   }}
                 </p>
-                <p>{{ $t("general.quantity") }}: {{ item.quantity }}</p>
+                <p class="price">
+                  {{
+                    Filters.currency(
+                      (item.quantity || 0) * (item.product_price || 0),
+                      item.currency_symbol
+                    )
+                  }}
+                </p>
               </ion-col>
               <ion-col size="1" class="remove-button">
-                <ion-button fill="clear" @click.prevent.stop="removeFromCart(item, index)">
-                  <ion-icon class="remove-icon" color="medium" :icon="closeCircleOutline"></ion-icon>
+                <ion-button
+                  fill="clear"
+                  @click.prevent.stop="removeFromCart(item, index)"
+                >
+                  <ion-icon
+                    class="remove-icon"
+                    color="medium"
+                    :icon="closeCircleOutline"
+                  ></ion-icon>
                 </ion-button>
               </ion-col>
-              <ProductQuantitySelector :initialQuantity="item?.quantity" @change="updateQuantity(item, $event)">
+              <ProductQuantitySelector
+                :initialQuantity="item?.quantity"
+                :initial-product-unit-id="item.product_units_id"
+                @change="updateQuantity(item, $event)"
+                @onselectProductUnit="updateUnitPrice(item, $event)"
+              >
               </ProductQuantitySelector>
             </ion-row>
           </IonItem>
-          <IonButton fill="clear" size="small" style="text-transform: none" class="ion-text-start add-new-item"
-                     @click="addNewItem">
-            <IonIcon :icon="addCircleOutline" style="margin-right: 5px"></IonIcon>
+          <IonButton
+            fill="clear"
+            size="small"
+            style="text-transform: none"
+            class="ion-text-start add-new-item"
+            @click="addNewItem"
+          >
+            <IonIcon
+              :icon="addCircleOutline"
+              style="margin-right: 5px"
+            ></IonIcon>
             Add new item
           </IonButton>
         </IonList>
@@ -162,6 +196,16 @@ const removeFromCart = async (item: OrderItem, index: number) => {
 const updateQuantity = (item: OrderItem, newQuantity: number) => {
   item.quantity = newQuantity;
   item.total_price = item.quantity * (item._product?._product_price || 0);
+};
+
+const updateUnitPrice = (item: OrderItem, productUnitId: number) => {
+  if (productUnitId == 2) {
+    item.product_price = item.product?.single_piece_price;
+  } else {
+    item.product_price = item.unit_price;
+  }
+  item.product_units_id = productUnitId;
+  item.total_price = (item.quantity || 0) * (item.product_price || 0);
 };
 
 const addNewItem = () => {

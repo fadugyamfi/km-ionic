@@ -1,5 +1,9 @@
 <template>
-  <IonModal ref="modal" :initial-breakpoint="0.75" :breakpoints="[0, 0.5, 0.75]">
+  <IonModal
+    ref="modal"
+    :initial-breakpoint="0.75"
+    :breakpoints="[0, 0.5, 0.75]"
+  >
     <IonContent class="ion-padding">
       <header class="fw-semibold ion-padding ion-text-center">
         {{ $t("profile.stock.updateStock") }}
@@ -7,7 +11,11 @@
       <main class="ion-padding-vertical">
         <section class="ion-margin-bottom">
           <IonItem lines="none">
-            <IonInput :label="`Price (${product?.currency?.symbol || 'GHS'})`" placeholder="0.00" v-model="form.fields.product_price"></IonInput>
+            <IonInput
+              :label="`Price (${product?.currency?.symbol || 'GHS'})`"
+              placeholder="0.00"
+              v-model="form.fields.product_price"
+            ></IonInput>
           </IonItem>
         </section>
         <section>
@@ -27,6 +35,7 @@
             ></IonIcon>
           </IonItem>
           <ProductQuantitySelector
+            :hideProductUnitSelector="true"
             :initial-quantity="product?.stock_quantity"
             @change="updateProductQuantity($event)"
             v-if="showQuantitySelector"
@@ -49,7 +58,7 @@
             v-for="variation in productVariations"
             :key="variation.id"
             :value="variation.id"
-            >
+          >
             {{ variation.name }}
           </IonSelectOption>
         </IonSelect>
@@ -70,7 +79,7 @@
             v-for="variation in productVariations"
             :key="variation.id"
             :value="variation.id"
-            >
+          >
             {{ variation.name }}
           </IonSelectOption>
         </IonSelect>
@@ -169,7 +178,7 @@ export default defineComponent({
   mounted() {
     this.form.fields.product_price = this.product?.product_price;
     this.form.fields.stock_quantity = this.product?.stock_quantity;
-  }
+  },
 });
 </script>
 

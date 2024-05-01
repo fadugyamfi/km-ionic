@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="!hideProductUnitSelector">
     <ion-segment :value="initialProductUnitId" mode="ios" @ion-change="selectProductUnit">
       <ion-segment-button :value="1">
         <ion-label>{{ $t("general.units.case") }}</ion-label>
@@ -71,6 +71,10 @@ export default defineComponent({
       default: 1,
       type: Number,
     },
+    hideProductUnitSelector: {
+      type: Boolean,
+      default: false
+    }
   },
 
   emits: ["change", "onselectProductUnit"],

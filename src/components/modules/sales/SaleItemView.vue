@@ -121,7 +121,6 @@ export default defineComponent({
   methods: {
     updateItemQuantity(quantity: number) {
       const productUnitId = this.saleItem?.product_units_id;
-      console.log(productUnitId, "unit");
       this.saleItem?.update({
         quantity,
         total_price:
@@ -133,7 +132,6 @@ export default defineComponent({
     },
 
     updateUnitPrice(productUnitId: number) {
-      //   if (productUnitId == 2) {
       this.saleItem?.update({
         total_price:
           (this.saleItem?.quantity as number) *
@@ -142,12 +140,6 @@ export default defineComponent({
             : this.saleItem?.product?.single_piece_price || 0),
         product_units_id: productUnitId,
       });
-      // this.saleItem.product.product_price = this.saleItem?.product?.single_piece_price;
-      //   } else {
-      //     item.product_price = item.unit_price;
-      //   }
-      //   item.product_units_id = productUnitId;
-      //   item.total_price = item.quantity * item.product_price;
     },
 
     removeItem() {
