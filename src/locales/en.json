@@ -42,6 +42,7 @@
       "case": "Case",
       "pieces": "Pieces"
     },
+    "unitPrice": "Unit Price",
     "thisMonth": "This Month",
     "allTime": "All Time",
     "totalSalesMade": "Total Sales Made",
@@ -334,7 +335,6 @@
       "stock": "Stock",
       "myStock": "My Stock",
       "addStock": "Add Stock",
-      "myStock": "My Stock",
       "addProductImage": "Add Product Image",
       "category": "Product category",
       "productName": "Product name",

@@ -237,6 +237,7 @@ export default defineComponent({
 
     selectProduct(selection: ProductSelection) {
       if (selection.selected) {
+        console.log(selection.product)
         this.saleStore.addProductToSale(selection.product);
       } else {
         this.saleStore.removeProductFromSale(selection.product);

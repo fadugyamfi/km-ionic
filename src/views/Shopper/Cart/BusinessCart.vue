@@ -55,7 +55,7 @@
                 </p>
                 <p>{{ $t("general.quantity") }}: {{ item.quantity }}</p>
                 <p class="unit-price">
-                  Unit Price:
+                  {{ $t("general.unitPrice") }}:
                   {{
                     Filters.currency(
                       item.product_price || 0,
