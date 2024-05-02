@@ -9,6 +9,7 @@
         <BusinessMinimumOrderReached
           :business="order?.business"
           :totalCost="totalCost"
+          :show-delivery-indication="false"
         ></BusinessMinimumOrderReached>
       </section>
       <IonList lines="none">
@@ -86,7 +87,8 @@
           <IonText class="fw-semibold">Delivery Fee</IonText>
           <section class="d-flex ion-align-items-center">
             <IonText class="fw-semibold ion-margin-end">
-              {{ Filters.currency(deliveryFee, "GHS") }}
+              TBD
+              <!-- {{ Filters.currency(deliveryFee, "GHS") }} -->
             </IonText>
           </section>
         </section>
@@ -138,7 +140,7 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton :disabled="!minOrderAmountReached" @click="createOrder">
+      <KolaYellowButton @click="createOrder">
         Place Order
       </KolaYellowButton>
     </IonFooter>
@@ -207,7 +209,7 @@ const order = computed<Order>(() => {
   ) as Order;
 });
 
-const defaultMinOrderAmount = 2000; // Set your default value here
+const defaultMinOrderAmount = 3000; // Set your default value here
 
 const minOrderAmountReached = computed(() => {
   const minOrderAmount =

@@ -29,6 +29,7 @@
           <BusinessMinimumOrderReached
             :business="order?.business"
             :totalCost="totalCost"
+            :show-delivery-indication="false"
           ></BusinessMinimumOrderReached>
         </section>
         <IonList lines="none">
@@ -56,7 +57,7 @@
                 <p class="price">
                   {{
                     Filters.currency(
-                      (item.quantity || 0) * (item.product_price || 0),
+                      (item.quantity || 0) * (item.unit_price || 0),
                       item.currency_symbol
                     )
                   }}
@@ -76,9 +77,7 @@
               </ion-col>
               <ProductQuantitySelector
                 :initialQuantity="item?.quantity"
-                :initial-product-unit-id="item.product_units_id"
                 @change="updateQuantity(item, $event)"
-                @onselectProductUnit="updateUnitPrice(item, $event)"
               >
               </ProductQuantitySelector>
             </ion-row>

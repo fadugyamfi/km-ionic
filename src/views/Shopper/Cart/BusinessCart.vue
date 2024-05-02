@@ -30,7 +30,7 @@
     </section>
 
     <ion-content class="ion-padding-horizontal">
-      <section class="ion-margin-top">
+      <section>
         <BusinessMinimumOrderReached
           :business="order?.business"
           :totalCost="totalCost"
@@ -101,7 +101,6 @@
 
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton
-        :disabled="!minOrderAmountReached"
         v-if="orderBusiness?.order_items?.length > 0"
         @click="viewDeliveryDetails()"
       >
@@ -190,7 +189,7 @@ const order = computed<Order>(() => {
   ) as Order;
 });
 
-const defaultMinOrderAmount = 2000; // Set your default value here
+const defaultMinOrderAmount = 3000; // Set your default value here
 
 const minOrderAmountReached = computed(() => {
   const minOrderAmount =

@@ -18,7 +18,8 @@
       <IonText class="fw-semibold">Delivery Fee</IonText>
       <section class="d-flex ion-align-items-center">
         <IonText class="fw-semibold ion-margin-end">
-          {{ Filters.currency(deliveryFee, "GHS") }}
+          TBD
+          <!-- {{ Filters.currency(deliveryFee, "GHS") }} -->
         </IonText>
       </section>
     </section>
