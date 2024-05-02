@@ -359,6 +359,9 @@ p {
 .custom-thumbnail {
   align-self: flex-start;
   margin-right: 16px;
+  width: 110px;
+  height: 180px;
+  margin-bottom: 0px;
 }
 
 .segment-button {
@@ -374,11 +377,6 @@ ion-badge {
 
 .text-area {
   color: black;
-}
-
-.custom-thumbnail {
-  width: 94px;
-  height: 120px;
 }
 
 .custom-label {

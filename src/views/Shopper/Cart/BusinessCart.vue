@@ -260,8 +260,9 @@ ion-footer {
 .custom-thumbnail {
   align-self: flex-start;
   margin-right: 16px;
-  width: 94px;
-  height: 120px;
+  width: 110px;
+  height: 180px;
+  margin-bottom: 0px;
 }
 
 .segment-button {

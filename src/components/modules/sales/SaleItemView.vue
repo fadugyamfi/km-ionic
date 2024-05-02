@@ -164,7 +164,8 @@ ion-item {
 
 ion-thumbnail {
   min-width: 85px;
-  height: 140px;
+  height: 180px;
+  margin-bottom: 0px;
   margin-right: 10px;
   --border-radius: 8px;
 }

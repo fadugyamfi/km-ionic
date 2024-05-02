@@ -1,6 +1,10 @@
 <template>
-  <section v-if="!hideProductUnitSelector">
-    <ion-segment :value="initialProductUnitId" mode="ios" @ion-change="selectProductUnit">
+  <section v-if="!hideProductUnitSelector" class="w-100">
+    <ion-segment
+      :value="initialProductUnitId"
+      mode="ios"
+      @ion-change="selectProductUnit"
+    >
       <ion-segment-button :value="1">
         <ion-label>{{ $t("general.units.case") }}</ion-label>
       </ion-segment-button>
@@ -73,8 +77,8 @@ export default defineComponent({
     },
     hideProductUnitSelector: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
 
   emits: ["change", "onselectProductUnit"],
@@ -120,6 +124,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 ion-segment {
+  width: 100% !important;
   margin-top: 10px;
   ion-segment-button {
     padding: 0px;
