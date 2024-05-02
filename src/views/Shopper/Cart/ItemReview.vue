@@ -9,6 +9,7 @@
         <BusinessMinimumOrderReached
           :business="order?.business"
           :totalCost="totalCost"
+          :show-delivery-indication="false"
         ></BusinessMinimumOrderReached>
       </section>
       <IonList lines="none">
@@ -125,7 +126,7 @@
     </ion-content>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton :disabled="!minOrderAmountReached" @click="createOrder">
+      <KolaYellowButton @click="createOrder">
         Place Order
       </KolaYellowButton>
     </IonFooter>
