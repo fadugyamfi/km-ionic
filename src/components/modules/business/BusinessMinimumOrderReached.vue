@@ -4,7 +4,7 @@
       v-if="showDeliveryIndication"
       class="d-flex ion-align-items-center"
     >
-      <!-- <IonIcon class="danger" color="danger" :icon="alertCircleOutline"></IonIcon> -->
+      <IonIcon class="danger" color="danger" :icon="alertCircleOutline"></IonIcon>
       <IonText color="medium">
         Enjoy free delivery on orders above
         {{ Filters.currency(getEffectiveMinOrderAmount()) }}

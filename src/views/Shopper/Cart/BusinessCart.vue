@@ -30,7 +30,7 @@
     </section>
 
     <ion-content class="ion-padding-horizontal">
-      <section class="ion-margin-top">
+      <section>
         <BusinessMinimumOrderReached
           :business="order?.business"
           :totalCost="totalCost"
@@ -184,7 +184,7 @@ const order = computed<Order>(() => {
   ) as Order;
 });
 
-const defaultMinOrderAmount = 2000; // Set your default value here
+const defaultMinOrderAmount = 3000; // Set your default value here
 
 const minOrderAmountReached = computed(() => {
   const minOrderAmount =
