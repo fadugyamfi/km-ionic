@@ -17,8 +17,7 @@
       <IonIcon class="danger" color="danger" :icon="alertCircleOutline"></IonIcon>
       <IonText color="medium">
         Your order is below
-        {{ Filters.currency(getEffectiveMinOrderAmount()) }}. To deliver, extra
-        charges apply.
+        {{ Filters.currency(getEffectiveMinOrderAmount()) }}. A delivery fee will be charged for this order
       </IonText>
     </section>
 
