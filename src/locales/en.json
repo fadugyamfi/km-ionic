@@ -32,13 +32,18 @@
     "accept": "Accept",
     "update": "Update",
     "edit": "Edit",
+    "delivery": "Delivery",
     "reorder": "Reorder",
     "totalRepaid": "Total Repaid",
     "amountOwed": "Amount Owed",
     "units": {
       "box": "Box | Boxes",
-      "piece": "Piece | Pieces"
+      "piece": "Piece | Pieces",
+      "case": "Case",
+      "pieces": "Pieces"
     },
+    "unitPrice": "Unit Price",
+    "totalPrice": "Total Price",
     "thisMonth": "This Month",
     "allTime": "All Time",
     "totalSalesMade": "Total Sales Made",
@@ -180,8 +185,7 @@
     "orders": {
       "orderDetails": "Order Details",
       "yourOrder": "Your Order",
-      "orderStatus": "Order Status",
-      "delivery": "Delivery"
+      "orderStatus": "Order Status"
     },
     "cart": {
       "proceedToCheckout": "Proceed To Checkout",
@@ -332,7 +336,6 @@
       "stock": "Stock",
       "myStock": "My Stock",
       "addStock": "Add Stock",
-      "myStock": "My Stock",
       "addProductImage": "Add Product Image",
       "category": "Product category",
       "productName": "Product name",

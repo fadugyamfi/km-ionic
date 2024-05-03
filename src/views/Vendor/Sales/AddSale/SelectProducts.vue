@@ -112,7 +112,6 @@ import {
   IonBackButton,
   IonButton,
   IonButtons,
-  IonCheckbox,
   IonCol,
   IonContent,
   IonFooter,
@@ -183,7 +182,6 @@ export default defineComponent({
     IonLabel,
     IonItem,
     IonText,
-    IonCheckbox,
     IonGrid,
     IonRow,
     IonCol,
@@ -237,6 +235,7 @@ export default defineComponent({
 
     selectProduct(selection: ProductSelection) {
       if (selection.selected) {
+        console.log(selection.product)
         this.saleStore.addProductToSale(selection.product);
       } else {
         this.saleStore.removeProductFromSale(selection.product);

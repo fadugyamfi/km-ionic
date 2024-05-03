@@ -129,30 +129,19 @@
 <script setup lang="ts">
 import {
   IonBackButton,
-  IonButton,
   IonButtons,
   IonContent,
   IonFooter,
-  IonIcon,
   IonPage,
   IonTitle,
   IonToolbar,
-  IonText,
   IonInput,
   IonSelect,
   IonSelectOption,
-  IonCheckbox,
   IonSpinner,
   IonHeader,
 } from "@ionic/vue";
 import {
-  close,
-  heartOutline,
-  heart,
-  cart,
-  cartOutline,
-  shareOutline,
-  navigateOutline,
   arrowBackOutline,
   chevronDownOutline,
 } from "ionicons/icons";

@@ -1,16 +1,23 @@
 <template>
   <section class="minimum-order">
-    <section v-if="getEffectiveMinOrderAmount() > totalCost" class="d-flex ion-align-items-center">
+    <section
+      v-if="showDeliveryIndication"
+      class="d-flex ion-align-items-center"
+    >
       <IonIcon class="danger" color="danger" :icon="alertCircleOutline"></IonIcon>
       <IonText color="medium">
-        {{ Filters.currency(getEffectiveMinOrderAmount()) }} minimum not reached
+        Enjoy free delivery on orders above
+        {{ Filters.currency(getEffectiveMinOrderAmount()) }}
       </IonText>
     </section>
-
-    <section v-if="getEffectiveMinOrderAmount() <= totalCost" class="d-flex ion-align-items-center">
-      <IonIcon class="success" color="success" :icon="checkmarkCircleOutline"></IonIcon>
+    <section
+      v-if="getEffectiveMinOrderAmount() > totalCost && !showDeliveryIndication"
+      class="d-flex ion-align-items-center"
+    >
+      <IonIcon class="danger" color="danger" :icon="alertCircleOutline"></IonIcon>
       <IonText color="medium">
-        Minimum order reached
+        Your order is below
+        {{ Filters.currency(getEffectiveMinOrderAmount()) }}. A delivery fee will be charged for this order
       </IonText>
     </section>
 
@@ -24,23 +31,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { locationOutline, alertCircleOutline, checkmarkCircleOutline } from 'ionicons/icons';
-import { IonIcon, IonText, IonAvatar } from '@ionic/vue';
-import Business from '@/models/Business';
-import Filters from '@/utilities/Filters';
+import { defineComponent, PropType } from "vue";
+import {
+  locationOutline,
+  alertCircleOutline,
+  checkmarkCircleOutline,
+} from "ionicons/icons";
+import { IonIcon, IonText, IonAvatar } from "@ionic/vue";
+import Business from "@/models/Business";
+import Filters from "@/utilities/Filters";
 
 export default defineComponent({
   props: {
     business: {
       type: Object as PropType<Business | null>,
-      default: () => ({ min_order_amount: 2000 }) // Set the default value here
+      default: () => ({ min_order_amount: 3000 }), // Set the default value here
     },
     totalCost: {
       type: Number as PropType<number>,
       required: true,
-      default: 0
-    }
+      default: 0,
+    },
+    showDeliveryIndication: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   data() {
@@ -48,17 +63,17 @@ export default defineComponent({
       locationOutline,
       alertCircleOutline,
       checkmarkCircleOutline,
-      Filters
+      Filters,
     };
   },
   components: { IonIcon, IonText, IonAvatar },
   methods: {
     getEffectiveMinOrderAmount(): number {
       const value = this.business?.min_order_amount;
-      return typeof value === 'number' ? value : 2000;
+      return typeof value === "number" ? value : 3000;
     },
   },
-})
+});
 </script>
 
 <style scoped lang="scss">
@@ -72,8 +87,10 @@ ion-icon {
   }
 
   font-size: 20px !important; /* Increase the icon size */
+  height: 20px !important;
+  width: 22px !important;
   padding: 3px;
-  border-radius: 50%;
+  border-radius: 100%;
   margin-right: 10px; /* Increase the spacing between icon and text */
 }
 

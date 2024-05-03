@@ -32,7 +32,7 @@
                     </IonButton>
                 </section>
 
-                <ProductQuantitySelector :initial-quantity="orderItem?.quantity" @change="updateItemQuantity($event)">
+                <ProductQuantitySelector  :initial-quantity="orderItem?.quantity" @change="updateItemQuantity($event)">
                 </ProductQuantitySelector>
             </section>
 

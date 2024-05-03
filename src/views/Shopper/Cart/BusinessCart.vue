@@ -20,7 +20,7 @@
                   <IonBadge>{{ orderBusiness?.order_items?.length }}</IonBadge>
                 </div>
               </IonSegmentButton>
-              <IonSegmentButton value="saved">
+              <IonSegmentButton value="saved" disabled>
                 <ion-label color="dark">Saved</ion-label>
               </IonSegmentButton>
             </IonSegment>
@@ -30,7 +30,7 @@
     </section>
 
     <ion-content class="ion-padding-horizontal">
-      <section class="ion-margin-top">
+      <section>
         <BusinessMinimumOrderReached
           :business="order?.business"
           :totalCost="totalCost"
@@ -53,16 +53,34 @@
                 <p class="text-product ion-margin-top">
                   {{ item.product_name }}
                 </p>
-                <p class="">
-                  {{ $t("general.quantity") }}: {{ item.quantity }}
+                <p>{{ $t("general.quantity") }}: {{ item.quantity }}</p>
+                <p
+                  class="unit-price d-flex ion-justify-content-between"
+                  style="margin-right: -28px"
+                >
+                  {{ $t("general.unitPrice") }}:
+                  <span>
+                    {{
+                      Filters.currency(
+                        item.product_price || 0,
+                        item.currency_symbol
+                      )
+                    }}
+                  </span>
                 </p>
-                <p class="price">
-                  {{
-                    Filters.currency(
-                      item.quantity * (item.product_price || 0),
-                      item.currency_symbol
-                    )
-                  }}
+                <p
+                  class="price d-flex ion-justify-content-between"
+                  style="color: #000 !important; margin-right: -28px"
+                >
+                {{ $t("general.totalPrice") }}:
+                  <span>
+                    {{
+                      Filters.currency(
+                        item.quantity * (item.product_price || 0),
+                        item.currency_symbol
+                      )
+                    }}
+                  </span>
                 </p>
               </ion-col>
               <ion-col size="2" class="d-flex ion-align-items-start">
@@ -79,7 +97,9 @@
               </ion-col>
               <ProductQuantitySelector
                 :initial-quantity="item.quantity"
+                :initial-product-unit-id="item.product_units_id"
                 @change="updateQuantity(item, $event)"
+                @onselectProductUnit="updateUnitPrice(item, $event)"
               >
               </ProductQuantitySelector>
             </ion-row>
@@ -92,7 +112,6 @@
 
     <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton
-        :disabled="!minOrderAmountReached"
         v-if="orderBusiness?.order_items?.length > 0"
         @click="viewDeliveryDetails()"
       >
@@ -108,7 +127,6 @@ import {
   IonSegmentButton,
   IonLabel,
   IonThumbnail,
-  IonImg,
   IonBadge,
   IonItem,
   IonList,
@@ -124,14 +142,12 @@ import {
 } from "@ionic/vue";
 import { CartItem, useCartStore } from "@/stores/CartStore";
 import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
-import OrderItemView from "@/components/modules/carts/OrderItemView.vue";
 import { closeCircleOutline } from "ionicons/icons";
 import CartHeader from "@/components/header/CartHeader.vue";
 import EmptyCart from "@/components/cards/EmptyCart.vue";
 import CartTotalCard from "@/components/cards/CartTotalCard.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import BusinessMinimumOrderReached from "../../../components/modules/business/BusinessMinimumOrderReached.vue";
-import { formatAmountWithCommas } from "@/utilities";
 import Image from "@/components/Image.vue";
 import Filters from "@/utilities/Filters";
 import { useRouter } from "vue-router";
@@ -148,7 +164,6 @@ const orderBusiness = computed((): Order | any => {
     (order: any) => order?.businesses_id == route.params.id
   );
 });
-const orders = computed(() => cartStore.orders);
 
 const viewing = ref("cart");
 
@@ -185,7 +200,7 @@ const order = computed<Order>(() => {
   ) as Order;
 });
 
-const defaultMinOrderAmount = 2000; // Set your default value here
+const defaultMinOrderAmount = 3000; // Set your default value here
 
 const minOrderAmountReached = computed(() => {
   const minOrderAmount =
@@ -197,8 +212,14 @@ const viewDeliveryDetails = () => {
   router.push(`/shopper/cart/business/${route.params.id}/delivery-details`);
 };
 
-const viewPaymentMethod = () => {
-  router.push(`/shopper/cart/business/${route.params.id}/payment-method`);
+const updateUnitPrice = (item: CartItem, productUnitId: number) => {
+  if (productUnitId == 2) {
+    item.product_price = item.single_piece_price;
+  } else {
+    item.product_price = item.unit_price;
+  }
+  item.product_units_id = productUnitId;
+  item.total_price = item.quantity * item.product_price;
 };
 
 onIonViewDidEnter(async () => {
@@ -249,8 +270,9 @@ ion-footer {
 .custom-thumbnail {
   align-self: flex-start;
   margin-right: 16px;
-  width: 94px;
-  height: 120px;
+  width: 110px;
+  height: 180px;
+  margin-bottom: 0px;
 }
 
 .segment-button {
@@ -265,23 +287,20 @@ ion-badge {
 }
 
 .custom-label {
-  color: black;
-
   p {
     font-size: 14px;
     font-family: "Poppins";
     font-weight: 400;
     text-transform: capitalize;
+    word-wrap: break-word;
     line-height: 22px;
-    word-wrap: break-word;
-  }
 
-  .price {
-    font-size: 14px;
-    font-weight: 400;
-    text-transform: capitalize;
-    line-height: 18px;
-    word-wrap: break-word;
+    &.unit-price {
+      line-height: 18px !important;
+    }
+    &.price {
+      line-height: 18px !important;
+    }
   }
 }
 
@@ -292,10 +311,6 @@ ion-icon.remove-icon {
 
 .remove-button {
   text-align: end;
-}
-
-.text-product {
-  color: black;
 }
 
 .text-product {
