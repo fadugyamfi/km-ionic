@@ -1,4 +1,18 @@
 <template>
+  <section v-if="!hideProductUnitSelector" class="w-100">
+    <ion-segment
+      :value="initialProductUnitId"
+      mode="ios"
+      @ion-change="selectProductUnit"
+    >
+      <ion-segment-button :value="1">
+        <ion-label>{{ $t("general.units.case") }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button :value="2">
+        <ion-label>{{ $t("general.units.pieces") }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </section>
   <section
     class="quantity-selector d-flex ion-align-items-center ion-justify-content-center"
   >
@@ -21,12 +35,28 @@
 </template>
 
 <script lang="ts">
-import { IonButton, IonIcon, IonInput, IonItem } from "@ionic/vue";
+import {
+  IonButton,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonSegment,
+  IonSegmentButton,
+  IonLabel,
+} from "@ionic/vue";
 import { defineComponent } from "vue";
 import { add, remove } from "ionicons/icons";
 
 export default defineComponent({
-  components: { IonItem, IonButton, IonInput, IonIcon },
+  components: {
+    IonItem,
+    IonButton,
+    IonInput,
+    IonIcon,
+    IonSegment,
+    IonSegmentButton,
+    IonLabel,
+  },
 
   data() {
     return {
@@ -41,13 +71,17 @@ export default defineComponent({
       default: 1,
       type: Number,
     },
-    item: {
-      type: Object,
-      default: () => ({}),
+    initialProductUnitId: {
+      default: 1,
+      type: Number,
+    },
+    hideProductUnitSelector: {
+      type: Boolean,
+      default: false,
     },
   },
 
-  emits: ["change"],
+  emits: ["change", "onselectProductUnit"],
 
   mounted() {
     this.quantity = this.initialQuantity;
@@ -76,6 +110,9 @@ export default defineComponent({
     updateQuantity() {
       this.$emit("change", +this.quantity);
     },
+    selectProductUnit(event: CustomEvent) {
+      this.$emit("onselectProductUnit", event.detail.value);
+    },
   },
   watch: {
     initialQuantity(newQuantity) {
@@ -86,6 +123,14 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+ion-segment {
+  width: 100% !important;
+  margin-top: 10px;
+  ion-segment-button {
+    padding: 0px;
+  }
+}
+
 .quantity-selector {
   background-color: #f5f5f5;
   border: none;

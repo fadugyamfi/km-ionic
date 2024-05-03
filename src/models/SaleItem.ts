@@ -9,6 +9,7 @@ export class SaleItem {
     public quantity = 0;
     public unit_price? = 0;
     public total_price? = 0;
+    public product_units_id?: number
 
     public _product?: Product | null;
 

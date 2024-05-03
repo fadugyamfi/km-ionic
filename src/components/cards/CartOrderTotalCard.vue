@@ -20,7 +20,7 @@
 
           <IonItem class="ion-margin-top">
             <IonLabel class="font">Delivery fee</IonLabel>
-            <IonText slot="end" class="font-medium"> GHS 0.00 </IonText>
+            <IonText slot="end" class="font-medium"> TBD</IonText>
           </IonItem>
 
           <IonItem>

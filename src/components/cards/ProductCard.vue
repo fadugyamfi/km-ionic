@@ -282,6 +282,7 @@ export default defineComponent({
         this.product.business = this.business;
       }
       const cartStore = useCartStore();
+      console.log(this.product)
       cartStore.addProduct(this.product, 1);
     },
   },

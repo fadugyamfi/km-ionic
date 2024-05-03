@@ -3,7 +3,7 @@
         <IonCardContent class="ion-no-padding">
             <IonList lines="none">
                 <IonItem>
-                    <IonLabel class="font-medium">{{ $t('shopper.orders.delivery') }}</IonLabel>
+                    <IonLabel class="font-medium">{{ $t('general.delivery') }}</IonLabel>
                     <IonText slot="end" class="font-medium">
                         GHS 0.00
                     </IonText>

@@ -63,7 +63,6 @@ import {
   IonThumbnail,
 } from "@ionic/vue";
 import { PropType, defineComponent } from "vue";
-import ProductQuantitySelector from "../products/ProductQuantitySelector.vue";
 import { closeCircleOutline } from "ionicons/icons";
 import Image from "@/components/Image.vue";
 import { mapStores } from "pinia";
@@ -80,7 +79,6 @@ export default defineComponent({
     IonItem,
     IonThumbnail,
     IonText,
-    ProductQuantitySelector,
     IonButton,
     IonIcon,
     Image,
