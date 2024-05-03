@@ -7,7 +7,7 @@
 
       <section>
         <section class="d-flex ion-justify-content-between">
-          <section class="d-flex flex-column ion-justify-content-start">
+          <section class="d-flex flex-column ion-justify-content-start w-100">
             <IonText class="fw-semibold font-medium">{{
               saleItem?.product?.product_name || "N/A"
             }}</IonText>
@@ -23,25 +23,38 @@
             <IonText color="medium" class="font-medium">
               {{ $t("general.quantity") }}: {{ saleItem?.quantity }}
             </IonText>
-            <IonText color="medium" class="font-medium">
+            <IonText
+              color="medium"
+              class="font-medium d-flex ion-justify-content-between"
+              style="margin-right: -24px"
+            >
               {{ $t("general.unitPrice") }}:
-              {{
-                Filters.currency(
-                  saleItem?.product_units_id == 1
-                    ? saleItem?.product?.product_price || 0
-                    : saleItem?.product?.single_piece_price || 0,
-                  saleItem?.product?.currency?.symbol as string
-                )
-              }}
+              <span>
+                {{
+                  Filters.currency(
+                    saleItem?.product_units_id == 1
+                      ? saleItem?.product?.product_price || 0
+                      : saleItem?.product?.single_piece_price || 0,
+                    saleItem?.product?.currency?.symbol as string
+                  )
+                }}
+              </span>
             </IonText>
 
-            <IonText color="dark" class="font-medium fw-semibold">
-              {{
-                Filters.currency(
-                  saleItem?.total_price || 0,
-                  saleItem?.product?.currency?.symbol as string
-                )
-              }}
+            <IonText
+              color="dark"
+              class="font-medium fw-semibold d-flex ion-justify-content-between"
+              style="margin-right: -24px"
+            >
+              {{ $t("general.totalPrice") }}:
+              <span>
+                {{
+                  Filters.currency(
+                    saleItem?.total_price || 0,
+                    saleItem?.product?.currency?.symbol as string
+                  )
+                }}
+              </span>
             </IonText>
           </section>
 

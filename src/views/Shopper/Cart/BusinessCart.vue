@@ -54,22 +54,33 @@
                   {{ item.product_name }}
                 </p>
                 <p>{{ $t("general.quantity") }}: {{ item.quantity }}</p>
-                <p class="unit-price">
+                <p
+                  class="unit-price d-flex ion-justify-content-between"
+                  style="margin-right: -28px"
+                >
                   {{ $t("general.unitPrice") }}:
-                  {{
-                    Filters.currency(
-                      item.product_price || 0,
-                      item.currency_symbol
-                    )
-                  }}
+                  <span>
+                    {{
+                      Filters.currency(
+                        item.product_price || 0,
+                        item.currency_symbol
+                      )
+                    }}
+                  </span>
                 </p>
-                <p class="price" style="color: #000 !important">
-                  {{
-                    Filters.currency(
-                      item.quantity * (item.product_price || 0),
-                      item.currency_symbol
-                    )
-                  }}
+                <p
+                  class="price d-flex ion-justify-content-between"
+                  style="color: #000 !important; margin-right: -28px"
+                >
+                {{ $t("general.totalPrice") }}:
+                  <span>
+                    {{
+                      Filters.currency(
+                        item.quantity * (item.product_price || 0),
+                        item.currency_symbol
+                      )
+                    }}
+                  </span>
                 </p>
               </ion-col>
               <ion-col size="2" class="d-flex ion-align-items-start">

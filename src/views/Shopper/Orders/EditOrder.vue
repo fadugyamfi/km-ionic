@@ -45,22 +45,33 @@
               <ion-col size="10 ">
                 <h6 class="text-product">{{ item.product?.product_name }}</h6>
                 <p>{{ $t("general.quantity") }}: {{ item.quantity }}</p>
-                <p>
+                <p
+                  class="d-flex ion-justify-content-between"
+                  style="margin-right: -29px"
+                >
                   {{ $t("general.unitPrice") }}:
-                  {{
-                    Filters.currency(
-                      item.product_price || 0,
-                      item.currency_symbol
-                    )
-                  }}
+                  <span>
+                    {{
+                      Filters.currency(
+                        item.product_price || 0,
+                        item.currency_symbol
+                      )
+                    }}
+                  </span>
                 </p>
-                <p class="price">
-                  {{
-                    Filters.currency(
-                      (item.quantity || 0) * (item.unit_price || 0),
-                      item.currency_symbol
-                    )
-                  }}
+                <p
+                  class="price d-flex ion-justify-content-between"
+                  style="margin-right: -29px"
+                >
+                  {{ $t("general.totalPrice") }}:
+                  <span>
+                    {{
+                      Filters.currency(
+                        (item.quantity || 0) * (item.unit_price || 0),
+                        item.currency_symbol
+                      )
+                    }}
+                  </span>
                 </p>
               </ion-col>
               <ion-col size="1" class="remove-button">

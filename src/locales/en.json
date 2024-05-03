@@ -43,6 +43,7 @@
       "pieces": "Pieces"
     },
     "unitPrice": "Unit Price",
+    "totalPrice": "Total Price",
     "thisMonth": "This Month",
     "allTime": "All Time",
     "totalSalesMade": "Total Sales Made",
