@@ -21,9 +21,12 @@ export type CartItem = {
   product_name: string;
   product_image: string;
   product_price: number;
+  unit_price: number;
   currency_symbol: string;
   total_price: number;
+  single_piece_price: number;
   total_order_amount: number;
+  product_units_id: number
 };
 
 export const useCartStore = defineStore("cart", {
@@ -177,6 +180,7 @@ export const useCartStore = defineStore("cart", {
           currencies_id: 1, // GHS
           product_units_id: 1, // GHS
           cms_users_id: userStore.user?.id,
+          single_piece_price: product.single_piece_price,
         });
 
         order.order_items.push(orderItem);

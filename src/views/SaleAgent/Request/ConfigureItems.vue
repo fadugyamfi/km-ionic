@@ -102,7 +102,6 @@ import {
 import { defineComponent } from "vue";
 import Image from "@/components/Image.vue";
 import LocationInput from "@/components/forms/LocationInput.vue";
-import ProductQuantitySelector from "@/components/modules/products/ProductQuantitySelector.vue";
 import SaleItemView from "@/components/modules/sales/SaleItemView.vue";
 import { useSaleStore } from "@/stores/SaleStore";
 import { mapStores } from "pinia";
@@ -150,7 +149,6 @@ export default defineComponent({
     IonThumbnail,
     Image,
     IonLabel,
-    ProductQuantitySelector,
     SaleItemView,
     IonFooter,
     KolaYellowButton,

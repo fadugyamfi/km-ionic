@@ -23,16 +23,17 @@
         </IonText>
       </IonLabel>
       <div class="d-flex metadata-end-wrapper" slot="end">
-        <p class="fw-semibold">
-          {{ Filters.currency(0, "GHS") }}
-        </p>
         <IonCheckbox
           aria-label="standard-delivery"
           justify="end"
           mode="ios"
           value="standard"
           :checked="selectedDelivery == 'standard'"
-        ></IonCheckbox>
+        >
+          <p class="fw-semibold">
+            {{ Filters.currency(0, "GHS") }}
+          </p>
+        </IonCheckbox>
       </div>
     </IonItem>
     <IonItem lines="none" @click="selectedDeliveryMethod('express')">
@@ -44,16 +45,17 @@
         </IonText>
       </IonLabel>
       <div class="d-flex metadata-end-wrapper" slot="end">
-        <p class="fw-semibold">
-          {{ Filters.currency(0, "GHS") }}
-        </p>
         <IonCheckbox
           aria-label="express-delivery"
           justify="end"
           mode="ios"
           value="standard"
           :checked="selectedDelivery == 'express'"
-        ></IonCheckbox>
+        >
+          <p class="fw-semibold">
+            {{ Filters.currency(0, "GHS") }}
+          </p></IonCheckbox
+        >
       </div>
     </IonItem>
   </section>

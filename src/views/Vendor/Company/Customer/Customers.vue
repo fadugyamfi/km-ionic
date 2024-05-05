@@ -54,10 +54,10 @@
       >
         <IonRefresherContent pullingIcon="crescent"></IonRefresherContent>
       </IonRefresher>
-      <div class="ion-padding ion-text-center" v-show="fetching">
+      <div class="ion-padding ion-text-center" v-if="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-      <section v-if="!fetching">
+      <section v-else>
         <EmptyCustomers v-if="customers?.length == 0"></EmptyCustomers>
         <CustomersList :customers="customers" />
       </section>

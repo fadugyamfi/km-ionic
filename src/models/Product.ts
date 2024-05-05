@@ -13,6 +13,7 @@ export default class Product {
     public wholesale_price: number = 0;
     public retail_price?: number;
     public single_unit_price?: number;
+    public single_piece_price?: number;
     public product_banner_image?: string;
     public product_groups_id?: number;
     public product_categories_id?: number;

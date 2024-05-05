@@ -31,16 +31,17 @@
           :key="orderType.id"
           @click="selectOrderType(orderType)"
         >
-          <IonLabel>
-            <p class="ion-no-margin">{{ orderType.name }}</p>
-          </IonLabel>
           <IonCheckbox
             :aria-label="orderType.name"
-            slot="end"
+            justify="space-between"
             mode="ios"
             :value="orderType.id"
             :checked="orderStore?.newOrder?.order_type_id == orderType.id"
-          ></IonCheckbox>
+          >
+            <IonLabel>
+              <p class="ion-no-margin">{{ orderType.name }}</p>
+            </IonLabel>
+          </IonCheckbox>
         </IonItem>
       </IonList>
     </IonContent>
@@ -138,6 +139,5 @@ export default defineComponent({
       }
     },
   },
-
 });
 </script>

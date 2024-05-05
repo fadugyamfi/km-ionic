@@ -31,13 +31,13 @@
         <IonInput
           class="kola-input delivery-details-input ion-margin-bottom"
           :class="{
-            'ion-invalid ion-touched': form.errors.phone_number,
+            'ion-invalid ion-touched': form.errors.delivery_phone_number,
           }"
           type="number"
           label="Phone Number"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.phone_number"
+          v-model="form.fields.delivery_phone_number"
           name="phone-number"
           @ion-input="form.validate($event)"
           required
@@ -109,7 +109,7 @@ const userStore = useUserStore();
 const form = useForm({
   delivery_location: "",
   delivery_nearest_landmark: "",
-  phone_number: "",
+  delivery_phone_number: "",
   delivery_date: "",
   delivery_method: "",
   payment_option_id: 1,

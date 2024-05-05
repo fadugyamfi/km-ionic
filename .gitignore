@@ -32,7 +32,6 @@ npm-debug.log*
 /www
 .env.local
 .env
-.env.staging
 
 resources/ios/**/*
 resources/android/**/*

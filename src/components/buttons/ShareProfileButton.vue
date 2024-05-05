@@ -21,7 +21,7 @@ const userStore = useUserStore();
 const activeBusiness = computed(() => userStore.activeBusiness);
 
 const shareUrl = computed(
-  () => `/guest/home/businesses/${activeBusiness.value?.id}`
+  () => `https://m.kola.market/guest/home/businesses/${activeBusiness.value?.id}`
 );
 
 const share = async () => {

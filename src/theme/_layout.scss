@@ -183,3 +183,10 @@ ion-segment {
     font-weight: 400;
   }
 }
+
+ion-checkbox {
+  &::part(label) {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
