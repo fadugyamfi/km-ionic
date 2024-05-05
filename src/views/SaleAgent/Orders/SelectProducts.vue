@@ -30,7 +30,7 @@
               :placeholder="$t('vendor.sales.searchProducts') + '...'"
               class="search-input"
               @keyup.enter="onSearch($event)"
-              @ion-change="onSearch($event)"
+              @ion-clear="onClear"
             ></IonSearchbar>
           </IonToolbar>
         </IonHeader>
@@ -254,7 +254,7 @@ export default defineComponent({
         );
         return;
       }
-      this.orderStore.persist()
+      this.orderStore.persist();
       if (this.userStore.user?.isSalesAssociate()) {
         this.$router.push("/agent/orders/place-order/configure-items");
       } else {
@@ -269,6 +269,13 @@ export default defineComponent({
     onSearch(event: Event) {
       this.fetchProducts({
         product_name_has: (event.target as HTMLIonSearchbarElement).value,
+        refresh: true,
+      });
+    },
+    onClear() {
+      this.fetchProducts({
+        product_name_has: "",
+        refresh: true,
       });
     },
   },
