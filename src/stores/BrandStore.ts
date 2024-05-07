@@ -141,12 +141,15 @@ export const useBrandStore = defineStore("brand", {
     async addBrand(brand: Brand): Promise<Brand | null> {
       try {
         const toastStore = useToastStore();
-        const res = await axios.post("/v2/brands", brand);
+        const userStore = useUserStore();
+        const res = await axios.post("/v2/brands", {
+          ...brand,
+          businesses_id: userStore.activeBusiness?.id,
+        });
         if (res.data) {
           const newBrand = new Brand(res.data.data);
           this.brands.unshift(newBrand);
           this.persist();
-          toastStore.showSuccess("Brand Added Successfully");
           return newBrand;
         }
         return null;

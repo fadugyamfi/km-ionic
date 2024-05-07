@@ -16,12 +16,14 @@
         </section>
       </main>
       <footer>
-        <KolaYellowButton @click="addBrand()">
+        <KolaYellowButton
+          @click="addBrand()"
+          :disabled="!form.fields.name || loading"
+        >
           {{ !loading ? $t("general.save") : "" }}
           <IonSpinner
             class="spinner"
             name="crescent"
-            :disabled="!form.fields.name"
             v-if="loading"
           ></IonSpinner>
         </KolaYellowButton>
@@ -44,6 +46,7 @@ import { mapStores } from "pinia";
 import Brand from "@/models/Brand";
 import { useBrandStore } from "@/stores/BrandStore";
 import { useForm } from "@/composables/form";
+import { useToastStore } from "@/stores/ToastStore";
 
 export default defineComponent({
   components: {
@@ -64,7 +67,7 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapStores(useBrandStore),
+    ...mapStores(useBrandStore, useToastStore),
   },
 
   methods: {
@@ -73,6 +76,8 @@ export default defineComponent({
         this.loading = true;
         const brand = new Brand(this.form.fields);
         await this.brandStore.addBrand(brand);
+        this.form.fields.name = "";
+        await this.toastStore.showSuccess("Brand Added Successfully");
       } catch (error) {
       } finally {
         this.loading = false;

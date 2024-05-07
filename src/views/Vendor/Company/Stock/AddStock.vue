@@ -628,7 +628,15 @@ ion-grid {
   --border-style: solid;
   --border-color: #b4b4b4;
   --border-radius: 8px;
+  --padding-top: 0px;
+  --padding-bottom: 0px;
+  --padding-start: 0px;
+  --padding-end: 0px;
   width: 60px;
   margin: 0 0 16px 10px;
+
+  ion-icon {
+    font-size: 25px;
+  }
 }
 </style>
