@@ -1,5 +1,5 @@
 <template>
-  <IonModal ref="modal" :initial-breakpoint="0.35" :breakpoints="[0, 3.5, 0.5]">
+  <IonModal ref="modal" :initial-breakpoint="0.35" :breakpoints="[0, 0.35, 0.5]">
     <IonContent class="ion-padding">
       <header class="fw-semibold ion-padding ion-text-center">
         {{ $t("profile.stock.addNewBrand") }}
