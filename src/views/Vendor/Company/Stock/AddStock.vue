@@ -103,28 +103,37 @@
             >{{ category.name }}</IonSelectOption
           >
         </IonSelect>
-        <IonSelect
-          class="kola-input ion-margin-bottom"
-          label="Brand"
-          :class="{
-            'ion-invalid ion-touched': form.errors.brands_id,
-          }"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.brands_id"
-          required
-          name="brands_id"
-          :toggle-icon="chevronDownOutline"
-          @ion-change="form.validateSelectInput($event)"
-        >
-          <IonSelectOption
-            v-for="brand in brands"
-            :key="brand.id"
-            :value="brand.id"
+        <section class="d-flex">
+          <IonSelect
+            class="kola-input ion-margin-bottom"
+            label="Brand"
+            :class="{
+              'ion-invalid ion-touched': form.errors.brands_id,
+            }"
+            labelPlacement="stacked"
+            fill="solid"
+            v-model="form.fields.brands_id"
+            required
+            name="brands_id"
+            :toggle-icon="chevronDownOutline"
+            @ion-change="form.validateSelectInput($event)"
           >
-            {{ brand.name }}</IonSelectOption
+            <IonSelectOption
+              v-for="brand in brands"
+              :key="brand.id"
+              :value="brand.id"
+            >
+              {{ brand.name }}</IonSelectOption
+            >
+          </IonSelect>
+          <IonButton
+            expand="block"
+            class="intro-btn white"
+            @click="openBrandSheet"
           >
-        </IonSelect>
+            <IonIcon :icon="addOutline"></IonIcon>
+          </IonButton>
+        </section>
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.product_price }"
@@ -334,6 +343,11 @@
         </IonFooter>
       </form>
     </ion-content>
+    <AddBrandSheet
+      :isOpen="showAddBrandSheet"
+      @didDismiss="showAddBrandSheet = false"
+    >
+    </AddBrandSheet>
   </ion-page>
 </template>
 <script setup lang="ts">
@@ -356,15 +370,14 @@ import {
   IonCardContent,
   IonCard,
   IonTextarea,
-  IonRadioGroup,
   IonRadio,
-  IonItem,
-  IonLabel,
+  IonRadioGroup,
+  IonIcon,
   IonGrid,
   IonRow,
   IonCol,
 } from "@ionic/vue";
-import { arrowBackOutline, chevronDownOutline } from "ionicons/icons";
+import { arrowBackOutline, chevronDownOutline, addOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
@@ -376,12 +389,13 @@ import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { useProductCategoryStore } from "@/stores/ProductCategoryStore";
 import { useStockStore } from "@/stores/StockStore";
 import { useBrandStore } from "@/stores/BrandStore";
+import AddBrandSheet from "@/components/modules/stock/AddBrandSheet.vue";
 import Brand from "@/models/Brand";
 
 const toastStore = useToastStore();
 const stockStore = useStockStore();
+const brandStore = useBrandStore();
 
-const route = useRoute();
 const router = useRouter();
 
 const fetching = ref(false);
@@ -390,6 +404,7 @@ const brands = ref<Brand[]>([]);
 const productUnits = ref<any>([]);
 
 const photo = ref();
+const showAddBrandSheet = ref(false);
 
 const form = useForm({
   product_image: "",
@@ -409,7 +424,7 @@ const form = useForm({
   volume_units_id: "",
   min_order_amount: "",
   min_order_quantity: "",
-  group_quantity: ""
+  group_quantity: "",
 });
 
 const weightUnits = ref([
@@ -442,10 +457,13 @@ const formValid = computed(() => {
     fields.weight_value &&
     fields.weight_units_id &&
     fields.min_order_amount &&
-    fields.min_order_quantity && 
+    fields.min_order_quantity &&
     fields.group_quantity
   );
 });
+const openBrandSheet = () => {
+  showAddBrandSheet.value = true;
+};
 
 const createStock = async () => {
   try {
@@ -492,7 +510,6 @@ const fetchProductGroups = async () => {
 };
 
 const fetchBrands = async () => {
-  const brandStore = useBrandStore();
   fetching.value = true;
   const response = await brandStore.fetchBrands();
   fetching.value = false;
@@ -603,9 +620,23 @@ ion-grid {
   }
 }
 
-.date-wrapper {
-  background: #f6f6f6;
-  ion-input {
+.intro-btn.white {
+  --background: #f6f6f6;
+  --color: #74787c;
+  --box-shadow: none;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-color: #b4b4b4;
+  --border-radius: 8px;
+  --padding-top: 0px;
+  --padding-bottom: 0px;
+  --padding-start: 0px;
+  --padding-end: 0px;
+  width: 60px;
+  margin: 0 0 16px 10px;
+
+  ion-icon {
+    font-size: 25px;
   }
 }
 </style>

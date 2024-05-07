@@ -1,5 +1,5 @@
 <template>
-    <IonModal :isOpen="isOpen" id="confirm-modal" ref="modal">
+    <IonModal :isOpen="isOpen" id="confirm-modal" ref="modal" @didDismiss="dismiss()">
         <div class="wrapper ion-padding">
             <div class="ion-text-center">
                 <p class="d-flex ion-justify-content-center">
