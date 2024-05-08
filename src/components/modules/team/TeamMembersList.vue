@@ -16,7 +16,7 @@
         >
           <IonContent :scroll-y="false">
             <IonList class="pop-over-content">
-              <IonItem lines="full" :button="true" :detail="false">
+              <IonItem lines="full" :button="true" :detail="false" router-link="/profile/company/team/role-and-permission">
                 <IonIcon :icon="createOutline"></IonIcon>
                 {{ $t("profile.team.editRoleAndPermissions") }}
               </IonItem>
