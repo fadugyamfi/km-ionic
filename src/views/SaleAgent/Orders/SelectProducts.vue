@@ -264,6 +264,13 @@ export default defineComponent({
 
     toggleSearchEnabled() {
       this.searchEnabled = !this.searchEnabled;
+
+      setTimeout(() => {
+        let elem = <HTMLInputElement>document.querySelector('.search-input input');
+        if (elem) {
+            elem.focus();
+        }
+      }, 100)
     },
 
     onSearch(event: Event) {
@@ -272,6 +279,7 @@ export default defineComponent({
         refresh: true,
       });
     },
+
     onClear() {
       this.fetchProducts({
         product_name_has: "",
