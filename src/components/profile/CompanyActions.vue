@@ -67,7 +67,7 @@
         :detail="true"
         :button="true"
         class="profile-item"
-        :disabled="true"
+        router-link="/profile/company/team"
       >
         <IonAvatar slot="start">
           <img src="/images/ic_user.svg" class="action-img" />

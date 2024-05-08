@@ -413,6 +413,25 @@
       "editAddress": "Edit Address",
       "save": "Save",
       "cancel": "Cancel"
+    },
+
+    "team": {
+      "team": "Team",
+      "searchTeamMember": "Find Team Member By Name",
+      "buildYourTeam": "Build Your Team!",
+      "noTeamDescription": "Ready to bring your team together? Start by adding members to collaborate and achieve your goals more efficiently.",
+      "addMember": "Add member",
+      "addTeamMember": "Add A Team Member",
+      "fullName": "Full Name",
+      "assignRole": "Assign role",
+      "selectRole": "Select a role",
+      "addNewRole": "Add a new role",
+      "addNewRoleNotFoundInOptions": "Add a new role not found in the options",
+      "addTeamMemberDescription": " Inviting team members is simple. Just enter their email addresses below, and we'll send them a unique link to join.",
+      "editRoleAndPermissions": "Edit role and permissions",
+      "removeMember": "Remove member",
+      "removeMember?": "Remove member?",
+      "youCanAlwaysAddTeamMember": "You can always add team member "
     }
   },
   "settings": {
