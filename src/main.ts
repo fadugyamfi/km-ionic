@@ -87,7 +87,7 @@ const app = createApp(App)
   .use(router)
 
   .use(VueGtag, {
-    config: { id: "G-0X283E0RYF" },
+    config: { id: "G-093DTNK2FF" },
   });
 
 router.isReady().then(() => {
