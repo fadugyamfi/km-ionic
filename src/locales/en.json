@@ -363,7 +363,8 @@
       "productDetail": "Product Detail",
       "productOutOfStock": "Product is currently out of stock",
       "confirmDelete": "Are you sure you want to remove this stock?",
-      "updateStock": "Update Stock"
+      "updateStock": "Update Stock",
+      "addNewBrand": "Add New Brand"
     },
     "switchBusiness": "Switch Business",
     "agent": {

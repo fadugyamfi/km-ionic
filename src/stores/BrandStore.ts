@@ -138,6 +138,26 @@ export const useBrandStore = defineStore("brand", {
       }
     },
 
+    async addBrand(brand: Brand): Promise<Brand | null> {
+      try {
+        const toastStore = useToastStore();
+        const userStore = useUserStore();
+        const res = await axios.post("/v2/brands", {
+          ...brand,
+          businesses_id: userStore.activeBusiness?.id,
+        });
+        if (res.data) {
+          const newBrand = new Brand(res.data.data);
+          this.brands.unshift(newBrand);
+          this.persist();
+          return newBrand;
+        }
+        return null;
+      } catch (error) {
+        handleAxiosRequestError(error);
+        return null;
+      }
+    },
     async addToFavorites(brand: Brand) {
       const toastStore = useToastStore();
       brand.addToFavorites();
