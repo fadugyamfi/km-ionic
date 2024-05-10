@@ -8,6 +8,7 @@
     "optional": "optional",
     "cancel": "Cancel",
     "save": "Save",
+    "saveChanges": "Save Changes",
     "home": "Home",
     "sales": "Sales",
     "credit": "Credits",
@@ -351,7 +352,6 @@
       "minimumOrderAmount": "Minimum order amount (GHS)",
       "minimumOrderQuantity": "Minimum order quantity",
       "selectExpiryDate": "Select expiry date",
-      "saveChanges": "Save Changes",
       "numberOfItems": "Number of items",
       "totalValueStock": "Total value of stock",
       "availableStock": "Available Stock",
@@ -431,7 +431,17 @@
       "editRoleAndPermissions": "Edit role and permissions",
       "removeMember": "Remove member",
       "removeMember?": "Remove member?",
-      "youCanAlwaysAddTeamMember": "You can always add team member "
+      "removeRole?": "Remove role?",
+      "youCanAlwaysAddTeamMember": "You can always add team member ",
+      "youCanAlwaysAddRole": "You can always add another role ",
+      "emailAddress": "Email Address",
+      "name": "Name",
+      "preferredContact": "Preferred contact number",
+      "teamMemberDetails": "Team member details",
+      "assignNewRole": " Assign New Role ",
+      "role": "Role",
+      "permissions": "Permissions",
+      "rolesAndPermissions": "Role and permissions"
     }
   },
   "settings": {

@@ -2,13 +2,17 @@
   <section style="margin-top: 24px">
     <section class="role-section">
       <header>
-        <h6>Role</h6>
-        <IonText color="tertiary"> Assign New Role </IonText>
+        <h6>{{ $t("profile.team.role") }}</h6>
+        <IonText
+          color="tertiary"
+          :router-link="`/profile/company/team/${route.params.id}/assign-role`"
+          >{{ $t("profile.team.assignNewRole") }}</IonText
+        >
       </header>
     </section>
     <IonItem lines="none">
       <IonLabel slot="start"> Sales agent </IonLabel>
-      <IonButton fill="clear" slot="end" color="dark">
+      <IonButton fill="clear" slot="end" color="dark" @click="removeRole">
         <IonIcon :icon="closeCircleOutline"></IonIcon>
       </IonButton>
     </IonItem>
@@ -19,10 +23,49 @@
       </IonButton>
     </IonItem>
   </section>
+  <RemoveRoleModal
+    :isOpen="showConfirmRemoveModal"
+    :member="selectedRole"
+    @dismiss="showConfirmRemoveModal = false"
+    @confirm="onConfirmDelete()"
+  />
 </template>
 <script setup lang="ts">
 import { IonText, IonItem, IonButton, IonIcon, IonLabel } from "@ionic/vue";
 import { closeCircleOutline } from "ionicons/icons";
+import { useToastStore } from "@/stores/ToastStore";
+import { ref } from "vue";
+import { useCustomerStore } from "@/stores/CustomerStore";
+import RemoveRoleModal from "./RemoveRoleModal.vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute()
+
+const toastStore = useToastStore();
+const customerStore = useCustomerStore();
+const showConfirmRemoveModal = ref(false);
+
+const selectedRole = ref(null);
+
+const removeRole = (role) => {
+  selectedRole.value = role;
+  showConfirmRemoveModal.value = true;
+};
+
+const onConfirmDelete = async () => {
+  try {
+    showConfirmRemoveModal.value = false;
+    await customerStore.deleteCustomer(selectedRole.value);
+    toastStore.showSuccess("Role has been removed", "", "bottom");
+  } catch (error) {
+    toastStore.showError(
+      "Failed to remove role. Please try again",
+      "",
+      "bottom",
+      "footer"
+    );
+  }
+};
 </script>
 <style lang="scss" scoped>
 .role-section {
@@ -60,8 +103,8 @@ ion-item {
   }
   ion-button {
     ion-icon {
-        color: #9E9E9E;
-        font-size: 20px;
+      color: #9e9e9e;
+      font-size: 20px;
     }
   }
 }

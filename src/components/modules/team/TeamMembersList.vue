@@ -16,12 +16,17 @@
         >
           <IonContent :scroll-y="false">
             <IonList class="pop-over-content">
-              <IonItem lines="full" :button="true" :detail="false" router-link="/profile/company/team/role-and-permission">
+              <IonItem
+                lines="full"
+                :button="true"
+                :detail="false"
+                :router-link="`/profile/company/team/${member.id}/role-and-permission`"
+              >
                 <IonIcon :icon="createOutline"></IonIcon>
                 {{ $t("profile.team.editRoleAndPermissions") }}
               </IonItem>
               <IonItem
-                @click="removeMember"
+                @click="removeMember(member)"
                 lines="none"
                 :button="true"
                 :detail="false"
@@ -83,8 +88,8 @@ const openMenu = (e: Event, index = -1) => {
   openPopover.value = index;
 };
 
-const removeMember = (customer: Customer) => {
-  selectedMember.value = customer;
+const removeMember = (member: Customer) => {
+  selectedMember.value = member;
   showConfirmRemoveModal.value = true;
 };
 
@@ -92,11 +97,7 @@ const onConfirmDelete = async () => {
   try {
     showConfirmRemoveModal.value = false;
     await customerStore.deleteCustomer(selectedMember.value as Customer);
-    toastStore.showSuccess(
-      "Team member has been removed",
-      "",
-      "bottom"
-    );
+    toastStore.showSuccess("Team member has been removed", "", "bottom");
   } catch (error) {
     toastStore.showError(
       "Failed to remove Team member. Please try again",

@@ -86,7 +86,7 @@
       </main>
       <footer>
         <KolaYellowButton @click="update()">
-          {{ $t("profile.stock.saveChanges") }}
+          {{ $t("general.saveChanges") }}
         </KolaYellowButton>
       </footer>
     </IonContent>

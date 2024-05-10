@@ -13,8 +13,7 @@
             ></ion-back-button>
           </ion-buttons>
           <IonTitle size="small" class="fw-bold">
-            <!-- {{ $t("profile.team.addMember") }} -->
-            Role and permissions
+            {{ $t("profile.team.rolesAndPermissions") }}
           </IonTitle>
           <ion-buttons slot="end">
             <IonButton disabled></IonButton>
@@ -36,9 +35,14 @@
               <h4>Gifty Johnson</h4>
               <IonText color="medium">giftyjohnson@gmail.com</IonText>
               <IonChip>Sales agent</IonChip>
-              <IonChip>Sales agent</IonChip>
+              <IonChip>Business analyst</IonChip>
             </IonLabel>
-            <IonButton slot="end" fill="clear" color="dark">
+            <IonButton
+              slot="end"
+              fill="clear"
+              color="dark"
+              @click="editDetails"
+            >
               <IonIcon :icon="createOutline" style="font-size: 20px"></IonIcon>
             </IonButton>
           </IonItem>
@@ -46,6 +50,12 @@
       </IonCard>
       <TeamMemberRoles></TeamMemberRoles>
       <TeamMemberPermissions></TeamMemberPermissions>
+      
+      <TeamMemberDetailsSheet
+        :isOpen="showTeamMemberDetailSheet"
+        @didDismiss="showTeamMemberDetailSheet = false"
+        @update="onSaveUpdate($event)"
+      />
     </IonContent>
   </IonPage>
 </template>
@@ -77,6 +87,9 @@ import { ref } from "vue";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import TeamMemberRoles from "@/components/modules/team/TeamMemberRoles.vue";
 import TeamMemberPermissions from "@/components/modules/team/TeamMemberPermissions.vue";
+import TeamMemberDetailsSheet from "@/components/modules/team/TeamMemberDetailsSheet.vue";
+
+const showTeamMemberDetailSheet = ref(false);
 
 const member = ref({
   name: "Gifty Johnson",
@@ -92,7 +105,12 @@ const member = ref({
     },
   ],
 });
+const editDetails = () => {
+  showTeamMemberDetailSheet.value = true;
+};
+const onSaveUpdate = () => {};
 </script>
+
 <style lang="scss" scoped>
 ion-card {
   margin: 0px;

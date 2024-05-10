@@ -170,8 +170,13 @@ export const ProfileRoutes = [
                 component: () => import("@/views/Profile/Team/AddMember.vue"),
               },
               {
-                path: "role-and-permission",
-                component: () => import("@/views/Profile/Team/RoleAndPermission.vue"),
+                path: ":id/role-and-permission",
+                component: () =>
+                  import("@/views/Profile/Team/RoleAndPermission.vue"),
+              },
+              {
+                path: ":id/assign-role",
+                component: () => import("@/views/Profile/Team/AssignRole.vue"),
               },
             ],
           },

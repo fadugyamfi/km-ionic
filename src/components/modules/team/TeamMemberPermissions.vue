@@ -2,7 +2,7 @@
   <section style="margin-top: 24px">
     <section class="role-section">
       <header>
-        <h6>Permissions</h6>
+        <h6>{{$t('profile.team.permissions')}}</h6>
       </header>
     </section>
   </section>
