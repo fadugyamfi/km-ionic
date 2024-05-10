@@ -45,6 +45,7 @@
     </IonHeader>
     <IonContent>
       <TeamMembersList :teamMembers="teamMembers" />
+      <!-- <NoTeamMember /> -->
     </IonContent>
   </IonPage>
 </template>

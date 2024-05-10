@@ -48,6 +48,7 @@ ion-item {
   border-radius: 8px;
   box-shadow: 0px 2px 12px #68686f14;
   margin-bottom: 5px;
+  --inner-padding-end: 5px;
   &::part(native) {
     color: #000;
     border-radius: 8px;

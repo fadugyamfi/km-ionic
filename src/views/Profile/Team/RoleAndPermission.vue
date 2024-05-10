@@ -45,6 +45,7 @@
         </IonCardContent>
       </IonCard>
       <TeamMemberRoles></TeamMemberRoles>
+      <TeamMemberPermissions></TeamMemberPermissions>
     </IonContent>
   </IonPage>
 </template>
@@ -67,14 +68,15 @@ import {
   IonIcon,
   IonText,
 } from "@ionic/vue";
-import { ref } from "vue";
 import {
   arrowBackOutline,
   chevronDownOutline,
   createOutline,
 } from "ionicons/icons";
+import { ref } from "vue";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import TeamMemberRoles from "@/components/modules/team/TeamMemberRoles.vue";
+import TeamMemberPermissions from "@/components/modules/team/TeamMemberPermissions.vue";
 
 const member = ref({
   name: "Gifty Johnson",
