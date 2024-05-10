@@ -4,7 +4,13 @@
       <EditAddressHeader />
     </section>
     <ion-content :fullscreen="true" class="ion-padding-horizontal">
-      <form>
+      <section
+        v-if="fetching"
+        class="ion-text-center d-flex ion-justify-content-center ion-padding"
+      >
+        <IonSpinner name="crescent"></IonSpinner>
+      </section>
+      <form v-else>
         <LocationInput
           v-model="form.fields.address"
           label="Business Address"
@@ -148,17 +154,21 @@ const updateBusinessLocations = async () => {
 };
 
 const cancel = () => {
-  router.push("/profile/address");
+  router.replace("/profile/address");
 };
 
 const getRegions = async () => {
   try {
+    fetching.value = true;
     const countryId = businessStore?.registration?.country_id;
     const response = await LocationStore.fetchRegions(countryId);
     if (response) {
       regions.value = response;
     }
-  } catch (error) {}
+  } catch (error) {
+  } finally {
+    fetching.value = false;
+  }
 };
 
 const fetchAddress = async () => {

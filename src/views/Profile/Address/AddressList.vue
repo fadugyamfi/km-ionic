@@ -4,27 +4,38 @@
       <AddressHeader />
     </section>
     <IonContent class="ion-padding-horizontal">
-      <IonItem
-        v-for="address in businessLocations"
-        :key="address.id"
-        lines="none"
-        class="profile-item ion-margin-top d-flex flex-column ion-align-items-start"
-        :router-link="`/profile/address/business/${address.business_id}/location/${address.id}/edit-address`"
+      <IonButton
+        fill="clear"
+        style="text-transform: none"
+        class="ion-text-start add-new-item"
+        router-link="/profile/address/add-address"
       >
-        <div class="d-flex flex-column">
-          <IonLabel>{{ address?.business?.name }}</IonLabel>
-          <IonText class="success">{{ address?.address }}</IonText>
-          <IonText class="success">{{ address?.city }}</IonText>
-        </div>
-        <IonIcon slot="end" :icon="createOutline"></IonIcon>
-      </IonItem>
-
-      <IonItem lines="none" router-link="/profile/address/add-address">
-        <IonIcon class="success" :icon="addCircleOutline"></IonIcon>
-        <IonText class="new-bussiness" color="medium">
-          Add New Address
-        </IonText>
-      </IonItem>
+        <IonIcon :icon="addCircleOutline"></IonIcon>
+        Add new address
+      </IonButton>
+      <section
+        v-if="fetching"
+        class="ion-text-center d-flex ion-justify-content-center ion-padding"
+      >
+        <IonSpinner name="crescent"></IonSpinner>
+      </section>
+      <section v-else>
+        <IonItem
+          v-for="address in businessLocations"
+          :key="address.id"
+          lines="none"
+          :button="true"
+          class="profile-item d-flex flex-column ion-align-items-start"
+          :router-link="`/profile/address/business/${address?.business_id}/location/${address?.id}/edit-address`"
+        >
+          <IonLabel>
+            <h6>{{ address?.business?.name }}</h6>
+            <p>{{ address?.address }}</p>
+            <p>{{ address?.city }}</p>
+          </IonLabel>
+          <IonIcon slot="end" :icon="createOutline"></IonIcon>
+        </IonItem>
+      </section>
     </IonContent>
   </ion-page>
 </template>
@@ -38,7 +49,9 @@ import {
   IonList,
   IonText,
   IonPage,
+  IonButton,
   IonContent,
+  IonSpinner,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useUserStore } from "@/stores/UserStore";
@@ -54,6 +67,7 @@ import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import AddressHeader from "@/components/header/AddressHeader.vue";
 import { useBusinessStore } from "@/stores/BusinessStore";
 import Address from "@/models/Address";
+import { handleAxiosRequestError } from "@/utilities";
 
 export default defineComponent({
   components: {
@@ -64,9 +78,11 @@ export default defineComponent({
     IonIcon,
     ProfileAvatar,
     IonText,
+    IonButton,
     IonPage,
     AddressHeader,
     IonContent,
+    IonSpinner,
   },
 
   computed: {
@@ -81,14 +97,22 @@ export default defineComponent({
       settingsOutline,
       addCircleOutline,
       businessLocations: [] as Address[] | null,
+      fetching: false,
     };
   },
 
   methods: {
     async getBusinessLocations() {
-      this.businessLocations = await this.businessStore.getBusinessLocations(
-        Number(this.userStore.activeBusiness?.id)
-      );
+      try {
+        this.fetching = true;
+        this.businessLocations = await this.businessStore.getBusinessLocations(
+          Number(this.userStore.activeBusiness?.id)
+        );
+      } catch (error) {
+        handleAxiosRequestError(error);
+      } finally {
+        this.fetching = false;
+      }
     },
   },
   mounted() {
@@ -104,15 +128,26 @@ ion-badge.badge {
   margin-left: 8px;
 }
 
-.success {
-  margin-right: 8px;
-}
+ion-item {
+  box-shadow: 0px 4px 12px 0px #696f821a;
 
-.new-bussiness {
-  color: #666eed;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
+  ion-label {
+    p {
+      font-size: 12px;
+    }
+  }
+
+  ion-icon {
+    color: #003366;
+  }
+}
+.add-new-item {
+  --color: #666eed;
+
+  ion-icon {
+    color: #667085;
+    margin-right: 5px;
+    font-size: 20px;
+  }
 }
 </style>
