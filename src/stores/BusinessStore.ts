@@ -537,7 +537,7 @@ export const useBusinessStore = defineStore("business", {
         .then((response) => {
           if (response.status >= 200 && response.status < 300) {
             const data = response.data.data;
-            this.businessLocations.push(new Address(data));
+            this.businessLocations.unshift(new Address(data));
             return data;
           }
         })

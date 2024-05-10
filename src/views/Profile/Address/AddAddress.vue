@@ -57,7 +57,7 @@
           @click.prevent="createBusinessLocation"
           >{{ $t("profile.customers.save") }}</KolaYellowButton
         >
-        <KolaWhiteButton :disabled="!formValid" @click.prevent="createCancel">{{
+        <KolaWhiteButton @click.prevent="cancel">{{
           $t("profile.address.cancel")
         }}</KolaWhiteButton>
       </IonFooter>
@@ -72,11 +72,9 @@ import {
   IonPage,
   IonInput,
   IonSelect,
-  IonSelectOption
+  IonSelectOption,
 } from "@ionic/vue";
-import {
-  chevronDownOutline,
-} from "ionicons/icons";
+import { chevronDownOutline } from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
@@ -113,11 +111,13 @@ const form = useForm({
 const formValid = computed(() => {
   const fields = form.fields;
 
-  return fields.region_id;
+  return (
+    fields.region_id && fields.city.length > 0 && fields.address.length > 0
+  );
 });
 
-const createCancel = async () => {
-  router.push("/profile/address");
+const cancel = async () => {
+  router.replace("/profile/address");
 };
 
 const createBusinessLocation = async () => {
@@ -133,7 +133,7 @@ const createBusinessLocation = async () => {
         "",
         "bottom"
       );
-      router.push("/profile/address");
+      router.replace("/profile/address");
     } else {
       toastStore.unblockUI();
       toastStore.showError(
