@@ -2,7 +2,7 @@
   <section style="margin-top: 24px">
     <section class="role-section">
       <header>
-        <h6>{{$t('profile.team.permissions')}}</h6>
+        <h6>{{ $t("profile.team.permissions") }}</h6>
       </header>
     </section>
   </section>
@@ -65,7 +65,7 @@
       <ion-item slot="header" color="light">
         <ion-label>Credit sales permissions</ion-label>
       </ion-item>
-      <div  slot="content">
+      <div slot="content">
         <IonItem class="content-item">
           <IonCheckbox
             aria-label="Manage inventory"
@@ -133,6 +133,10 @@ import { closeCircleOutline, chevronDown } from "ionicons/icons";
 }
 ion-accordion-group {
   ion-accordion {
+    &::v-deep(ion-icon) {
+      font-size: 18px;
+      color: #787486;
+    }
     ion-item {
       box-shadow: 0px 2px 12px #68686f14;
       margin-bottom: 5px;
