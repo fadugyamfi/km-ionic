@@ -571,6 +571,35 @@ export const useBusinessStore = defineStore("business", {
         })
         .catch((error) => handleAxiosRequestError(error));
     },
+    async removeBusinessLocation(
+      location: Address,
+      business_id: number | string
+    ) {
+      const toastStore = useToastStore();
+      try {
+        const res = await axios.delete(
+          `/v2/businesses/${business_id}/locations/${location.id}`
+        );
+        if (res) {
+          this.businessLocations = this.businessLocations.filter(
+            (loc) => loc.id !== res.data?.data?.id
+          );
+        }
+        toastStore.showSuccess(
+          "Address has been removed successfully",
+          "",
+          "bottom"
+        );
+      } catch (error) {
+        handleAxiosRequestError(error);
+        toastStore.showError(
+          "Failed to remove Address. Please try again",
+          "",
+          "bottom",
+          "footer"
+        );
+      }
+    },
     async addBusiness(businessInfo: object): Promise<Business | null> {
       try {
         const response = await axios.post(`/v2/businesses`, businessInfo);
