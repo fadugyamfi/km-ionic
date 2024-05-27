@@ -27,23 +27,7 @@
     </section>
 
     <IonContent class="ion-padding" v-if="product">
-      <header>
-        <Swiper>
-          <SwiperSlide>
-            <section style="height: 200px; border-radius: 10px">
-              <Image
-                :src="product?.image"
-                :path="product?.product_banner_image"
-                :no-img-src="noImage"
-                style="height: 200px"
-                w="400"
-                h="400"
-              ></Image>
-            </section>
-          </SwiperSlide>
-        </Swiper>
-      </header>
-
+      <ProductImages :product="product" />
       <main>
         <section class="section title-section d-flex ion-align-items-start">
           <span class="product-name">
@@ -60,7 +44,7 @@
         >
           <span
             class="price fw-semibold"
-            :class="{ strikethrough: product.is_on_sale }"
+            :class="{ strikethrough: product?.is_on_sale }"
           >
             {{
               Filters.currency(
@@ -73,7 +57,7 @@
           <IonText
             class="price fw-semibold"
             color="danger"
-            v-if="product.is_on_sale"
+            v-if="product?.is_on_sale"
           >
             {{
               Filters.currency(
@@ -211,6 +195,7 @@ import { handleAxiosRequestError } from "@/utilities";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import Filters from "../../utilities/Filters";
 import ShareButton from "@/components/buttons/ShareButton.vue";
+import ProductImages from "@/components/modules/products/ProductImages.vue";
 
 export default defineComponent({
   components: {
@@ -241,6 +226,7 @@ export default defineComponent({
     CartStatusButton,
     ProfileAvatar,
     ShareButton,
+    ProductImages,
   },
 
   data() {

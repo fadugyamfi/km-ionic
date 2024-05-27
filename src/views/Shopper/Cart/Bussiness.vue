@@ -16,7 +16,7 @@
                   <IonBadge>{{ cartStore.orders.length }}</IonBadge>
                 </div>
               </IonSegmentButton>
-              <IonSegmentButton value="saved">
+              <IonSegmentButton value="saved" disabled>
                 <ion-label color="dark">Saved</ion-label>
               </IonSegmentButton>
             </IonSegment>

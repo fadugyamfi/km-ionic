@@ -22,31 +22,15 @@
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-      <IonText style="font-size: 14px" color="medium" size="small">
-        {{ $t("profile.stock.addProductImage") }}
-      </IonText>
+      <section
+        class="d-flex ion-align-items-center ion-justify-content-between ion-margin-bottom"
+      >
+        <IonText style="font-size: 14px" color="medium" size="small">
+          {{ $t("profile.stock.addProductImages") }}
+        </IonText>
+      </section>
       <form v-show="!fetching">
-        <IonCard color="light">
-          <IonImg
-            v-if="photo"
-            :src="photo.webviewPath"
-            @click="pickImages()"
-          ></IonImg>
-
-          <IonCardContent
-            v-if="!photo"
-            @click="pickImages()"
-            class="d-flex ion-justify-content-center ion-align-items-center flex-column"
-            style="height: 200px"
-          >
-            <IonImg
-              src="/images/vendor/featured-image.svg"
-              style="width: 64px; margin-bottom: 15px"
-            ></IonImg>
-            <p class="font-medium">Tap to upload</p>
-            <p class="font-medium">SVG, PNG, JPG or GIF (max. 2048x1080px)</p>
-          </IonCardContent>
-        </IonCard>
+        <ImageUpload @images="setProductImages" />
         <IonInput
           class="kola-input ion-margin-bottom"
           :class="{ 'ion-invalid ion-touched': form.errors.product_name }"
@@ -367,8 +351,6 @@ import {
   IonHeader,
   IonSpinner,
   IonImg,
-  IonCardContent,
-  IonCard,
   IonTextarea,
   IonRadio,
   IonRadioGroup,
@@ -377,7 +359,11 @@ import {
   IonRow,
   IonCol,
 } from "@ionic/vue";
-import { arrowBackOutline, chevronDownOutline, addOutline } from "ionicons/icons";
+import {
+  arrowBackOutline,
+  chevronDownOutline,
+  addOutline,
+} from "ionicons/icons";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import { useToastStore } from "@/stores/ToastStore";
@@ -385,12 +371,12 @@ import { useUserStore } from "@/stores/UserStore";
 import { useForm } from "@/composables/form";
 import { useRoute, useRouter } from "vue-router";
 import { computed, onMounted, ref } from "vue";
-import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { useProductCategoryStore } from "@/stores/ProductCategoryStore";
 import { useStockStore } from "@/stores/StockStore";
 import { useBrandStore } from "@/stores/BrandStore";
 import AddBrandSheet from "@/components/modules/stock/AddBrandSheet.vue";
 import Brand from "@/models/Brand";
+import ImageUpload from "@/components/ImageUpload.vue";
 
 const toastStore = useToastStore();
 const stockStore = useStockStore();
@@ -403,11 +389,10 @@ const productGroups = ref<any>([]);
 const brands = ref<Brand[]>([]);
 const productUnits = ref<any>([]);
 
-const photo = ref();
 const showAddBrandSheet = ref(false);
 
 const form = useForm({
-  product_image: "",
+  product_images: [],
   product_categories_id: "",
   product_name: "",
   product_description: "",
@@ -465,18 +450,23 @@ const openBrandSheet = () => {
   showAddBrandSheet.value = true;
 };
 
+const setProductImages = (productImages: string[]) => {
+  form.fields.product_images = productImages;
+};
+
 const createStock = async () => {
   try {
     const userStore = useUserStore();
     toastStore.blockUI("Hold On As We Add Your Stock");
     const stock = await stockStore.addStock({
       ...form.fields,
+      product_images: "",
       businesses_id: userStore.activeBusiness?.id,
     });
     if (stock) {
-      toastStore.unblockUI();
+      await addStockImages(stock?.id.toString());
       await toastStore.showSuccess("Stock has been added successfully");
-      router.push("/profile/company/stocks");
+      router.replace("/profile/company/stocks");
     } else {
       toastStore.unblockUI();
       toastStore.showError(
@@ -489,6 +479,29 @@ const createStock = async () => {
   } catch (error) {
   } finally {
     toastStore.unblockUI();
+  }
+};
+
+const addStockImages = async (product_id: number) => {
+  try {
+    for (const image of form.fields.product_images) {
+      const res = await stockStore.addStockImages(product_id, image);
+      if (!res) {
+        toastStore.showError(
+          "Failed to add Stock image. Please try again later",
+          "",
+          "bottom",
+          "footer"
+        );
+      }
+    }
+  } catch (error) {
+    toastStore.showError(
+      "Failed to add Stock images. Please try again later",
+      "",
+      "bottom",
+      "footer"
+    );
   }
 };
 
@@ -521,20 +534,6 @@ const fetchProductUnits = async () => {
   fetching.value = false;
 };
 
-const pickImages = async () => {
-  const { takePhoto, photos, pickImages } = usePhotoGallery();
-  try {
-    await pickImages();
-
-    photo.value = photos.value ? photos.value[0] : null;
-    if (photo.value) {
-      form.fields.product_image = photo.value.base64Data as string;
-    }
-  } catch (e) {
-    console.log(e);
-  }
-};
-
 onMounted(() => {
   getProductCategories();
   fetchProductGroups();
@@ -563,13 +562,7 @@ h6 {
   line-height: 16px;
   color: #74787c;
 }
-ion-card {
-  margin: 20px 0px;
-  border-color: #b4b4b4;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 8px;
-}
+
 ion-radio {
   --border-radius: 4px;
   --inner-border-radius: 4px;

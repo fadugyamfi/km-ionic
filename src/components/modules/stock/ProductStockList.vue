@@ -56,35 +56,28 @@ export default defineComponent({
   },
 
   data() {
-    return {
-      leftColumnItems: [] as Array<Stock>,
-      rightColumnItems: [] as Array<Stock>,
-    };
+    return {};
   },
 
   components: { ProductStockCard },
 
   methods: {
-    fillColumns() {
-      this.leftColumnItems = this.stocks.filter((category, index) => {
-        return index % 2 == 0;
-      });
-
-      this.rightColumnItems = this.stocks.filter((category, index) => {
-        return index % 2 != 0;
-      });
-    },
-
     onStockSelected(stock: Stock) {
       if (!this.clickable) return;
       this.$router.push(`/profile/company/stocks/${stock.id}/stock-details`);
     },
   },
-
-  mounted() {
-    setTimeout(() => {
-      this.fillColumns();
-    }, 200);
+  computed: {
+    leftColumnItems() {
+      return this.stocks.filter((category, index) => {
+        return index % 2 == 0;
+      });
+    },
+    rightColumnItems() {
+      return this.stocks.filter((category, index) => {
+        return index % 2 != 0;
+      });
+    },
   },
 });
 </script>

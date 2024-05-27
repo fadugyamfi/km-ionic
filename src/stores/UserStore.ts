@@ -5,6 +5,7 @@ import User from "@/models/User";
 import Business from "@/models/Business";
 import AppStorage from "./AppStorage";
 import { useCustomerStore } from "./CustomerStore";
+import { useBusinessStore } from "./BusinessStore";
 
 const meta = (key: string) => {
   const meta = document.querySelector(`meta[name="${key}"]`);
@@ -398,9 +399,13 @@ export const useUserStore = defineStore("user", {
         ...options,
       };
       const customerStore = useCustomerStore();
+      const businessStore = useBusinessStore();
+
+      const cacheSearchQuery = await businessStore.getSearchTerm();
       const data = await storage.get("kola.assigned-businesses");
-      if (data?.businesses && !refresh) {
-        customerStore.totalCustomers = data.total
+
+      if (data?.businesses && !refresh && !cacheSearchQuery) {
+        customerStore.totalCustomers = data.total;
         return data.businesses;
       }
 
@@ -417,6 +422,9 @@ export const useUserStore = defineStore("user", {
             1,
             "days"
           );
+          if (!refresh && cacheSearchQuery) {
+            await businessStore.clearSearchTerm();
+          }
           return businesses;
         })
         .catch((error) => {

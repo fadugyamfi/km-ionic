@@ -31,6 +31,7 @@ export const useStockStore = defineStore("stock", {
       url: string = "/v2/products"
     ): Promise<Stock[]> {
       try {
+        this.stocks = [];
         const products = await this.fetchStocks(
           {
             product_name_has: this.searchTerm,
@@ -39,7 +40,7 @@ export const useStockStore = defineStore("stock", {
           },
           url
         );
-
+        this.stocks = products;
         return products;
       } catch (error) {
         return [];
@@ -48,7 +49,7 @@ export const useStockStore = defineStore("stock", {
 
     async fetchStocks(
       options = {},
-      url: string = "/v2/products",
+      url: string = "/v2/products"
     ): Promise<Stock[]> {
       const userStore = useUserStore();
       const params = {
@@ -101,6 +102,7 @@ export const useStockStore = defineStore("stock", {
         .delete(`/v2/products/${stock.id}`)
         .then(() => {
           const index = this.stocks.findIndex((s) => s.id == stock.id);
+          console.log(index);
           if (index > -1) {
             this.stocks.splice(index, 1);
           }
@@ -153,6 +155,21 @@ export const useStockStore = defineStore("stock", {
         })
         .catch((error) => handleAxiosRequestError(error));
     },
+    async addStockImages(
+      product_id: number,
+      image: string
+    ): Promise<Object | null> {
+      try {
+        const res = await axios.post(`v2/product-images`, {
+          product_id,
+          images: [image],
+        });
+        return res.data;
+      } catch (error) {
+        return null;
+      }
+    },
+
     async fetchProduct(product_id: number | string): Promise<Stock | null> {
       try {
         const response = await axios.get(`/v2/products/${product_id}`);

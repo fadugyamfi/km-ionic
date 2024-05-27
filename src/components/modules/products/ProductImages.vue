@@ -1,20 +1,20 @@
 <template>
-  <div class="order-slider">
-    <Swiper ref="swiper" :slides-per-view="1" pagination :modules="modules">
-      <SwiperSlide
-        v-for="(orderItem, index) in order?.order_items"
-        :key="index"
-      >
-        <IonCard>
-          <IonCardContent>
-            <Image :src="orderItem?.product?.product_images[0]?.image" w="400" />
-          </IonCardContent>
-        </IonCard>
-      </SwiperSlide>
-      <SwiperSlide v-if="order?.order_items?.length == 0">
-        <section style="height: 200px; border-radius: 10px">
+  <div class="products-slider">
+    <Swiper :pagination="true" :modules="modules">
+      <SwiperSlide v-for="image in product?.product_images" :key="image?.id">
+        <section style="height: 100%; border-radius: 10px">
           <Image
-            :no-img-src="noImage"
+            :src="image?.image"
+            :path="image?.image_path"
+            w="400"
+            h="400"
+          ></Image>
+        </section>
+      </SwiperSlide>
+      <SwiperSlide v-if="product?.product_images?.length == 0">
+        <section style="height: 100%; border-radius: 10px">
+          <Image
+            :src="product?.image"
             style="height: 200px"
             w="400"
             h="400"
@@ -24,32 +24,31 @@
     </Swiper>
   </div>
 </template>
-
 <script lang="ts">
-import { Order } from "@/models/Order";
 import { PropType, defineComponent } from "vue";
 import { IonCard, IonCardContent } from "@ionic/vue";
 import Image from "../../Image.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
-import { PaginationOptions } from "swiper/types";
+import { Pagination } from "swiper/modules";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/scss/navigation";
 import "swiper/scss/pagination";
 import "swiper/scss/scrollbar";
+import Product from "@/models/Product";
+import Stock from "@/models/Stock";
 
 export default defineComponent({
   props: {
-    order: {
-      type: Object as PropType<Order | null>,
+    product: {
+      type: Object as PropType<Product | Stock | null>,
     },
   },
 
   data() {
     return {
-      modules: [Navigation, Pagination, Scrollbar, A11y],
+      modules: [Pagination],
       swiperOptions: {
         slidesPerView: 1,
         autoplay: {
@@ -60,7 +59,7 @@ export default defineComponent({
           clickable: true,
           type: "bullets",
           enabled: true,
-        } as PaginationOptions,
+        },
       },
       noImage: "/images/product-placeholder.png",
     };
@@ -75,9 +74,8 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss">
-.order-slider {
+<style lang="scss" scoped>
+.products-slider {
   height: 250px;
   margin-bottom: 2em;
 
@@ -85,13 +83,15 @@ export default defineComponent({
     width: 100%;
 
     ion-img {
-      height: 200px;
+      height: 100%;
       object-fit: contain;
     }
   }
 
   .swiper {
-    .swiper-pagination {
+    height: 100%;
+    &::v-deep(.swiper-pagination) {
+      position: absolute;
       bottom: 6px;
 
       .swiper-pagination-bullet {

@@ -202,16 +202,23 @@ export default defineComponent({
 
   methods: {
     async loadCachedInventory() {
-      this.products = await this.saleStore.fetchInventory();
+      try {
+        this.fetching = true;
+        this.products = await this.saleStore.fetchInventory();
 
-      if (!this.products || this.products.length == 0) {
-        this.fetchProducts();
+        if (!this.products || this.products.length == 0) {
+          this.fetchProducts();
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      } finally {
+        this.fetching = false;
       }
     },
 
     async fetchProducts(options = {}) {
-      this.fetching = true;
       try {
+        this.fetching = true;
         const params = {
           businesses_id: this.userStore.activeBusiness?.id,
           approved_only: 1,
@@ -235,7 +242,7 @@ export default defineComponent({
 
     selectProduct(selection: ProductSelection) {
       if (selection.selected) {
-        console.log(selection.product)
+        console.log(selection.product);
         this.saleStore.addProductToSale(selection.product);
       } else {
         this.saleStore.removeProductFromSale(selection.product);
@@ -253,7 +260,7 @@ export default defineComponent({
         );
         return;
       }
-      this.saleStore.persist()
+      this.saleStore.persist();
       if (this.userStore.user?.isSalesAssociate()) {
         this.$router.push("/agent/sales/add-sale/configure-items");
       } else {
