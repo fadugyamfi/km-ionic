@@ -1,6 +1,6 @@
 {
   "name": "kola-market-ionic",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "private": true,
   "description": "Kola Market App",
   "scripts": {
@@ -39,7 +39,7 @@
     "braces": "^3.0.2",
     "cordova-clarity": "^2.2.0",
     "cordova-plugin-device": "^2.1.0",
-    "echarts": "^5.4.3",
+    "echarts": "^5.5.0",
     "firebase": "^10.7.1",
     "intl-tel-input": "^17.0.16",
     "ionicons": "7.2.2",

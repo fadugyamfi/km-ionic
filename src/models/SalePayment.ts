@@ -10,6 +10,7 @@ export class SalePayment {
   public amount: number = 0;
   public total_sales_price: number = 0;
   public payment_date?: string;
+  public credits_id?: number;
 
   private _business?: Business | null;
   private _payment_mode?: PaymentMode | null;

@@ -27,7 +27,7 @@
         v-for="order in orders"
         :key="order.id"
         class="ion-align-items-start ion-margin-bottom"
-        :router-link="`/vendor/orders/${order.id}`"
+        @click="viewDetails(order.id)"
         button
       >
         <ProfileAvatar
@@ -57,11 +57,12 @@
 </template>
 <script lang="ts" setup>
 import { IonList, IonText, IonItem, IonChip, IonLabel } from "@ionic/vue";
-import { PropType } from "vue";
-import { useRoute } from "vue-router";
+import { PropType, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { Order } from "@/models/Order";
 import filters from "@/utilities/Filters";
 import ProfileAvatar from "../../ProfileAvatar.vue";
+import { useUserStore } from "@/stores/UserStore";
 
 const props = defineProps({
   orders: {
@@ -71,6 +72,10 @@ const props = defineProps({
 });
 
 const route = useRoute();
+const router = useRouter();
+const userStore = useUserStore();
+
+const isVendorMode = computed(() => userStore.appMode == "vendor");
 
 const getStatusInfo = (orderStatusId?: number) => {
   switch (orderStatusId) {
@@ -106,6 +111,14 @@ const getStatusInfo = (orderStatusId?: number) => {
         label: "Default",
       };
   }
+};
+
+const viewDetails = (id: any) => {
+  if (isVendorMode.value) {
+    router.push(`/vendor/orders/${id}`);
+    return;
+  }
+  router.push(`/shopper/orders/${id}`);
 };
 </script>
 
