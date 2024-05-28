@@ -23,6 +23,7 @@
       v-for="credit in credits"
       :key="credit.id"
       class="ion-align-items-start ion-margin-bottom"
+      :router-link="`/vendor/orders/${credit.credits_id}`"
     >
       <ProfileAvatar
         slot="start"
@@ -39,7 +40,7 @@
           color="medium"
           class="font-medium"
         >
-          Payment made on {{ credit.payment_date.split(" ")[0] }}
+          Payment made on {{ credit.payment_date?.split(" ")[0] || "N/A" }}
         </IonText>
         <IonText color="medium" class="font-medium d-flex">
           paid via {{ credit.payment_mode.name }}

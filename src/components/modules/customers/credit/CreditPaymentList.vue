@@ -168,7 +168,7 @@ export default defineComponent({
 
     viewDetails(payment: SalePayment) {
       this.$emit("view-details", payment);
-      this.$router.push(`/shopper/orders/${payment.id}`);
+      this.$router.push(`/vendor/orders/${payment.id}`);
     },
   },
 });
