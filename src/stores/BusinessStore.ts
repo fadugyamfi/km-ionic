@@ -12,6 +12,7 @@ import { useRouter } from "vue-router";
 import Customer from "../models/Customer";
 
 const storage = new AppStorage();
+const SEARCH_QUERY = "kola.business-search-query";
 
 export const useBusinessStore = defineStore("business", {
   state: () => ({
@@ -62,13 +63,29 @@ export const useBusinessStore = defineStore("business", {
         pin_confirmation: "",
       },
     },
-    searchQuery: "",
+    searchQuery: null as string | null,
     SearchResults: [] as Business[],
     businessSummary: null as any | null,
     business: null as any | null,
   }),
 
   actions: {
+    async setSearchTerm(term: string) {
+      this.searchQuery = term;
+      storage.set(SEARCH_QUERY, this.searchQuery, 1, "day");
+    },
+
+    async getSearchTerm() {
+      if (!this.searchQuery && (await storage.has(SEARCH_QUERY))) {
+        this.searchQuery = await storage.get(SEARCH_QUERY);
+      }
+
+      return this.searchQuery;
+    },
+    async clearSearchTerm() {
+      await storage.remove(SEARCH_QUERY);
+      this.searchQuery = null;
+    },
     async loadCachedBusinesses() {
       if (!this.businesses) {
         this.businesses = (await storage.get("kola.businesses")) || [];
@@ -269,15 +286,16 @@ export const useBusinessStore = defineStore("business", {
         return [];
       }
     },
-
     async getBusinessCustomers(
       business: Business,
       limit: number = 50,
       options = {},
       refresh = false
     ): Promise<Business[]> {
+      const cacheSearchQuery = await this.getSearchTerm();
       const cacheKey = `kola.business.${business.id}.customers`;
-      if ((await storage.has(cacheKey)) && !refresh) {
+      
+      if ((await storage.has(cacheKey)) && !refresh && !cacheSearchQuery) {
         const data = await storage.get(cacheKey);
         return data.map((el: object) => new Business(el));
       }
@@ -299,7 +317,9 @@ export const useBusinessStore = defineStore("business", {
           const customers: Business[] = data.map((el: any) => new Business(el));
 
           await storage.set(cacheKey, customers, 7, "days");
-
+          if (!refresh && cacheSearchQuery) {
+            await this.clearSearchTerm();
+          }
           return customers;
         }
       } catch (error) {
@@ -537,7 +557,7 @@ export const useBusinessStore = defineStore("business", {
         .then((response) => {
           if (response.status >= 200 && response.status < 300) {
             const data = response.data.data;
-            this.businessLocations.push(new Address(data));
+            this.businessLocations.unshift(new Address(data));
             return data;
           }
         })
@@ -570,6 +590,35 @@ export const useBusinessStore = defineStore("business", {
           }
         })
         .catch((error) => handleAxiosRequestError(error));
+    },
+    async removeBusinessLocation(
+      location: Address,
+      business_id: number | string
+    ) {
+      const toastStore = useToastStore();
+      try {
+        const res = await axios.delete(
+          `/v2/businesses/${business_id}/locations/${location.id}`
+        );
+        if (res) {
+          this.businessLocations = this.businessLocations.filter(
+            (loc) => loc.id !== res.data?.data?.id
+          );
+        }
+        toastStore.showSuccess(
+          "Address has been removed successfully",
+          "",
+          "bottom"
+        );
+      } catch (error) {
+        handleAxiosRequestError(error);
+        toastStore.showError(
+          "Failed to remove Address. Please try again",
+          "",
+          "bottom",
+          "footer"
+        );
+      }
     },
     async addBusiness(businessInfo: object): Promise<Business | null> {
       try {

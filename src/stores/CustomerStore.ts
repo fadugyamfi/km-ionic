@@ -183,6 +183,7 @@ export const useCustomerStore = defineStore("customer", {
 
         const ordersData = response.data.data;
         this.orders = ordersData.map((data: any) => new Order(data));
+        return this.orders
       } catch (error) {
         handleAxiosRequestError(error);
       }

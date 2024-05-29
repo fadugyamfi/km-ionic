@@ -31,12 +31,13 @@
       <CustomerProfileHeader :customer="customer" />
       <ProfileSubHeader :customer="customer" />
 
-      <div class="ion-padding ion-text-center" v-show="fetching">
+      <div class="ion-padding ion-text-center" v-if="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-
-      <CustomerOrderHistory :orders="orders" />
-      <CustomerCredit :credits="credits" />
+      <section v-else>
+        <CustomerOrderHistory :orders="orders" />
+        <CustomerCredit :credits="credits" />
+      </section>
     </IonContent>
   </ion-page>
 </template>
@@ -78,31 +79,33 @@ const route = useRoute();
 
 const fetching = ref(false);
 
-const orders = computed(() => customerStore.orders.splice(0, 3));
-const credits = computed(() => customerStore.creditPayments.splice(0, 3));
+const orders = ref();
+const credits = computed(() => customerStore.creditPayments.slice(0, 3));
 
 const fetchCustomer = async () => {
-  fetching.value = true;
-
-  if( customerStore.selectedCustomer ) {
-    customer.value = customerStore.selectedCustomer;
+  try {
+    fetching.value = true;
+    if (customerStore.selectedCustomer) {
+      customer.value = customerStore.selectedCustomer;
+    } else {
+      customer.value = (await customerStore.getCustomer(
+        userStore.activeBusiness as Business,
+        route.params.id
+      )) as Customer;
+    }
+  } catch (error) {
+    handleAxiosRequestError(error);
+  } finally {
+    fetching.value = false;
   }
-
-  else {
-    customer.value = await customerStore.getCustomer(
-      userStore.activeBusiness as Business,
-      route.params.id
-    ) as Customer;
-  }
-
-  fetching.value = false;
 };
 
 const fetchCustomerOrders = async () => {
   try {
     fetching.value = true;
     const customer_id = route.params.id;
-    await customerStore.receivedOrders(customer_id);
+    const data = await customerStore.receivedOrders(customer_id);
+    orders.value = data?.slice(0, 3);
   } catch (error) {
     handleAxiosRequestError(error);
   } finally {
@@ -122,8 +125,8 @@ const fetchCustomerCredits = async () => {
   }
 };
 
-onMounted(() => {
-  fetchCustomer();
+onMounted(async () => {
+  await fetchCustomer();
   fetchCustomerOrders();
   fetchCustomerCredits();
 });

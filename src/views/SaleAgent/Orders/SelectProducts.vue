@@ -206,16 +206,23 @@ export default defineComponent({
 
   methods: {
     async loadCachedInventory() {
-      this.products = await this.saleStore.fetchInventory();
+      try {
+        this.fetching = true;
+        this.products = await this.saleStore.fetchInventory();
 
-      if (!this.products || this.products.length == 0) {
-        this.fetchProducts();
+        if (!this.products || this.products.length == 0) {
+          this.fetchProducts();
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      } finally {
+        this.fetching = false;
       }
     },
 
     async fetchProducts(options = {}) {
-      this.fetching = true;
       try {
+        this.fetching = true;
         const params = {
           businesses_id: this.userStore.activeBusiness?.id,
           limit: 500,

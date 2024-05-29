@@ -2,7 +2,11 @@
   <section>
     <section class="product-category-card" :class="{ tall: tall === true }">
       <ion-card>
-        <Image :alt="stock.product_name" :src="stock.image" w="150" />
+        <Image
+          :alt="stock?.product_name"
+          :src="stock?.product_images?.length ? stock?.product_images[0]?.image : stock?.image"
+          w="150"
+        />
         <IonCardHeader>
           <section
             class="d-flex ion-align-items-center ion-justify-content-between"
@@ -66,7 +70,7 @@ import {
   IonButton,
   IonText,
 } from "@ionic/vue";
-import { defineComponent } from "vue";
+import { PropType, defineComponent } from "vue";
 import {
   locationOutline,
   closeCircleOutline,
@@ -84,7 +88,7 @@ export default defineComponent({
   props: {
     stock: {
       required: true,
-      type: Stock,
+      type: Stock as PropType<Stock>,
     },
 
     tall: {

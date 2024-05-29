@@ -192,7 +192,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useUserStore, useOrderStore),
+    ...mapStores(useUserStore, useOrderStore, useBusinessStore),
   },
 
   methods: {
@@ -205,18 +205,16 @@ export default defineComponent({
 
     async fetchCustomers(options = {}) {
       this.fetching = true;
-      const userStore = useUserStore();
-      const businessStore = useBusinessStore();
 
       if (this.userStore.user?.isSaleAgent()) {
-        this.customers = await userStore.fetchAssignedBusinesses(
-          userStore.user?.id,
+        this.customers = await this.userStore.fetchAssignedBusinesses(
+          this.userStore.user?.id,
           options,
           this.refreshing
         );
       } else {
-        this.customers = await businessStore.getBusinessCustomers(
-          userStore.activeBusiness as Business,
+        this.customers = await this.businessStore.getBusinessCustomers(
+          this.userStore.activeBusiness as Business,
           300,
           options,
           this.refreshing
@@ -252,8 +250,9 @@ export default defineComponent({
       }
     },
 
-    async onSearch(event: Event) {
+    async onSearch(event: any) {
       this.refreshing = true;
+      this.businessStore.setSearchTerm(event.target.value);
       await this.fetchCustomers({
         name_like: (event.target as HTMLIonSearchbarElement).value,
       });

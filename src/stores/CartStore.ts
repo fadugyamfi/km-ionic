@@ -26,7 +26,7 @@ export type CartItem = {
   total_price: number;
   single_piece_price: number;
   total_order_amount: number;
-  product_units_id: number
+  product_units_id: number;
 };
 
 export const useCartStore = defineStore("cart", {
@@ -172,7 +172,10 @@ export const useCartStore = defineStore("cart", {
           products_id: product.id,
           product_price: productPrice,
           currency_symbol: product.currency?.symbol,
-          product_image: product.image,
+          product_image:
+            product.product_images && product.product_images?.length > 0
+              ? product.product_images[0].image
+              : product.image,
           product_name: product.product_name,
           unit_price: productPrice,
           quantity: quantity,
@@ -213,6 +216,9 @@ export const useCartStore = defineStore("cart", {
         (order) => order.businesses_id == business.businesses_id
       );
       this.orders[businessIndex].order_items.splice(itemIndex, 1);
+      if (this.orders[businessIndex].order_items.length == 0) {
+        this.orders.splice(businessIndex, 1);
+      }
       const toastStore = useToastStore();
       toastStore.showSuccess("Removed From Cart");
       this.persist();

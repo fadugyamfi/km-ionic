@@ -58,12 +58,6 @@ import { useRoute, useRouter } from "vue-router";
 import { Order } from "@/models/Order";
 
 export default defineComponent({
-  props: {
-    order: {
-      type: Order,
-      required: true,
-    },
-  },
   components: {
     IonPage,
     IonContent,

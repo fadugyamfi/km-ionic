@@ -23,6 +23,7 @@
       v-for="credit in credits"
       :key="credit.id"
       class="ion-align-items-start ion-margin-bottom"
+      @click="viewDetails(credit.credits_id)"
     >
       <ProfileAvatar
         slot="start"
@@ -39,7 +40,7 @@
           color="medium"
           class="font-medium"
         >
-          Payment made on {{ credit.payment_date.split(" ")[0] }}
+          Payment made on {{ credit.payment_date?.split(" ")[0] || "N/A" }}
         </IonText>
         <IonText color="medium" class="font-medium d-flex">
           paid via {{ credit.payment_mode.name }}
@@ -60,13 +61,12 @@ import {
   IonIcon,
   IonLabel,
 } from "@ionic/vue";
-import { PropType, ref } from "vue";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import Image from "@/components/Image.vue";
-import Customer from "@/models/Customer";
-import { useCustomerStore } from "@/stores/CustomerStore";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import Filters from "@/utilities/Filters";
+import { useUserStore } from "@/stores/UserStore";
 
 const props = defineProps({
   credits: {
@@ -75,13 +75,18 @@ const props = defineProps({
   },
 });
 
-const customer = ref({
-  id: 1,
-  logo: "",
-});
-
 const router = useRouter();
-const customerStore = useCustomerStore();
+const userStore = useUserStore();
+
+const isVendorMode = computed(() => userStore.appMode == "vendor");
+
+const viewDetails = (id: number) => {
+  if (isVendorMode.value) {
+    router.push(`/vendor/orders/${id}`);
+    return;
+  }
+  router.push(`/shopper/orders/${id}`);
+};
 </script>
 
 <style lang="scss" scoped>
