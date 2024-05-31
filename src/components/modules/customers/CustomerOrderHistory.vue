@@ -16,7 +16,7 @@
       v-if="orders.length == 0"
       class="no-records ion-padding-horizontal"
     >
-      <IonText>{{ $t('profile.customers.noRecords') }}</IonText>
+      <IonText>{{ $t("profile.customers.noRecords") }}</IonText>
     </section>
     <IonList
       v-else
@@ -26,7 +26,9 @@
       <IonItem
         v-for="order in orders"
         :key="order.id"
-        class="ion-align-items-start"
+        class="ion-align-items-start ion-margin-bottom"
+        @click="viewDetails(order.id)"
+        button
       >
         <ProfileAvatar
           slot="start"
@@ -43,7 +45,9 @@
             </span>
           </p>
           <IonText class="font-medium">
-            <IonChip>{{ order.order_status?.name || "Pending" }}</IonChip>
+            <IonChip :color="getStatusInfo(order.order_status_id)?.color">{{
+              order.order_status?.name || "Pending"
+            }}</IonChip>
           </IonText>
         </IonLabel>
         <IonText> {{ filters.date(order.created_at, "short") }}</IonText>
@@ -53,20 +57,69 @@
 </template>
 <script lang="ts" setup>
 import { IonList, IonText, IonItem, IonChip, IonLabel } from "@ionic/vue";
-import { PropType } from "vue";
-import { useRoute } from "vue-router";
+import { PropType, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { Order } from "@/models/Order";
 import filters from "@/utilities/Filters";
 import ProfileAvatar from "../../ProfileAvatar.vue";
+import { useUserStore } from "@/stores/UserStore";
 
 const props = defineProps({
   orders: {
-    type: Object as PropType<Order[]>,
-    default: true,
+    type: Array as PropType<Order[]>,
+    default: () => [],
   },
 });
 
 const route = useRoute();
+const router = useRouter();
+const userStore = useUserStore();
+
+const isVendorMode = computed(() => userStore.appMode == "vendor");
+
+const getStatusInfo = (orderStatusId?: number) => {
+  switch (orderStatusId) {
+    case 1:
+      return {
+        color: "secondary",
+        label: "Processing",
+      };
+    case 2:
+    case 4:
+    case 5:
+    case 6:
+      return {
+        color: "primary",
+        label: "Pending",
+      };
+    case 3:
+    case 7:
+      return {
+        color: "success",
+        label: "Completed",
+      };
+    case 8:
+    case 9:
+    case 10:
+      return {
+        color: "danger",
+        label: "Cancelled",
+      };
+    default:
+      return {
+        color: "medium",
+        label: "Default",
+      };
+  }
+};
+
+const viewDetails = (id: any) => {
+  if (isVendorMode.value) {
+    router.push(`/vendor/orders/${id}`);
+    return;
+  }
+  router.push(`/shopper/orders/${id}`);
+};
 </script>
 
 <style lang="scss" scoped>

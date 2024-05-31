@@ -72,7 +72,7 @@
                   class="price d-flex ion-justify-content-between"
                   style="color: #000 !important; margin-right: -28px"
                 >
-                {{ $t("general.totalPrice") }}:
+                  {{ $t("general.totalPrice") }}:
                   <span>
                     {{
                       Filters.currency(
@@ -122,7 +122,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import {
   IonSegmentButton,
   IonLabel,
@@ -174,7 +174,7 @@ const updateQuantity = (item: CartItem, newQuantity: number) => {
 };
 
 const removeFromCart = (index: number) => {
-  console.log(index, orderBusiness.value);
+  console.log(index, orderBusiness.value, "hello");
   cartStore.removeAtItemIndex(orderBusiness.value, index);
 };
 
@@ -226,6 +226,11 @@ onIonViewDidEnter(async () => {
   if (cartStore.orders.length == 0) {
     await cartStore.loadFromStorage();
   }
+});
+
+watch(orderBusiness.value, (newValue) => {
+  if (newValue && newValue.order_items?.length == 0)
+    router.replace(`/shopper/cart/business`);
 });
 </script>
 

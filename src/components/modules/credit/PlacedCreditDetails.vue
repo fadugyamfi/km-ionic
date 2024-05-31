@@ -23,7 +23,7 @@
               </p>
               <p>
                 <IonChip color="danger" class="font-medium fw-bold">
-                  {{ credit?.order?.days_overdue }} days overdue
+                  {{ Number(credit?.order?.days_overdue) }} days overdue
                 </IonChip>
               </p>
               <p class="font-medium">

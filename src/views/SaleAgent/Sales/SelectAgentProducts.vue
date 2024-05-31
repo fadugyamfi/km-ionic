@@ -204,10 +204,17 @@ export default defineComponent({
 
   methods: {
     async loadCachedInventory() {
-      this.products = await this.saleStore.fetchAgentInventory();
+      try {
+        this.fetching = true;
+        this.products = await this.saleStore.fetchAgentInventory();
 
-      if (!this.products || this.products.length == 0) {
-        this.fetchAgentProducts();
+        if (!this.products || this.products.length == 0) {
+          this.fetchAgentProducts();
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      } finally {
+        this.fetching = false;
       }
     },
 

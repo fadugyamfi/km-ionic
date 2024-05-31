@@ -25,15 +25,7 @@
     </section>
 
     <IonContent class="ion-padding" v-if="product">
-      <header>
-        <Swiper>
-          <SwiperSlide>
-            <section style="height: 200px; border-radius: 10px">
-              <Image :src="product?.image" :path="product?.product_banner_image" :no-img-src="noImage" style="height: 200px" w="400" h="400"></Image>
-            </section>
-          </SwiperSlide>
-        </Swiper>
-      </header>
+      <ProductImages :product="product" />
 
       <main>
         <section class="section title-section d-flex ion-align-items-start">
@@ -156,7 +148,6 @@ import { useProductStore } from "@/stores/ProductStore";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import Image from "@/components/Image.vue";
-import { Swiper, SwiperSlide } from "swiper/vue";
 import BusinessRatingAndReviews from "@/components/modules/business/BusinessRatingAndReviews.vue";
 import BusinessMinimumOrder from "@/components/modules/business/BusinessMinimumOrder.vue";
 import ProductTags from "@/components/modules/products/ProductTags.vue";
@@ -169,6 +160,7 @@ import { handleAxiosRequestError } from "@/utilities";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import LoginRequiredSheet from "@/components/modules/LoginRequiredSheet.vue";
 import Filters from "../../utilities/Filters";
+import ProductImages from "@/components/modules/products/ProductImages.vue";
 
 export default defineComponent({
   components: {
@@ -185,8 +177,6 @@ export default defineComponent({
     KolaYellowButton,
     KolaWhiteButton,
     Image,
-    Swiper,
-    SwiperSlide,
     IonAvatar,
     IonSkeletonText,
     IonLabel,
@@ -199,6 +189,7 @@ export default defineComponent({
     CartStatusButton,
     LoginRequiredSheet,
     ProfileAvatar,
+    ProductImages
   },
 
   data() {

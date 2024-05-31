@@ -4,7 +4,7 @@
       v-for="(payment, index) in creditPayments"
       :key="payment?.id"
       :credit="payment"
-      :showPopover=showPopover
+      :showPopover="showPopover"
       @click="viewDetails(payment)"
       @openMenu="openMenu($event, index)"
     >
@@ -89,6 +89,7 @@ import CreditListItem from "./CreditListItem.vue";
 import { SalePayment } from "@/models/SalePayment";
 import DeleteCreditModal from "@/components/modules/customers/DeleteCreditModal.vue";
 import { useCustomerStore } from "@/stores/CustomerStore";
+import { useUserStore } from "@/stores/UserStore";
 
 export default defineComponent({
   props: {
@@ -121,7 +122,10 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useCustomerStore),
+    ...mapStores(useCustomerStore, useUserStore),
+    isVendorMode() {
+      return this.userStore.appMode == "vendor";
+    },
   },
 
   data() {
@@ -168,7 +172,11 @@ export default defineComponent({
 
     viewDetails(payment: SalePayment) {
       this.$emit("view-details", payment);
-      this.$router.push(`/shopper/orders/${payment.id}`);
+      if (this.isVendorMode) {
+        this.$router.push(`/vendor/orders/${payment.credits_id}`);
+        return;
+      }
+      this.$router.push(`/shopper/orders/${payment.credits_id}`);
     },
   },
 });

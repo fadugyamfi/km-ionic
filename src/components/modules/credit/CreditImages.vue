@@ -3,7 +3,12 @@
     <Swiper ref="swiper" :slides-per-view="1" :pagination="true">
       <SwiperSlide v-for="(saleItem, index) in saleItems" :key="index">
         <IonCard>
-          <Image :src="saleItem.product?.image" w="400" h="400" />
+          <Image :src="saleItem?.product?.product_images[0]?.image" w="400" h="400" />
+        </IonCard>
+      </SwiperSlide>
+      <SwiperSlide v-if="saleItems?.length == 0">
+        <IonCard>
+          <Image :no-img-src="noImage" w="400" h="400" />
         </IonCard>
       </SwiperSlide>
       <div class="swiper-pagination"></div>
@@ -36,6 +41,7 @@ export default defineComponent({
           clickable: true,
         },
       },
+      noImage: "/images/product-placeholder.png",
     };
   },
 

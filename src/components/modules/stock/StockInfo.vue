@@ -1,6 +1,6 @@
 <template>
   <section class="ion-margin-top">
-    <IonText class="d-flex ion-align-items-center stock-availabilty">
+    <IonText class="d-flex ion-align-items-center stock-availabilty" v-if="product?.stock_quantity == 0">
       <IonIcon class="warning" :icon="alertCircleOutline"></IonIcon
       >{{ $t("profile.stock.productOutOfStock") }}</IonText
     >

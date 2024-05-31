@@ -22,8 +22,8 @@
         class="product-image"
         :class="{ float: !imgLoaded }"
         :alt="product?.product_name"
-        :src="product?.image"
-        :path="product?.product_banner_image"
+        :src="imageURL"
+        :path="imagePath"
         :no-img-src="noImage"
         w="180"
         @loaded="imgLoaded = true"
@@ -232,7 +232,29 @@ export default defineComponent({
     IonText,
     IonRippleEffect,
   },
+  computed: {
+    imageURL: function () {
+      if (
+        this.product?.product_images &&
+        this.product?.product_images?.length > 0
+      ) {
+        return this.product.product_images[0].image;
+      }
 
+      return this.product.image;
+    },
+
+    imagePath: function () {
+      if (
+        this.product?.product_images &&
+        this.product.product_images?.length > 0
+      ) {
+        return this.product.product_images[0].image_path;
+      }
+
+      return this.product.product_banner_image;
+    },
+  },
   methods: {
     doAction() {
       if (this.action == "viewProduct") {

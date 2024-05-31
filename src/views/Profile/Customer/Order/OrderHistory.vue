@@ -5,11 +5,11 @@
         <ion-toolbar class="ion-align-items-center">
           <ion-buttons slot="start">
             <ion-back-button
-              :defaultHref="`/profile/company/customers/${$route.params.id}/profile`"
+              :defaultHref="`/profile/company/customers`"
             ></ion-back-button>
           </ion-buttons>
 
-          <IonTitle size="small" class="fw-bold">Order History</IonTitle>
+          <IonTitle size="small" class="fw-bold">Order Histosry</IonTitle>
           <ion-buttons slot="end">
             <IonButton @click="showFilterSheet = true" color="dark">
               <IonIcon :icon="optionsOutline"></IonIcon>

@@ -106,7 +106,7 @@ const showFilterSheet = ref(false);
 const router = useRouter();
 const stockStore = useStockStore();
 
-const stocks = ref<Stock[]>();
+const stocks = computed(() => stockStore.stocks);
 
 const searchFilters = ref({
   start_dt: null as string | null,
@@ -138,7 +138,7 @@ const onFilterCategory = (event: number) => {
 const fetchStocks = async () => {
   try {
     fetching.value = true;
-    stocks.value = await stockStore.fetchStocks(searchFilters.value);
+    await stockStore.fetchStocks(searchFilters.value);
   } catch (error) {
     console.log(error);
   } finally {
@@ -148,7 +148,7 @@ const fetchStocks = async () => {
 const fetchSearchedStocks = async () => {
   fetching.value = true;
   try {
-    stocks.value = await stockStore.fetchSearchedStocks();
+    await stockStore.fetchSearchedStocks();
   } catch (error) {
     handleAxiosRequestError(error);
   } finally {
@@ -158,10 +158,8 @@ const fetchSearchedStocks = async () => {
 
 const onSearch = (event: any) => {
   stockStore.searchTerm = event.target?.value;
-  stocks.value = [];
   fetchSearchedStocks();
 };
-
 
 onIonViewDidEnter(() => {
   // onSegmentChanged(new CustomEvent("load", { detail: { value: "pastmonth" } }));

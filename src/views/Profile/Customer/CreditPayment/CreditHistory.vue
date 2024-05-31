@@ -5,7 +5,7 @@
         <ion-toolbar class="ion-align-items-center">
           <ion-buttons slot="start">
             <ion-back-button
-              :defaultHref="`/profile/company/customers/${$route.params.id}/profile`"
+              :defaultHref="`/profile/company/customers`"
             ></ion-back-button>
           </ion-buttons>
 
