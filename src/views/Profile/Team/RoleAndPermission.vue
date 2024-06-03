@@ -94,6 +94,7 @@ const showTeamMemberDetailSheet = ref(false);
 const member = ref({
   name: "Gifty Johnson",
   email: "giftyjohnson@gmail.com",
+  logo: '',
   roles: [
     {
       id: 1,
@@ -108,7 +109,7 @@ const member = ref({
 const editDetails = () => {
   showTeamMemberDetailSheet.value = true;
 };
-const onSaveUpdate = () => {};
+const onSaveUpdate = (e: any) => {};
 </script>
 
 <style lang="scss" scoped>

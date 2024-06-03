@@ -206,7 +206,7 @@ export default defineComponent({
     async fetchCustomers(options = {}) {
       this.fetching = true;
 
-      if (this.userStore.user?.isSaleAgent()) {
+      if (this.userStore.activeRole?.isSaleAgent()) {
         this.customers = await this.userStore.fetchAssignedBusinesses(
           this.userStore.user?.id,
           options,

@@ -2,7 +2,7 @@
   <IonList lines="none" class="ion-padding-horizontal teams-select-list simple">
     <TeamMemberItem
       v-for="(member, index) in teamMembers"
-      :key="member.id"
+      :key="member?.id"
       :member="member"
       @openMenu="openMenu($event, index)"
     >
@@ -20,7 +20,7 @@
                 lines="full"
                 :button="true"
                 :detail="false"
-                :router-link="`/profile/company/team/${member.id}/role-and-permission`"
+                :router-link="`/profile/company/team/${member?.id}/role-and-permission`"
               >
                 <IonIcon :icon="createOutline"></IonIcon>
                 {{ $t("profile.team.editRoleAndPermissions") }}
@@ -70,7 +70,7 @@ const toastStore = useToastStore();
 
 const props = defineProps({
   teamMembers: {
-    type: Array,
+    type: Array as PropType<any>,
     default: () => [],
   },
 });
@@ -88,7 +88,7 @@ const openMenu = (e: Event, index = -1) => {
   openPopover.value = index;
 };
 
-const removeMember = (member: Customer) => {
+const removeMember = (member: any) => {
   selectedMember.value = member;
   showConfirmRemoveModal.value = true;
 };
