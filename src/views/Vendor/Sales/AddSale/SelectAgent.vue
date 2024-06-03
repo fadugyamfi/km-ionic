@@ -229,7 +229,6 @@ export default defineComponent({
       }
 
       if (this.userStore.activeRole?.isSalesAssociate()) {
-      if (this.userStore.activeRole?.isSalesAssociate()) {
         this.$router.replace("/agent/sales/add-sale/select-customer");
       } else {
         this.$router.push("/vendor/sales/add-sale/select-sale-type");
