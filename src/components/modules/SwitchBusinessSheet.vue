@@ -2,7 +2,7 @@
   <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5, 1]">
     <IonContent class="ion-padding">
       <header class="fw-semibold ion-padding ion-text-center">
-        {{ $t("profile.switchBusiness") }}
+       Switch {{ userStore.user?.isOwner() ? "Business" : "Teams" }}
       </header>
       <main class="ion-padding-vertical">
         <ion-list>
@@ -12,7 +12,7 @@
               :checked="activeBusiness?.id == business.id"
               :disabled="!business.name"
               mode="ios"
-              >
+            >
               <IonLabel>
                 {{ business.name || "No business" }}
 
@@ -22,7 +22,7 @@
                   </IonText>
                 </div>
               </IonLabel>
-              </ion-toggle>
+            </ion-toggle>
           </ion-item>
         </ion-list>
       </main>
@@ -42,7 +42,7 @@ import {
   IonIcon,
   IonSelectOption,
   IonLabel,
-IonText,
+  IonText,
 } from "@ionic/vue";
 import { defineComponent, PropType } from "vue";
 import { chevronDownOutline, chevronUpOutline } from "ionicons/icons";
@@ -63,7 +63,7 @@ export default defineComponent({
     IonIcon,
     IonToggle,
     IonLabel,
-    IonText
+    IonText,
   },
 
   data() {
@@ -71,7 +71,7 @@ export default defineComponent({
       chevronDownOutline,
       chevronUpOutline,
       showQuantitySelector: true,
-      checked: true
+      checked: true,
     };
   },
 

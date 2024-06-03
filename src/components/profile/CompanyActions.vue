@@ -122,7 +122,6 @@
       </IonItem>
 
       <IonItem
-        v-if="userStore.user?.isOwner()"
         :detail="true"
         :button="true"
         class="profile-item"
@@ -135,7 +134,10 @@
             style="font-size: 21px"
           ></IonIcon>
         </IonAvatar>
-        <IonLabel>Switch Business</IonLabel>
+        <IonLabel
+          >Switch
+          {{ userStore.user?.isOwner() ? "Business" : "Teams" }}</IonLabel
+        >
       </IonItem>
     </IonList>
 
@@ -156,7 +158,14 @@
 </template>
 
 <script lang="ts">
-import { IonIcon, IonLabel, IonItem, IonAvatar, IonList, IonSpinner } from "@ionic/vue";
+import {
+  IonIcon,
+  IonLabel,
+  IonItem,
+  IonAvatar,
+  IonList,
+  IonSpinner,
+} from "@ionic/vue";
 import { computed, defineComponent } from "vue";
 import { useUserStore } from "@/stores/UserStore";
 import { mapStores } from "pinia";
@@ -187,7 +196,7 @@ export default defineComponent({
     SwitchBusinessSheet,
     ModeToggleCard,
     GeneralActions,
-    IonSpinner
+    IonSpinner,
   },
 
   computed: {
@@ -241,11 +250,12 @@ export default defineComponent({
   },
 
   async mounted() {
-    if( !this.userStore.activeBusiness ) {
+    if (!this.userStore.activeBusiness) {
       this.fetching = true;
-      await this.userStore.refreshUserBusinesses();
+      // await this.userStore.refreshUserBusinesses();
+      await this.userStore.fetchUserInfo();
       this.fetching = false;
     }
-  }
+  },
 });
 </script>

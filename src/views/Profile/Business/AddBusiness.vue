@@ -135,7 +135,8 @@ const addBusiness = async () => {
         "bottom",
         "edit-profile-save-btn"
       );
-      userStore.fetchUserBusinesses();
+      // userStore.fetchUserBusinesses();
+      userStore.fetchUserInfo();
       router.go(-1);
     } else {
       toastStore.unblockUI();
