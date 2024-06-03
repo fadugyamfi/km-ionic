@@ -245,7 +245,7 @@ export default defineComponent({
 
   ionViewDidEnter() {
     if (this.userStore.activeRole?.isSalesAssociate()) {
-      this.selectAgent(this.userStore.user);
+      this.selectAgent(this.userStore.user as User);
       this.onContinue();
     } else {
       this.fetchSaleAgents();

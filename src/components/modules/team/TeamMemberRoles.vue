@@ -47,7 +47,7 @@ const showConfirmRemoveModal = ref(false);
 
 const selectedRole = ref(null);
 
-const removeRole = (role) => {
+const removeRole = (role: any) => {
   selectedRole.value = role;
   showConfirmRemoveModal.value = true;
 };
@@ -55,7 +55,7 @@ const removeRole = (role) => {
 const onConfirmDelete = async () => {
   try {
     showConfirmRemoveModal.value = false;
-    await customerStore.deleteCustomer(selectedRole.value);
+    await customerStore.deleteCustomer(selectedRole.value as any);
     toastStore.showSuccess("Role has been removed", "", "bottom");
   } catch (error) {
     toastStore.showError(
