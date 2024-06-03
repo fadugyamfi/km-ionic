@@ -66,6 +66,7 @@
         v-if="userStore.activeRole?.isOwner()"
         :detail="true"
         :button="true"
+        disabled
         class="profile-item"
         router-link="/profile/company/team"
       >
