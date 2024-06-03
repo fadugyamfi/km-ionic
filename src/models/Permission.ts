@@ -4,11 +4,11 @@ interface Pivot {
 }
 
 export default class Permission {
-  id?: number;
-  description?: string | null;
-  group_name?: string;
-  name?: string;
-  pivot?: Pivot;
+  public id?: number;
+  public description?: string | null;
+  public group_name?: string;
+  public name?: string;
+  public pivot?: Pivot;
 
   constructor(data: object | null) {
     Object.assign(this, data);

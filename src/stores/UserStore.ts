@@ -69,7 +69,7 @@ export const useUserStore = defineStore("user", {
       userBusinesses: [] as Business[],
       userTeams: [] as Team[],
       activeBusiness: null,
-      activeRole: null,
+      activeRole: null as Role | null,
       verification: {
         phone_number: "",
         response: {
@@ -183,7 +183,7 @@ export const useUserStore = defineStore("user", {
       this.userBusinesses = userBusinesses || [];
       this.userTeams = userTeams || [];
       this.activeBusiness = activeBusiness || null;
-      this.activeRole = activeRole || null;
+      this.activeRole = new Role(activeRole);
       this.registering = userRegistering || false;
     },
 
@@ -315,12 +315,18 @@ export const useUserStore = defineStore("user", {
 
     async setActiveBusiness(business: Business) {
       this.activeBusiness = business;
-      const activeTeam = this.userTeams?.find(
+
+      const userRole = this.userTeams?.find(
         (team: Team) => team.businesses_id == business.id
-      );
-      this.activeRole = activeTeam?.role;
+      )?.role as Role;
+      
+      await this.storeUserRole(new Role(userRole));
       await storage.set("kola.active-business", business, 1, "month");
-      await storage.set("kola.active-role", this.activeRole, 1, "month");
+    },
+
+    async storeUserRole(role: Role) {
+      this.activeRole = role;
+      await storage.set("kola.active-role", role, 1, "month");
     },
 
     async setRegisteringAs(flow: string) {
@@ -336,10 +342,10 @@ export const useUserStore = defineStore("user", {
 
       return axios
         .get("/v2/auth/me")
-        .then((response) => {
-          this.storeUser(new User(response.data.data));
-          this.storeUserTeams(response.data.data.teams);
-          this.storeUserBusinesses(response.data.data.teams);
+        .then(async (response) => {
+          await this.storeUser(new User(response.data.data));
+          await this.storeUserTeams(response.data.data.teams);
+          await this.storeUserBusinesses(response.data.data.teams);
           return this.user;
         })
         .catch((error) => handleAxiosRequestError(error))
@@ -382,7 +388,7 @@ export const useUserStore = defineStore("user", {
     },
 
     async refreshUserBusinesses() {
-      if (this.user?.isOwner()) {
+      if (this.activeRole?.isOwner()) {
         this.fetchUserBusinesses();
       } else {
         // this.fetchUserBusinesses(this.user?.parent_users_id);
@@ -510,7 +516,7 @@ export const useUserStore = defineStore("user", {
         await this.clearSessionInfo();
 
         return response?.data;
-      });
+      })
     },
 
     async updateRequestAuthorization() {

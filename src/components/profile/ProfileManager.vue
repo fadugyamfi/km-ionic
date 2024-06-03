@@ -62,7 +62,7 @@ const appStore = useAppStore();
 const viewing = ref('company');
 
 const canToggleModes = computed(() => {
-  return !userStore.user?.isSalesAssociate() && !userStore.user?.isSalesManager();
+  return !userStore.activeRole?.isSalesAssociate() && !userStore.activeRole?.isSalesManager();
 })
 
 let swiperEl: Ref<any> = ref(null);

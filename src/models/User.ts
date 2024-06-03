@@ -18,23 +18,23 @@ export default class User {
     return this.name?.split(" ")[0];
   }
 
-  isSuperAdmin() {
-    return this.id_cms_privileges == 1;
-  }
+  // isSuperAdmin() {
+  //   return this.id_cms_privileges == 1;
+  // }
 
-  isSaleAgent() {
-    return this.id_cms_privileges == 5;
-  }
+  // isSaleAgent() {
+  //   return this.id_cms_privileges == 5;
+  // }
 
-  isSalesManager() {
-    return this.id_cms_privileges == 2; // Sales Manager
-  }
+  // isSalesManager() {
+  //   return this.id_cms_privileges == 2; // Sales Manager
+  // }
 
-  isOwner() {
-    return this.id_cms_privileges == 4; // Owner
-  }
+  // isOwner() {
+  //   return this.id_cms_privileges == 4; // Owner
+  // }
 
-  isSalesAssociate() {
-    return [2, 5].indexOf(this.id_cms_privileges as number) > -1;
-  }
+  // isSalesAssociate() {
+  //   return [2, 5].indexOf(this.id_cms_privileges as number) > -1;
+  // }
 }

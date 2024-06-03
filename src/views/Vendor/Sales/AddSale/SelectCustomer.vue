@@ -206,7 +206,7 @@ export default defineComponent({
       const userStore = useUserStore();
       const businessStore = useBusinessStore();
 
-      if (this.userStore.user?.isSalesAssociate()) {
+      if (this.userStore.activeRole?.isSalesAssociate()) {
         this.customers = await userStore.fetchAssignedBusinesses(
           userStore.user?.id,
           options,
@@ -241,7 +241,7 @@ export default defineComponent({
         return;
       }
 
-      if (this.userStore.user?.isSalesAssociate()) {
+      if (this.userStore.activeRole?.isSalesAssociate()) {
         this.$router.push("/agent/sales/add-sale/select-sale-type");
       } else {
         this.$router.push("/vendor/sales/add-sale/select-products");

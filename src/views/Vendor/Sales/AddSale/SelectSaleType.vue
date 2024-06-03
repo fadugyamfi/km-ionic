@@ -146,7 +146,7 @@ export default defineComponent({
         return;
       }
 
-      if (this.userStore.user?.isSalesAssociate()) {
+      if (this.userStore.activeRole?.isSalesAssociate()) {
         this.$router.push("/agent/sales/add-sale/select-payment-mode");
       } else {
         this.$router.push("/vendor/sales/add-sale/select-payment-mode");

@@ -4,7 +4,7 @@
       <IonRouterOutlet></IonRouterOutlet>
 
       <AgentTabBar
-        v-if="userStore.user?.isSalesAssociate() || userStore.user?.isSalesManager()"
+        v-if="userStore.activeRole?.isSalesAssociate() || userStore.activeRole?.isSalesManager()"
       ></AgentTabBar>
       <section v-else>
         <ShopperTabBar v-if="userStore.isInShoppingMode()"></ShopperTabBar>

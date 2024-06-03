@@ -13,7 +13,7 @@
 
     <IonList lines="none">
       <IonItem
-        v-if="userStore.user?.isOwner()"
+        v-if="userStore.activeRole?.isOwner()"
         :detail="true"
         :button="true"
         class="profile-item"
@@ -38,7 +38,7 @@
       </IonItem>
 
       <IonItem
-        v-if="userStore.user?.isOwner()"
+        v-if="userStore.activeRole?.isOwner()"
         :detail="true"
         :button="true"
         class="profile-item"
@@ -50,7 +50,7 @@
         <IonLabel>Stock</IonLabel>
       </IonItem>
       <IonItem
-        v-if="!userStore.user?.isOwner()"
+        v-if="!userStore.activeRole?.isOwner()"
         :detail="true"
         :button="true"
         class="profile-item"
@@ -63,7 +63,7 @@
       </IonItem>
 
       <IonItem
-        v-if="userStore.user?.isOwner()"
+        v-if="userStore.activeRole?.isOwner()"
         :detail="true"
         :button="true"
         class="profile-item"
@@ -76,7 +76,7 @@
       </IonItem>
 
       <IonItem
-        v-if="userStore.user?.isOwner()"
+        v-if="userStore.activeRole?.isOwner()"
         :detail="true"
         class="profile-item"
         router-link="/profile/company/add-business"
@@ -87,7 +87,7 @@
         <IonLabel>Add Business</IonLabel>
       </IonItem>
       <IonItem
-        v-if="userStore.user?.isOwner() && !hasAppliedToSell"
+        v-if="userStore.activeRole?.isOwner() && !hasAppliedToSell"
         :detail="true"
         class="profile-item"
         router-link="/profile/company/summary"
@@ -98,7 +98,7 @@
         <IonLabel>Become a Seller</IonLabel>
       </IonItem>
       <IonItem
-        v-if="userStore.user?.isOwner()"
+        v-if="userStore.activeRole?.isOwner()"
         :detail="true"
         class="profile-item"
         router-link="/profile/company/sale-agents"
@@ -136,7 +136,7 @@
         </IonAvatar>
         <IonLabel
           >Switch
-          {{ userStore.user?.isOwner() ? "Business" : "Teams" }}</IonLabel
+          {{ userStore.activeRole?.isOwner() ? "Business" : "Teams" }}</IonLabel
         >
       </IonItem>
     </IonList>
@@ -204,8 +204,8 @@ export default defineComponent({
 
     canToggleModes() {
       return (
-        !this.userStore.user?.isSalesAssociate() &&
-        !this.userStore.user?.isSalesManager()
+        !this.userStore.activeRole?.isSalesAssociate() &&
+        !this.userStore.activeRole?.isSalesManager()
       );
     },
 
@@ -217,7 +217,7 @@ export default defineComponent({
     },
 
     stockPath() {
-      return this.userStore.user?.isOwner()
+      return this.userStore.activeRole?.isOwner()
         ? "/profile/company/stocks"
         : "/profile/company/agent/stocks";
     },

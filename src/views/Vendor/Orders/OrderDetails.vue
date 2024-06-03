@@ -196,8 +196,8 @@ export default defineComponent({
     userCanApproveOrders() {
       return (
         this.userStore.user?.isSuperAdmin() ||
-        this.userStore.user?.isOwner() ||
-        this.userStore.user?.isSalesManager()
+        this.userStore.activeRole?.isOwner() ||
+        this.userStore.activeRole?.isSalesManager()
       );
     },
   },
