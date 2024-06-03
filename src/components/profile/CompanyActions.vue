@@ -13,7 +13,7 @@
 
     <IonList lines="none">
       <IonItem
-        v-if="userStore.user?.isOwner()"
+        v-if="userStore.activeRole?.isOwner()"
         :detail="true"
         :button="true"
         class="profile-item"
@@ -38,7 +38,7 @@
       </IonItem>
 
       <IonItem
-        v-if="userStore.user?.isOwner()"
+        v-if="userStore.activeRole?.isOwner()"
         :detail="true"
         :button="true"
         class="profile-item"
@@ -50,7 +50,7 @@
         <IonLabel>Stock</IonLabel>
       </IonItem>
       <IonItem
-        v-if="!userStore.user?.isOwner()"
+        v-if="!userStore.activeRole?.isOwner()"
         :detail="true"
         :button="true"
         class="profile-item"
@@ -63,11 +63,12 @@
       </IonItem>
 
       <IonItem
-        v-if="userStore.user?.isOwner()"
+        v-if="userStore.activeRole?.isOwner()"
         :detail="true"
         :button="true"
+        disabled
         class="profile-item"
-        :disabled="true"
+        router-link="/profile/company/team"
       >
         <IonAvatar slot="start">
           <img src="/images/ic_user.svg" class="action-img" />
@@ -76,7 +77,7 @@
       </IonItem>
 
       <IonItem
-        v-if="userStore.user?.isOwner()"
+        v-if="userStore.activeRole?.isOwner()"
         :detail="true"
         class="profile-item"
         router-link="/profile/company/add-business"
@@ -87,7 +88,7 @@
         <IonLabel>Add Business</IonLabel>
       </IonItem>
       <IonItem
-        v-if="userStore.user?.isOwner() && !hasAppliedToSell"
+        v-if="userStore.activeRole?.isOwner() && !hasAppliedToSell"
         :detail="true"
         class="profile-item"
         router-link="/profile/company/summary"
@@ -98,7 +99,7 @@
         <IonLabel>Become a Seller</IonLabel>
       </IonItem>
       <IonItem
-        v-if="userStore.user?.isOwner()"
+        v-if="userStore.activeRole?.isOwner()"
         :detail="true"
         class="profile-item"
         router-link="/profile/company/sale-agents"
@@ -122,7 +123,6 @@
       </IonItem>
 
       <IonItem
-        v-if="userStore.user?.isOwner()"
         :detail="true"
         :button="true"
         class="profile-item"
@@ -135,7 +135,10 @@
             style="font-size: 21px"
           ></IonIcon>
         </IonAvatar>
-        <IonLabel>Switch Business</IonLabel>
+        <IonLabel
+          >Switch
+          {{ userStore.activeRole?.isOwner() ? "Business" : "Teams" }}</IonLabel
+        >
       </IonItem>
     </IonList>
 
@@ -156,7 +159,14 @@
 </template>
 
 <script lang="ts">
-import { IonIcon, IonLabel, IonItem, IonAvatar, IonList, IonSpinner } from "@ionic/vue";
+import {
+  IonIcon,
+  IonLabel,
+  IonItem,
+  IonAvatar,
+  IonList,
+  IonSpinner,
+} from "@ionic/vue";
 import { computed, defineComponent } from "vue";
 import { useUserStore } from "@/stores/UserStore";
 import { mapStores } from "pinia";
@@ -187,7 +197,7 @@ export default defineComponent({
     SwitchBusinessSheet,
     ModeToggleCard,
     GeneralActions,
-    IonSpinner
+    IonSpinner,
   },
 
   computed: {
@@ -195,8 +205,8 @@ export default defineComponent({
 
     canToggleModes() {
       return (
-        !this.userStore.user?.isSalesAssociate() &&
-        !this.userStore.user?.isSalesManager()
+        !this.userStore.activeRole?.isSalesAssociate() &&
+        !this.userStore.activeRole?.isSalesManager()
       );
     },
 
@@ -208,7 +218,7 @@ export default defineComponent({
     },
 
     stockPath() {
-      return this.userStore.user?.isOwner()
+      return this.userStore.activeRole?.isOwner()
         ? "/profile/company/stocks"
         : "/profile/company/agent/stocks";
     },
@@ -241,11 +251,12 @@ export default defineComponent({
   },
 
   async mounted() {
-    if( !this.userStore.activeBusiness ) {
+    if (!this.userStore.activeBusiness) {
       this.fetching = true;
-      await this.userStore.refreshUserBusinesses();
+      // await this.userStore.refreshUserBusinesses();
+      await this.userStore.fetchUserInfo();
       this.fetching = false;
     }
-  }
+  },
 });
 </script>

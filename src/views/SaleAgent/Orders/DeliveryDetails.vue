@@ -177,7 +177,7 @@ const recordOrder = async () => {
       );
       return;
     }
-    if (userStore.user?.isSalesAssociate()) {
+    if (userStore.activeRole?.isSalesAssociate()) {
       router.push("/agent/orders/place-order/order-confirmation");
     } else {
       router.push("/vendor/orders/record-order/order-confirmation");

@@ -148,7 +148,7 @@ const fetchCustomers = async (options: any = {}) => {
   }
   const userStore = useUserStore();
 
-  if (userStore.user?.isSalesAssociate()) {
+  if (userStore.activeRole?.isSalesAssociate()) {
     options = Object.assign(options, { limit: 100 });
     customers.value = await userStore.fetchAssignedBusinesses(
       userStore.user?.id,

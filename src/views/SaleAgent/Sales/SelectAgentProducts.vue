@@ -262,7 +262,7 @@ export default defineComponent({
         return;
       }
       this.saleStore.persist();
-      if (this.userStore.user?.isSalesAssociate()) {
+      if (this.userStore.activeRole?.isSalesAssociate()) {
         this.$router.push("/agent/sales/add-sale/configure-items");
       } else {
         this.$router.push("/vendor/sales/add-sale/configure-items");

@@ -6,6 +6,8 @@ import Business from "@/models/Business";
 import AppStorage from "./AppStorage";
 import { useCustomerStore } from "./CustomerStore";
 import { useBusinessStore } from "./BusinessStore";
+import Team from "@/models/Team";
+import Role from "@/models/Role";
 
 const meta = (key: string) => {
   const meta = document.querySelector(`meta[name="${key}"]`);
@@ -27,7 +29,9 @@ type UserStoreState = {
   auth?: object | null;
   apiHeaders?: object | null;
   userBusinesses?: Business[];
+  userTeams?: Team[];
   activeBusiness?: Business | null;
+  activeRole?: Role | null;
   verification: {
     phone_number: String;
     response: any;
@@ -63,7 +67,9 @@ export const useUserStore = defineStore("user", {
       auth: null as Auth | null,
       apiHeaders: null,
       userBusinesses: [] as Business[],
+      userTeams: [] as Team[],
       activeBusiness: null,
+      activeRole: null as Role | null,
       verification: {
         phone_number: "",
         response: {
@@ -152,7 +158,9 @@ export const useUserStore = defineStore("user", {
       const onboardedResult = await storage.get("kola.onboarded");
       const appModeResult = await storage.get("kola.app-mode");
       const userBusinesses = await storage.get("kola.user-businesses");
+      const userTeams = await storage.get("kola.user-teams");
       const activeBusiness = await storage.get("kola.active-business");
+      const activeRole = await storage.get("kola.active-role");
       const userRegistering = await storage.get("kola.user-registering");
 
       if (onboardedResult) {
@@ -173,7 +181,9 @@ export const useUserStore = defineStore("user", {
 
       this.appMode = appModeResult || "guest";
       this.userBusinesses = userBusinesses || [];
+      this.userTeams = userTeams || [];
       this.activeBusiness = activeBusiness || null;
+      this.activeRole = new Role(activeRole);
       this.registering = userRegistering || false;
     },
 
@@ -215,6 +225,27 @@ export const useUserStore = defineStore("user", {
     async storeUser(user: User) {
       this.user = user;
       await storage.set("kola.user", this.user, 1, "year");
+    },
+    async storeUserBusinesses(teams: Team[]) {
+      this.userBusinesses = teams.map((el: any) => new Business(el.business));
+      if (
+        typeof this.userBusinesses != "undefined" &&
+        this.userBusinesses.length > 0
+      ) {
+        await storage.set(
+          "kola.user-businesses",
+          this.userBusinesses,
+          1,
+          "month"
+        );
+        this.setActiveBusiness(this.userBusinesses[0]);
+      }
+    },
+    async storeUserTeams(teams: Team[]) {
+      this.userTeams = teams;
+      if (typeof this.userTeams != "undefined" && this.userTeams.length > 0) {
+        await storage.set("kola.user-teams", this.userTeams, 1, "month");
+      }
     },
 
     async storeAuth(auth: object) {
@@ -284,7 +315,18 @@ export const useUserStore = defineStore("user", {
 
     async setActiveBusiness(business: Business) {
       this.activeBusiness = business;
+
+      const userRole = this.userTeams?.find(
+        (team: Team) => team.businesses_id == business.id
+      )?.role as Role;
+      
+      await this.storeUserRole(new Role(userRole));
       await storage.set("kola.active-business", business, 1, "month");
+    },
+
+    async storeUserRole(role: Role) {
+      this.activeRole = role;
+      await storage.set("kola.active-role", role, 1, "month");
     },
 
     async setRegisteringAs(flow: string) {
@@ -300,8 +342,10 @@ export const useUserStore = defineStore("user", {
 
       return axios
         .get("/v2/auth/me")
-        .then((response) => {
-          this.storeUser(new User(response.data.data));
+        .then(async (response) => {
+          await this.storeUser(new User(response.data.data));
+          await this.storeUserTeams(response.data.data.teams);
+          await this.storeUserBusinesses(response.data.data.teams);
           return this.user;
         })
         .catch((error) => handleAxiosRequestError(error))
@@ -332,7 +376,7 @@ export const useUserStore = defineStore("user", {
 
           const user = await this.fetchUserInfo();
 
-          this.refreshUserBusinesses();
+          // this.refreshUserBusinesses();
 
           return user;
         })
@@ -344,10 +388,11 @@ export const useUserStore = defineStore("user", {
     },
 
     async refreshUserBusinesses() {
-      if (this.user?.isOwner()) {
+      if (this.activeRole?.isOwner()) {
         this.fetchUserBusinesses();
       } else {
-        this.fetchUserBusinesses(this.user?.parent_users_id);
+        // this.fetchUserBusinesses(this.user?.parent_users_id);
+        this.fetchUserBusinesses(this.user?.id);
       }
     },
 
@@ -368,7 +413,7 @@ export const useUserStore = defineStore("user", {
       return axios
         .get(`/v2/users/${user}/businesses`)
         .then(async (response) => {
-          const businesses = response.data.data;
+          const businesses = response.data.data.teams;
           this.userBusinesses = businesses.map(
             (el: any) => new Business(el.business)
           );
@@ -457,6 +502,8 @@ export const useUserStore = defineStore("user", {
     async clearSessionInfo() {
       await storage.remove("kola.active-business");
       await storage.remove("kola.user-businesses");
+      await storage.remove("kola.user-teams");
+      await storage.remove("kola.active-role");
       await storage.remove("kola.business");
       await storage.remove("kola.user");
       await storage.remove("kola.auth");
@@ -469,7 +516,7 @@ export const useUserStore = defineStore("user", {
         await this.clearSessionInfo();
 
         return response?.data;
-      });
+      })
     },
 
     async updateRequestAuthorization() {

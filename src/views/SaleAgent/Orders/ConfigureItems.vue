@@ -175,7 +175,7 @@ export default defineComponent({
       
       this.orderStore.persist();
 
-      if (this.userStore.user?.isSalesAssociate()) {
+      if (this.userStore.activeRole?.isSalesAssociate()) {
         this.$router.push("/agent/orders/place-order/delivery-details");
       } else {
         this.$router.push("/vendor/orders/record-order/delivery-details");

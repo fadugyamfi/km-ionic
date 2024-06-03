@@ -2,7 +2,7 @@
   <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5, 1]">
     <IonContent class="ion-padding">
       <header class="fw-semibold ion-padding ion-text-center">
-        {{ $t("profile.switchBusiness") }}
+        Switch {{ isOwner ? "Business" : "Teams" }}
       </header>
       <main class="ion-padding-vertical">
         <ion-list>
@@ -12,7 +12,7 @@
               :checked="activeBusiness?.id == business.id"
               :disabled="!business.name"
               mode="ios"
-              >
+            >
               <IonLabel>
                 {{ business.name || "No business" }}
 
@@ -22,7 +22,7 @@
                   </IonText>
                 </div>
               </IonLabel>
-              </ion-toggle>
+            </ion-toggle>
           </ion-item>
         </ion-list>
       </main>
@@ -42,7 +42,7 @@ import {
   IonIcon,
   IonSelectOption,
   IonLabel,
-IonText,
+  IonText,
 } from "@ionic/vue";
 import { defineComponent, PropType } from "vue";
 import { chevronDownOutline, chevronUpOutline } from "ionicons/icons";
@@ -63,7 +63,7 @@ export default defineComponent({
     IonIcon,
     IonToggle,
     IonLabel,
-    IonText
+    IonText,
   },
 
   data() {
@@ -71,7 +71,7 @@ export default defineComponent({
       chevronDownOutline,
       chevronUpOutline,
       showQuantitySelector: true,
-      checked: true
+      checked: true,
     };
   },
 
@@ -84,24 +84,48 @@ export default defineComponent({
     activeBusiness() {
       return this.userStore.activeBusiness;
     },
+    isOwner() {
+      return this.userStore.activeRole?.isOwner();
+    },
   },
 
   methods: {
     async onToggle(e: any, business: Business) {
       try {
         this.checked = e.detail.checked;
-        const response = await this.userStore.setActiveBusiness(business);
+        const isPreviousSalesAssociate =
+          this.userStore.activeRole?.isSalesAssociate();
+        await this.userStore.setActiveBusiness(business);
+
+        if (!isPreviousSalesAssociate) {
+          if (!this.userStore.activeRole?.isSalesAssociate()) {
+            return;
+          } else {
+            this.$router.replace("/agent/home");
+          }
+        }
+        if (isPreviousSalesAssociate) {
+          if (this.userStore.activeRole?.isSalesAssociate()) {
+            return;
+          } else {
+            this.$router.replace("/vendor/home");
+          }
+        }
         if (this.checked) {
           this.$el.dismiss();
           this.toastStore.showSuccess(
-            "Company account switched successfully",
+            `${
+              this.isOwner ? "Teams" : "Company account"
+            } switched successfully`,
             "",
             "bottom"
           );
         }
       } catch (error) {
         this.toastStore.showError(
-          "Failed to switch Company account. Please try again",
+          `Failed to switch ${
+            this.isOwner ? "Teams" : "company account"
+          }. Please try again`,
           "",
           "bottom",
           "footer"

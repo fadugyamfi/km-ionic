@@ -62,7 +62,7 @@ export default defineComponent({
             orderStore.selectedOrder = order;
             this.$emit('notification-clicked', notification);
 
-            if( userStore.user?.isSalesAssociate() ) {
+            if( userStore.activeRole?.isSalesAssociate() ) {
                 this.$router.push(`/agents/orders/${order.id}`);
                 return;
             }

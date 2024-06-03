@@ -54,7 +54,7 @@ export default defineComponent({
 
   methods: {
     viewDetails(request: AgentRequest) {
-      if (this.userStore.user?.isSalesAssociate()) {
+      if (this.userStore.activeRole?.isSalesAssociate()) {
         this.$router.push(`/agent/request/${request.id}/details`);
         return;
       }
