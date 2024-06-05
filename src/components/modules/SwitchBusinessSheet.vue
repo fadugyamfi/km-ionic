@@ -6,19 +6,25 @@
       </header>
       <main class="ion-padding-vertical">
         <ion-list>
-          <ion-item v-for="business in userBusinesses" :key="business.id">
+          <ion-item
+            v-for="({ business, role }, index) in userTeams"
+            :key="userTeams?.length && userTeams[index].id"
+          >
             <ion-toggle
-              @ion-change="onToggle($event, business)"
-              :checked="activeBusiness?.id == business.id"
-              :disabled="!business.name"
+              @ion-change="onToggle($event, business as Business)"
+              :checked="activeBusiness?.id == business?.id"
+              :disabled="!business?.name"
               mode="ios"
             >
               <IonLabel>
-                {{ business.name || "No business" }}
+                {{ business?.name || "No business" }}
 
                 <div>
                   <IonText class="font-medium" color="medium">
-                    {{ business?.location }}
+                    {{ role?.name }}
+                    <p class="font-medium">
+                      {{ business?.location }}
+                    </p>
                   </IonText>
                 </div>
               </IonLabel>
@@ -49,6 +55,7 @@ import { chevronDownOutline, chevronUpOutline } from "ionicons/icons";
 import { useUserStore } from "@/stores/UserStore";
 import { mapStores } from "pinia";
 import Business from "@/models/Business";
+import Team from "@/models/Team";
 import { useToastStore } from "@/stores/ToastStore";
 
 export default defineComponent({
@@ -78,8 +85,8 @@ export default defineComponent({
   emits: ["update"],
   computed: {
     ...mapStores(useUserStore, useToastStore),
-    userBusinesses() {
-      return this.userStore.userBusinesses;
+    userTeams() {
+      return this.userStore.userTeams;
     },
     activeBusiness() {
       return this.userStore.activeBusiness;
@@ -98,16 +105,12 @@ export default defineComponent({
         await this.userStore.setActiveBusiness(business);
 
         if (!isPreviousSalesAssociate) {
-          if (!this.userStore.activeRole?.isSalesAssociate()) {
-            return;
-          } else {
+          if (this.userStore.activeRole?.isSalesAssociate()) {
             this.$router.replace("/agent/home");
           }
         }
         if (isPreviousSalesAssociate) {
-          if (this.userStore.activeRole?.isSalesAssociate()) {
-            return;
-          } else {
+          if (!this.userStore.activeRole?.isSalesAssociate()) {
             this.$router.replace("/vendor/home");
           }
         }
