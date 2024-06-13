@@ -27,7 +27,8 @@ export const useAgentsStore = defineStore("agents", {
 
       if ((await storage.has(cacheKey)) && !refresh) {
         const data = await storage.get(cacheKey);
-        return data.map((el: object) => new Agent(el));
+        this.agents = data.map((el: object) => new Agent(el));
+        return this.agents;
       }
 
       try {
@@ -45,7 +46,7 @@ export const useAgentsStore = defineStore("agents", {
           const agents: Agent[] = data.map((el: any) => new Agent(el));
 
           await storage.set(cacheKey, agents, 7, "days");
-
+          this.agents = agents;
           return agents;
         }
       } catch (error) {
@@ -84,13 +85,20 @@ export const useAgentsStore = defineStore("agents", {
     async getAgent(
       business: Business,
       agent_id: any,
-      options: Object
+      options: Object,
+      refresh = false
     ): Promise<Agent | null> {
       try {
         const params = {
           businesses_id: business.id,
           ...options,
         };
+        if (!refresh) {
+          const agent = this.agents.find((agent) => agent.id === agent_id);
+          if (agent) {
+            return new Agent(agent);
+          }
+        }
         const response = await axios.get(`/v2/sale-agents/${agent_id}`, {
           params,
         });

@@ -7,91 +7,31 @@
     </section>
   </section>
   <ion-accordion-group :multiple="true">
-    <ion-accordion :toggle-icon="chevronDown" value="first">
+    <ion-accordion
+      :toggle-icon="chevronDown"
+      :value="`group-${index}`"
+      v-for="(group, index) in groupedPermissions"
+    >
       <ion-item slot="header" color="light">
-        <ion-label>Inventory permissions</ion-label>
+        <ion-label class="header">{{ group.group_name }}</ion-label>
       </ion-item>
       <div slot="content">
-        <IonItem lines="none" class="content-item">
+        <IonItem
+          class="content-item"
+          :lines="index == group.permissions.length - 1 && 'none'"
+          v-for="(permission, index) in group.permissions"
+        >
           <IonCheckbox
-            aria-label="Manage inventory"
+            :aria-label="permission.name"
             justify="space-between"
             mode="ios"
-            value="1"
+            checked
+            disabled
           >
             <IonLabel>
-              <p class="ion-no-margin">{{ "Manage inventory" }}</p>
+              <p class="ion-no-margin">{{ permission.name }}</p>
             </IonLabel>
-          </IonCheckbox>
-        </IonItem>
-      </div>
-    </ion-accordion>
-    <ion-accordion value="second">
-      <ion-item slot="header" color="light">
-        <ion-label>Team management permissions</ion-label>
-      </ion-item>
-      <div slot="content">
-        <IonItem class="content-item">
-          <IonCheckbox
-            aria-label="Manage inventory"
-            justify="space-between"
-            mode="ios"
-            value="1"
-          >
-            <IonLabel>
-              <p class="ion-no-margin">{{ "Manage employees" }}</p>
-            </IonLabel>
-            <IonText>Add, edit or delete sales agent for the business</IonText>
-          </IonCheckbox>
-        </IonItem>
-        <IonItem lines="none" class="content-item">
-          <IonCheckbox
-            aria-label="Manage inventory"
-            justify="space-between"
-            mode="ios"
-            value="1"
-          >
-            <IonLabel>
-              <p class="ion-no-margin">{{ "Manage sales manager account" }}</p>
-            </IonLabel>
-            <IonText
-              >Add, edit or delete sales managers for the business</IonText
-            >
-          </IonCheckbox>
-        </IonItem>
-      </div>
-    </ion-accordion>
-    <ion-accordion value="third">
-      <ion-item slot="header" color="light">
-        <ion-label>Credit sales permissions</ion-label>
-      </ion-item>
-      <div slot="content">
-        <IonItem class="content-item">
-          <IonCheckbox
-            aria-label="Manage inventory"
-            justify="space-between"
-            mode="ios"
-            value="1"
-          >
-            <IonLabel>
-              <p class="ion-no-margin">{{ "Manage employees" }}</p>
-            </IonLabel>
-            <IonText>Add, edit or delete sales agent for the business</IonText>
-          </IonCheckbox>
-        </IonItem>
-        <IonItem lines="none" class="content-item">
-          <IonCheckbox
-            aria-label="Manage inventory"
-            justify="space-between"
-            mode="ios"
-            value="1"
-          >
-            <IonLabel>
-              <p class="ion-no-margin">{{ "Manage sales manager account" }}</p>
-            </IonLabel>
-            <IonText
-              >Add, edit or delete sales managers for the business</IonText
-            >
+            <IonText>{{ permission.description }}</IonText>
           </IonCheckbox>
         </IonItem>
       </div>
@@ -110,6 +50,13 @@ import {
   IonCheckbox,
 } from "@ionic/vue";
 import { closeCircleOutline, chevronDown } from "ionicons/icons";
+
+const props = defineProps({
+  groupedPermissions: {
+    type: Array,
+    default: () => [],
+  },
+});
 </script>
 <style lang="scss" scoped>
 .role-section {
@@ -138,12 +85,15 @@ ion-accordion-group {
       color: #787486;
     }
     ion-item {
-      box-shadow: 0px 2px 12px #68686f14;
+      box-shadow: 0px 2px 20px #68686f14;
       margin-bottom: 5px;
       --inner-padding-end: 14px;
 
       ion-label {
         font-size: 14px !important;
+        &::first-letter {
+          text-transform: capitalize;
+        }
       }
 
       &::part(native) {
@@ -171,6 +121,11 @@ ion-accordion-group {
           border-bottom-right-radius: 0px;
           border-bottom-left-radius: 0px;
         }
+        ion-label {
+          &.header {
+            font-weight: 500;
+          }
+        }
 
         &.content-item {
           box-shadow: none;
@@ -185,8 +140,12 @@ ion-accordion-group {
             border: none;
             background: none;
             border-radius: 0px;
+            padding-left: 25px;
           }
           ion-checkbox {
+            &.checkbox-disabled {
+              opacity: 1;
+            }
             ion-label {
               p {
                 color: #000 !important;
@@ -197,7 +156,7 @@ ion-accordion-group {
               color: #787486;
             }
             &::part(label) {
-              width: 220px;
+              width: 260px;
               white-space: wrap !important;
             }
           }

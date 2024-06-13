@@ -44,8 +44,16 @@
       </IonToolbar>
     </IonHeader>
     <IonContent>
-      <TeamMembersList :teamMembers="teamMembers" />
-      <!-- <NoTeamMember /> -->
+      <div class="ion-padding ion-text-center" v-show="fetching">
+        <IonSpinner name="crescent"></IonSpinner>
+      </div>
+      <section v-show="!fetching">
+        <TeamMembersList
+          v-if="teamMembers.length > 0"
+          :teamMembers="teamMembers"
+        />
+        <NoTeamMember v-else />
+      </section>
     </IonContent>
   </IonPage>
 </template>
@@ -63,37 +71,41 @@ import {
   IonIcon,
   IonBadge,
   IonSearchbar,
+  IonSpinner,
   IonContent,
 } from "@ionic/vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
 import NoTeamMember from "@/components/modules/team/NoTeamMember.vue";
 import TeamMembersList from "@/components/modules/team/TeamMembersList.vue";
+import Business from "@/models/Business";
+import { useUserStore } from "@/stores/UserStore";
+import { useAgentsStore } from "@/stores/AgentsStore";
+
+const agentStore = useAgentsStore();
+const userStore = useUserStore();
 
 const searchTerm = ref("");
 const searchEnabled = ref(false);
+const fetching = ref(false);
 
 const onSearch = async (event: any) => {};
 const addTeamMember = () => {};
 
-const teamMembers = ref([
-  {
-    id: 1,
-    name: "Gifty Johnson",
-    profile_photo: "",
-    role: "Sales agent & business analyst",
-  },
-  {
-    id: 2,
-    name: "Gifty Johnson",
-    profile_photo: "",
-    role: "Sales agent & business analyst",
-  },
-  {
-    id: 3,
-    name: "Gifty Johnson",
-    profile_photo: "",
-    role: "Sales agent & business analyst",
-  },
-]);
+const teamMembers = ref([]);
+
+
+const fetchTeamMembers = async () => {
+  fetching.value = true;
+  teamMembers.value = await agentStore.getBusinessSaleAgents(
+    userStore.activeBusiness as Business,
+    50,
+    true
+  );
+  fetching.value = false;
+};
+
+onMounted(() => {
+  fetchTeamMembers();
+});
 </script>

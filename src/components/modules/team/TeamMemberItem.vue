@@ -8,7 +8,7 @@
     <IonLabel>
       <p class="ion-no-margin">{{ member.name }}</p>
       <IonText color="medium" class="font-medium ellipsis" style="width: 200px">
-        {{ member.role }}
+        {{ member.teams[0]?.role?.name }}
       </IonText>
     </IonLabel>
 
