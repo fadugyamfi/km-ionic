@@ -48,8 +48,10 @@
             <div slot="content">
               <IonItem
                 class="content-item"
-                :lines="index == group.permissions.length - 1 && 'none'"
-                v-for="(permission, index) in group.permissions"
+                :lines="
+                  permissionIndex == group.permissions.length - 1 ? 'none' : undefined
+                "
+                v-for="(permission, permissionIndex) in group.permissions"
               >
                 <IonCheckbox
                   :aria-label="permission.name"
@@ -112,6 +114,7 @@ import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import { useUserStore } from "@/stores/UserStore";
 import { useToastStore } from "@/stores/ToastStore";
+import { GroupedPermission } from "@/models/Permission";
 
 export default defineComponent({
   components: {
@@ -141,7 +144,7 @@ export default defineComponent({
       fetching: false,
       saving: false,
       chevronDown,
-      groupedAllPermissions: [],
+      groupedAllPermissions: [] as GroupedPermission[],
       form: useForm({
         name: "",
         permissions: [],
@@ -168,7 +171,7 @@ export default defineComponent({
           business_id: this.userStore.activeBusiness?.id,
         });
         await this.toastStore.showSuccess("Role added successfully");
-        this.cancel()
+        this.cancel();
       } catch (error) {
       } finally {
         this.saving = false;
@@ -182,7 +185,7 @@ export default defineComponent({
       if (ev.detail.role === "confirm") {
       }
     },
-    selectPermission(e) {
+    selectPermission(e: any) {
       const permissionId = e.target.value;
       const index = this.form.fields.permissions.indexOf(permissionId);
       if (index > -1) {
@@ -205,7 +208,9 @@ export default defineComponent({
       }
     },
     toggleAccordion() {
-      const nativeEl = this.$refs.accordionGroup.$el;
+      const nativeEl = (
+        this.$refs.accordionGroup as InstanceType<typeof IonAccordionGroup>
+      ).$el;
       let toggledValues = [];
       for (let index = 0; index < this.groupedAllPermissions?.length; index++) {
         toggledValues.push(`group-${index}`);

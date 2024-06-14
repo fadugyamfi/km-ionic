@@ -47,7 +47,7 @@
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
-      <section v-show="!fetching">
+      <section v-if="!fetching">
         <TeamMembersList
           v-if="teamMembers.length > 0"
           :teamMembers="teamMembers"
@@ -73,16 +73,19 @@ import {
   IonSearchbar,
   IonSpinner,
   IonContent,
+  onIonViewDidEnter,
+  onIonViewWillEnter,
 } from "@ionic/vue";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
 import NoTeamMember from "@/components/modules/team/NoTeamMember.vue";
 import TeamMembersList from "@/components/modules/team/TeamMembersList.vue";
 import Business from "@/models/Business";
 import { useUserStore } from "@/stores/UserStore";
-import { useAgentsStore } from "@/stores/AgentsStore";
+import { useTeamStore } from "@/stores/TeamStore";
+import Agent from "@/models/Agent";
 
-const agentStore = useAgentsStore();
+const teamStore = useTeamStore();
 const userStore = useUserStore();
 
 const searchTerm = ref("");
@@ -90,22 +93,24 @@ const searchEnabled = ref(false);
 const fetching = ref(false);
 
 const onSearch = async (event: any) => {};
-const addTeamMember = () => {};
 
-const teamMembers = ref([]);
-
+const teamMembers = computed((): Agent[] => teamStore.teamMembers);
 
 const fetchTeamMembers = async () => {
-  fetching.value = true;
-  teamMembers.value = await agentStore.getBusinessSaleAgents(
-    userStore.activeBusiness as Business,
-    50,
-    true
-  );
-  fetching.value = false;
+  try {
+    fetching.value = true;
+    await teamStore.fetchTeamMembers(
+      userStore.activeBusiness as Business,
+      50,
+      true
+    );
+  } catch (error) {
+  } finally {
+    fetching.value = false;
+  }
 };
 
-onMounted(() => {
+onIonViewWillEnter(() => {
   fetchTeamMembers();
 });
 </script>

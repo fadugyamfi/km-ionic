@@ -104,6 +104,7 @@ import { useRoleAndPermissionStore } from "@/stores/RoleAndPermissionStore";
 import { useUserStore } from "@/stores/UserStore";
 import { useToastStore } from "@/stores/ToastStore";
 import AddNewRoleModal from "@/components/modules/team/AddNewRoleModal.vue";
+import Role from "@/models/Role";
 
 const route = useRoute();
 const router = useRouter();
@@ -117,7 +118,7 @@ const form = useForm({
   name: "",
 });
 
-const roles = ref([]);
+const roles = ref<Role[]>();
 
 const handleNameInput = (event: any) => {
   form.validate(event);

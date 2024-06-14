@@ -65,6 +65,8 @@ import { defineComponent, PropType } from "vue";
 import KolaYellowButton from "../../KolaYellowButton.vue";
 import { useForm } from "@/composables/form";
 import { useTeamStore } from "@/stores/TeamStore";
+import { useToastStore } from "@/stores/ToastStore";
+import Agent from "@/models/Agent";
 
 export default defineComponent({
   components: {
@@ -78,7 +80,7 @@ export default defineComponent({
 
   props: {
     member: {
-      type: Object,
+      type: Object as PropType<Agent | null>,
       default: () => ({}),
     },
   },
@@ -92,6 +94,7 @@ export default defineComponent({
       }),
       saving: false,
       teamStore: useTeamStore(),
+      toastStore: useToastStore(),
     };
   },
 
@@ -115,8 +118,11 @@ export default defineComponent({
           memberId,
           this.form.fields
         );
-        this.$emit("update");
-        this.$el.dismiss();
+        if (res) {
+          this.$emit("update");
+          this.$el.dismiss();
+          await this.toastStore.showSuccess("Team member updated successfully");
+        }
       } catch (error) {
       } finally {
         this.saving = false;

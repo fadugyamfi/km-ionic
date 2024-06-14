@@ -30,7 +30,7 @@
           <IonCardContent>
             <IonItem lines="none">
               <ProfileAvatar
-                :image="member?.logo"
+                :image="member?.photo"
                 :username="member?.name"
                 customSize="48px"
                 slot="start"
@@ -92,37 +92,35 @@ import {
   IonIcon,
   IonText,
 } from "@ionic/vue";
-import {
-  arrowBackOutline,
-  chevronDownOutline,
-  createOutline,
-} from "ionicons/icons";
+import { arrowBackOutline, createOutline } from "ionicons/icons";
 import { computed, onMounted, ref } from "vue";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import TeamMemberRoles from "@/components/modules/team/TeamMemberRoles.vue";
 import TeamMemberPermissions from "@/components/modules/team/TeamMemberPermissions.vue";
 import TeamMemberDetailsSheet from "@/components/modules/team/TeamMemberDetailsSheet.vue";
 import { useRoleAndPermissionStore } from "@/stores/RoleAndPermissionStore";
-import { useAgentsStore } from "@/stores/AgentsStore";
 import { useRoute } from "vue-router";
 import { useUserStore } from "@/stores/UserStore";
 import Business from "@/models/Business";
+import { useTeamStore } from "@/stores/TeamStore";
+import Agent from "@/models/Agent";
+import Role from "@/models/Role";
+import { GroupedPermission } from "@/models/Permission";
 
 const route = useRoute();
 
 const roleAndPermissionStore = useRoleAndPermissionStore();
-const agentStore = useAgentsStore();
+const teamStore = useTeamStore();
 const userStore = useUserStore();
 
 const fetching = ref(true);
 const showTeamMemberDetailSheet = ref(false);
 
-const member = ref({});
+const member = ref<Agent | null>();
 
-const role = computed(() => member.value?.teams && member.value?.teams[0].role);
-const roles = computed(() => roleAndPermissionStore.roles);
-
-const groupedPermissions = ref([]);
+const role = computed(() => member.value?.teams[0]?.role as Role);
+const roles = computed(() => roleAndPermissionStore.roles as Role[]);
+const groupedPermissions = ref<GroupedPermission[] | null>([]);
 
 const editDetails = () => {
   showTeamMemberDetailSheet.value = true;
@@ -131,10 +129,13 @@ const editDetails = () => {
 const fetchRolePermissions = async () => {
   try {
     fetching.value = true;
-    const roleId = member.value.teams[0]?.role?.id;
-    const res = await roleAndPermissionStore.fetchRolePermissions(roleId, {
-      grouped: true,
-    });
+    const roleId = role.value.id;
+    const res = await roleAndPermissionStore.fetchRolePermissions(
+      roleId as number,
+      {
+        grouped: true,
+      }
+    );
     groupedPermissions.value = res;
   } catch (error) {
   } finally {
@@ -144,10 +145,10 @@ const fetchRolePermissions = async () => {
 const getMember = async (refresh = false) => {
   try {
     fetching.value = true;
-    const agentId = +route.params.id;
-    const res = await agentStore.getAgent(
+    const memberId = +route.params.id;
+    const res = await teamStore.getTeamMember(
       userStore.activeBusiness as Business,
-      agentId,
+      memberId,
       {},
       refresh
     );

@@ -18,8 +18,8 @@
       <div slot="content">
         <IonItem
           class="content-item"
-          :lines="index == group.permissions.length - 1 && 'none'"
-          v-for="(permission, index) in group.permissions"
+          :lines="permissionIndex == group.permissions.length - 1 ? 'none' : undefined"
+          v-for="(permission, permissionIndex) in group.permissions"
         >
           <IonCheckbox
             :aria-label="permission.name"
@@ -50,10 +50,12 @@ import {
   IonCheckbox,
 } from "@ionic/vue";
 import { closeCircleOutline, chevronDown } from "ionicons/icons";
+import { GroupedPermission } from "@/models/Permission";
+import { PropType } from "vue";
 
 const props = defineProps({
   groupedPermissions: {
-    type: Array,
+    type: Array as PropType<GroupedPermission[] | null>,
     default: () => [],
   },
 });

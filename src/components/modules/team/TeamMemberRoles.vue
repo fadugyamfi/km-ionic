@@ -38,19 +38,20 @@
 import { IonText, IonItem, IonButton, IonIcon, IonLabel } from "@ionic/vue";
 import { closeCircleOutline } from "ionicons/icons";
 import { useToastStore } from "@/stores/ToastStore";
-import { ref } from "vue";
+import { PropType, ref } from "vue";
 import { useCustomerStore } from "@/stores/CustomerStore";
 import AssignRoleSheet from "@/components/modules/team/AssignRoleSheet.vue";
 import RemoveRoleModal from "./RemoveRoleModal.vue";
 import { useRoute } from "vue-router";
+import Role from "@/models/Role";
 
 const props = defineProps({
   role: {
-    type: Object,
+    type: Object as PropType<Role>,
     default: () => ({}),
   },
   roles: {
-    type: Array,
+    type: Array as PropType<Role[]>,
     default: () => [],
   },
 });

@@ -74,6 +74,7 @@ import { useRoleAndPermissionStore } from "@/stores/RoleAndPermissionStore";
 import { mapStores } from "pinia";
 import { useUserStore } from "@/stores/UserStore";
 import { useToastStore } from "@/stores/ToastStore";
+import Role from "@/models/Role";
 
 export default defineComponent({
   components: {
@@ -90,11 +91,11 @@ export default defineComponent({
 
   props: {
     assignedRole: {
-      type: Object,
+      type: Object as PropType<Role>,
       default: () => ({}),
     },
     roles: {
-      type: Array,
+      type: Array as PropType<Role[]>,
       default: () => [],
     },
   },
