@@ -4,6 +4,7 @@
       <SwiperSlide v-for="image in product?.product_images" :key="image?.id">
         <section style="height: 100%; border-radius: 10px">
           <Image
+           @click="viewImage(image?.image)"
             :src="image?.image"
             :path="image?.image_path"
             w="400"
@@ -14,6 +15,7 @@
       <SwiperSlide v-if="product?.product_images?.length == 0">
         <section style="height: 100%; border-radius: 10px">
           <Image
+            @click="viewImage(product?.image)"
             :src="product?.image"
             style="height: 200px"
             w="400"
@@ -22,6 +24,11 @@
         </section>
       </SwiperSlide>
     </Swiper>
+    <ViewPhotoModal
+    :isOpen="showPhoto"
+    @dismiss="showPhoto = false"
+    :imageUrl="imageUrl"
+  />
   </div>
 </template>
 <script lang="ts">
@@ -30,6 +37,7 @@ import { IonCard, IonCardContent } from "@ionic/vue";
 import Image from "../../Image.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Pagination } from "swiper/modules";
+import ViewPhotoModal from "@/components/ViewPhotoModal.vue";
 
 // Import Swiper styles
 import "swiper/css";
@@ -62,6 +70,8 @@ export default defineComponent({
         },
       },
       noImage: "/images/product-placeholder.png",
+      showPhoto: false,
+      imageUrl: null,
     };
   },
 
@@ -71,7 +81,14 @@ export default defineComponent({
     IonCard,
     Image,
     IonCardContent,
+    ViewPhotoModal
   },
+  methods: {
+    viewImage(url: any) {
+      this.imageUrl = url;
+      this.showPhoto = true;
+    },
+  }
 });
 </script>
 <style lang="scss" scoped>

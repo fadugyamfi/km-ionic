@@ -1,6 +1,6 @@
 <template>
   <IonModal
-    v-show="image"
+    v-show="imageUrl"
     class="open-modal"
     :isOpen="isOpen"
     id="photo-modal"
@@ -17,7 +17,7 @@
     </ion-header>
     <ion-content>
       <div class="wrapper">
-        <img :src="(image as string)" />
+        <img :src="(imageUrl as string)" />
       </div>
     </ion-content>
   </IonModal>
@@ -42,7 +42,7 @@ export default defineComponent({
     isOpen: {
       default: false,
     },
-    image: {
+    imageUrl: {
       type: String as PropType<string | null>,
       default: null,
     },
