@@ -181,7 +181,7 @@ const teamStore = useTeamStore();
 const toastStore = useToastStore();
 
 const form = useForm({
-  profile_picture: "",
+  photo: "",
   name: "",
   role_id: "",
   phone_number: "",
@@ -246,7 +246,7 @@ const pickImages = async () => {
 
     photo.value = photos.value ? photos.value[0] : null;
     if (photo.value) {
-      form.fields.profile_picture = photo.value.base64Data as string;
+      form.fields.photo = photo.value.base64Data as string;
     }
   } catch (e) {
     console.log(e);
