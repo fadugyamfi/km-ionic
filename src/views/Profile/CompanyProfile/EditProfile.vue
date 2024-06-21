@@ -36,10 +36,10 @@
             @click="viewCoverPhoto(company?.cover_image)"
             id="view-cover-image"
           />
-          <ProfilePhotoModal
+          <ViewPhotoModal
             :isOpen="showPhoto"
             @dismiss="showPhoto = false"
-            :image="image"
+            :imageUrl="imageUrl"
           />
           <aside class="d-flex">
             <ProfileAvatar
@@ -249,7 +249,7 @@ import { useRoute, useRouter } from "vue-router";
 import Business from "@/models/Business";
 import { useForm } from "@/composables/form";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
-import ProfilePhotoModal from "@/components/profile/ProfilePhotoModal.vue";
+import ViewPhotoModal from "@/components/ViewPhotoModal.vue";
 import { usePhotoGallery, UserPhoto } from "@/composables/usePhotoGallery";
 import { useLocationStore } from "@/stores/LocationStore";
 import Country from "@/models/Country";
@@ -260,7 +260,7 @@ const businessStore = useBusinessStore();
 const locationStore = useLocationStore();
 const userStore = useUserStore();
 
-const image = ref(null);
+const imageUrl = ref(null);
 const showPhoto = ref(false);
 
 const route = useRoute();
@@ -289,8 +289,8 @@ const form = useForm({
 
 const photo = ref<UserPhoto | null>(null);
 
-const viewCoverPhoto = (imageUrl: any) => {
-  image.value = imageUrl;
+const viewCoverPhoto = (url: any) => {
+  imageUrl.value = url;
   showPhoto.value = true;
 };
 

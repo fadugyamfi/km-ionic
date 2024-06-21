@@ -1,6 +1,6 @@
 <template>
   <IonModal
-    v-show="image"
+    v-show="imageUrl"
     class="open-modal"
     :isOpen="isOpen"
     id="photo-modal"
@@ -16,9 +16,13 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <div class="wrapper">
-        <img :src="(image as string)" />
-      </div>
+      <Swiper :modules="modules" zoom>
+        <SwiperSlide>
+          <div class="wrapper swiper-zoom-container">
+            <img :src="(imageUrl as string)" />
+          </div>
+        </SwiperSlide>
+      </Swiper>
     </ion-content>
   </IonModal>
 </template>
@@ -36,13 +40,15 @@ import {
 } from "@ionic/vue";
 import { closeOutline } from "ionicons/icons";
 import { PropType, defineComponent } from "vue";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Zoom } from "swiper/modules";
 
 export default defineComponent({
   props: {
     isOpen: {
       default: false,
     },
-    image: {
+    imageUrl: {
       type: String as PropType<string | null>,
       default: null,
     },
@@ -53,6 +59,7 @@ export default defineComponent({
   data() {
     return {
       closeOutline,
+      modules: [Zoom],
     };
   },
   components: {
@@ -65,6 +72,8 @@ export default defineComponent({
     IonButton,
     IonModal,
     IonIcon,
+    SwiperSlide,
+    Swiper,
   },
 
   methods: {
@@ -84,13 +93,16 @@ ion-modal {
   &.open-modal {
     --width: 100%;
     --height: 100%;
-    .wrapper {
-      width: 100%;
+    .swiper {
       height: 100%;
-      img {
+      .wrapper {
         width: 100%;
-        height: 90%;
-        object-fit: contain;
+        height: 100%;
+        img {
+          width: 100%;
+          height: 90%;
+          object-fit: contain;
+        }
       }
     }
   }
