@@ -162,8 +162,7 @@ export default defineComponent({
   },
 
   ionViewDidEnter() {
-    this.loadCachedInventory();
-    // this.saleStore.loadFromStorage();
+    this.fetchAgentProducts();
   },
 
   components: {
