@@ -26,7 +26,7 @@
         <Swiper :slides-per-view="2">
           <template
             v-for="promotionItem in promotion.promotion_items"
-            :key="promotionItem.id"
+            :key="promotionItem.promotion_id"
           >
             <SwiperSlide v-if="promotionItem.product">
               <ProductCard
