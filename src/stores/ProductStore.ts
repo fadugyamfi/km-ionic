@@ -138,7 +138,7 @@ export const useProductStore = defineStore("product", {
         const response = await axios.get(link, { params });
         if (response) {
           const { links } = response.data;
-          this.nextLink = links.next;
+          this.nextLink = links?.next;
           this.products = [
             ...this.products,
             ...this.mapResponseToProducts(response),
