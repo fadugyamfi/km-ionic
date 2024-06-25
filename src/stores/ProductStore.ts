@@ -16,6 +16,7 @@ export const useProductStore = defineStore("product", {
   state: () => {
     return {
       products: [] as Product[],
+      agentProducts: [] as Product[],
       selectedProduct: null as Product | null,
       recentlyViewedProducts: [] as Product[],
       searchTerm: "",
@@ -114,9 +115,9 @@ export const useProductStore = defineStore("product", {
           `/v2/users/${userStore.user?.id}/products`,
           { params }
         );
-        this.products = this.mapResponseToProducts(response);
+        this.agentProducts = this.mapResponseToProducts(response);
 
-        return this.products;
+        return this.agentProducts;
       } catch (error) {
         handleAxiosRequestError(error);
 
