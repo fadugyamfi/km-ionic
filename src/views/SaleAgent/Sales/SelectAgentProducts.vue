@@ -226,7 +226,7 @@ export default defineComponent({
         };
 
         this.products = await this.productStore.fetchAgentProducts(params);
-        this.saleStore.inventory = this.products;
+        // this.saleStore.inventory = this.products;
       } catch (error) {
         handleAxiosRequestError(error);
       } finally {
