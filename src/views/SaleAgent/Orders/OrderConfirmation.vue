@@ -122,7 +122,7 @@ export default defineComponent({
       this.orderStore.resetForNewOrder();
       if (this.$route.fullPath.includes("request")) {
         this.$router.replace("/agent/request/place-request/select-customer");
-      } else if (this.userStore.user?.isSalesAssociate()) {
+      } else if (this.userStore.activeRole?.isSalesAssociate()) {
         this.$router.replace("/agent/orders/place-order/select-customer");
       } else {
         this.$router.replace("/vendor/orders/record-order/select-agent");
@@ -133,7 +133,7 @@ export default defineComponent({
       this.orderStore.resetForNewOrder();
       if (this.$route.fullPath.includes("request")) {
         this.$router.replace("/agent/request");
-      } else if (this.userStore.user?.isSalesAssociate()) {
+      } else if (this.userStore.activeRole?.isSalesAssociate()) {
         this.$router.replace("/agent/orders");
       } else {
         this.$router.replace("/vendor/orders");

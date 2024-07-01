@@ -77,7 +77,7 @@ export default defineComponent({
 
     if (!this.loginDisabled && this.userStore.appMode == "guest") {
       this.userStore.fetchUserInfo();
-      this.userStore.fetchUserBusinesses();
+      // this.userStore.fetchUserBusinesses();
     }
   },
 });

@@ -38,10 +38,10 @@
             @click="viewCoverPhoto(user?.photo)"
           ></ProfileAvatar>
 
-          <ProfilePhotoModal
+          <ViewPhotoModal
             :isOpen="showPhoto"
             @dismiss="showPhoto = false"
-            :image="image"
+            :imageUrl="imageUrl"
           />
           <IonButton
             fill="clear"
@@ -135,7 +135,7 @@ import { useRouter } from "vue-router";
 import User from "@/models/User";
 import { useForm } from "@/composables/form";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
-import ProfilePhotoModal from "@/components/profile/ProfilePhotoModal.vue";
+import ViewPhotoModal from "@/components/ViewPhotoModal.vue";
 
 const toastStore = useToastStore();
 const userStore = useUserStore();
@@ -144,7 +144,7 @@ const router = useRouter();
 const fetching = ref(false);
 const validating = ref(false);
 
-const image = ref(null);
+const imageUrl = ref(null);
 const showPhoto = ref(false);
 
 const defaultBackRoute = computed(() => {
@@ -174,8 +174,8 @@ const isChangeNumber = computed(
   () => form.fields.phone_number !== user.value?.phone_number
 );
 
-const viewCoverPhoto = (imageUrl: any) => {
-  image.value = imageUrl;
+const viewCoverPhoto = (url: any) => {
+  imageUrl.value = url;
   showPhoto.value = true;
 };
 

@@ -1,5 +1,5 @@
 <template>
-    <section class="shopper-home-section ion-padding-top">
+    <section class="shopper-home-section ion-padding-top" v-if="products.length > 0">
         <header class="ion-padding-horizontal ion-padding-bottom">
             <h6>Recently Viewed Products</h6>
 

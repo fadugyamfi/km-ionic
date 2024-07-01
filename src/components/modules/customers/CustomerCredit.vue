@@ -43,7 +43,7 @@
           Payment made on {{ credit.payment_date?.split(" ")[0] || "N/A" }}
         </IonText>
         <IonText color="medium" class="font-medium d-flex">
-          paid via {{ credit.payment_mode.name }}
+          paid via {{ credit.payment_mode?.name }}
           <Image class="momo" src="/images/momo.svg"></Image> </IonText
       ></IonLabel>
 

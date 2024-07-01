@@ -206,7 +206,7 @@ export default defineComponent({
     async fetchCustomers(options = {}) {
       this.fetching = true;
 
-      if (this.userStore.user?.isSaleAgent()) {
+      if (this.userStore.activeRole?.isSaleAgent()) {
         this.customers = await this.userStore.fetchAssignedBusinesses(
           this.userStore.user?.id,
           options,
@@ -241,7 +241,7 @@ export default defineComponent({
         return;
       }
       this.orderStore.persist();
-      if (this.userStore.user?.isSalesAssociate()) {
+      if (this.userStore.activeRole?.isSalesAssociate()) {
         // this.$router.push("/agent/orders/place-order/select-products");
         this.$router.push("/agent/orders/place-order/select-order-type");
       } else {

@@ -155,7 +155,7 @@ const onContinue = async () => {
 
       if (!loginDisabled) {
         await userStore.fetchUserInfo();
-        await userStore.fetchUserBusinesses();
+        // await userStore.fetchUserBusinesses();
 
         router.push("/shopper");
       } else {

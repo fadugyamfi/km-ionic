@@ -26,61 +26,58 @@ export const ProfileRoutes = [
       {
         path: "company",
         redirect: "/profile/company/customers",
-        component: () => import("@/views/Vendor/Company.vue"),
+        component: () => import("@/views/Profile/Company.vue"),
         children: [
           {
             path: "customers",
-            component: () =>
-              import("@/views/Vendor/Company/Customer/Customers.vue"),
+            component: () => import("@/views/Profile/Customer/Customers.vue"),
           },
           {
             path: "customers/add-customer",
-            component: () =>
-              import("@/views/Vendor/Company/Customer/AddCustomer.vue"),
+            component: () => import("@/views/Profile/Customer/AddCustomer.vue"),
           },
           {
             path: "customers/:id/update-customer",
             component: () =>
-              import("@/views/Vendor/Company/Customer/UpdateCustomer.vue"),
+              import("@/views/Profile/Customer/UpdateCustomer.vue"),
           },
           {
             path: "customers/:id/profile",
             component: () =>
-              import("@/views/Vendor/Company/Customer/CustomerProfile.vue"),
+              import("@/views/Profile/Customer/CustomerProfile.vue"),
           },
           {
             path: "customers/:id/orders",
             component: () =>
-              import("@/views/Vendor/Company/Customer/Order/OrderHistory.vue"),
+              import("@/views/Profile/Customer/Order/OrderHistory.vue"),
           },
           {
             path: "customers/:id/credit-payments",
             component: () =>
               import(
-                "@/views/Vendor/Company/Customer/CreditPayment/CreditHistory.vue"
+                "@/views/Profile/Customer/CreditPayment/CreditHistory.vue"
               ),
           },
           {
             path: "stocks",
-            component: () => import("@/views/Vendor/Company/Stock/Stocks.vue"),
+            component: () => import("@/views/Profile/Stock/Stocks.vue"),
           },
           {
             path: "agent/stocks",
-            component: () => import("@/views/Profile/SaleAgents/AgentStock.vue"),
+            component: () =>
+              import("@/views/Profile/SaleAgents/AgentStock.vue"),
           },
           {
             path: "stocks/add-stock",
-            component: () =>
-              import("@/views/Vendor/Company/Stock/AddStock.vue"),
+            component: () => import("@/views/Profile/Stock/AddStock.vue"),
           },
           // {
           //   path: "stocks/stock-list",
-          //   component: () => import("@/views/Vendor/Company/Stock/Stoc.vue"),
+          //   component: () => import("@/views/Profile/Stock/Stoc.vue"),
           // },
           {
             path: "stocks/:id/stock-details",
-            component: () =>
-              import("@/views/Vendor/Company/Stock/StockDetails.vue"),
+            component: () => import("@/views/Profile/Stock/StockDetails.vue"),
           },
           {
             path: "sale-agents",
@@ -156,6 +153,32 @@ export const ProfileRoutes = [
             path: "change-cover-photo",
             component: () =>
               import("@/views/Profile/CompanyProfile/ChangeCoverPhoto.vue"),
+          },
+
+          // team routes
+
+          {
+            path: "team",
+            component: () => import("@/views/Profile/Team.vue"),
+            children: [
+              {
+                path: "",
+                component: () => import("@/views/Profile/Team/TeamMembers.vue"),
+              },
+              {
+                path: "add-member",
+                component: () => import("@/views/Profile/Team/AddMember.vue"),
+              },
+              {
+                path: ":id/role-and-permission",
+                component: () =>
+                  import("@/views/Profile/Team/RoleAndPermission.vue"),
+              },
+              {
+                path: ":id/assign-role",
+                component: () => import("@/views/Profile/Team/AssignRole.vue"),
+              },
+            ],
           },
         ],
       },

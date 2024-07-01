@@ -1,5 +1,6 @@
 import Product from "./Product";
 export default class PromotionItem {
+  public id?: number | string;
   public promotion_id?: number | string;
   public promo_price?: number;
   public _product?: Product | null;

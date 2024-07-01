@@ -2,27 +2,33 @@
   <IonModal ref="modal" :initial-breakpoint="0.5" :breakpoints="[0, 0.5, 1]">
     <IonContent class="ion-padding">
       <header class="fw-semibold ion-padding ion-text-center">
-        {{ $t("profile.switchBusiness") }}
+        Switch {{ isOwner ? "Business" : "Teams" }}
       </header>
       <main class="ion-padding-vertical">
         <ion-list>
-          <ion-item v-for="business in userBusinesses" :key="business.id">
+          <ion-item
+            v-for="({ business, role }, index) in userTeams"
+            :key="userTeams?.length && userTeams[index].id"
+          >
             <ion-toggle
-              @ion-change="onToggle($event, business)"
-              :checked="activeBusiness?.id == business.id"
-              :disabled="!business.name"
+              @ion-change="onToggle($event, business as Business)"
+              :checked="activeBusiness?.id == business?.id"
+              :disabled="!business?.name"
               mode="ios"
-              >
+            >
               <IonLabel>
-                {{ business.name || "No business" }}
+                {{ business?.name || "No business" }}
 
                 <div>
                   <IonText class="font-medium" color="medium">
-                    {{ business?.location }}
+                    {{ role?.name }}
+                    <p class="font-medium">
+                      {{ business?.location }}
+                    </p>
                   </IonText>
                 </div>
               </IonLabel>
-              </ion-toggle>
+            </ion-toggle>
           </ion-item>
         </ion-list>
       </main>
@@ -42,13 +48,14 @@ import {
   IonIcon,
   IonSelectOption,
   IonLabel,
-IonText,
+  IonText,
 } from "@ionic/vue";
 import { defineComponent, PropType } from "vue";
 import { chevronDownOutline, chevronUpOutline } from "ionicons/icons";
 import { useUserStore } from "@/stores/UserStore";
 import { mapStores } from "pinia";
 import Business from "@/models/Business";
+import Team from "@/models/Team";
 import { useToastStore } from "@/stores/ToastStore";
 
 export default defineComponent({
@@ -63,7 +70,7 @@ export default defineComponent({
     IonIcon,
     IonToggle,
     IonLabel,
-    IonText
+    IonText,
   },
 
   data() {
@@ -71,18 +78,21 @@ export default defineComponent({
       chevronDownOutline,
       chevronUpOutline,
       showQuantitySelector: true,
-      checked: true
+      checked: true,
     };
   },
 
   emits: ["update"],
   computed: {
     ...mapStores(useUserStore, useToastStore),
-    userBusinesses() {
-      return this.userStore.userBusinesses;
+    userTeams() {
+      return this.userStore.userTeams;
     },
     activeBusiness() {
       return this.userStore.activeBusiness;
+    },
+    isOwner() {
+      return this.userStore.activeRole?.isOwner();
     },
   },
 
@@ -90,18 +100,35 @@ export default defineComponent({
     async onToggle(e: any, business: Business) {
       try {
         this.checked = e.detail.checked;
-        const response = await this.userStore.setActiveBusiness(business);
+        const isPreviousSalesAssociate =
+          this.userStore.activeRole?.isSalesAssociate();
+        await this.userStore.setActiveBusiness(business);
+
+        if (!isPreviousSalesAssociate) {
+          if (this.userStore.activeRole?.isSalesAssociate()) {
+            this.$router.replace("/agent/home");
+          }
+        }
+        if (isPreviousSalesAssociate) {
+          if (!this.userStore.activeRole?.isSalesAssociate()) {
+            this.$router.replace("/vendor/home");
+          }
+        }
         if (this.checked) {
           this.$el.dismiss();
           this.toastStore.showSuccess(
-            "Company account switched successfully",
+            `${
+              this.isOwner ? "Teams" : "Company account"
+            } switched successfully`,
             "",
             "bottom"
           );
         }
       } catch (error) {
         this.toastStore.showError(
-          "Failed to switch Company account. Please try again",
+          `Failed to switch ${
+            this.isOwner ? "Teams" : "company account"
+          }. Please try again`,
           "",
           "bottom",
           "footer"

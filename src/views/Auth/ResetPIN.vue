@@ -72,7 +72,7 @@ const onContinue = async () => {
             setTimeout(async () => {
                 toastStore.blockUI( i18n.t("auth.resetPin.loadingYourAccountInfo") )
                 await userStore.fetchUserInfo();
-                await userStore.fetchUserBusinesses();
+                // await userStore.fetchUserBusinesses();
                 router.replace('/shopper');
                 toastStore.unblockUI();
             }, 500);

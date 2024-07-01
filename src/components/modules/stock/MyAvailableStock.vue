@@ -3,6 +3,7 @@
     <header class="d-flex ion-justify-content-end">
       <IonText
         color="primary"
+        @click="addNewRequest"
         router-link="/agent/request/place-request/select-products"
         class=""
       >
@@ -27,6 +28,7 @@ import axios from "axios";
 import { IonText } from "@ionic/vue";
 import { mapStores } from "pinia";
 import { useProductCategoryStore } from "@/stores/ProductCategoryStore";
+import { useRequestStore } from "@/stores/RequestStore";
 import Stock from "@/models/Stock";
 
 export default defineComponent({
@@ -39,6 +41,15 @@ export default defineComponent({
   components: {
     ProductStockList,
     IonText,
+  },
+  computed: {
+    ...mapStores(useRequestStore),
+  },
+  methods: {
+    addNewRequest() {
+      this.requestStore.resetForNewRequest();
+      this.$router.push("/agent/request/place-request/select-products");
+    },
   },
 });
 </script>

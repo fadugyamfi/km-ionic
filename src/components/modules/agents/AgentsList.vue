@@ -113,7 +113,7 @@ const deleteAgent = (agent: User|Agent) => {
 const onConfirmDelete = async () => {
   try {
     showConfirmDeleteModal.value = false;
-    await agentsStore.deleteAgent(selectedAgent.value as User);
+    await agentsStore.deleteAgent(selectedAgent.value as Agent);
     toastStore.showSuccess("Agent has been removed successfully", "", "bottom");
   } catch (error) {
     toastStore.showError(

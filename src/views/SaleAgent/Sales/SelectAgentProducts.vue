@@ -162,8 +162,7 @@ export default defineComponent({
   },
 
   ionViewDidEnter() {
-    this.loadCachedInventory();
-    // this.saleStore.loadFromStorage();
+    this.fetchAgentProducts();
   },
 
   components: {
@@ -227,7 +226,7 @@ export default defineComponent({
         };
 
         this.products = await this.productStore.fetchAgentProducts(params);
-        this.saleStore.inventory = this.products;
+        // this.saleStore.inventory = this.products;
       } catch (error) {
         handleAxiosRequestError(error);
       } finally {
@@ -262,7 +261,7 @@ export default defineComponent({
         return;
       }
       this.saleStore.persist();
-      if (this.userStore.user?.isSalesAssociate()) {
+      if (this.userStore.activeRole?.isSalesAssociate()) {
         this.$router.push("/agent/sales/add-sale/configure-items");
       } else {
         this.$router.push("/vendor/sales/add-sale/configure-items");

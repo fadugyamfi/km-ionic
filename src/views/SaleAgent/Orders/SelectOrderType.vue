@@ -132,7 +132,7 @@ export default defineComponent({
     },
 
     onContinue() {
-      if (this.userStore.user?.isSalesAssociate()) {
+      if (this.userStore.activeRole?.isSalesAssociate()) {
         this.$router.push("/agent/orders/place-order/select-products");
       } else {
         this.$router.push("/vendor/orders/record-order/select-products");
