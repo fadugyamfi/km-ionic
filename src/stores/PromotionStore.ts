@@ -95,7 +95,8 @@ export const usePromotionStore = defineStore("promotion", {
 
     async getPromotion(promotionIdOrSlug: number | string): Promise<Promotion | null> {
       if (this.promotions.length > 0) {
-        const promotion = this.promotions.find((p) => p.id == promotionIdOrSlug);
+        const promotion = this.promotions.find((p) => p.id == promotionIdOrSlug || p.slug == promotionIdOrSlug);
+        
         if (promotion) {
           return promotion;
         }

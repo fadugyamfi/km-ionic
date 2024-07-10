@@ -49,11 +49,7 @@ export const ShopperHomeRoutes = [
         component: () => import("@/views/Shopper/Businesses/BusinessProducts.vue"),
     },
     {
-        path: "home/promotions/:id",
-        component: () => import("@/views/Shopper/Promotions/PromotionItems.vue"),
-    },
-    {
-        path: 'home/promotions/s/:slug',
+        path: "home/promotions/:idOrSlug",
         component: () => import("@/views/Shopper/Promotions/PromotionItems.vue"),
     },
 ];
