@@ -9,7 +9,7 @@
 
       <IonText
         color="primary"
-        :router-link="`/guest/home/promotions/${promotion.id}`"
+        :router-link="`/guest/home/promotions/${promotion.slug}`"
       >
         View all
       </IonText>

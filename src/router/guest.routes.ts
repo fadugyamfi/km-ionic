@@ -15,9 +15,9 @@ export const GuestModeRoutes = [
         await userStore.loadStoredData();
       }
 
-      if (!userStore.onboarded && !userStore.user) {
-        return { name: "Onboarding" };
-      }
+      // if (!userStore.onboarded && !userStore.user) {
+      //   return { name: "Onboarding" };
+      // }
 
       if (
         userStore.user &&
