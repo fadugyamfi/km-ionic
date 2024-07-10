@@ -49,8 +49,6 @@ const route = useRoute();
 const promotion = ref<Promotion | null>();
 const promotionItems = ref<PromotionItem[] | null>();
 const fetching = ref(false);
-const storage = new AppStorage();
-const cacheKey = "kola.promotion-items";
 
 const products = computed(() => {
   return promotionItems.value?.
@@ -59,29 +57,26 @@ const products = computed(() => {
 })
 
 onIonViewDidEnter(async () => {
-  const promotionCacheKey = `${cacheKey}.${+route.params.id}`;
-  promotion.value = await promotionStore.getPromotion(+route.params.id);
+  let promotionId: string | number | undefined = +route.params.id;
+  let promotionSlug: string | undefined = route.params.slug as string;
 
-  const items = await storage.get(promotionCacheKey);
-  if( items ) {
-    promotionItems.value = items.map((p:any) => new PromotionItem(p));
-    return;
-  }
-
+  promotion.value = await promotionStore.getPromotion(promotionId || promotionSlug);
   promotionItems.value = promotion.value?.promotion_items;
+
+  if( !promotionId && promotion.value ) {
+    promotionId = promotion.value?.id;
+  }
 
   setTimeout(async () => {
     fetching.value = true;
 
     try {
-      promotionItems.value = await promotionStore.getPromotionItems(+route.params.id);
-      storage.set(promotionCacheKey, promotionItems.value, 7, 'days');
+      promotionItems.value = await promotionStore.getPromotionItems(promotionId as number);
     } catch(error) {
       console.log(error);
     } finally {
       fetching.value = false;
     }
-    fetching.value = false;
   }, 100)
 });
 </script>

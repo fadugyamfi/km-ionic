@@ -17,7 +17,7 @@
           <IonButton
             fill="clear"
             color="primary"
-            :router-link="`/shopper/home/promotions/${promotion.id}`"
+            :router-link="`/shopper/home/promotions/s/${promotion.slug}`"
           >
             {{ $t("shopper.home.viewAll") }}
           </IonButton>

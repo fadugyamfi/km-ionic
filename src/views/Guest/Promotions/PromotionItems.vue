@@ -65,21 +65,38 @@ const products = computed(() => {
 })
 
 const loadPromotionAndItems = async () => {
-  const promotionCacheKey = `${cacheKey}.${+route.params.id}`;
-  promotion.value = await promotionStore.getGuestPromotion(+route.params.id);
+  let promotionId = +route.params.id;
+  let promotionSlug = route.params.slug;
+  let promotionCacheKey = `${cacheKey}.${promotionId}`;
 
-  const items = await storage.get(promotionCacheKey);
-  if (items) {
-    promotionItems.value = items.map((p: any) => new PromotionItem(p));
-    return;
+  if( promotionId ) {
+    const items = await storage.get(promotionCacheKey);
+  
+    if( items ) {
+      promotionItems.value = items.map((p:any) => new PromotionItem(p));
+      return;
+    }
+
+    promotion.value = await promotionStore.getPromotion(promotionId);
+    promotionItems.value = promotion.value?.promotion_items;
   }
 
-  promotionItems.value = promotion.value?.promotion_items;
+  if( promotionSlug ) {
+    promotionCacheKey = `${cacheKey}.${promotionSlug}`;
+    promotion.value = await promotionStore.getPromotionBySlug(promotionSlug);
+    
+    promotionId = promotion.value?.id;
+    promotionItems.value = promotion.value?.promotion_items;
+  }
+
+  if( !promotionId ) {
+    return;
+  }
 
   setTimeout(async () => {
     fetching.value = true;
     try {
-      promotionItems.value = await promotionStore.getGuestPromotionItems(+route.params.id);
+      promotionItems.value = await promotionStore.getGuestPromotionItems(promotionId);
       storage.set(promotionCacheKey, promotionItems.value, 7, 'days');
     } catch (error) {
       console.log(error);

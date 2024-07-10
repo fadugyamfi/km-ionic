@@ -52,4 +52,8 @@ export const ShopperHomeRoutes = [
         path: "home/promotions/:id",
         component: () => import("@/views/Shopper/Promotions/PromotionItems.vue"),
     },
+    {
+        path: 'home/promotions/s/:slug',
+        component: () => import("@/views/Shopper/Promotions/PromotionItems.vue"),
+    },
 ];
