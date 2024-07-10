@@ -32,6 +32,7 @@
               <ProductCard
                 :product="promotionItem?.product"
                 :show-description="false"
+                :show-retail-price="true"
               ></ProductCard>
             </SwiperSlide>
           </template>

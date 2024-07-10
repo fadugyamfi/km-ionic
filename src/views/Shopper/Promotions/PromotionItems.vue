@@ -25,7 +25,7 @@
         <IonSpinner name="crescent"></IonSpinner>
       </section>
 
-      <ProductGridList :products="products"></ProductGridList>
+      <ProductGridList :products="products" :show-retail-prices="true" ></ProductGridList>
     </ion-content>
   </ion-page>
 </template>

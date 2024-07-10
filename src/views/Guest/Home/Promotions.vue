@@ -24,6 +24,7 @@
           <GuestProductCard
             :product="promotionItem?.product"
             :show-description="false"
+            :show-retail-price="true"
           ></GuestProductCard>
         </SwiperSlide>
       </template>
