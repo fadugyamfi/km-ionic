@@ -70,7 +70,7 @@
           <IonText
             class="price"
             color="medium"
-            v-if="product?.retail_price as number > 0"
+            v-if="!product.preferRetailPrice && product?.retail_price as number > 0"
           >
             MSRP:
             {{
