@@ -203,6 +203,7 @@ export default defineComponent({
       default: false,
       type: Boolean,
     },
+
     showStockStatus: {
       default: false,
       type: Boolean,
@@ -217,6 +218,11 @@ export default defineComponent({
       defaut: null,
       type: Object as PropType<Business | null>,
     },
+
+    showRetailPrice: {
+      type: Boolean,
+      default: false
+    }
   },
 
   data() {
@@ -317,6 +323,10 @@ export default defineComponent({
       this.selected = newValue;
     },
   },
+
+  mounted() {
+    this.product.preferRetailPrice = this.showRetailPrice;
+  }
 });
 </script>
 

@@ -11,7 +11,7 @@ export default class Product {
   public product_description?: string;
   public _product_price?: number = 0;
   public wholesale_price: number = 0;
-  public retail_price?: number;
+  public retail_price: number = 0;
   public single_unit_price?: number;
   public single_piece_price?: number;
   public product_banner_image?: string;
@@ -32,6 +32,7 @@ export default class Product {
   public favorited?: FavoritedProduct | null;
   public is_on_sale: number = 0;
   public sale_price: number = 0;
+  public preferRetailPrice = false;
 
   constructor(data: any) {
     if (data._business) {
@@ -94,6 +95,10 @@ export default class Product {
   }
 
   get product_price() {
+    if( this.preferRetailPrice && this.retail_price > 0 ) {
+      return this.retail_price;
+    }
+
     if (this.wholesale_price > 0) {
       return this.wholesale_price;
     }

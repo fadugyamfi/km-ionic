@@ -7,16 +7,28 @@
   "background_color": "#FFFFFF",
   "icons": [
     {
+      "src": "./img/icons/icon-128x128.png",
+      "type": "image/png",
+      "sizes": "128x128",
+      "purpose": "maskable"
+    },
+    {
       "src": "./img/icons/icon-192x192.png",
       "type": "image/png",
-      "sizes": "128x128 192x192",
-      "purpose": "any maskable"
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./img/icons/icon-256x256.png",
+      "type": "image/png",
+      "sizes": "256x256",
+      "purpose": "maskable"
     },
     {
       "src": "./img/icons/icon-512x512.png",
       "type": "image/png",
-      "sizes": "256x256 512x512",
-      "purpose": "any maskable"
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
   "screenshots" : [
@@ -43,6 +55,13 @@
       "sizes": "711x1552",
       "type": "image/png",
       "label": "Profile Management"
+    },
+    {
+      "src": "./img/screenshots/home_wide.png",
+      "sizes": "1266x595",
+      "type": "image/png",
+      "label": "Shopper Home",
+      "form_factor": "wide"
     }
   ],
   "related_applications": [

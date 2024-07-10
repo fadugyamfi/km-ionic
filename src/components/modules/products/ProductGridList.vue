@@ -2,9 +2,20 @@
     <RecycleScroller class="scroller" :items="products" :grid-items="2" :item-size="280" :item-secondary-size="cardWidth"
                      :item-class="'product-card-item'" key-field="id" v-slot="{ item }">
 
-        <GuestProductCard v-if="userStore.isInGuestMode()" :product="item" :showDescription="false">
+        <GuestProductCard 
+            v-if="userStore.isInGuestMode()" 
+            :product="item" 
+            :showDescription="false"
+            :show-retail-price="showRetailPrices"
+        >
         </GuestProductCard>
-        <ProductCard v-else :product="item" :showDescription="false"></ProductCard>
+
+        <ProductCard 
+            v-else 
+            :product="item" 
+            :showDescription="false"
+            :show-retail-price="showRetailPrices"
+        ></ProductCard>
 
     </RecycleScroller>
 </template>
@@ -34,6 +45,11 @@ const props = defineProps({
     products: {
         type: Array<Product>,
         default: []
+    },
+
+    showRetailPrices: {
+        type: Boolean,
+        default: false
     }
 });
 

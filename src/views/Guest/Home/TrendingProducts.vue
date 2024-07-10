@@ -3,9 +3,9 @@
     <header class="ion-padding-horizontal">
       <h6>{{ $t("shopper.home.trending") }}</h6>
 
-      <!-- <IonText color="primary" router-link="/shopper/home/categories">
-        View all
-      </IonText> -->
+      <IonButton fill="clear" color="primary" @click="refreshProducts()">
+        {{ $t('general.refresh') }}
+      </IonButton>
     </header>
 
     <section v-if="fetching">
@@ -60,6 +60,15 @@ export default defineComponent({
 
       this.fetching = false;
     },
+
+    async refreshProducts() {
+      this.fetching = true;
+
+      this.products = await this.productStore.fetchGuestProducts({ refresh: true, sort: 'top_selling', limit: 100 });
+      await storage.set(KOLA_TRENDING, this.products, 3, 'days')
+
+      this.fetching = false;
+    }
   },
 
   mounted() {
