@@ -94,12 +94,7 @@ export const GuestModeRoutes = [
               import("@/views/Guest/Businesses/BusinessProducts.vue"),
           },
           {
-            path: "promotions/:id",
-            component: () =>
-              import("@/views/Guest/Promotions/PromotionItems.vue"),
-          },
-          {
-            path: "promotions/s/:slug",
+            path: "promotions/:idOrSlug",
             component: () =>
               import("@/views/Guest/Promotions/PromotionItems.vue"),
           },

@@ -65,39 +65,19 @@ const products = computed(() => {
 })
 
 const loadPromotionAndItems = async () => {
-  let promotionId = +route.params.id;
-  let promotionSlug = route.params.slug;
-  let promotionCacheKey = `${cacheKey}.${promotionId}`;
+  let promotionIdOrSlug = route.params.idOrSlug;
 
-  if( promotionId ) {
-    const items = await storage.get(promotionCacheKey);
-  
-    if( items ) {
-      promotionItems.value = items.map((p:any) => new PromotionItem(p));
-      return;
-    }
+  promotion.value = await promotionStore.getPromotion(promotionIdOrSlug as string);
+  promotionItems.value = promotion.value?.promotion_items;
 
-    promotion.value = await promotionStore.getPromotion(promotionId);
-    promotionItems.value = promotion.value?.promotion_items;
-  }
-
-  if( promotionSlug ) {
-    promotionCacheKey = `${cacheKey}.${promotionSlug}`;
-    promotion.value = await promotionStore.getPromotionBySlug(promotionSlug);
-    
-    promotionId = promotion.value?.id;
-    promotionItems.value = promotion.value?.promotion_items;
-  }
-
-  if( !promotionId ) {
+  if( !promotion.value ) {
     return;
   }
 
   setTimeout(async () => {
     fetching.value = true;
     try {
-      promotionItems.value = await promotionStore.getGuestPromotionItems(promotionId);
-      storage.set(promotionCacheKey, promotionItems.value, 7, 'days');
+      promotionItems.value = await promotionStore.getGuestPromotionItems(promotion.value?.id as number);
     } catch (error) {
       console.log(error);
     } finally {
