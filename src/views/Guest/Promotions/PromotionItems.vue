@@ -67,7 +67,7 @@ const products = computed(() => {
 const loadPromotionAndItems = async () => {
   let promotionIdOrSlug = route.params.idOrSlug;
 
-  promotion.value = await promotionStore.getPromotion(promotionIdOrSlug as string);
+  promotion.value = await promotionStore.getGuestPromotion(promotionIdOrSlug as string);
   promotionItems.value = promotion.value?.promotion_items;
 
   if( !promotion.value ) {
