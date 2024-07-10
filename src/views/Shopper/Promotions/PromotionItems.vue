@@ -57,18 +57,19 @@ const products = computed(() => {
 })
 
 onIonViewDidEnter(async () => {
+  fetching.value = true;
+
   let promotionIdOrSlug: string | string[] = route.params.idOrSlug;
 
   promotion.value = await promotionStore.getPromotion(promotionIdOrSlug as string);
   promotionItems.value = promotion.value?.promotion_items;
 
   if( !promotion.value ) {
+    fetching.value = false;
     return;
   }
 
   setTimeout(async () => {
-    fetching.value = true;
-
     try {
       promotionItems.value = await promotionStore.getPromotionItems(promotion.value?.id as number);
     } catch(error) {

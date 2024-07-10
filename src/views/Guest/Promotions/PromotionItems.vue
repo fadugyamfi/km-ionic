@@ -65,17 +65,19 @@ const products = computed(() => {
 })
 
 const loadPromotionAndItems = async () => {
+  fetching.value = true;
+
   let promotionIdOrSlug = route.params.idOrSlug;
 
   promotion.value = await promotionStore.getGuestPromotion(promotionIdOrSlug as string);
   promotionItems.value = promotion.value?.promotion_items;
 
   if( !promotion.value ) {
+    fetching.value = false;
     return;
   }
 
   setTimeout(async () => {
-    fetching.value = true;
     try {
       promotionItems.value = await promotionStore.getGuestPromotionItems(promotion.value?.id as number);
     } catch (error) {
