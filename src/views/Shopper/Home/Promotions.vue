@@ -17,7 +17,7 @@
           <IonButton
             fill="clear"
             color="primary"
-            :router-link="`/shopper/home/promotions/${promotion.id}`"
+            :router-link="`/shopper/home/promotions/${promotion.slug}`"
           >
             {{ $t("shopper.home.viewAll") }}
           </IonButton>
@@ -32,6 +32,7 @@
               <ProductCard
                 :product="promotionItem?.product"
                 :show-description="false"
+                :show-retail-price="true"
               ></ProductCard>
             </SwiperSlide>
           </template>

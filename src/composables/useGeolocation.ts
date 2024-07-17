@@ -27,10 +27,10 @@ export const useGeolocation = () => {
   };
 
   const getCurrentLocation = async (): Promise<any> => {
-const userStore = useUserStore();
+    const userStore = useUserStore();
     try {
       userStore.locationLoading = true;
-      if ( (isPlatform("ios") || isPlatform("android")) && !isPlatform('mobileweb') ) {
+      if ((isPlatform("ios") || isPlatform("android")) && !isPlatform('mobileweb')) {
         const status = await Geolocation.checkPermissions();
 
         if (status.location == "granted") {
@@ -52,7 +52,7 @@ const userStore = useUserStore();
       }
     } catch (error) {
       console.log(error);
-} finally {
+    } finally {
       userStore.locationLoading = false;
     }
   };
@@ -60,13 +60,13 @@ const userStore = useUserStore();
   const getDisplayName = async (coordinates: {
     coords: { latitude: number; longitude: number };
   }) => {
-const userStore = useUserStore();
+    const userStore = useUserStore();
     try {
-userStore.locationLoading = true;
+      userStore.locationLoading = true;
       const lat = coordinates?.coords?.latitude;
       const lon = coordinates?.coords?.longitude;
 
-      if( !lat && !lon ) {
+      if (!lat && !lon) {
         const toastStore = useToastStore();
         toastStore.showError('Please enable device Location', 'Device Location Unknown', 'top');
         return null;
@@ -84,7 +84,7 @@ userStore.locationLoading = true;
       }
     } catch (error) {
       return null;
-      } finally {
+    } finally {
       userStore.locationLoading = false;
     }
   };

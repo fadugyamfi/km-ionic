@@ -9,7 +9,7 @@
 
       <IonText
         color="primary"
-        :router-link="`/guest/home/promotions/${promotion.id}`"
+        :router-link="`/guest/home/promotions/${promotion.slug}`"
       >
         View all
       </IonText>
@@ -24,6 +24,7 @@
           <GuestProductCard
             :product="promotionItem?.product"
             :show-description="false"
+            :show-retail-price="true"
           ></GuestProductCard>
         </SwiperSlide>
       </template>

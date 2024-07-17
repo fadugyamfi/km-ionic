@@ -3,6 +3,7 @@ import PromotionItem from "./PromotionItem";
 export default class Promotion {
   public id?: number | string;
   public name?: string;
+  public slug?: string;
   public position?: number;
   public _promotion_items?: PromotionItem[];
 

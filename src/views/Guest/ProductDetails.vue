@@ -57,7 +57,7 @@
             }}
           </IonText>
 
-          <IonText class="price" color="medium" v-if="product?.retail_price as number > 0">
+          <IonText class="price" color="medium" v-if="!product.preferRetailPrice && product?.retail_price as number > 0">
             MSRP:
             {{
               Filters.currency(
