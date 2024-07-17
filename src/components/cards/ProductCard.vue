@@ -27,7 +27,6 @@
         w="180"
         @loaded="imgLoaded = true"
       />
-
       <!-- <IonSkeletonText
         v-if="!imgLoaded"
         :animated="false"
@@ -231,7 +230,7 @@ export default defineComponent({
       addCircleOutline,
       alertCircleOutline,
       imgLoaded: false,
-      selected: false,
+      selected: this.initiallySelected,
       noImage: "/images/product-placeholder.png",
       Filters,
     };

@@ -4,7 +4,11 @@
       <ion-card>
         <Image
           :alt="stock?.product_name"
-          :src="stock?.product_images?.length ? stock?.product_images[0]?.image : stock?.image"
+          :src="
+            stock?.product_images?.length
+              ? stock?.product_images[0]?.image
+              : stock?.image
+          "
           w="150"
         />
         <IonCardHeader>
@@ -34,7 +38,7 @@
             </span>
           </section>
 
-          <section v-if="stock.stock_quantity == 0">
+          <section v-if="stock.quantity == 0">
             <IonText class="d-flex ion-align-items-center">
               <IonIcon class="warning" :icon="alertCircleOutline"></IonIcon>
               out of stock
@@ -42,7 +46,7 @@
           </section>
           <section v-else>
             <IonText class="d-flex ion-align-items-center">
-              {{ Filters.number(stock.stock_quantity as number, 0) }} in stock
+              {{ Filters.number(stock.quantity as number, 0) }} in stock
             </IonText>
           </section>
         </IonCardHeader>

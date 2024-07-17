@@ -57,7 +57,7 @@
             }}</IonLabel>
           </IonItem>
         </IonCard>
-        <RecycleScroller
+        <!-- <RecycleScroller
           class="scroller"
           :items="request?.agent_request_items"
           :grid-items="2"
@@ -75,7 +75,38 @@
             :showAddToSelected="false"
             :action="'toggleSelect'"
           ></ProductCard>
-        </RecycleScroller>
+        </RecycleScroller> -->
+        <IonLabel class="ion-margin-horizontal fw-semibold font-medium"
+          >Items</IonLabel
+        >
+        <IonCard>
+          <IonCardContent>
+            <section v-if="loading" class="ion-text-center ion-padding">
+              <IonSpinner name="crescent"></IonSpinner>
+            </section>
+
+            <section v-else>
+              <IonList
+                lines="full"
+                v-if="request?.agent_request_items?.length as number > 0"
+              >
+                <SaleItemView
+                  v-for="item in request?.agent_request_items"
+                  :key="item.products_id"
+                  :saleItem="item"
+                  :editable="false"
+                >
+                </SaleItemView>
+              </IonList>
+
+              <NoResults
+                v-else
+                :title="$t('vendor.sales.noSaleItemsAvailable')"
+                :description="$t('vendor.sales.addItemsToSaleToSeeThemHere')"
+              ></NoResults>
+            </section>
+          </IonCardContent>
+        </IonCard>
       </section>
       <ConfirmModal
         :isOpen="showConfirm"
@@ -122,9 +153,11 @@ import {
   IonItem,
   IonCard,
   IonCardHeader,
+  IonCardContent,
   IonFooter,
   IonCardTitle,
   IonChip,
+  IonList
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { mapStores } from "pinia";
@@ -139,6 +172,8 @@ import Filters from "@/utilities/Filters";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import ConfirmModal from "@/components/modals/ConfirmModal.vue";
 import AgentRequest from "@/models/AgentRequest";
+import SaleItemView from "@/components/modules/sales/SaleItemView.vue";
+import NoResults from '@/components/layout/NoResults.vue';
 
 export default defineComponent({
   data() {
@@ -156,6 +191,7 @@ export default defineComponent({
     IonToolbar,
     IonButtons,
     IonBackButton,
+    IonCardContent,
     IonTitle,
     IonButton,
     IonSpinner,
@@ -172,6 +208,9 @@ export default defineComponent({
     KolaYellowButton,
     ConfirmModal,
     IonChip,
+    SaleItemView,
+    NoResults,
+    IonList
   },
 
   computed: {

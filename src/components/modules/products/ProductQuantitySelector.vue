@@ -19,7 +19,6 @@
     <IonButton fill="clear" size="small" @click="decreaseQuantity()">
       <IonIcon slot="icon-only" :icon="remove" color="dark"></IonIcon>
     </IonButton>
-
     <IonInput
       v-model="quantity"
       type="number"
@@ -28,7 +27,12 @@
       @ion-blur="updateQuantity()"
     ></IonInput>
 
-    <IonButton fill="clear" size="small" @click="increaseQuantity()">
+    <IonButton
+      fill="clear"
+      size="small"
+      @click="increaseQuantity()"
+      :disabled="maxReached"
+    >
       <IonIcon slot="icon-only" :icon="add" color="dark"></IonIcon>
     </IonButton>
   </section>
@@ -62,7 +66,8 @@ export default defineComponent({
     return {
       add,
       remove,
-      quantity: 0,
+      quantity: 1,
+      productUnit: this.initialProductUnitId,
     };
   },
 
@@ -79,12 +84,22 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    max: {
+      type: Number,
+      default: 0,
+    },
   },
 
   emits: ["change", "onselectProductUnit"],
 
   mounted() {
     this.quantity = this.initialQuantity;
+  },
+
+  computed: {
+    maxReached() {
+      return this.productUnit == 1 ? this.quantity >= this.max : false;
+    },
   },
 
   methods: {
@@ -103,7 +118,6 @@ export default defineComponent({
       }
 
       ++this.quantity;
-      console.log(this.quantity);
       this.$emit("change", this.quantity);
     },
 
@@ -111,6 +125,8 @@ export default defineComponent({
       this.$emit("change", +this.quantity);
     },
     selectProductUnit(event: CustomEvent) {
+      this.productUnit = event.detail.value;
+      this.quantity = 1;
       this.$emit("onselectProductUnit", event.detail.value);
     },
   },
