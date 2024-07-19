@@ -23,10 +23,8 @@
       v-model="quantity"
       type="number"
       fill="outline"
-      @ion-input="updateQuantity()"
       @ion-blur="updateQuantity()"
     ></IonInput>
-
     <IonButton
       fill="clear"
       size="small"
@@ -88,6 +86,10 @@ export default defineComponent({
       type: Number,
       default: 0,
     },
+    groupQuantity: {
+      type: Number,
+      default: 0,
+    },
   },
 
   emits: ["change", "onselectProductUnit"],
@@ -98,7 +100,11 @@ export default defineComponent({
 
   computed: {
     maxReached() {
-      return this.productUnit == 1 ? this.quantity >= this.max : false;
+      if (this.productUnit == 1) {
+        return this.quantity >= this.max;
+      } else {
+        return this.quantity >= this.max * this.groupQuantity;
+      }
     },
   },
 
@@ -122,6 +128,13 @@ export default defineComponent({
     },
 
     updateQuantity() {
+      if (this.maxReached) {
+        if (this.productUnit == 1) {
+          this.quantity = this.max;
+        } else {
+          this.quantity = this.max * this.groupQuantity;
+        }
+      }
       this.$emit("change", +this.quantity);
     },
     selectProductUnit(event: CustomEvent) {

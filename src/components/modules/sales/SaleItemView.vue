@@ -75,6 +75,7 @@
             @change="updateItemQuantity($event)"
             @onselectProductUnit="updateUnitPrice($event)"
             :max="saleItem?.product?.quantity"
+            :group-quantity="saleItem?.product?.group_quantity"
           ></ProductQuantitySelector>
         </section>
       </section>
