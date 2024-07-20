@@ -30,6 +30,7 @@ export default class Stock {
   public _tags?: Tag[] | null;
   public favorited?: FavoritedProduct | null;
   public stock_quantity?: number = 0;
+  public quantity?: number = 0;
 
   constructor(data: object) {
     Object.assign(this, data);

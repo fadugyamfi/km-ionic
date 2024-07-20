@@ -1,12 +1,12 @@
 <template>
   <IonItem>
-    <section class="d-flex ion-align-items-stretch">
+    <section class="d-flex ion-align-items-stretch w-100">
       <IonThumbnail :class="{ 'non-editable': !editable }">
         <Image :src="saleItem?.product?.image" w="150"></Image>
       </IonThumbnail>
 
-      <section>
-        <section class="d-flex ion-justify-content-between">
+      <section class="w-100">
+        <section class="d-flex ion-justify-content-between w-100">
           <section class="d-flex flex-column ion-justify-content-start w-100">
             <IonText class="fw-semibold font-medium">{{
               saleItem?.product?.product_name || "N/A"
@@ -26,9 +26,8 @@
             <IonText
               color="medium"
               class="font-medium d-flex ion-justify-content-between"
-              style="margin-right: -24px"
             >
-              {{ $t("general.unitPrice") }}:
+              <p style="margin: 0px">{{ $t("general.unitPrice") }}:</p>
               <span>
                 {{
                   Filters.currency(
@@ -44,9 +43,8 @@
             <IonText
               color="dark"
               class="font-medium fw-semibold d-flex ion-justify-content-between"
-              style="margin-right: -24px"
             >
-              {{ $t("general.totalPrice") }}:
+              <p style="margin: 0px">{{ $t("general.totalPrice") }}:</p>
               <span>
                 {{
                   Filters.currency(
@@ -69,7 +67,6 @@
             <IonIcon slot="icon-only" :icon="closeCircleOutline"></IonIcon>
           </IonButton>
         </section>
-
         <section>
           <ProductQuantitySelector
             v-if="editable"
@@ -77,6 +74,8 @@
             :initial-quantity="saleItem?.quantity"
             @change="updateItemQuantity($event)"
             @onselectProductUnit="updateUnitPrice($event)"
+            :max="saleItem?.product?.quantity"
+            :group-quantity="saleItem?.product?.group_quantity"
           ></ProductQuantitySelector>
         </section>
       </section>
@@ -124,6 +123,7 @@ export default defineComponent({
     return {
       closeCircleOutline,
       Filters,
+      itemQuantity: this.saleItem?.quantity,
     };
   },
 
