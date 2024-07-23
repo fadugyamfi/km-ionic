@@ -100,11 +100,14 @@ export default defineComponent({
 
   computed: {
     maxReached() {
-      if (this.productUnit == 1) {
-        return this.quantity >= this.max;
-      } else {
-        return this.quantity >= this.max * this.groupQuantity;
+      if (this.max > 0) {
+        if (this.productUnit == 1) {
+          return this.quantity >= this.max;
+        } else {
+          return this.quantity >= this.max * this.groupQuantity;
+        }
       }
+      return false
     },
   },
 
@@ -139,7 +142,10 @@ export default defineComponent({
     },
     selectProductUnit(event: CustomEvent) {
       this.productUnit = event.detail.value;
-      this.quantity = 1;
+      if (this.maxReached) {
+        this.quantity = 1;
+        this.$emit("change", this.quantity);
+      }
       this.$emit("onselectProductUnit", event.detail.value);
     },
   },

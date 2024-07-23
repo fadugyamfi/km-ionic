@@ -49,6 +49,8 @@
               v-for="item in saleStore.newSale.sale_items"
               :key="item.products_id"
               :saleItem="item"
+              :max="item?.product?.quantity"
+              :group-quantity="item?.product?.group_quantity"
             >
             </SaleItemView>
           </IonList>
