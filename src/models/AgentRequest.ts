@@ -20,6 +20,7 @@ public total_sales_price?: number | string;
   public uuid?: string;
   public approved_by?: number;
   public approved_at?: string;
+  public status?: string;
 
   constructor(data: Object) {
     this.update(data);

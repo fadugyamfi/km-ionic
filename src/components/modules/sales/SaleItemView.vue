@@ -74,8 +74,8 @@
             :initial-quantity="saleItem?.quantity"
             @change="updateItemQuantity($event)"
             @onselectProductUnit="updateUnitPrice($event)"
-            :max="saleItem?.product?.quantity"
-            :group-quantity="saleItem?.product?.group_quantity"
+            :max="max"
+            :group-quantity="groupQuantity"
           ></ProductQuantitySelector>
         </section>
       </section>
@@ -113,7 +113,14 @@ export default defineComponent({
     saleItem: {
       type: Object as PropType<SaleItem | OrderItem>,
     },
-
+    max: {
+      type: Number,
+      default: 0,
+    },
+    groupQuantity: {
+      type: Number,
+      default: 0,
+    },
     editable: {
       default: true,
     },

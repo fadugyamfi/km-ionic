@@ -23,10 +23,36 @@
         </IonSegment>
       </IonToolbar>
     </IonHeader>
-    <ion-content>
+    <ion-content
+      ><IonItem
+        lines="none"
+        class="profile-item ion-margin-top"
+        style="margin: 0px 12px"
+      >
+        <section class="d-flex ion-align-items-center" style="gap: 10px;">
+          <IonText style="font-size: 14px;">Team: </IonText>
+          <ProfileAvatar
+            :image="userStore.activeBusiness?.logo"
+            :username="userStore.activeBusiness?.name"
+            customSize="32px"
+          ></ProfileAvatar>
+        </section>
+        <IonLabel>{{ userStore.activeBusiness?.name }}</IonLabel>
+        <IonButton
+          slot="end"
+          fill="clear"
+          size="small"
+          class="fw-semibold ion-text-capitalize"
+          color="primary"
+          @click="showSwitchTeamSheet = true"
+        >
+          Switch
+        </IonButton>
+      </IonItem>
       <div class="ion-padding ion-text-center" v-show="fetching">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
+
       <IonGrid v-if="!fetching">
         <SalesStatistics
           :total-sales="agent?.total_sales"
@@ -132,6 +158,11 @@
       @didDismiss="showFilterSheet = false"
       @update="onFilterUpdate($event)"
     ></FilterAgentSaleReportSheet>
+    <SwitchBusinessSheet
+      :isOpen="showSwitchTeamSheet"
+      @didDismiss="showSwitchTeamSheet = false"
+    >
+    </SwitchBusinessSheet>
   </ion-page>
 </template>
 
@@ -153,6 +184,8 @@ import {
   IonSelect,
   IonSelectOption,
   onIonViewDidEnter,
+  IonItem,
+  IonIcon,
 } from "@ionic/vue";
 import { onMounted, ref } from "vue";
 import { useUserStore } from "@/stores/UserStore";
@@ -161,7 +194,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useAgentsStore } from "@/stores/AgentsStore";
 import { useSaleStore } from "../../stores/SaleStore";
 import { Sale } from "../../models/Sale";
-import { chevronDownOutline } from "ionicons/icons";
+import { chevronDownOutline, swapHorizontalOutline } from "ionicons/icons";
 import Agent from "@/models/Agent";
 import AgentHeader from "@/components/layout/AgentHeader.vue";
 import BestSellingItems from "@/components/modules/BestSellingItems.vue";
@@ -174,10 +207,13 @@ import BarChart from "@/components/charts/BarChart.vue";
 import TopPerformingAgent from "@/models/TopPerformingAgent";
 import TopLeaders from "@/components/modules/agents/TopLeaders.vue";
 import NoRecordCard from "@/components/cards/NoRecordCard.vue";
+import ProfileAvatar from "@/components/ProfileAvatar.vue";
+import SwitchBusinessSheet from "@/components/modules/SwitchBusinessSheet.vue";
 
 const fetching = ref(false);
 const route = useRoute();
 const router = useRouter();
+const userStore = useUserStore();
 
 const recentSales = ref([] as Sale[]);
 const fetchingHistory = ref(false);
@@ -185,6 +221,7 @@ const topPerformingAgents = ref<TopPerformingAgent[]>([]);
 const topThree = ref<TopPerformingAgent[]>([]);
 
 const showFilterSheet = ref(false);
+const showSwitchTeamSheet = ref(false);
 const agent = ref<Agent | null>();
 const searchFilters = ref({
   start_dt: "",

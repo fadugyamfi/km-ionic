@@ -31,7 +31,8 @@
           :checked="selectedDelivery == 'standard'"
         >
           <p class="fw-semibold">
-            {{ Filters.currency(0, "GHS") }}
+            <!-- {{ Filters.currency(0, "GHS") }} -->
+            Price TBD
           </p>
         </IonCheckbox>
       </div>
@@ -53,7 +54,8 @@
           :checked="selectedDelivery == 'express'"
         >
           <p class="fw-semibold">
-            {{ Filters.currency(0, "GHS") }}
+            <!-- {{ Filters.currency(0, "GHS") }} -->
+            Price TBD
           </p></IonCheckbox
         >
       </div>
@@ -124,7 +126,7 @@ ion-item {
     display: flex;
     align-items: center;
     p {
-      margin: 0px 10px 0px 0px;
+      margin: 0px;
       font-size: 14px;
     }
   }

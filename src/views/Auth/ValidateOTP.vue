@@ -45,7 +45,7 @@
       </div>
     </IonContent>
 
-    <IonFooter class="ion-padding">
+    <IonFooter class="ion-padding ion-no-border">
       <KolaYellowButton :disabled="!otpEntered" @click="onContinue()">
         <IonSpinner v-if="validating" name="crescent"></IonSpinner>
         <IonText v-else>{{ $t("general.continue") }}</IonText>
@@ -155,6 +155,7 @@ const updateUserInfo = async () => {
   font-weight: 500;
   border-radius: 10px;
   border: solid 1px #d7d7d7;
+  background-color: #fff;
   vertical-align: middle;
   padding-top: 10px;
   padding-bottom: 10px;

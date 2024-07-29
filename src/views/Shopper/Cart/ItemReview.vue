@@ -71,11 +71,10 @@
       <IonCard>
         <section
           class="d-flex ion-justify-content-between ion-align-items-center"
-          style="margin-bottom: 8px"
         >
           <IonText class="fw-semibold">Items total</IonText>
           <section class="d-flex ion-align-items-center">
-            <IonText class="fw-semibold ion-margin-end">{{
+            <IonText class="fw-semibold">{{
               Filters.currency(totalCost as number, "GHS")
             }}</IonText>
           </section>
@@ -86,7 +85,7 @@
         >
           <IonText class="fw-semibold">Delivery Fee</IonText>
           <section class="d-flex ion-align-items-center">
-            <IonText class="fw-semibold ion-margin-end">
+            <IonText class="fw-semibold">
               TBD
               <!-- {{ Filters.currency(deliveryFee, "GHS") }} -->
             </IonText>
@@ -102,8 +101,8 @@
               :icon="locationOutline"
               style="margin-right: 3px; vertical-align: middle"
             ></IonIcon>
-            <span style="padding-top: 94px; vertical-align: middle">{{
-              orderBusiness?.delivery_location
+            <span>{{
+              orderBusiness?.delivery_location || 'No location provided'
             }}</span>
           </IonText>
           <!-- <section class="d-flex ion-align-items-center">
@@ -118,14 +117,14 @@
         >
           <IonText class="fw-semibold">Total Cost</IonText>
           <section class="d-flex ion-align-items-center">
-            <IonText class="fw-semibold ion-margin-end">{{
+            <IonText class="fw-semibold">{{
               Filters.currency(totalWithDelivery as number, "GHS")
             }}</IonText>
           </section>
         </section>
       </IonCard>
       <IonTextarea
-        class="kola-input ion-margin-bottom ion-padding"
+        class="kola-input ion-padding"
         :class="{
           'ion-invalid ion-touched': form.errors.delivery_notes,
         }"
@@ -420,7 +419,7 @@ ion-icon.remove-icon {
 }
 
 ion-card {
-  padding: 9px;
+  padding: 10px;
 }
 
 .fw-semibold {

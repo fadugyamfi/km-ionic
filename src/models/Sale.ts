@@ -14,7 +14,7 @@ export class Sale {
   public gps_location?: string;
   public delivery_location?: string;
   public product_units_id?: number;
-  public sale_started_at?: string;
+  public sale_started_at?: any;
   public sale_ended_at?: string;
   public total_items?: number = 0;
   public total_sales_price?: number = 0;
@@ -22,6 +22,7 @@ export class Sale {
   public created_at?: string;
   public uuid?: string;
   public inventory_id?: number | string;
+  public due_date?: any;
 
   public _sale_items?: SaleItem[] = [];
   public sale_items_count?: number = 0;

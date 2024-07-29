@@ -22,19 +22,8 @@
               {{ $t("profile.agent.items") }}
             </IonLabel>
 
-            <IonChip
-              v-if="request?.approved_by"
-              color="success"
-              class="font-medium"
-            >
-              {{ $t("profile.agent.approved") }}
-            </IonChip>
-            <IonChip
-              v-if="!request?.approved_by"
-              color="danger"
-              class="font-medium"
-            >
-              {{ $t("profile.agent.unapproved") }}
+            <IonChip :color="statusColor" class="font-medium">
+              {{ statusName }}
             </IonChip>
           </IonLabel>
           <IonText slot="end" class="font-medium">{{
@@ -93,6 +82,22 @@ export default defineComponent({
   props: {
     request: {
       type: Object as PropType<any>,
+    },
+  },
+  computed: {
+    statusColor() {
+      return this.request?.approved_by && this.request?.status !== "2"
+        ? "success"
+        : this.request?.status == "2"
+        ? "tertiary"
+        : "danger";
+    },
+    statusName() {
+      return this.request?.approved_by && this.request?.status !== "2"
+        ? "Approved"
+        : this.request?.status == "2"
+        ? "Delivered"
+        : "Unapproved";
     },
   },
 
