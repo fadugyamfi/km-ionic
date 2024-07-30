@@ -87,6 +87,7 @@
       ></ConfirmModal> -->
       <StatusUpdateSheet
         :isOpen="showConfirm"
+        :request="request"
         :title="title"
         @didDismiss="showConfirm = false"
         @confirm="doConfirm"
@@ -96,26 +97,32 @@
     <ion-footer class="ion-no-border ion-padding">
       <section
         class="ion-text-center ion-margin-bottom"
-        v-if="statusName && !loading"
+        v-if="statusId !== RequestStatus.PLACED && !loading"
       >
         <IonChip :color="statusColor" class="font-medium">
           {{ statusName }}
           {{
-            statusName == "Approved"
+            statusId == RequestStatus.APPROVED
               ? `on ${Filters.date(request?.approved_at as string, "short")}`
               : ""
           }}
         </IonChip>
       </section>
-      <section v-if="!canApprove && !loading">
-        <KolaYellowButton @click="confirmApproval()">
+      <section v-if="canApprove && !loading">
+        <KolaYellowButton
+          :disabled="requestStore?.declining"
+          @click="confirmApproval()"
+        >
           <IonSpinner
             v-if="requestStore?.approving"
             name="crescent"
           ></IonSpinner>
           <IonText v-else>{{ "Approve" }}</IonText></KolaYellowButton
         >
-        <KolaWhiteButton :disabled="requestStore?.approving" @click="confirmDecline()">
+        <KolaWhiteButton
+          :disabled="requestStore?.approving"
+          @click="confirmDecline()"
+        >
           <IonSpinner
             v-if="requestStore?.declining"
             name="crescent"
@@ -124,7 +131,7 @@
         >
       </section>
       <KolaYellowButton
-        v-if="statusName == 'Approved'"
+        v-if="statusId == RequestStatus.APPROVED"
         @click="confirmSetDelivered()"
       >
         <IonSpinner
@@ -173,6 +180,7 @@ import ConfirmModal from "@/components/modals/ConfirmModal.vue";
 import AgentRequest from "@/models/AgentRequest";
 import { formatMySQLDateTime } from "@/utilities";
 import StatusUpdateSheet from "@/components/modules/agents/StatusUpdateSheet.vue";
+import { RequestStatus } from "@/stores/AgentsStore";
 
 export default defineComponent({
   data() {
@@ -183,6 +191,7 @@ export default defineComponent({
       confirmAction: "",
       title: "",
       Filters,
+      RequestStatus,
     };
   },
   components: {
@@ -217,26 +226,25 @@ export default defineComponent({
     cardWidth() {
       return window.document.documentElement.clientWidth / 2;
     },
-    canApprove() {
-      return this.request?.approved_by;
+    statusId() {
+      return this.request?.agent_request_status?.id;
     },
 
-    isSetAsDelivered() {
-      return this.request?.status == "2";
+    canApprove() {
+      return this.statusId == RequestStatus.PLACED;
     },
+
     statusColor() {
-      return this.canApprove && !this.isSetAsDelivered
+      return this.statusId == RequestStatus.APPROVED
         ? "success"
-        : this.isSetAsDelivered
+        : this.statusId == RequestStatus.DELIVERED
         ? "tertiary"
-        : "";
+        : this.statusId == RequestStatus.REJECTED
+        ? "danger"
+        : "meduim";
     },
     statusName() {
-      return this.canApprove && !this.isSetAsDelivered
-        ? "Approved"
-        : this.isSetAsDelivered
-        ? "Delivered"
-        : null;
+      return this.request?.agent_request_status?.name;
     },
   },
 
@@ -258,7 +266,7 @@ export default defineComponent({
       }
     },
     confirmDecline() {
-      this.title = "Decline Request";
+      this.title = "Reject Request";
       this.confirmAction = "decline";
       this.showConfirm = true;
     },
@@ -289,7 +297,7 @@ export default defineComponent({
         approved_by: this.userStore.user?.id || "",
         approved_at: formatMySQLDateTime(new Date().toISOString()),
         est_delivery_at: form.est_delivery_at,
-        comment: form.comment
+        comment: form.comment,
       });
       if (response) {
         this.$router.replace("/profile/company/sale-agents");
@@ -312,7 +320,7 @@ export default defineComponent({
         approved_at: formatMySQLDateTime(new Date().toISOString()),
         status: 2,
         comment: form.comment,
-        actual_delivery_at: form.actual_delivery_at
+        actual_delivery_at: form.actual_delivery_at,
       });
       if (response) {
         this.$router.replace("/profile/company/sale-agents");

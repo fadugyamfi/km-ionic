@@ -228,7 +228,7 @@ onIonViewDidEnter(async () => {
   }
 });
 
-watch(orderBusiness.value, (newValue) => {
+watch(() => orderBusiness.value, (newValue) => {
   if (newValue && newValue.order_items?.length == 0)
     router.replace(`/shopper/cart/business`);
 });

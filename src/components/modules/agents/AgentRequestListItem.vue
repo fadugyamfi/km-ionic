@@ -57,6 +57,7 @@ import { PropType, defineComponent } from "vue";
 import Image from "@/components/Image.vue";
 import Filters from "@/utilities/Filters";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
+import { RequestStatus } from "@/stores/AgentsStore";
 
 export default defineComponent({
   components: {
@@ -85,19 +86,22 @@ export default defineComponent({
     },
   },
   computed: {
+    statusId() {
+      return this.request?.agent_request_status?.id;
+    },
     statusColor() {
-      return this.request?.approved_by && this.request?.status !== "2"
+      return this.statusId == RequestStatus.PLACED
+        ? "secondary"
+        : this.statusId == RequestStatus.APPROVED
         ? "success"
-        : this.request?.status == "2"
+        : this.statusId == RequestStatus.DELIVERED
         ? "tertiary"
-        : "danger";
+        : this.statusId == RequestStatus.REJECTED
+        ? "danger"
+        : 'medium'
     },
     statusName() {
-      return this.request?.approved_by && this.request?.status !== "2"
-        ? "Approved"
-        : this.request?.status == "2"
-        ? "Delivered"
-        : "Unapproved";
+      return this.request?.agent_request_status?.name;
     },
   },
 

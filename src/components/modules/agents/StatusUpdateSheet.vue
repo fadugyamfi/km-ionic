@@ -6,7 +6,7 @@
       </header>
       <main class="ion-padding">
         <section
-          v-if="title.includes('Approve')"
+          v-if="statusId == RequestStatus.PLACED"
           class="sales-select-list"
           style="margin-bottom: 24px"
         >
@@ -42,7 +42,7 @@
       </main>
       <footer class="ion-padding">
         <KolaYellowButton @click="confirm()">
-          {{ $t("general.save") }}
+          {{ $t("Confirm") }}
         </KolaYellowButton>
       </footer>
     </IonContent>
@@ -61,11 +61,13 @@ import {
   IonTextarea,
   IonRow,
 } from "@ionic/vue";
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { useForm } from "@/composables/form";
 import DateTimeButton from "@/components/buttons/DateTimeButton.vue";
 import { formatMySQLDateTime } from "@/utilities";
+import AgentRequest from "@/models/AgentRequest";
+import { RequestStatus } from "@/stores/AgentsStore";
 
 export default defineComponent({
   components: {
@@ -89,6 +91,7 @@ export default defineComponent({
         actual_delivery_at: new Date().toISOString(),
         comment: "",
       }),
+      RequestStatus,
     };
   },
 
@@ -99,11 +102,19 @@ export default defineComponent({
       type: String,
       default: "",
     },
+    request: {
+      type: Object as PropType<AgentRequest | null>,
+      default: () => ({}),
+    },
   },
 
   computed: {
     currentDate() {
       return formatMySQLDateTime(new Date().toISOString());
+    },
+
+    statusId() {
+      return this.request?.agent_request_status?.id;
     },
   },
 

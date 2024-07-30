@@ -97,7 +97,10 @@
       ></ConfirmModal>
     </ion-content>
     <ion-footer class="ion-no-border ion-padding">
-      <section class="ion-text-center ion-margin-bottom" v-if="statusName && !loading">
+      <section
+        class="ion-text-center ion-margin-bottom"
+        v-if="statusName && !loading"
+      >
         <IonChip :color="statusColor" class="font-medium">
           {{ statusName }}
           {{
@@ -107,10 +110,7 @@
           }}
         </IonChip>
       </section>
-      <KolaYellowButton
-        @click="confirmCancel()"
-        v-if="!canCancel(request) && !loading"
-      >
+      <KolaYellowButton @click="confirmCancel()" v-if="canCancel && !loading">
         <IonSpinner v-if="requestStore?.cancelling" name="crescent"></IonSpinner
         ><IonText>{{ $t("profile.agent.cancelRequest") }}</IonText>
       </KolaYellowButton>
@@ -155,6 +155,7 @@ import ConfirmModal from "@/components/modals/ConfirmModal.vue";
 import AgentRequest from "@/models/AgentRequest";
 import SaleItemView from "@/components/modules/sales/SaleItemView.vue";
 import NoResults from "@/components/layout/NoResults.vue";
+import { RequestStatus } from "@/stores/AgentsStore";
 
 export default defineComponent({
   data() {
@@ -199,19 +200,29 @@ export default defineComponent({
     cardWidth() {
       return window.document.documentElement.clientWidth / 2;
     },
+
+    statusId() {
+      return this.request?.agent_request_status?.id;
+    },
+
     statusColor() {
-      return this.request?.approved_by && this.request?.status !== "2"
+      return this.statusId == RequestStatus.PLACED
+        ? "danger"
+        : this.statusId == RequestStatus.APPROVED
         ? "success"
-        : this.request?.status == "2"
+        : this.statusId == RequestStatus.DELIVERED
         ? "tertiary"
-        : "danger";
+        : this.statusId == RequestStatus.REJECTED
+        ? "danger"
+        : "medium";
     },
     statusName() {
-      return this.request?.approved_by && this.request?.status !== "2"
-        ? "Approved"
-        : this.request?.status == "2"
-        ? "Delivered"
-        : "Unapproved";
+      return this.statusId == RequestStatus.PLACED
+        ? this.$t("profile.agent.unapproved")
+        : this.request?.agent_request_status?.name;
+    },
+    canCancel() {
+      return this.statusId == RequestStatus.PLACED;
     },
   },
 
@@ -242,9 +253,6 @@ export default defineComponent({
       if (response !== null) {
         this.$router.replace("/agent/request");
       }
-    },
-    canCancel(request: AgentRequest | null) {
-      return request?.approved_by;
     },
   },
   ionViewDidEnter() {
