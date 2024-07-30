@@ -16,9 +16,7 @@
 
             <CartStatusButton :product="product || undefined"></CartStatusButton>
 
-            <IonButton slot="icon-only">
-              <IonIcon :icon="shareOutline"></IonIcon>
-            </IonButton>
+            <ShareButton :title="product?.product_name || ''"></ShareButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -161,6 +159,7 @@ import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import LoginRequiredSheet from "@/components/modules/LoginRequiredSheet.vue";
 import Filters from "../../utilities/Filters";
 import ProductImages from "@/components/modules/products/ProductImages.vue";
+import ShareButton from "@/components/buttons/ShareButton.vue";
 
 export default defineComponent({
   components: {
@@ -189,7 +188,8 @@ export default defineComponent({
     CartStatusButton,
     LoginRequiredSheet,
     ProfileAvatar,
-    ProductImages
+    ProductImages,
+    ShareButton
   },
 
   data() {
