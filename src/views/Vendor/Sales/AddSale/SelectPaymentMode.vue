@@ -153,7 +153,7 @@ export default defineComponent({
       }
 
       if (this.userStore.activeRole?.isSalesAssociate()) {
-        this.$router.push("/agent/sales/add-sale/select-inventory");
+        this.$router.push("/agent/sales/add-sale/select-agent-products");
       } else {
         this.$router.push("/vendor/sales/add-sale/select-customer");
       }

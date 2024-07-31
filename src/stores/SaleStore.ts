@@ -118,6 +118,7 @@ export const useSaleStore = defineStore("sale", {
         total_sales_price: 0,
         total_discount: 0,
         description: "",
+        due_date: new Date().toISOString()
       });
     },
 

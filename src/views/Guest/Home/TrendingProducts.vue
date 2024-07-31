@@ -4,7 +4,7 @@
       <h6>{{ $t("shopper.home.trending") }}</h6>
 
       <IonButton fill="clear" color="primary" @click="refreshProducts()">
-        {{ $t('general.refresh') }}
+        {{ $t("general.refresh") }}
       </IonButton>
     </header>
 
@@ -13,13 +13,12 @@
     </section>
 
     <ProductGridList v-else :products="products"></ProductGridList>
-
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { IonCol, IonGrid, IonRow, IonText } from "@ionic/vue";
+import { IonCol, IonGrid, IonRow, IonText, IonButton } from "@ionic/vue";
 import { mapStores } from "pinia";
 import GuestProductCard from "../../../components/cards/GuestProductCard.vue";
 import Product from "../../../models/Product";
@@ -35,7 +34,7 @@ export default defineComponent({
   data() {
     return {
       products: [] as Array<Product>,
-      fetching: false
+      fetching: false,
     };
   },
 
@@ -43,7 +42,16 @@ export default defineComponent({
     ...mapStores(useProductStore),
   },
 
-  components: { IonText, IonGrid, IonRow, IonCol, GuestProductCard, ProductsLoadingSkeletons, ProductGridList },
+  components: {
+    IonText,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonButton,
+    GuestProductCard,
+    ProductsLoadingSkeletons,
+    ProductGridList,
+  },
 
   methods: {
     async fetchTrendingProducts() {
@@ -54,8 +62,11 @@ export default defineComponent({
       if (trendingProducts) {
         this.products = trendingProducts.map((el: object) => new Product(el));
       } else {
-        this.products = await this.productStore.fetchGuestProducts({ sort: 'top_selling', limit: 100 });
-        await storage.set(KOLA_TRENDING, this.products, 1, 'days')
+        this.products = await this.productStore.fetchGuestProducts({
+          sort: "top_selling",
+          limit: 100,
+        });
+        await storage.set(KOLA_TRENDING, this.products, 1, "days");
       }
 
       this.fetching = false;
@@ -64,11 +75,15 @@ export default defineComponent({
     async refreshProducts() {
       this.fetching = true;
 
-      this.products = await this.productStore.fetchGuestProducts({ refresh: true, sort: 'top_selling', limit: 100 });
-      await storage.set(KOLA_TRENDING, this.products, 3, 'days')
+      this.products = await this.productStore.fetchGuestProducts({
+        refresh: true,
+        sort: "top_selling",
+        limit: 100,
+      });
+      await storage.set(KOLA_TRENDING, this.products, 3, "days");
 
       this.fetching = false;
-    }
+    },
   },
 
   mounted() {
@@ -76,7 +91,6 @@ export default defineComponent({
   },
 });
 </script>
-
 
 <style scoped>
 .skeleton-card {

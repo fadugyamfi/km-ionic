@@ -6,7 +6,7 @@
           <IonToolbar>
             <IonButtons slot="start">
               <IonBackButton
-                defaultHref="/agent/sales/add-sale/select-inventory"
+                defaultHref="/agent/sales/add-sale/select-payment-mode"
                 :icon="arrowBack"
                 mode="md"
               >
@@ -222,6 +222,7 @@ export default defineComponent({
       try {
         const params = {
           limit: 500,
+          businesses_id: this.userStore.activeBusiness?.id,
           ...options,
         };
 

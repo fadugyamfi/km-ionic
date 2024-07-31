@@ -10,6 +10,13 @@ import { Sale } from "../models/Sale";
 
 const storage = new AppStorage();
 
+export const RequestStatus = {
+  PLACED: 1,
+  APPROVED: 2,
+  DELIVERED: 3,
+  REJECTED: 4
+}
+
 export const useAgentsStore = defineStore("agents", {
   state: () => ({
     agents: [] as Agent[],

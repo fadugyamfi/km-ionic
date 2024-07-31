@@ -47,7 +47,7 @@
             @click="onAddNewOrder()"
             v-if="$route.fullPath.includes('request')"
           >
-            Record new request
+            Place new request
           </KolaYellowButton>
           <KolaYellowButton @click="onAddNewOrder()" v-else>
             {{ $t("shopper.cart.placeNewOrder") }}

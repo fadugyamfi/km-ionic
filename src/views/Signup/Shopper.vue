@@ -41,9 +41,9 @@
         ></IonInput>
 
         <LocationInput
-        v-model="form.fields.business_location"
-        label="Business Location"
-      ></LocationInput>
+          v-model="form.fields.business_location"
+          label="Business Location"
+        ></LocationInput>
 
         <PinEntryField
           name="pin"
@@ -156,11 +156,8 @@ const onContinue = async () => {
       if (!loginDisabled) {
         await userStore.fetchUserInfo();
         // await userStore.fetchUserBusinesses();
-
-        router.push("/shopper");
-      } else {
-        router.push("/signup/vendor/signup-complete");
       }
+      router.push("/shopper");
     } else {
       toastStore.unblockUI();
       toastStore.showError(
@@ -177,8 +174,6 @@ const onContinue = async () => {
     toastStore.unblockUI();
   }
 };
-
-
 </script>
 <style scoped>
 .spinner {
