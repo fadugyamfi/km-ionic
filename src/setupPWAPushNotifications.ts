@@ -5,6 +5,7 @@ import { useDeviceStore } from "@/stores/DeviceStore";
 import { Capacitor } from "@capacitor/core";
 import { useNotificationStore } from "./stores/NotificationStore";
 import { useRouter } from "vue-router";
+import AppStorage from "./stores/AppStorage";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -23,20 +24,25 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+const storage = new AppStorage();
+
 // let messaging;
-function requestPermission() {
+async function requestPermission() {
   try {
     const messaging = getMessaging(app);
-    const FCMToken = localStorage.getItem("FCMToken");
+
+    const fcm_token = await storage.get("kola.fcm-token");
 
     if (Capacitor.isNativePlatform()) {
       return;
     }
 
-    if (FCMToken && Notification.permission == "granted") {
+    if (fcm_token && Notification.permission == "granted") {
       return;
     }
-    localStorage.removeItem("FCMToken");
+
+    await storage.remove("kola.fcm-token");
 
     console.log("Requesting permission...");
     const result = Notification.requestPermission().then((permission) => {
@@ -47,12 +53,12 @@ function requestPermission() {
           vapidKey:
             "BNtJKjrduSWdDWdtgRZlxpurRzk75440-AP_uB5Ou-hWE9LOq6JTS82wi0K_qgZSu9ZFomlSzwu2mTVOuBPjx7g",
         })
-          .then((currentToken) => {
+          .then(async (currentToken) => {
             if (currentToken) {
               console.log("my token my token", currentToken);
               // Send the token to your server and update the UI if necessary
               useDeviceStore().registerDevice(currentToken);
-              localStorage.setItem("FCMToken", currentToken);
+              await storage.set("kola.fcm-token", currentToken);
               return currentToken;
             } else {
               // Show permission request UI
@@ -82,14 +88,17 @@ function requestPermission() {
         icon: payload.notification?.icon,
       };
 
-      const notification = new Notification(notificationTitle, notificationOptions);
+      const notification = new Notification(
+        notificationTitle,
+        notificationOptions
+      );
       console.log(notification);
 
-      notification.addEventListener("click", function(ev) {
+      notification.addEventListener("click", function (ev) {
         console.log("notification clicked");
         console.log(ev);
 
-        if( payload.data?.order ) {
+        if (payload.data?.order) {
           const order = JSON.parse(payload.data?.order as string);
           router.push(`/vendor/orders/${order.id}`);
         }
