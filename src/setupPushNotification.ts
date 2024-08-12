@@ -11,9 +11,9 @@ import AppStorage from "./stores/AppStorage";
 
 const storage = new AppStorage();
 
-const fcm_token = await storage.get("kola.fcm-token");
-
 export async function setupPushNotifications() {
+  const fcm_token = await storage.get("kola.fcm-token");
+
   if (!Capacitor.isNativePlatform()) {
     return;
   }
