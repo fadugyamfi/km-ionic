@@ -13,6 +13,7 @@ type useDeviceState = {
     androidSDKVersion?: any;
   };
   deviceId: any;
+  registeredDevices: any[];
 };
 
 export const useDeviceStore = defineStore("device", {
@@ -23,6 +24,7 @@ export const useDeviceStore = defineStore("device", {
       osVersion: "",
     },
     deviceId: null,
+    registeredDevices: [],
   }),
 
   actions: {
@@ -53,6 +55,38 @@ export const useDeviceStore = defineStore("device", {
           }
         );
         if (response) {
+          const exists = this.registeredDevices.find(
+            (device) => device.device_id == response.data?.data?.device_id
+          );
+          if (exists) return;
+          this.registeredDevices.push(response.data.data);
+        }
+      } catch (error) {
+        handleAxiosRequestError(error);
+      }
+    },
+    async unRegisterDevice(id: number) {
+      try {
+        await this.getDeviceId();
+        const response = await axios.delete(
+          `/v2/users/${useUserStore().user?.id}/devices/${id}`
+        );
+        if (response) {
+          this.registeredDevices = this.registeredDevices.filter(
+            (device) => device.device_id !== response.data?.data?.device_id
+          );
+        }
+      } catch (error) {
+        handleAxiosRequestError(error)
+      }
+    },
+    async getUserRegisteredDevices() {
+      try {
+        const response = await axios.get(
+          `/v2/users/${useUserStore().user?.id}/devices`
+        );
+        if (response) {
+          this.registeredDevices = response.data.data;
         }
       } catch (error) {
         handleAxiosRequestError(error);

@@ -456,12 +456,13 @@
   "notifications": {
     "title": "Notifications",
     "noNotifications": "No Notifications",
-    "enableNotifications": "Enable Notifications",
+    "enableNotifications": "Enable notifications",
     "general": "General",
     "orders": "Orders",
     "kolaWantsToSendNotification": "Kola wants to send you notifications",
     "newNotificationsWillAppearHere": "When you have new notifications they will appear here.",
     "notificationsAreBlockedOnNative": "Notifications are blocked. To get push notifications from Kola, open your phone settings and allow notifications",
-    "notificationsAreBlockedOnWeb": " Notifications are blocked. To get push notifications from Kola, open your browser preferences or click the lock near the address bar to change your notification preferences."
+    "notificationsAreBlockedOnWeb": " Notifications are blocked. To get push notifications from Kola, open your browser preferences or click the lock near the address bar to change your notification preferences.",
+    "subscribeToNotifications": "Subscribe to notifications about your orders and other activities"
   }
 }
