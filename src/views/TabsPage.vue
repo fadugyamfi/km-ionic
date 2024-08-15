@@ -5,8 +5,7 @@
 
       <AgentTabBar
         v-if="
-          userStore.activeRole?.isSalesAssociate() ||
-          userStore.activeRole?.isSalesManager()
+          userStore.activeRole?.isSalesAssociate()
         "
       ></AgentTabBar>
       <section v-else>

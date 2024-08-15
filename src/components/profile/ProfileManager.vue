@@ -89,8 +89,7 @@ const viewing = ref("company");
 
 const canToggleModes = computed(() => {
   return (
-    !userStore.activeRole?.isSalesAssociate() &&
-    !userStore.activeRole?.isSalesManager()
+    !userStore.activeRole?.isSalesAssociate()
   );
 });
 
