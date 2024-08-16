@@ -205,8 +205,7 @@ export default defineComponent({
 
     canToggleModes() {
       return (
-        !this.userStore.activeRole?.isSalesAssociate() &&
-        !this.userStore.activeRole?.isSalesManager()
+        !this.userStore.activeRole?.isSalesAssociate()
       );
     },
 
