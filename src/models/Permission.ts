@@ -14,3 +14,12 @@ export default class Permission {
     Object.assign(this, data);
   }
 }
+
+export class GroupedPermission {
+  group_name?: string;
+  permissions: Permission[] = [];
+
+  constructor(data: object | null) {
+    Object.assign(this, data)
+  }
+}

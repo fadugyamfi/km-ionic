@@ -3,24 +3,21 @@
     <section class="role-section">
       <header>
         <h6>{{ $t("profile.team.role") }}</h6>
-        <IonText
-          color="tertiary"
-          :router-link="`/profile/company/team/${route.params.id}/assign-role`"
-          >{{ $t("profile.team.assignNewRole") }}</IonText
+        <IonButton
+          fill="clear"
+          style="text-transform: none"
+          class="ion-text-start add-new-item"
+          @click="showAssignRoleSheet = true"
         >
+          {{ $t("profile.team.assignNewRole") }}
+        </IonButton>
       </header>
     </section>
     <IonItem lines="none">
-      <IonLabel slot="start"> Sales agent </IonLabel>
-      <IonButton fill="clear" slot="end" color="dark" @click="removeRole">
+      <IonLabel slot="start">{{ role?.name }}</IonLabel>
+      <!-- <IonButton fill="clear" slot="end" color="dark" @click="removeRole">
         <IonIcon :icon="closeCircleOutline"></IonIcon>
-      </IonButton>
-    </IonItem>
-    <IonItem lines="none">
-      <IonLabel slot="start">Business analyst</IonLabel>
-      <IonButton fill="clear" slot="end" color="dark">
-        <IonIcon :icon="closeCircleOutline"></IonIcon>
-      </IonButton>
+      </IonButton> -->
     </IonItem>
   </section>
   <RemoveRoleModal
@@ -29,27 +26,53 @@
     @dismiss="showConfirmRemoveModal = false"
     @confirm="onConfirmDelete()"
   />
+  <AssignRoleSheet
+    :assignedRole="role"
+    :roles="roles"
+    :isOpen="showAssignRoleSheet"
+    @didDismiss="showAssignRoleSheet = false"
+    @onAssignRole="assignRole"
+  />
 </template>
 <script setup lang="ts">
 import { IonText, IonItem, IonButton, IonIcon, IonLabel } from "@ionic/vue";
 import { closeCircleOutline } from "ionicons/icons";
 import { useToastStore } from "@/stores/ToastStore";
-import { ref } from "vue";
+import { PropType, ref } from "vue";
 import { useCustomerStore } from "@/stores/CustomerStore";
+import AssignRoleSheet from "@/components/modules/team/AssignRoleSheet.vue";
 import RemoveRoleModal from "./RemoveRoleModal.vue";
 import { useRoute } from "vue-router";
+import Role from "@/models/Role";
 
-const route = useRoute()
+const props = defineProps({
+  role: {
+    type: Object as PropType<Role>,
+    default: () => ({}),
+  },
+  roles: {
+    type: Array as PropType<Role[]>,
+    default: () => [],
+  },
+});
+
+const route = useRoute();
+const emit = defineEmits(["onAssignRole"]);
 
 const toastStore = useToastStore();
 const customerStore = useCustomerStore();
 const showConfirmRemoveModal = ref(false);
+const showAssignRoleSheet = ref(false);
 
 const selectedRole = ref(null);
 
 const removeRole = (role: any) => {
   selectedRole.value = role;
   showConfirmRemoveModal.value = true;
+};
+
+const assignRole = () => {
+  emit("onAssignRole");
 };
 
 const onConfirmDelete = async () => {
@@ -85,6 +108,10 @@ const onConfirmDelete = async () => {
     a {
       padding: 3px 10px;
     }
+  }
+  .add-new-item {
+    --color: #5260ff;
+    font-weight: 400;
   }
 }
 ion-item {
