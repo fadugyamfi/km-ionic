@@ -93,40 +93,38 @@ export const usePromotionStore = defineStore("promotion", {
       return this.promotions;
     },
 
-    async getPromotion(promotionId: number): Promise<Promotion | null> {
+    async getPromotion(promotionIdOrSlug: number | string): Promise<Promotion | null> {
       if (this.promotions.length > 0) {
-        const promotion = this.promotions.find((p) => p.id == promotionId);
+        const promotion = this.promotions.find((p) => p.id == promotionIdOrSlug || p.slug == promotionIdOrSlug);
+
         if (promotion) {
           return promotion;
         }
       }
 
       return axios
-        .get(`/v2/promotions/${promotionId}`)
+        .get(`/v2/promotions/${promotionIdOrSlug}`)
         .then((response) => {
-          const promotion = new Promotion(response.data.data);
-
-          return promotion;
+          return new Promotion(response.data.data);
         })
         .catch((error) => {
           console.log(error);
           return null;
         });
     },
-    async getGuestPromotion(promotionId: number): Promise<Promotion | null> {
+
+    async getGuestPromotion(promotionIdOrSlug: number | string): Promise<Promotion | null> {
       if (this.promotions.length > 0) {
-        const promotion = this.promotions.find((p) => p.id == promotionId);
+        const promotion = this.promotions.find((p) => p.id == promotionIdOrSlug || p.slug == promotionIdOrSlug);
         if (promotion) {
           return promotion;
         }
       }
 
       return axios
-        .get(`/v2/guest/promotions/${promotionId}`)
+        .get(`/v2/guest/promotions/${promotionIdOrSlug}`)
         .then((response) => {
-          const promotion = new Promotion(response.data.data);
-
-          return promotion;
+          return new Promotion(response.data.data);
         })
         .catch((error) => {
           console.log(error);
@@ -150,11 +148,7 @@ export const usePromotionStore = defineStore("promotion", {
       return axios
         .get(`/v2/promotion-items`, { params })
         .then((response) => {
-          const promotionItems = response.data.data.map(
-            (el: object) => new PromotionItem(el)
-          );
-
-          return promotionItems;
+          return this.mapAndStorePromotionItems(promotionId, response)
         })
         .catch((error) => {
           console.log(error);
@@ -178,11 +172,7 @@ export const usePromotionStore = defineStore("promotion", {
       return axios
         .get(`/v2/guest/promotion-items`, { params })
         .then((response) => {
-          const promotionItems = response.data.data.map(
-            (el: object) => new PromotionItem(el)
-          );
-
-          return promotionItems;
+          return this.mapAndStorePromotionItems(promotionId, response);
         })
         .catch((error) => {
           console.log(error);
@@ -195,7 +185,7 @@ export const usePromotionStore = defineStore("promotion", {
         (el: object) => new PromotionItem(el)
       );
 
-      storage.set(`${KOLA_PROMOTION_ITEMS}.${promotionId}`, promotionItems, 3, 'days');
+      storage.set(`${KOLA_PROMOTION_ITEMS}.${promotionId}`, promotionItems, 2, 'hours');
 
       return promotionItems;
     },
@@ -204,9 +194,7 @@ export const usePromotionStore = defineStore("promotion", {
       const response = await storage.get(`${KOLA_PROMOTION_ITEMS}.${promotionId}`);
 
       if( response ) {
-        return response.data.data.map(
-          (el: object) => new PromotionItem(el)
-        );
+        return response.map((el: object) => new PromotionItem(el));
       }
 
       return null;

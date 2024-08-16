@@ -4,7 +4,11 @@
       v-if="showDeliveryIndication"
       class="d-flex ion-align-items-center"
     >
-      <IonIcon class="danger" color="danger" :icon="alertCircleOutline"></IonIcon>
+      <IonIcon
+        class="danger"
+        color="danger"
+        :icon="alertCircleOutline"
+      ></IonIcon>
       <IonText color="medium">
         Enjoy free delivery on orders above
         {{ Filters.currency(getEffectiveMinOrderAmount()) }}
@@ -14,10 +18,15 @@
       v-if="getEffectiveMinOrderAmount() > totalCost && !showDeliveryIndication"
       class="d-flex ion-align-items-center"
     >
-      <IonIcon class="danger" color="danger" :icon="alertCircleOutline"></IonIcon>
+      <IonIcon
+        class="danger"
+        color="danger"
+        :icon="alertCircleOutline"
+      ></IonIcon>
       <IonText color="medium">
         Your order is below
-        {{ Filters.currency(getEffectiveMinOrderAmount()) }}. A delivery fee will be charged for this order
+        {{ Filters.currency(getEffectiveMinOrderAmount()) }}. A delivery fee
+        will be charged for this order
       </IonText>
     </section>
 
@@ -69,8 +78,9 @@ export default defineComponent({
   components: { IonIcon, IonText, IonAvatar },
   methods: {
     getEffectiveMinOrderAmount(): number {
-      const value = this.business?.min_order_amount;
-      return typeof value === "number" ? value : 3000;
+      // const value = this.business?.min_order_amount;
+      // return typeof value === "number" ? value : 3000;
+      return 3000;
     },
   },
 });

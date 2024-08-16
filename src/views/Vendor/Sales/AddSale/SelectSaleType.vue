@@ -48,6 +48,17 @@
           </IonCheckbox>
         </IonItem>
       </IonList>
+      <section
+        class="sales-select-list ion-padding-horizontal"
+        v-if="saleStore.newSale.sale_types_id == 5"
+      >
+        <h6>Due Date</h6>
+        <DateTimeButton
+          v-model="saleStore.newSale.due_date"
+          :min="saleStore.newSale.sale_started_at"
+        ></DateTimeButton>
+        <h4 class="ion-text-end">{{ creditDays }} {{ $t("Credit Day(s)") }}</h4>
+      </section>
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
@@ -79,8 +90,10 @@ import {
   IonLabel,
   IonAvatar,
   IonCheckbox,
+  IonInput,
   IonText,
   IonFooter,
+  IonDatetime,
 } from "@ionic/vue";
 import { arrowBack, close, refreshOutline, search } from "ionicons/icons";
 import { defineComponent } from "vue";
@@ -89,7 +102,9 @@ import { mapStores } from "pinia";
 import { useSaleStore } from "@/stores/SaleStore";
 import { SaleType } from "@/models/SaleType";
 import { useToastStore } from "@/stores/ToastStore";
-import { useUserStore } from "../../../../stores/UserStore";
+import { useUserStore } from "@/stores/UserStore";
+import DateTimeButton from "@/components/buttons/DateTimeButton.vue";
+import { formatMySQLDateTime } from "@/utilities";
 
 export default defineComponent({
   components: {
@@ -111,6 +126,9 @@ export default defineComponent({
     IonText,
     IonFooter,
     KolaYellowButton,
+    IonInput,
+    IonDatetime,
+    DateTimeButton,
   },
 
   data() {
@@ -126,12 +144,36 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useSaleStore, useUserStore),
+    ...mapStores(useSaleStore, useUserStore, useToastStore),
+
+    creditDays() {
+      if (!this.saleStore.newSale.due_date) {
+        return 0;
+      }
+      const due_date = formatMySQLDateTime(this.saleStore.newSale.due_date);
+      const start_date = this.saleStore.newSale.sale_started_at;
+
+      const diffInMs =
+        (new Date(due_date) as any) - (new Date(start_date) as any);
+
+      const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+      return Math.ceil(diffInDays);
+    },
   },
 
   methods: {
+    formatMySQLDateTime,
+    handleSetDueDate() {
+      if (this.creditDays < 0) {
+        this.toastStore.showError("Invalid date! Select a future date");
+        this.saleStore.newSale.due_date = null;
+      }
+    },
     selectSaleType(saleType: SaleType) {
       this.saleStore.newSale.sale_types_id = saleType.id as number;
+      if (this.saleStore.newSale.sale_types_id == 1) {
+        this.saleStore.newSale.due_date = null;
+      }
     },
 
     onContinue() {
@@ -159,3 +201,14 @@ export default defineComponent({
   mounted() {},
 });
 </script>
+
+<style scoped>
+h6 {
+  font-size: 14px;
+  margin-top: 24px;
+}
+h4 {
+  font-size: 12px;
+  margin: 10px 0px;
+}
+</style>

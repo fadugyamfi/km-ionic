@@ -27,7 +27,6 @@
         w="180"
         @loaded="imgLoaded = true"
       />
-
       <!-- <IonSkeletonText
         v-if="!imgLoaded"
         :animated="false"
@@ -203,6 +202,7 @@ export default defineComponent({
       default: false,
       type: Boolean,
     },
+
     showStockStatus: {
       default: false,
       type: Boolean,
@@ -217,6 +217,11 @@ export default defineComponent({
       defaut: null,
       type: Object as PropType<Business | null>,
     },
+
+    showRetailPrice: {
+      type: Boolean,
+      default: false
+    }
   },
 
   data() {
@@ -225,7 +230,7 @@ export default defineComponent({
       addCircleOutline,
       alertCircleOutline,
       imgLoaded: false,
-      selected: false,
+      selected: this.initiallySelected,
       noImage: "/images/product-placeholder.png",
       Filters,
     };
@@ -317,6 +322,10 @@ export default defineComponent({
       this.selected = newValue;
     },
   },
+
+  mounted() {
+    this.product.preferRetailPrice = this.showRetailPrice;
+  }
 });
 </script>
 

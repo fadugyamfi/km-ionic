@@ -6,7 +6,7 @@
           <IonToolbar>
             <IonButtons slot="start">
               <IonBackButton
-                defaultHref="/agent/sales/add-sale/select-inventory"
+                defaultHref="/agent/sales/add-sale/select-payment-mode"
                 :icon="arrowBack"
                 mode="md"
               >
@@ -162,8 +162,7 @@ export default defineComponent({
   },
 
   ionViewDidEnter() {
-    this.loadCachedInventory();
-    // this.saleStore.loadFromStorage();
+    this.fetchAgentProducts();
   },
 
   components: {
@@ -223,11 +222,12 @@ export default defineComponent({
       try {
         const params = {
           limit: 500,
+          businesses_id: this.userStore.activeBusiness?.id,
           ...options,
         };
 
         this.products = await this.productStore.fetchAgentProducts(params);
-        this.saleStore.inventory = this.products;
+        // this.saleStore.inventory = this.products;
       } catch (error) {
         handleAxiosRequestError(error);
       } finally {

@@ -65,7 +65,7 @@
         :disabled="!cartTotalCost || !form.fields.delivery_location"
         @click="onContinue()"
       >
-        Record request
+        Place request
       </KolaYellowButton>
     </IonFooter>
   </IonPage>
@@ -204,7 +204,7 @@ export default defineComponent({
         if (!request) {
           this.toastStore.unblockUI();
           this.toastStore.showError(
-            "Failed to record request",
+            "Failed to place request",
             "Error",
             "bottom",
             "configure-continue"

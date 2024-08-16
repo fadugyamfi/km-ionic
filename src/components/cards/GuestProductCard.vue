@@ -200,6 +200,11 @@ export default defineComponent({
       defaut: null,
       type: Object as PropType<Business | null>,
     },
+
+    showRetailPrice: {
+      default: false,
+      type: Boolean
+    }
   },
 
   data() {
@@ -288,6 +293,10 @@ export default defineComponent({
   beforeMount() {
     this.selected = this.initiallySelected;
   },
+
+  mounted() {
+    this.product.preferRetailPrice = this.showRetailPrice;
+  }
 });
 </script>
 

@@ -225,6 +225,10 @@ export const ProfileRoutes = [
         path: "account-activity",
         component: () => import("@/views/Profile/AccountActivity.vue"),
       },
+      {
+        path: "notification",
+        component: () => import("@/views/Profile/NotificationSettings.vue"),
+      },
     ],
   },
 ];

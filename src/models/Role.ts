@@ -12,7 +12,7 @@ export default class Role {
 
   // user role
   isSalesAssociate() {
-    return [2, 5].indexOf(this.id as number) > -1;
+    return [5].indexOf(this.id as number) > -1;
   }
 
   isSuperAdmin() {

@@ -35,6 +35,7 @@ export const useRequestStore = defineStore("request", {
       approving: false,
       declining: false,
       cancelling: false,
+      settingAsDelivered: false,
     };
   },
 
@@ -219,7 +220,12 @@ export const useRequestStore = defineStore("request", {
     },
     async approveRequest(
       request_id: string | number,
-      form: { approved_by: number | string; approved_at: string }
+      form: {
+        approved_by: number | string;
+        approved_at: string;
+        est_delivery_at: string;
+        comment: string;
+      }
     ) {
       try {
         this.approving = true;
@@ -229,13 +235,12 @@ export const useRequestStore = defineStore("request", {
         );
         toastStore.showSuccess("Request approved successfully");
         const index = this.agentRequests.findIndex(
-          (request) => request.id == response.data.data.id
+          (request) => request.id == response.data.id
         );
         if (index > -1) {
-          this.agentRequests[index].approved_by =
-            response.data.data.approved_by;
+          this.agentRequests[index].approved_by = response.data.approved_by;
         }
-        return response.data.data;
+        return response.data;
       } catch (error) {
         console.log(error);
         handleAxiosRequestError(error);
@@ -245,18 +250,52 @@ export const useRequestStore = defineStore("request", {
         this.approving = false;
       }
     },
-    async declineRequest(request_id: string | number) {
+    async setDelivered(
+      request_id: string | number,
+      form: {
+        approved_by: number | string;
+        approved_at: string;
+        status: number;
+        actual_delivery_at: string;
+        comment: string;
+      }
+    ) {
+      try {
+        this.settingAsDelivered = true;
+        const response = await axios.put(
+          `/v2/agent-requests/${request_id}/delivered`,
+          form
+        );
+        toastStore.showSuccess("Agent request marked as delivered");
+        const index = this.agentRequests.findIndex(
+          (request) => request.id == response.data.agentRequest.id
+        );
+        if (index > -1) {
+          this.agentRequests[index].status = response.data.agentRequest.status;
+        }
+        return response.data.agentRequest;
+      } catch (error) {
+        console.log(error);
+        handleAxiosRequestError(error);
+        toastStore.showError("Failed to mark as delivered");
+        return null;
+      } finally {
+        this.settingAsDelivered = false;
+      }
+    },
+    async declineRequest(request_id: string | number, form: any) {
       try {
         this.declining = true;
         const response = await axios.put(
-          `/v2/agent-requests/${request_id}/reject`
+          `/v2/agent-requests/${request_id}/reject`,
+          form
         );
         console.log(response);
         toastStore.showSuccess("Request declined successfully");
         this.agentRequests = this.agentRequests.filter(
-          (item) => item.id !== response.data.data.id
+          (item) => item.id !== response.data.id
         );
-        return response.data.data;
+        return response.data;
       } catch (error) {
         handleAxiosRequestError(error);
         toastStore.showError("Failed to decline request");

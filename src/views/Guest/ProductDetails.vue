@@ -16,9 +16,7 @@
 
             <CartStatusButton :product="product || undefined"></CartStatusButton>
 
-            <IonButton slot="icon-only">
-              <IonIcon :icon="shareOutline"></IonIcon>
-            </IonButton>
+            <ShareButton :title="product?.product_name || ''"></ShareButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -57,7 +55,7 @@
             }}
           </IonText>
 
-          <IonText class="price" color="medium" v-if="product?.retail_price as number > 0">
+          <IonText class="price" color="medium" v-if="!product.preferRetailPrice && product?.retail_price as number > 0">
             MSRP:
             {{
               Filters.currency(
@@ -161,6 +159,7 @@ import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import LoginRequiredSheet from "@/components/modules/LoginRequiredSheet.vue";
 import Filters from "../../utilities/Filters";
 import ProductImages from "@/components/modules/products/ProductImages.vue";
+import ShareButton from "@/components/buttons/ShareButton.vue";
 
 export default defineComponent({
   components: {
@@ -189,7 +188,8 @@ export default defineComponent({
     CartStatusButton,
     LoginRequiredSheet,
     ProfileAvatar,
-    ProductImages
+    ProductImages,
+    ShareButton
   },
 
   data() {

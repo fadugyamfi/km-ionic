@@ -49,7 +49,7 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <FooterNavigation @continue="onContinue()"></FooterNavigation>
+      <FooterNavigation continueText="Submit" @continue="onContinue()"></FooterNavigation>
     </IonFooter>
   </IonPage>
 </template>
@@ -166,7 +166,7 @@ export default defineComponent({
             pin_confirmation:
               this.businessStore.registration.user.pin_confirmation,
           });
-          this.$router.push("/signup/vendor/signup-complete");
+          this.$router.push("/vendor");
         }
       } catch (error) {
         handleAxiosRequestError(error);

@@ -24,8 +24,6 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Allow Kola Market to use your camera</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allow Kola Market to use your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location is needed to facilitate processing your orders and delivery</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

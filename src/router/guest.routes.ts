@@ -15,13 +15,13 @@ export const GuestModeRoutes = [
         await userStore.loadStoredData();
       }
 
-      if (!userStore.onboarded && !userStore.user) {
-        return { name: "Onboarding" };
-      }
+      // if (!userStore.onboarded && !userStore.user) {
+      //   return { name: "Onboarding" };
+      // }
 
       if (
         userStore.user &&
-        (userStore.activeRole?.isSalesAssociate() || userStore.activeRole?.isSalesManager())
+        (userStore.activeRole?.isSalesAssociate() )
       ) {
         return { name: "SaleAgentHome" };
       }
@@ -94,7 +94,7 @@ export const GuestModeRoutes = [
               import("@/views/Guest/Businesses/BusinessProducts.vue"),
           },
           {
-            path: "promotions/:id",
+            path: "promotions/:idOrSlug",
             component: () =>
               import("@/views/Guest/Promotions/PromotionItems.vue"),
           },

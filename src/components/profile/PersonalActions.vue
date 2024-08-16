@@ -23,7 +23,7 @@
         <IonLabel>Reset Pin</IonLabel>
       </IonItem>
 
-      <IonItem :detail="true" :button="true" class="profile-item" @click="showNotifications()">
+      <IonItem :detail="true" :button="true" class="profile-item" router-link="/profile/notification">
         <IonAvatar slot="start">
           <img src="/images/ic_notification.svg" class="action-img" />
         </IonAvatar>
@@ -167,7 +167,7 @@ export default defineComponent({
     ...mapStores(useUserStore),
 
     canToggleModes() {
-      return !this.userStore.activeRole?.isSalesAssociate() && !this.userStore.activeRole?.isSalesManager();
+      return !this.userStore.activeRole?.isSalesAssociate() ;
     }
   },
 

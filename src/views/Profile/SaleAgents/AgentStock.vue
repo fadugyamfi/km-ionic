@@ -16,12 +16,7 @@
             $t("profile.stock.myStock")
           }}</IonTitle>
           <IonButtons slot="end">
-            <IonButton
-              color="dark"
-              @click="
-                router.push(`/agent/request/place-request/select-products`)
-              "
-            >
+            <IonButton color="dark" @click="addNewRequest">
               <IonIcon :icon="bagAddOutline"></IonIcon>
             </IonButton>
             <IonButton @click="showFilterSheet = true" color="dark">
@@ -106,6 +101,7 @@ import { useStockStore } from "@/stores/StockStore";
 import { handleAxiosRequestError } from "@/utilities";
 import Stock from "@/models/Stock";
 import { useUserStore } from "@/stores/UserStore";
+import { useRequestStore } from "@/stores/RequestStore";
 
 const fetching = ref(false);
 const refreshing = ref(false);
@@ -113,6 +109,7 @@ const showFilterSheet = ref(false);
 const router = useRouter();
 const stockStore = useStockStore();
 const userStore = useUserStore();
+const requestStore = useRequestStore();
 
 const stocks = ref<Stock[]>();
 
@@ -142,6 +139,11 @@ const onFilterUpdate = (event: { start_dt: string; end_dt: string }) => {
 const onFilterCategory = (event: number) => {
   searchFilters.value.product_categories_id = event;
   fetchStocks();
+};
+
+const addNewRequest = () => {
+  requestStore.resetForNewRequest();
+  router.push("/agent/request/place-request/select-products");
 };
 const fetchStocks = async () => {
   try {

@@ -22,19 +22,8 @@
               {{ $t("profile.agent.items") }}
             </IonLabel>
 
-            <IonChip
-              v-if="request?.approved_by"
-              color="success"
-              class="font-medium"
-            >
-              {{ $t("profile.agent.approved") }}
-            </IonChip>
-            <IonChip
-              v-if="!request?.approved_by"
-              color="danger"
-              class="font-medium"
-            >
-              {{ $t("profile.agent.unapproved") }}
+            <IonChip :color="statusColor" class="font-medium">
+              {{ statusName }}
             </IonChip>
           </IonLabel>
           <IonText slot="end" class="font-medium">{{
@@ -68,6 +57,7 @@ import { PropType, defineComponent } from "vue";
 import Image from "@/components/Image.vue";
 import Filters from "@/utilities/Filters";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
+import { RequestStatus } from "@/stores/AgentsStore";
 
 export default defineComponent({
   components: {
@@ -93,6 +83,25 @@ export default defineComponent({
   props: {
     request: {
       type: Object as PropType<any>,
+    },
+  },
+  computed: {
+    statusId() {
+      return this.request?.agent_request_status?.id;
+    },
+    statusColor() {
+      return this.statusId == RequestStatus.PLACED
+        ? "secondary"
+        : this.statusId == RequestStatus.APPROVED
+        ? "success"
+        : this.statusId == RequestStatus.DELIVERED
+        ? "tertiary"
+        : this.statusId == RequestStatus.REJECTED
+        ? "danger"
+        : 'medium'
+    },
+    statusName() {
+      return this.request?.agent_request_status?.name;
     },
   },
 

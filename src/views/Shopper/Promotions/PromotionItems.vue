@@ -25,7 +25,7 @@
         <IonSpinner name="crescent"></IonSpinner>
       </section>
 
-      <ProductGridList :products="products"></ProductGridList>
+      <ProductGridList :products="products" :show-retail-prices="true" ></ProductGridList>
     </ion-content>
   </ion-page>
 </template>
@@ -49,8 +49,6 @@ const route = useRoute();
 const promotion = ref<Promotion | null>();
 const promotionItems = ref<PromotionItem[] | null>();
 const fetching = ref(false);
-const storage = new AppStorage();
-const cacheKey = "kola.promotion-items";
 
 const products = computed(() => {
   return promotionItems.value?.
@@ -59,29 +57,26 @@ const products = computed(() => {
 })
 
 onIonViewDidEnter(async () => {
-  const promotionCacheKey = `${cacheKey}.${+route.params.id}`;
-  promotion.value = await promotionStore.getPromotion(+route.params.id);
+  fetching.value = true;
 
-  const items = await storage.get(promotionCacheKey);
-  if( items ) {
-    promotionItems.value = items.map((p:any) => new PromotionItem(p));
+  let promotionIdOrSlug: string | string[] = route.params.idOrSlug;
+
+  promotion.value = await promotionStore.getPromotion(promotionIdOrSlug as string);
+  promotionItems.value = promotion.value?.promotion_items;
+
+  if( !promotion.value ) {
+    fetching.value = false;
     return;
   }
 
-  promotionItems.value = promotion.value?.promotion_items;
-
   setTimeout(async () => {
-    fetching.value = true;
-
     try {
-      promotionItems.value = await promotionStore.getPromotionItems(+route.params.id);
-      storage.set(promotionCacheKey, promotionItems.value, 7, 'days');
+      promotionItems.value = await promotionStore.getPromotionItems(promotion.value?.id as number);
     } catch(error) {
       console.log(error);
     } finally {
       fetching.value = false;
     }
-    fetching.value = false;
   }, 100)
 });
 </script>
