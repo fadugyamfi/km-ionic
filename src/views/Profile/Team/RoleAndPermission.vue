@@ -37,7 +37,7 @@
               />
               <IonLabel class="ion-no-margin">
                 <h4>{{ member?.name }}</h4>
-                <IonText color="medium">{{ member?.email }}</IonText>
+                <p color="medium">{{ member?.email }}</p>
                 <IonChip>{{ role?.name }}</IonChip>
               </IonLabel>
               <IonButton
@@ -192,7 +192,8 @@ ion-card {
         font-size: 14px;
         font-weight: 400;
       }
-      ion-text {
+
+      p {
         font-size: 12px;
       }
       ion-chip {
