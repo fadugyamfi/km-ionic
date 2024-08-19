@@ -44,8 +44,16 @@
       </IonToolbar>
     </IonHeader>
     <IonContent>
-      <TeamMembersList :teamMembers="teamMembers" />
-      <!-- <NoTeamMember /> -->
+      <div class="ion-padding ion-text-center" v-show="fetching">
+        <IonSpinner name="crescent"></IonSpinner>
+      </div>
+      <section v-if="!fetching">
+        <TeamMembersList
+          v-if="teamMembers.length > 0"
+          :teamMembers="teamMembers"
+        />
+        <NoTeamMember v-else />
+      </section>
     </IonContent>
   </IonPage>
 </template>
@@ -63,37 +71,46 @@ import {
   IonIcon,
   IonBadge,
   IonSearchbar,
+  IonSpinner,
   IonContent,
+  onIonViewDidEnter,
+  onIonViewWillEnter,
 } from "@ionic/vue";
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { arrowBackOutline, personAddOutline, search } from "ionicons/icons";
 import NoTeamMember from "@/components/modules/team/NoTeamMember.vue";
 import TeamMembersList from "@/components/modules/team/TeamMembersList.vue";
+import Business from "@/models/Business";
+import { useUserStore } from "@/stores/UserStore";
+import { useTeamStore } from "@/stores/TeamStore";
+import Agent from "@/models/Agent";
+
+const teamStore = useTeamStore();
+const userStore = useUserStore();
 
 const searchTerm = ref("");
 const searchEnabled = ref(false);
+const fetching = ref(false);
 
 const onSearch = async (event: any) => {};
-const addTeamMember = () => {};
 
-const teamMembers = ref([
-  {
-    id: 1,
-    name: "Gifty Johnson",
-    profile_photo: "",
-    role: "Sales agent & business analyst",
-  },
-  {
-    id: 2,
-    name: "Gifty Johnson",
-    profile_photo: "",
-    role: "Sales agent & business analyst",
-  },
-  {
-    id: 3,
-    name: "Gifty Johnson",
-    profile_photo: "",
-    role: "Sales agent & business analyst",
-  },
-]);
+const teamMembers = computed((): Agent[] => teamStore.teamMembers);
+
+const fetchTeamMembers = async () => {
+  try {
+    fetching.value = true;
+    await teamStore.fetchTeamMembers(
+      userStore.activeBusiness as Business,
+      50,
+      true
+    );
+  } catch (error) {
+  } finally {
+    fetching.value = false;
+  }
+};
+
+onIonViewWillEnter(() => {
+  fetchTeamMembers();
+});
 </script>

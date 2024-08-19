@@ -22,40 +22,54 @@
       </ion-header>
     </IonHeader>
     <IonContent class="ion-padding-horizontal">
-      <IonCard class="team-member-detail-card">
-        <IonCardContent>
-          <IonItem lines="none">
-            <ProfileAvatar
-              :image="member?.logo"
-              :username="member?.name"
-              customSize="48px"
-              slot="start"
-            />
-            <IonLabel class="ion-no-margin">
-              <h4>Gifty Johnson</h4>
-              <IonText color="medium">giftyjohnson@gmail.com</IonText>
-              <IonChip>Sales agent</IonChip>
-              <IonChip>Business analyst</IonChip>
-            </IonLabel>
-            <IonButton
-              slot="end"
-              fill="clear"
-              color="dark"
-              @click="editDetails"
-            >
-              <IonIcon :icon="createOutline" style="font-size: 20px"></IonIcon>
-            </IonButton>
-          </IonItem>
-        </IonCardContent>
-      </IonCard>
-      <TeamMemberRoles></TeamMemberRoles>
-      <TeamMemberPermissions></TeamMemberPermissions>
-      
-      <TeamMemberDetailsSheet
-        :isOpen="showTeamMemberDetailSheet"
-        @didDismiss="showTeamMemberDetailSheet = false"
-        @update="onSaveUpdate($event)"
-      />
+      <div class="ion-padding ion-text-center" v-show="fetching">
+        <IonSpinner name="crescent"></IonSpinner>
+      </div>
+      <section v-show="!fetching">
+        <IonCard class="team-member-detail-card">
+          <IonCardContent>
+            <IonItem lines="none">
+              <ProfileAvatar
+                :image="member?.photo"
+                :username="member?.name"
+                customSize="48px"
+                slot="start"
+              />
+              <IonLabel class="ion-no-margin">
+                <h4>{{ member?.name }}</h4>
+                <p color="medium">{{ member?.email }}</p>
+                <IonChip>{{ role?.name }}</IonChip>
+              </IonLabel>
+              <IonButton
+                slot="end"
+                fill="clear"
+                color="dark"
+                @click="editDetails"
+              >
+                <IonIcon
+                  :icon="createOutline"
+                  style="font-size: 20px"
+                ></IonIcon>
+              </IonButton>
+            </IonItem>
+          </IonCardContent>
+        </IonCard>
+        <TeamMemberRoles
+          :role="role"
+          :roles="roles"
+          @onAssignRole="getMember(true)"
+        ></TeamMemberRoles>
+        <TeamMemberPermissions
+          :groupedPermissions="groupedPermissions"
+        ></TeamMemberPermissions>
+
+        <TeamMemberDetailsSheet
+          :member="member"
+          :isOpen="showTeamMemberDetailSheet"
+          @didDismiss="showTeamMemberDetailSheet = false"
+          @update="getMember(true)"
+        />
+      </section>
     </IonContent>
   </IonPage>
 </template>
@@ -71,45 +85,97 @@ import {
   IonContent,
   IonCard,
   IonCardContent,
-  IonFooter,
+  IonSpinner,
   IonItem,
   IonLabel,
   IonChip,
   IonIcon,
   IonText,
 } from "@ionic/vue";
-import {
-  arrowBackOutline,
-  chevronDownOutline,
-  createOutline,
-} from "ionicons/icons";
-import { ref } from "vue";
+import { arrowBackOutline, createOutline } from "ionicons/icons";
+import { computed, onMounted, ref } from "vue";
 import ProfileAvatar from "@/components/ProfileAvatar.vue";
 import TeamMemberRoles from "@/components/modules/team/TeamMemberRoles.vue";
 import TeamMemberPermissions from "@/components/modules/team/TeamMemberPermissions.vue";
 import TeamMemberDetailsSheet from "@/components/modules/team/TeamMemberDetailsSheet.vue";
+import { useRoleAndPermissionStore } from "@/stores/RoleAndPermissionStore";
+import { useRoute } from "vue-router";
+import { useUserStore } from "@/stores/UserStore";
+import Business from "@/models/Business";
+import { useTeamStore } from "@/stores/TeamStore";
+import Agent from "@/models/Agent";
+import Role from "@/models/Role";
+import { GroupedPermission } from "@/models/Permission";
 
+const route = useRoute();
+
+const roleAndPermissionStore = useRoleAndPermissionStore();
+const teamStore = useTeamStore();
+const userStore = useUserStore();
+
+const fetching = ref(true);
 const showTeamMemberDetailSheet = ref(false);
 
-const member = ref({
-  name: "Gifty Johnson",
-  email: "giftyjohnson@gmail.com",
-  logo: '',
-  roles: [
-    {
-      id: 1,
-      name: "Sales agent",
-    },
-    {
-      id: 2,
-      name: "Business analyst",
-    },
-  ],
-});
+const member = ref<Agent | null>();
+
+const role = computed(() => member.value?.teams[0]?.role as Role);
+const roles = computed(() => roleAndPermissionStore.roles as Role[]);
+const groupedPermissions = ref<GroupedPermission[] | null>([]);
+
 const editDetails = () => {
   showTeamMemberDetailSheet.value = true;
 };
-const onSaveUpdate = (e: any) => {};
+
+const fetchRolePermissions = async () => {
+  try {
+    fetching.value = true;
+    const roleId = role.value.id;
+    const res = await roleAndPermissionStore.fetchRolePermissions(
+      roleId as number,
+      {
+        grouped: true,
+      }
+    );
+    groupedPermissions.value = res;
+  } catch (error) {
+  } finally {
+    fetching.value = false;
+  }
+};
+const getMember = async (refresh = false) => {
+  try {
+    fetching.value = true;
+    const memberId = +route.params.id;
+    const res = await teamStore.getTeamMember(
+      userStore.activeBusiness as Business,
+      memberId,
+      {},
+      refresh
+    );
+    member.value = res;
+  } catch (error) {
+  } finally {
+    fetching.value = false;
+  }
+};
+
+const fetchRoles = async () => {
+  try {
+    fetching.value = true;
+    const res = await roleAndPermissionStore.fetchRoles(
+      userStore.activeBusiness?.id as number
+    );
+  } catch (error) {
+  } finally {
+    fetching.value = false;
+  }
+};
+
+onMounted(async () => {
+  await getMember();
+  fetchRolePermissions();
+  fetchRoles();
+});
 </script>
 
 <style lang="scss" scoped>
@@ -126,7 +192,8 @@ ion-card {
         font-size: 14px;
         font-weight: 400;
       }
-      ion-text {
+
+      p {
         font-size: 12px;
       }
       ion-chip {
