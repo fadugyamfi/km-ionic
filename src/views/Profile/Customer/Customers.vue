@@ -42,7 +42,7 @@
           class="search-input"
           v-model="customerStore.searchTerm"
           @keyup.enter="onSearch($event)"
-          @ion-change="onSearch($event)"
+          @ion-clear="onClear"
         ></IonSearchbar>
       </IonToolbar>
     </IonHeader>
@@ -127,6 +127,16 @@ const onSearch = async (event: any) => {
   customerStore.setSearchTerm(event.target.value);
   await fetchCustomers({
     name_like: (event.target as HTMLIonSearchbarElement).value,
+  });
+  refreshing.value = false;
+};
+
+const onClear = () => {
+  if (fetching.value) return;
+  refreshing.value = true;
+  fetching.value = true;
+  fetchCustomers({
+    name_like: "",
   });
   refreshing.value = false;
 };
