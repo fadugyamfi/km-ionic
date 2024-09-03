@@ -27,7 +27,7 @@
               :placeholder="$t('vendor.sales.searchProducts') + '...'"
               class="search-input"
               @keyup.enter="onSearch($event)"
-              @ion-change="onSearch($event)"
+              @ion-clear="onClear"
             ></IonSearchbar>
           </IonToolbar>
         </IonHeader>
@@ -59,7 +59,14 @@
         :customer="saleStore.selectedCustomer"
       ></SelectedCustomer>
 
-      <div class="ion-text-center" v-if="fetching">
+      <IonRefresher
+        ref="refresher"
+        slot="fixed"
+        @ionRefresh="handleRefresh($event)"
+      >
+        <IonRefresherContent pullingIcon="crescent"></IonRefresherContent>
+      </IonRefresher>
+      <div class="ion-text-center" v-if="fetching && !refreshing">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
 
@@ -129,6 +136,9 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
+  IonRefresher,
+  IonRefresherContent,
+  RefresherCustomEvent,
 } from "@ionic/vue";
 import { arrowBack, search } from "ionicons/icons";
 import { defineComponent } from "vue";
@@ -155,6 +165,7 @@ export default defineComponent({
       arrowBack,
       searchEnabled: false,
       fetching: false,
+      refreshing: false,
       products: [] as Product[],
     };
   },
@@ -190,6 +201,8 @@ export default defineComponent({
     IonSpinner,
     NoResults,
     RecycleScroller,
+    IonRefresher,
+    IonRefresherContent,
   },
 
   computed: {
@@ -235,6 +248,12 @@ export default defineComponent({
         this.fetching = false;
       }
     },
+    async handleRefresh(event: RefresherCustomEvent) {
+      this.refreshing = true;
+      await this.fetchProducts({ refresh: true });
+      event.target.complete();
+      this.refreshing = false;
+    },
 
     isSelected(product: Product): boolean {
       return this.saleStore.isProductSelected(product);
@@ -275,6 +294,12 @@ export default defineComponent({
     onSearch(event: Event) {
       this.fetchProducts({
         product_name_has: (event.target as HTMLIonSearchbarElement).value,
+      });
+    },
+    onClear() {
+      this.fetchProducts({
+        product_name_has: "",
+        refresh: true,
       });
     },
   },
