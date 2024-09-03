@@ -11,6 +11,7 @@ const meta = (key:string) => {
 
 
 export function handleAxiosRequestError(error:any) {
+    console.log(error)
     const toastStore = useToastStore();
 
     if( error.response?.status == 401 || error.response?.status == 403 ) {
