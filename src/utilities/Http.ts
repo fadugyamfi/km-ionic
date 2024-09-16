@@ -23,7 +23,7 @@ export function handleAxiosRequestError(error: any) {
       ? error.response.data.message.join("<br />")
       : error.response.data.message
       ? error.response.data.message
-      : error.message;
+      : error.response?.data?.api_message;
     toastStore.showError(message, "Invalid Request");
   } else if (error.response?.status >= 500) {
     toastStore.showError(error.response.data.message, "Server Error");
