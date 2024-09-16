@@ -4,7 +4,7 @@
       <IonToolbar>
         <IonButtons slot="start">
           <IonBackButton
-            defaultHref="/profile/company/change-photo"
+            defaultHref="/profile/company/edit-profile"
           ></IonBackButton>
         </IonButtons>
         <IonTitle></IonTitle>
@@ -20,13 +20,13 @@
       <main class="ion-padding-top">
         <IonCard color="light">
           <IonImg
-            v-if="photo"
-            :src="photo.webviewPath"
+            v-if="photo?.webviewPath"
+            :src="photo?.webviewPath"
             @click="pickImages()"
           ></IonImg>
 
           <IonCardContent
-            v-if="!photo"
+            v-if="!photo?.webviewPath"
             @click="pickImages()"
             class="d-flex ion-justify-content-center ion-align-items-center flex-column"
             style="height: 200px"
@@ -49,9 +49,7 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <KolaYellowButton @click="updateProfile()">
-        {{ $t("profile.customers.save") }}</KolaYellowButton
-      >
+      <FooterNavigation @continue="updateProfile()" continueText="Save"></FooterNavigation>
     </IonFooter>
   </IonPage>
 </template>
@@ -109,6 +107,7 @@ export default defineComponent({
 
   mounted() {
     // this.businessStore.loadCachedRegistrationInfo();
+    this.photo = { webviewPath: this.userStore.companyForm?.cover_image } as UserPhoto;
   },
 
   computed: {

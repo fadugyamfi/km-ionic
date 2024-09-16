@@ -20,13 +20,13 @@
       <main class="ion-padding-top">
         <IonCard color="light">
           <IonImg
-            v-if="photo"
-            :src="photo.webviewPath"
+            v-if="photo?.webviewPath"
+            :src="photo?.webviewPath"
             @click="pickImages()"
           ></IonImg>
 
           <IonCardContent
-            v-if="!photo"
+            v-if="!photo?.webviewPath"
             @click="pickImages()"
             class="d-flex ion-justify-content-center ion-align-items-center flex-column"
             style="height: 200px"
@@ -49,7 +49,7 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <FooterNavigation @continue="onContinue()"></FooterNavigation>
+      <FooterNavigation @continue="updateProfile()" continueText="Save"></FooterNavigation>
     </IonFooter>
   </IonPage>
 </template>
@@ -77,6 +77,7 @@ import { mapStores } from "pinia";
 import { useToastStore } from "@/stores/ToastStore";
 import { handleAxiosRequestError } from "@/utilities";
 import { useUserStore } from "@/stores/UserStore";
+import { useBusinessStore } from "@/stores/BusinessStore";
 
 export default defineComponent({
   components: {
@@ -104,10 +105,11 @@ export default defineComponent({
 
   mounted() {
     // this.businessStore.loadCachedRegistrationInfo();
+    this.photo = { webviewPath: this.userStore.companyForm?.logo } as UserPhoto;
   },
 
   computed: {
-    ...mapStores(useUserStore),
+    ...mapStores(useUserStore, useToastStore, useBusinessStore),
   },
 
   methods: {
@@ -141,8 +143,32 @@ export default defineComponent({
       }
     },
 
-    onContinue() {
-      this.$router.push("/profile/company/change-cover-photo");
+    async updateProfile() {
+      try {
+        this.toastStore.blockUI("Hold On As We Update Company Profile");
+        const response = await this.businessStore.updateBusiness(
+          Number(this.userStore.activeBusiness?.id),
+          this.userStore.companyForm
+        );
+        if (response) {
+          this.toastStore.unblockUI();
+          this.toastStore.showSuccess(
+            "Company profile photo updated successfully"
+          );
+          setTimeout(() => {
+            this.$router.push("/profile/company/edit-profile");
+          }, 500);
+        }
+      } catch (error) {
+        this.toastStore.showError(
+          "Failed to update Company profile photo. Please try again",
+          "",
+          "bottom",
+          "footer"
+        );
+      } finally {
+        this.toastStore.unblockUI();
+      }
     },
   },
 });

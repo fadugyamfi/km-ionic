@@ -16,17 +16,16 @@
         :title="$t('signup.vendor.uploadYourProfilePhoto')"
         :subtext="$t('signup.vendor.uploadInstructions')"
       ></HeaderArea>
-
       <main class="ion-padding-top">
         <IonCard color="light">
           <IonImg
-            v-if="photo"
+            v-if="photo?.webviewPath"
             :src="photo.webviewPath"
             @click="pickImages()"
           ></IonImg>
 
           <IonCardContent
-            v-if="!photo"
+            v-if="!photo?.webviewPath"
             @click="pickImages()"
             class="d-flex ion-justify-content-center ion-align-items-center flex-column"
             style="height: 200px"
@@ -111,6 +110,7 @@ export default defineComponent({
 
   mounted() {
     // this.businessStore.loadCachedRegistrationInfo();
+    this.photo = { webviewPath: this.userStore.userForm?.photo } as UserPhoto;
   },
 
   computed: {
