@@ -185,7 +185,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useSaleStore),
+    ...mapStores(useSaleStore, useUserStore),
   },
 
   methods: {
@@ -222,7 +222,9 @@ export default defineComponent({
           toastStore.showSuccess(
             this.$t("vendor.sales.paymentRecordedSuccessfully")
           );
-          this.$router.push(`/vendor/sales/${this.$route.params.id}`);
+          if (this.userStore.activeRole?.isSalesAssociate()) {
+            this.$router.replace(`/agent/sales/${this.$route.params.id}`);
+          } else this.$router.replace(`/vendor/sales/${this.$route.params.id}`);
         }
       } catch (error) {
         toastStore.showError(this.$t("vendor.sales.paymentRecordingFailed"));
