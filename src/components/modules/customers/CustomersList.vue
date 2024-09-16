@@ -11,7 +11,11 @@
       ></ProfileAvatar>
       <IonLabel @click="viewCustomer(customer)">
         <p class="ion-no-margin">{{ customer.name }}</p>
-        <IonText color="medium" class="font-medium ellipsis" style="width: 200px;">
+        <IonText
+          color="medium"
+          class="font-medium ellipsis"
+          style="width: 200px"
+        >
           {{ customer.location || $t("profile.customers.locationUnknown") }}
         </IonText>
         <IonText v-if="isNewCustomer(customer.created_at)"
@@ -114,20 +118,17 @@ const deleteCustomer = (customer: Customer) => {
 const onConfirmDelete = async () => {
   try {
     showConfirmDeleteModal.value = false;
-    await customerStore.deleteCustomer(selectedCustomer.value as Customer);
-    toastStore.showSuccess(
-      "Customer has been removed successfully",
-      "",
-      "bottom"
+    const customers = await customerStore.deleteCustomer(
+      selectedCustomer.value as Customer
     );
-  } catch (error) {
-    toastStore.showError(
-      "Failed to remove Customer. Please try again",
-      "",
-      "bottom",
-      "footer"
-    );
-  }
+    if (customers) {
+      toastStore.showSuccess(
+        "Customer has been removed successfully",
+        "",
+        "bottom"
+      );
+    }
+  } catch (error) {}
 };
 
 const updateCustomer = (customer: Customer) => {
@@ -136,8 +137,8 @@ const updateCustomer = (customer: Customer) => {
 
 const viewCustomer = (customer: Customer) => {
   customerStore.selectedCustomer = customer;
-  router.push(`/profile/company/customers/${customer.id}/profile`)
-}
+  router.push(`/profile/company/customers/${customer.id}/profile`);
+};
 </script>
 
 <style lang="scss" scoped>

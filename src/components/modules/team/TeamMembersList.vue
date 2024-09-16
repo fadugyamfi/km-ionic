@@ -42,7 +42,6 @@
   </IonList>
   <DeleteTeamMemberModal
     :isOpen="showConfirmRemoveModal"
-    :member="selectedMember"
     @dismiss="showConfirmRemoveModal = false"
     @confirm="onConfirmDelete()"
   />
@@ -59,24 +58,21 @@ import {
 } from "@ionic/vue";
 import { createOutline, trashOutline } from "ionicons/icons";
 import { PropType, ref } from "vue";
-import { useRouter } from "vue-router";
-import Customer from "@/models/Customer";
-import { useCustomerStore } from "@/stores/CustomerStore";
 import { useToastStore } from "@/stores/ToastStore";
 import TeamMemberItem from "@/components/modules/team/TeamMemberItem.vue";
 import DeleteTeamMemberModal from "./DeleteTeamMemberModal.vue";
-
-const toastStore = useToastStore();
+import { useTeamStore } from "@/stores/TeamStore";
+import Agent from "@/models/Agent";
 
 const props = defineProps({
   teamMembers: {
-    type: Array as PropType<any>,
+    type: Array as PropType<Agent[]>,
     default: () => [],
   },
 });
 
-const router = useRouter();
-const customerStore = useCustomerStore();
+const toastStore = useToastStore();
+const teamStore = useTeamStore();
 
 const selectedMember = ref();
 const showConfirmRemoveModal = ref(false);
@@ -88,7 +84,7 @@ const openMenu = (e: Event, index = -1) => {
   openPopover.value = index;
 };
 
-const removeMember = (member: any) => {
+const removeMember = (member: Agent) => {
   selectedMember.value = member;
   showConfirmRemoveModal.value = true;
 };
@@ -96,11 +92,11 @@ const removeMember = (member: any) => {
 const onConfirmDelete = async () => {
   try {
     showConfirmRemoveModal.value = false;
-    await customerStore.deleteCustomer(selectedMember.value as Customer);
-    toastStore.showSuccess("Team member has been removed", "", "bottom");
+    await teamStore.removeTeamMember(selectedMember.value.id);
+    toastStore.showSuccess("User and business association removed", "", "bottom");
   } catch (error) {
     toastStore.showError(
-      "Failed to remove Team member. Please try again",
+      "Failed to remove user and business association. Please try again",
       "",
       "bottom",
       "footer"

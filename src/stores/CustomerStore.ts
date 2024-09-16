@@ -168,7 +168,9 @@ export const useCustomerStore = defineStore("customer", {
           const index = this.customers.findIndex((c) => c.id == customer.id);
           if (index > -1) {
             this.customers.splice(index, 1);
+            return this.customers
           }
+          return null
         })
         .catch((error) => {
           handleAxiosRequestError(error);

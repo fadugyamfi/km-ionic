@@ -66,7 +66,6 @@
         v-if="userStore.activeRole?.isOwner()"
         :detail="true"
         :button="true"
-        disabled
         class="profile-item"
         router-link="/profile/company/team"
       >
@@ -205,8 +204,7 @@ export default defineComponent({
 
     canToggleModes() {
       return (
-        !this.userStore.activeRole?.isSalesAssociate() &&
-        !this.userStore.activeRole?.isSalesManager()
+        !this.userStore.activeRole?.isSalesAssociate()
       );
     },
 

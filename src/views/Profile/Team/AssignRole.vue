@@ -16,7 +16,9 @@
             >{{ $t("profile.team.assignRole") }}
           </IonTitle>
           <ion-buttons slot="end">
-            <IonButton disabled></IonButton>
+            <IonButton @click="addNewRole">
+              <IonIcon :icon="personAddOutline" color="dark"></IonIcon>
+            </IonButton>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
@@ -27,15 +29,15 @@
           class="kola-input ion-margin-bottom"
           :label="$t('profile.team.assignRole')"
           :class="{
-            'ion-invalid ion-touched': form.errors.role,
+            'ion-invalid ion-touched': form.errors.role_id,
           }"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.role"
+          v-model="form.fields.role_id"
           required
           name="role"
           :toggle-icon="chevronDownOutline"
-          @ion-change="form.validateSelectInput($event)"
+          @ion-change="handleRoleSelect($event)"
         >
           <IonSelectOption
             v-for="role in roles"
@@ -48,17 +50,19 @@
         <h6>{{ $t("profile.team.addNewRole") }}</h6>
         <IonInput
           class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.new_role }"
+          :class="{ 'ion-invalid ion-touched': form.errors.name }"
           :label="$t('profile.team.addNewRoleNotFoundInOptions')"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.new_role"
-          name="new_role"
-          @ion-input="form.validate($event)"
+          v-model="form.fields.name"
+          name="name"
+          @ion-input="handleNameInput($event)"
           required
         ></IonInput>
       </form>
-      <KolaYellowButton>{{ $t("general.save") }}</KolaYellowButton>
+      <KolaYellowButton @click="save">{{
+        $t("general.save")
+      }}</KolaYellowButton>
       <KolaWhiteButton @click="cancel">{{
         $t("general.cancel")
       }}</KolaWhiteButton>
@@ -81,41 +85,106 @@ import {
   IonSelectOption,
   IonSelect,
   IonContent,
+  IonIcon,
+  modalController,
 } from "@ionic/vue";
-import { ref } from "vue";
-import { arrowBackOutline, chevronDownOutline } from "ionicons/icons";
+import { onMounted, ref } from "vue";
+import {
+  addOutline,
+  arrowBackOutline,
+  business,
+  chevronDownOutline,
+  personAddOutline,
+} from "ionicons/icons";
 import { useForm } from "@/composables/form";
 import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import { useRoute, useRouter } from "vue-router";
+import { useRoleAndPermissionStore } from "@/stores/RoleAndPermissionStore";
+import { useUserStore } from "@/stores/UserStore";
+import { useToastStore } from "@/stores/ToastStore";
+import AddNewRoleModal from "@/components/modules/team/AddNewRoleModal.vue";
+import Role from "@/models/Role";
 
 const route = useRoute();
 const router = useRouter();
 
+const userStore = useUserStore();
+const toastStore = useToastStore();
+const roleAndPermissionStore = useRoleAndPermissionStore();
+
 const form = useForm({
-  role: "",
-  new_role: "",
+  role_id: "",
+  name: "",
 });
 
-const roles = ref([
-  {
-    id: 1,
-    name: "Sales agent",
-  },
-  {
-    id: 2,
-    name: "Business analyst",
-  },
-  {
-    id: 3,
-    name: "Content editor",
-  },
-]);
+const roles = ref<Role[]>();
 
-const addTeamMember = () => {};
-const cancel = () => {
-  router.replace(`/profile/company/team/${route.params.id}/role-and-permission`);
+const handleNameInput = (event: any) => {
+  form.validate(event);
+  form.fields.role_id = "";
 };
+const handleRoleSelect = (event: any) => {
+  form.validateSelectInput(event);
+  form.fields.name = "";
+};
+
+const save = () => {
+  if (form.fields.role_id) {
+    assignRole();
+    return;
+  }
+  createRole();
+};
+
+const assignRole = async () => {
+  try {
+    // const res = await
+  } catch (error) {}
+};
+const createRole = async () => {
+  try {
+    const res = await roleAndPermissionStore.createRole({
+      name: form.fields.name,
+      business_id: userStore.activeBusiness?.id,
+      description: "",
+      permissions: [],
+    });
+    await toastStore.showSuccess("Role added successfully");
+  } catch (error) {}
+};
+
+const cancel = () => {
+  router.replace(
+    `/profile/company/team/${route.params.id}/role-and-permission`
+  );
+};
+
+const fetchRoles = async () => {
+  try {
+    const res = await roleAndPermissionStore.fetchRoles(
+      userStore.activeBusiness?.id as number
+    );
+    roles.value = res;
+  } catch (error) {}
+};
+const addNewRole = async () => {
+  const modal = await modalController.create({
+    component: AddNewRoleModal,
+  });
+
+  modal.present();
+
+  const { data, role } = await modal.onWillDismiss();
+
+  if (role === "confirm") {
+    // message.value = `Hello, ${data}!`;
+  }
+};
+
+onMounted(() => {
+  fetchRoles();
+});
 </script>
 <style lang="scss" scoped>
 h6 {
