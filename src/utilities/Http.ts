@@ -65,6 +65,5 @@ export async function refreshAuth() {
     }
   } catch (e) {
     toastStore.showError("Auth Refresh Failed");
-    console.log(e);
   }
 }
