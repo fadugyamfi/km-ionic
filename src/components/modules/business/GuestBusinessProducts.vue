@@ -66,7 +66,7 @@ export default defineComponent({
       this.fetching = true;
       this.products = await this.businessStore.getBusinessProducts(
         { id: this.$route.params.id } as Business,
-        10,
+        500,
         "/v2/guest/products"
       );
       this.fetching = false;
