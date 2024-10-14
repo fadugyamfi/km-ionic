@@ -1,5 +1,140 @@
 <template>
-  <section class="product-card">
+  <section class="product-card" v-if="isSaleAssociate">
+    <ion-card @click="doAction()" class="ion-activatable ripple-parent">
+      <IonRippleEffect></IonRippleEffect>
+
+      <FavoriteButton
+        v-if="showAddToFavorites"
+        class="favorite-button"
+        :product="product"
+        color="dark"
+      >
+      </FavoriteButton>
+      <IonCheckbox
+        v-if="showAddToSelected"
+        mode="ios"
+        @click.prevent=""
+        v-model="selected"
+      ></IonCheckbox>
+
+      <Image
+        class="product-image"
+        :class="{ float: !imgLoaded }"
+        :alt="product?.product_name"
+        :src="imageURL"
+        :path="imagePath"
+        :no-img-src="noImage"
+        w="180"
+        @loaded="imgLoaded = true"
+      />
+      <!-- <IonSkeletonText
+        v-if="!imgLoaded"
+        :animated="false"
+        class="product-image"
+      ></IonSkeletonText> -->
+
+      <IonCardHeader>
+        <section
+          class="d-flex ion-align-items-center ion-justify-content-between"
+        >
+          <p class="product-title line-clamp">
+            {{ product?.product_name }}
+            <span v-if="product?.is_on_sale">
+              - {{ product?.discountApplied }}% {{ $t("general.discount") }}
+            </span>
+          </p>
+        </section>
+
+        <section class="pricing d-flex flex-column">
+          <section
+            class="d-flex ion-align-items-center ion-justify-content-between"
+          >
+            <aside>
+              <section v-if="product?.is_on_sale && product.sale_price > 0">
+                <span class="font-medium" style="margin-right: 5px">
+                  <s>
+                    {{
+                      Filters.currency(
+                        Number(product?.product_price),
+                        String(product?.currency?.symbol || "GHS")
+                      )
+                    }}
+                  </s>
+                </span>
+
+                <IonText class="fw-medium" color="danger">
+                  {{
+                    Filters.currency(
+                      Number(product?.sale_price),
+                      String(product?.currency?.symbol || "GHS")
+                    )
+                  }}
+                </IonText>
+              </section>
+
+              <section v-else class="fw-medium">
+                {{
+                  Filters.currency(
+                    Number(product?.product_price),
+                    String(product?.currency?.symbol || "GHS")
+                  )
+                }}
+              </section>
+
+              <section class="product-weight">
+                <span v-if="product?.weight_value">
+                  {{ product?.weight_value
+                  }}{{ product?.weight_unit?.symbol || "g" }}
+                </span>
+                <span v-if="product?.weight_value && product?.group_quantity"
+                  >/</span
+                >
+                <span v-if="product?.group_quantity">
+                  {{ product?.group_quantity }}pcs
+                </span>
+              </section>
+            </aside>
+
+            <IonButton
+              v-if="showAddToCart"
+              fill="clear"
+              color="medium"
+              @click.prevent.stop="addToCart()"
+              class="ion-no-padding ion-no-margin"
+            >
+              <IonIcon
+                size="large"
+                slot="icon-only"
+                :icon="addCircleOutline"
+              ></IonIcon>
+            </IonButton>
+          </section>
+
+          <section class="stock-status" v-if="showStockStatus">
+            <IonText
+              v-if="product.quantity"
+              class="d-flex ion-align-items-center"
+            >
+              <!-- <IonIcon class="success" :icon="alertCircleOutline"></IonIcon> -->
+              {{ product?.quantity }} in stock
+            </IonText>
+            <IonText v-else class="d-flex ion-align-items-center">
+              <IonIcon class="warning" :icon="alertCircleOutline"></IonIcon>
+              out of stock
+            </IonText>
+          </section>
+        </section>
+
+        <section
+          v-if="showDescription && product?.product_description"
+          class="product-description"
+        >
+          <p class="ion-no-margin">{{ product?.product_description }}</p>
+        </section>
+      </IonCardHeader>
+    </ion-card>
+  </section>
+  <section class="new-product-card" v-else>
     <ion-card @click="doAction()" class="ion-activatable ripple-parent">
       <IonRippleEffect></IonRippleEffect>
 
@@ -141,6 +276,8 @@ import Filters from "../../utilities/Filters";
 import { useProductStore } from "@/stores/ProductStore";
 import WeightChip from "../modules/products/WeightChip.vue";
 import DiscountBadge from "../modules/products/DiscountBadge.vue";
+import { mapStores } from "pinia";
+import { useUserStore } from "@/stores/UserStore";
 
 export type ProductSelection = {
   selected: Boolean;
@@ -239,6 +376,7 @@ export default defineComponent({
   },
 
   computed: {
+    ...mapStores(useUserStore),
     imageURL: function () {
       if (
         this.product?.product_images &&
@@ -259,6 +397,9 @@ export default defineComponent({
       }
 
       return this.product.product_banner_image;
+    },
+    isSaleAssociate() {
+      return this.userStore.activeRole?.isSalesAssociate();
     },
   },
 
@@ -321,7 +462,7 @@ export default defineComponent({
   overflow: hidden;
 }
 
-.product-card {
+.new-product-card {
   width: 100%;
   ion-card {
     width: 96%;
@@ -481,6 +622,134 @@ export default defineComponent({
     position: absolute;
     top: 16px;
     left: 16px;
+  }
+
+  ion-checkbox {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+}
+
+// old product card design
+
+
+.product-card {
+  width: 100%;
+  ion-card {
+    width: 96%;
+    min-width: 148px;
+    margin: 0px auto;
+    position: relative;
+    overflow: hidden;
+
+    .product-image {
+      height: 165px;
+      width: 100%;
+      object-fit: contain;
+      padding: 5px;
+      display: block;
+      opacity: 1;
+
+      &.float {
+        // position: absolute;
+        // display: none;
+        // height: 1px;
+        opacity: 0.1;
+      }
+    }
+
+    ion-card-header {
+      text-align: left;
+      padding: 10px 10px;
+
+      .product-title {
+        font-size: 1em;
+        // font-weight: 500;
+        margin-top: 0px;
+        margin-bottom: 5px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        height: 40px;
+        color: #111;
+      }
+
+      .pricing {
+        font-size: 1em;
+        font-weight: 600;
+        color: #265da5;
+      }
+      .product-weight {
+        font-weight: 400;
+        font-size: 0.9em;
+        color: #9e9e9e;
+      }
+      .product-description {
+        font-size: 0.85em;
+        margin-top: 5px;
+        color: #9e9e9e;
+      }
+
+      .stock-status {
+        margin-top: 2px;
+        ion-icon {
+          font-size: 20px;
+          &.warning {
+            --background: #fdf0ed;
+            --border-color: #ef3e3233;
+            padding: 2px;
+            border-radius: 50%;
+            background-color: #fa2b3928;
+            color: #d92d20;
+            margin-right: 5px;
+          }
+          &.success {
+            --background: #fdf0ed;
+            padding: 2px;
+            border-radius: 50%;
+            background-color: #21d1882f;
+            color: #21d187;
+            margin-right: 5px;
+          }
+        }
+      }
+
+      ion-card-subtitle {
+        font-size: 0.8em;
+        padding: 0px;
+        margin: 0px;
+        color: #bdbdbd;
+        text-wrap: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+
+    ion-card-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8em;
+
+      .distance {
+        color: #666eed;
+      }
+    }
+  }
+
+  .favorite-button {
+    --padding-start: 2px;
+    --padding-end: 2px;
+    --padding-top: 2px;
+    --padding-bottom: 2px;
+    position: absolute;
+    top: 0px;
+    right: 5px;
+    min-height: 24px;
+    font-size: 12px;
+    border-radius: 50%;
+    background: white;
+    border: solid 1px #f1f1f1;
   }
 
   ion-checkbox {
