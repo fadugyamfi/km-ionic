@@ -17,93 +17,76 @@
         @click.prevent=""
         v-model="selected"
       ></IonCheckbox>
+      <div style="position: relative">
+        <Image
+          class="product-image"
+          :class="{ float: !imgLoaded }"
+          :alt="product?.product_name"
+          :src="imageURL"
+          :path="imagePath"
+          :no-img-src="noImage"
+          w="180"
+          @loaded="imgLoaded = true"
+        />
+        <WeightChip class="product-weight-chip" v-if="product?.weight_value">
+          {{ product?.weight_value
+          }}{{ product?.weight_unit?.symbol || "g" }}</WeightChip
+        >
+        <DiscountBadge v-if="product?.is_on_sale" class="discount-badge">
+          {{ product?.discountApplied }}%</DiscountBadge
+        >
+      </div>
 
-      <Image
-        class="product-image"
-        :class="{ float: !imgLoaded }"
-        :alt="product?.product_name"
-        :src="imageURL"
-        :path="imagePath"
-        :no-img-src="noImage"
-        w="180"
-        @loaded="imgLoaded = true"
-      />
-
-      <IonSkeletonText
+      <!-- <IonSkeletonText
         v-if="!imgLoaded"
         :animated="true"
         class="product-image"
-      ></IonSkeletonText>
+      ></IonSkeletonText> -->
 
       <IonCardHeader>
-        <section
-          class="d-flex ion-align-items-center ion-justify-content-between"
-        >
+        <section>
           <p class="product-title line-clamp">
             {{ product?.product_name }}
           </p>
         </section>
 
-        <section
-          class="pricing d-flex ion-align-items-center ion-justify-content-between"
-        >
-          <aside class="d-flex flex-column">
-            <section v-if="product?.is_on_sale && product.sale_price > 0">
-              <span style="margin-right: 5px">
-                <s>
+        <section class="pricing d-flex flex-column">
+          <section
+            class="d-flex flex-column ion-align-items-center ion-justify-content-between"
+          >
+            <aside>
+              <section class="fw-medium main-price">
+                {{
+                  Filters.currency(
+                    Number(product?.product_price),
+                    String(product?.currency?.symbol || "GHS")
+                  ).split(".")[0]
+                }}.<span class="main-sub-price">
                   {{
                     Filters.currency(
                       Number(product?.product_price),
                       String(product?.currency?.symbol || "GHS")
-                    )
+                    ).split(".")[1]
                   }}
-                </s>
-              </span>
+                </span>
+              </section>
 
-              <IonText class="fw-medium" color="danger">
-                {{
-                  Filters.currency(
-                    Number(product?.sale_price),
-                    String(product?.currency?.symbol || "GHS")
-                  )
-                }}
-              </IonText>
-            </section>
-            <section v-else>
-              {{
-                Filters.currency(
-                  Number(product?.product_price),
-                  String(product?.currency?.symbol || "GHS")
-                )
-              }}
-            </section>
-            <section class="product-weight">
-              <span v-if="product?.weight_value">
-                {{ product?.weight_value
-                }}{{ product?.weight_unit?.symbol || "g" }}
-              </span>
-              <span v-if="product?.weight_value && product?.group_quantity"
-                >/</span
-              >
-              <span v-if="product?.group_quantity">
-                {{ product?.group_quantity }}pcs
-              </span>
-            </section>
-          </aside>
-
-          <IonButton
-            v-if="showAddToCart"
-            fill="clear"
-            color="medium"
-            @click.prevent.stop="addToCart()"
-            class="ion-no-padding ion-no-margin"
-          >
-            <IonIcon
-              size="large"
-              slot="icon-only"
-              :icon="addCircleOutline"
-            ></IonIcon>
-          </IonButton>
+              <section class="product-weight">
+                <span v-if="product?.group_quantity">
+                  {{ product?.group_quantity }} pieces
+                </span>
+              </section>
+            </aside>
+            <IonButton
+              v-if="showAddToCart"
+              expand="block"
+              @click.prevent.stop="addToCart()"
+              class="add-to-cart-button"
+            >
+              <IonIcon size="meduim" slot="icon-only" :icon="addOutline" />
+              Add to cart
+            </IonButton>
+          </section>
         </section>
 
         <section
@@ -138,7 +121,7 @@ import {
   IonText,
 } from "@ionic/vue";
 import { PropType, defineComponent } from "vue";
-import { locationOutline } from "ionicons/icons";
+import { addOutline, locationOutline } from "ionicons/icons";
 import Product from "@/models/Product";
 import { addCircleOutline } from "ionicons/icons";
 import Image from "@/components/Image.vue";
@@ -148,6 +131,8 @@ import Business from "../../models/Business";
 import Filters from "../../utilities/Filters";
 import LoginRequiredSheet from "../modules/LoginRequiredSheet.vue";
 import { useProductStore } from "../../stores/ProductStore";
+import DiscountBadge from "../modules/products/DiscountBadge.vue";
+import WeightChip from "../modules/products/WeightChip.vue";
 
 export type ProductSelection = {
   selected: Boolean;
@@ -203,14 +188,15 @@ export default defineComponent({
 
     showRetailPrice: {
       default: false,
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
 
   data() {
     return {
       locationOutline,
       addCircleOutline,
+      addOutline,
       imgLoaded: false,
       selected: false,
       noImage: "/images/product-placeholder.png",
@@ -224,6 +210,8 @@ export default defineComponent({
   components: {
     IonCard,
     IonCardHeader,
+    WeightChip,
+    DiscountBadge,
     IonCardContent,
     IonCardTitle,
     IonCardSubtitle,
@@ -296,7 +284,7 @@ export default defineComponent({
 
   mounted() {
     this.product.preferRetailPrice = this.showRetailPrice;
-  }
+  },
 });
 </script>
 
@@ -318,13 +306,18 @@ export default defineComponent({
     overflow: hidden;
 
     .product-image {
-      height: 165px;
+      height: 200px;
+      width: 100%;
       object-fit: contain;
-      padding: 5px;
+      padding: 0px;
+      display: block;
+      opacity: 1;
 
       &.float {
-        position: absolute;
-        height: 1px;
+        // position: absolute;
+        // display: none;
+        // height: 1px;
+        opacity: 0.1;
       }
     }
 
@@ -333,30 +326,85 @@ export default defineComponent({
       padding: 10px 10px;
 
       .product-title {
-        font-size: 1em;
+        // font-size: 1em;
+        // font-weight: 500;
         margin-top: 0px;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
         text-overflow: ellipsis;
         overflow: hidden;
         height: 40px;
         color: #111;
+        text-transform: capitalize !important;
+        font-size: 1em;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: center;
       }
 
       .pricing {
         font-size: 1em;
         font-weight: 600;
         color: #265da5;
-      }
 
+        .main-price {
+          font-size: 24px;
+          line-height: 32px;
+          font-weight: 600;
+          color: #b87c16;
+          margin-bottom: 8px;
+
+          span.main-sub-price {
+            font-size: 16px;
+            line-height: 32px;
+            font-weight: 600;
+          }
+        }
+
+        .add-to-cart-button {
+          --background: #e0f0ff;
+          --box-shadow: 0px -2px 2px 0px #007af53d inset;
+          --color: #003366;
+          --padding-top: 10px;
+          --padding-bottom: 10px;
+          text-transform: none;
+          width: 100%;
+        }
+      }
       .product-weight {
-        font-weight: 400;
+        text-align: center;
+        font-weight: 500;
         font-size: 0.9em;
         color: #9e9e9e;
+        margin-bottom: 20px;
       }
       .product-description {
         font-size: 0.85em;
         margin-top: 5px;
         color: #9e9e9e;
+      }
+
+      .stock-status {
+        margin-top: 2px;
+        ion-icon {
+          font-size: 20px;
+          &.warning {
+            --background: #fdf0ed;
+            --border-color: #ef3e3233;
+            padding: 2px;
+            border-radius: 50%;
+            background-color: #fa2b3928;
+            color: #d92d20;
+            margin-right: 5px;
+          }
+          &.success {
+            --background: #fdf0ed;
+            padding: 2px;
+            border-radius: 50%;
+            background-color: #21d1882f;
+            color: #21d187;
+            margin-right: 5px;
+          }
+        }
       }
 
       ion-card-subtitle {
@@ -383,18 +431,31 @@ export default defineComponent({
   }
 
   .favorite-button {
-    --padding-start: 2px;
-    --padding-end: 2px;
-    --padding-top: 2px;
-    --padding-bottom: 2px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
     position: absolute;
-    top: 0px;
-    right: 5px;
+    top: 16px;
+    right: 16px;
     min-height: 24px;
     font-size: 12px;
     border-radius: 50%;
-    background: white;
+    background: #f1f1f1;
     border: solid 1px #f1f1f1;
+    z-index: 999;
+  }
+
+  .product-weight-chip {
+    position: absolute;
+    bottom: 16px;
+    right: 0;
+  }
+
+  .discount-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
   }
 
   ion-checkbox {

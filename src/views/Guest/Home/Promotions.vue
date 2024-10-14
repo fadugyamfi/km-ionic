@@ -15,7 +15,7 @@
       </IonText>
     </header>
 
-    <Swiper :slides-per-view="2">
+    <Swiper :slides-per-view="1.5">
       <template
         v-for="promotionItem in promotion.promotion_items"
         :key="promotionItem.id"
