@@ -1,14 +1,14 @@
 <template>
   <IonItem :button="true">
     <ProfileAvatar
-      :image="member?.logo"
+      :image="member?.photo"
       :username="member?.name"
       customSize="40px"
     ></ProfileAvatar>
     <IonLabel>
       <p class="ion-no-margin">{{ member.name }}</p>
       <IonText color="medium" class="font-medium ellipsis" style="width: 200px">
-        {{ member.role }}
+        {{ member.teams[0]?.role?.name }}
       </IonText>
     </IonLabel>
 
@@ -23,10 +23,12 @@
 import { IonText, IonItem, IonIcon, IonLabel, IonButton } from "@ionic/vue";
 import { ellipsisHorizontal } from "ionicons/icons";
 import ProfileAvatar from "../../ProfileAvatar.vue";
+import { PropType } from "vue";
+import Agent from "@/models/Agent";
 
 const props = defineProps({
   member: {
-    type: Object,
+    type: Object as PropType<Agent>,
     default: () => ({}),
   },
 });

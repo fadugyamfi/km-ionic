@@ -29,22 +29,24 @@
         class="profile-item ion-margin-top"
         style="margin: 0px 12px"
       >
-        <ProfileAvatar
-          :image="userStore.activeBusiness?.logo"
-          :username="userStore.activeBusiness?.name"
-          customSize="32px"
-        ></ProfileAvatar>
-        <IonLabel>{{ userStore.activeBusiness?.name }}</IonLabel>
+        <section class="d-flex ion-align-items-center" style="gap: 10px;">
+          <IonText style="font-size: 14px;">Team: </IonText>
+          <ProfileAvatar
+            :image="userStore.activeBusiness?.logo"
+            :username="userStore.activeBusiness?.name"
+            customSize="32px"
+          ></ProfileAvatar>
+        </section>
+        <IonLabel class="team">{{ userStore.activeBusiness?.name }}</IonLabel>
         <IonButton
           slot="end"
           fill="clear"
-          color="dark"
+          size="small"
+          class="fw-semibold ion-text-capitalize"
+          color="primary"
           @click="showSwitchTeamSheet = true"
         >
-          <IonIcon
-            :icon="swapHorizontalOutline"
-            style="font-size: 21px"
-          ></IonIcon>
+          Switch
         </IonButton>
       </IonItem>
       <div class="ion-padding ion-text-center" v-show="fetching">
@@ -357,7 +359,9 @@ ion-segment {
     padding-bottom: 0.4em;
   }
 }
-
+.team {
+  font-size: 0.9em !important;
+}
 .sale-filter {
   --background: #fff;
   --border-width: 1px;

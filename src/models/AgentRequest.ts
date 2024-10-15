@@ -20,6 +20,8 @@ public total_sales_price?: number | string;
   public uuid?: string;
   public approved_by?: number;
   public approved_at?: string;
+  public status?: string;
+  public agent_request_status?: any
 
   constructor(data: Object) {
     this.update(data);

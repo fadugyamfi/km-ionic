@@ -1,3 +1,5 @@
+import Team from "./Team";
+
 export default class Agent {
   public id_cms_privileges?: number;
   public phone_number?: string;
@@ -14,6 +16,7 @@ export default class Agent {
   public avg_sales?: number;
   public total_sales?: number;
   public latest_target_percentage_complete?: number;
+  public teams: Team[] = []
 
   constructor(data: Object) {
     Object.assign(this, data);

@@ -105,9 +105,7 @@ export const usePromotionStore = defineStore("promotion", {
       return axios
         .get(`/v2/promotions/${promotionIdOrSlug}`)
         .then((response) => {
-          const promotion = new Promotion(response.data.data);
-
-          return promotion;
+          return new Promotion(response.data.data);
         })
         .catch((error) => {
           console.log(error);
@@ -126,9 +124,7 @@ export const usePromotionStore = defineStore("promotion", {
       return axios
         .get(`/v2/guest/promotions/${promotionIdOrSlug}`)
         .then((response) => {
-          const promotion = new Promotion(response.data.data);
-
-          return promotion;
+          return new Promotion(response.data.data);
         })
         .catch((error) => {
           console.log(error);
@@ -198,9 +194,7 @@ export const usePromotionStore = defineStore("promotion", {
       const response = await storage.get(`${KOLA_PROMOTION_ITEMS}.${promotionId}`);
 
       if( response ) {
-        return response.data.data.map(
-          (el: object) => new PromotionItem(el)
-        );
+        return response.map((el: object) => new PromotionItem(el));
       }
 
       return null;

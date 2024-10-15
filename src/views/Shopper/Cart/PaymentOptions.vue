@@ -398,7 +398,6 @@ export default defineComponent({
 <style scoped lang="scss">
 ion-item {
   --background: #ffffff;
-  margin-bottom: 4px !important;
   border: solid 1px #f4f4f4;
   border-radius: 12px;
   margin-bottom: 0.5em;

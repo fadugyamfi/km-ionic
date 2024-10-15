@@ -42,6 +42,20 @@
     </section>
 
     <IonContent>
+      <section class=" ion-padding-horizontal">
+
+        <h6 style="margin-top: 0px">Sale Date</h6>
+        <IonInput
+          type="datetime-local"
+          class="kola-input delivery-details-input"
+          label="Sale Date & Time"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="saleStore.newSale.sale_started_at"
+          name="sale_started_at"
+          required
+        ></IonInput>
+      </section>
       <IonCard>
         <IonCardContent>
           <IonList lines="full">
@@ -89,6 +103,7 @@ import {
   IonThumbnail,
   IonTitle,
   IonToolbar,
+  IonInput,
 } from "@ionic/vue";
 import { arrowBack, closeCircleOutline, search } from "ionicons/icons";
 import { defineComponent } from "vue";
@@ -132,6 +147,7 @@ export default defineComponent({
     SaleItemView,
     IonFooter,
     KolaYellowButton,
+    IonInput,
   },
 
   computed: {
@@ -195,3 +211,14 @@ export default defineComponent({
   },
 });
 </script>
+<style scoped lang="scss">
+.delivery-details-input {
+  color: #74787c;
+  --padding-end: 10px;
+  --padding-start: 10px;
+}
+h6 {
+  font-size: 14px;
+  margin-top: 24px;
+}
+</style>

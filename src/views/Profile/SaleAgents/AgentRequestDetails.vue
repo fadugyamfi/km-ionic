@@ -79,40 +79,67 @@
           ></ProductCard>
         </RecycleScroller>
       </section>
-      <ConfirmModal
+      <!-- <ConfirmModal
         :isOpen="showConfirm"
         :description="confirmDescription"
         @confirm="doConfirm()"
         @dismiss="showConfirm = false"
-      ></ConfirmModal>
+      ></ConfirmModal> -->
+      <StatusUpdateSheet
+        :isOpen="showConfirm"
+        :request="request"
+        :title="title"
+        @didDismiss="showConfirm = false"
+        @confirm="doConfirm"
+      >
+      </StatusUpdateSheet>
     </ion-content>
     <ion-footer class="ion-no-border ion-padding">
-      <section class="ion-text-center" v-if="request?.approved_by">
-        <IonChip color="success" class="font-medium">
+      <section
+        class="ion-text-center ion-margin-bottom"
+        v-if="statusId !== RequestStatus.PLACED && !loading"
+      >
+        <IonChip :color="statusColor" class="font-medium">
+          {{ statusName }}
           {{
-            `Approved on ${Filters.date(
-              request?.approved_at as string,
-              "short"
-            )}`
+            statusId == RequestStatus.APPROVED
+              ? `on ${Filters.date(request?.approved_at as string, "short")}`
+              : ""
           }}
         </IonChip>
       </section>
-      <section v-if="!canApprove && !loading">
-        <KolaYellowButton @click="confirmApproval()">
+      <section v-if="canApprove && !loading">
+        <KolaYellowButton
+          :disabled="requestStore?.declining"
+          @click="confirmApproval()"
+        >
           <IonSpinner
             v-if="requestStore?.approving"
             name="crescent"
           ></IonSpinner>
-          <IonText>{{ "Approve" }}</IonText></KolaYellowButton
+          <IonText v-else>{{ "Approve" }}</IonText></KolaYellowButton
         >
-        <KolaWhiteButton @click="confirmDecline()">
+        <KolaWhiteButton
+          :disabled="requestStore?.approving"
+          @click="confirmDecline()"
+        >
           <IonSpinner
             v-if="requestStore?.declining"
             name="crescent"
           ></IonSpinner>
-          <IonText>{{ "Decline" }}</IonText></KolaWhiteButton
+          <IonText v-else>{{ "Decline" }}</IonText></KolaWhiteButton
         >
       </section>
+      <KolaYellowButton
+        v-if="statusId == RequestStatus.APPROVED"
+        @click="confirmSetDelivered()"
+      >
+        <IonSpinner
+          v-if="requestStore?.settingAsDelivered"
+          name="crescent"
+        ></IonSpinner>
+        <IonText v-else>{{ "Set as delivered" }}</IonText></KolaYellowButton
+      >
     </ion-footer>
   </IonPage>
 </template>
@@ -152,6 +179,8 @@ import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import ConfirmModal from "@/components/modals/ConfirmModal.vue";
 import AgentRequest from "@/models/AgentRequest";
 import { formatMySQLDateTime } from "@/utilities";
+import StatusUpdateSheet from "@/components/modules/agents/StatusUpdateSheet.vue";
+import { RequestStatus } from "@/stores/AgentsStore";
 
 export default defineComponent({
   data() {
@@ -160,8 +189,9 @@ export default defineComponent({
       request: null as AgentRequest | null,
       showConfirm: false,
       confirmAction: "",
-      confirmDescription: "",
+      title: "",
       Filters,
+      RequestStatus,
     };
   },
   components: {
@@ -188,6 +218,7 @@ export default defineComponent({
     KolaWhiteButton,
     ConfirmModal,
     IonChip,
+    StatusUpdateSheet,
   },
 
   computed: {
@@ -195,8 +226,25 @@ export default defineComponent({
     cardWidth() {
       return window.document.documentElement.clientWidth / 2;
     },
+    statusId() {
+      return this.request?.agent_request_status?.id;
+    },
+
     canApprove() {
-      return this.request?.approved_by;
+      return this.statusId == RequestStatus.PLACED;
+    },
+
+    statusColor() {
+      return this.statusId == RequestStatus.APPROVED
+        ? "success"
+        : this.statusId == RequestStatus.DELIVERED
+        ? "tertiary"
+        : this.statusId == RequestStatus.REJECTED
+        ? "danger"
+        : "meduim";
+    },
+    statusName() {
+      return this.request?.agent_request_status?.name;
     },
   },
 
@@ -218,48 +266,64 @@ export default defineComponent({
       }
     },
     confirmDecline() {
-      this.confirmDescription =
-        "Are you sure you want to decline this request?";
+      this.title = "Reject Request";
       this.confirmAction = "decline";
       this.showConfirm = true;
     },
     confirmApproval() {
-      this.confirmDescription =
-        "Are you sure you want to approve this request?";
+      this.title = "Approve Request";
       this.confirmAction = "approve";
       this.showConfirm = true;
     },
+    confirmSetDelivered() {
+      this.title = "Set Request As Delivered";
+      this.confirmAction = "confirm";
+      this.showConfirm = true;
+    },
 
-    doConfirm() {
+    doConfirm(form: any) {
       this.showConfirm = false;
       if (this.confirmAction == "approve") {
-        this.approve();
+        this.approve(form);
+      } else if (this.confirmAction == "decline") {
+        this.doConfirmDecline(form);
       } else {
-        this.doConfirmDecline();
+        this.doConfirmDelivered(form);
       }
     },
-    async approve() {
+    async approve(form: any) {
       const request_id = +this.$route.params.id;
       const response = await this.requestStore.approveRequest(request_id, {
         approved_by: this.userStore.user?.id || "",
         approved_at: formatMySQLDateTime(new Date().toISOString()),
+        est_delivery_at: form.est_delivery_at,
+        comment: form.comment,
       });
-      if (response !== null) {
-        setTimeout(
-          () => this.$router.replace("/profile/company/sale-agents"),
-          2000
-        );
+      if (response) {
+        this.$router.replace("/profile/company/sale-agents");
       }
     },
 
-    async doConfirmDecline() {
+    async doConfirmDecline(form: any) {
       const request_id = +this.$route.params.id;
-      const response = await this.requestStore.declineRequest(request_id);
-      if (response !== null) {
-        setTimeout(
-          () => this.$router.replace("/profile/company/sale-agents"),
-          2000
-        );
+      const response = await this.requestStore.declineRequest(request_id, {
+        comment: form.comment,
+      });
+      if (response) {
+        this.$router.replace("/profile/company/sale-agents");
+      }
+    },
+    async doConfirmDelivered(form: any) {
+      const request_id = +this.$route.params.id;
+      const response = await this.requestStore.setDelivered(request_id, {
+        approved_by: this.userStore.user?.id || "",
+        approved_at: formatMySQLDateTime(new Date().toISOString()),
+        status: 2,
+        comment: form.comment,
+        actual_delivery_at: form.actual_delivery_at,
+      });
+      if (response) {
+        this.$router.replace("/profile/company/sale-agents");
       }
     },
   },

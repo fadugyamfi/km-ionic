@@ -9,7 +9,7 @@
     <ion-content>
       <IonList lines="none" class="sales-select-list ion-padding-horizontal">
         <IonListHeader>
-          <IonLabel class="fw-bold">{{
+          <IonLabel class="fw-semibold">{{
             $t("vendor.sales.selectPaymentMethod")
           }}</IonLabel>
         </IonListHeader>
@@ -207,15 +207,11 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.new-card {
-  color: #666eed !important;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-}
-
-.ion-margin-bottom {
-  margin-bottom: -5px;
+ion-item {
+  &::part(native) {
+    padding: 8px 10px;
+    --padding-start: 0px;
+    --inner-padding-end: 0px;
+  }
 }
 </style>

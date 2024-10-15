@@ -112,7 +112,7 @@ const form = useForm({
   delivery_phone_number: "",
   delivery_date: "",
   delivery_method: "",
-  payment_option_id: 1,
+  payment_option_id: 2,
 });
 
 const selectDeliveryMethod = (method: string) => {
@@ -149,7 +149,7 @@ const storeDeliveryDetails = () => {
       };
       cartStore.persist();
       // router.push(`/shopper/cart/business/${route.params.id}/item-review`);
-      router.push(`/shopper/cart/business/${route.params.id}/payment-options`);
+      router.push(`/shopper/cart/business/${route.params.id}/payment-method`);
     } else {
       console.error("Business ID not found in cartStore.orders");
     }

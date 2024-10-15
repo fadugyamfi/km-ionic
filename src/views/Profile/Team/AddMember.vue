@@ -59,20 +59,54 @@
           @ion-input="form.validate($event)"
           required
         ></IonInput>
-        <h6>{{ $t("profile.team.assignRole") }}</h6>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.email }"
+          :label="$t('profile.team.emailAddress')"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.email"
+          name="email"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+        <IonInput
+          class="kola-input ion-margin-bottom"
+          :class="{ 'ion-invalid ion-touched': form.errors.phone_number }"
+          :label="$t('profile.team.preferredContact')"
+          labelPlacement="stacked"
+          fill="solid"
+          v-model="form.fields.phone_number"
+          name="phone_number"
+          @ion-input="form.validate($event)"
+          required
+        ></IonInput>
+        <header
+          class="d-flex ion-align-items-center ion-justify-content-between"
+        >
+          <h6 class="ion-no-margin">{{ $t("profile.team.assignRole") }}</h6>
+          <IonButton
+            fill="clear"
+            style="text-transform: none"
+            class="ion-text-start add-new-item"
+            @click="addNewRole"
+          >
+            {{ $t("profile.team.addNewRole") }}
+          </IonButton>
+        </header>
         <IonSelect
           class="kola-input ion-margin-bottom"
           :label="$t('profile.team.selectRole')"
           :class="{
-            'ion-invalid ion-touched': form.errors.role,
+            'ion-invalid ion-touched': form.errors.role_id,
           }"
           labelPlacement="stacked"
           fill="solid"
-          v-model="form.fields.role"
+          v-model="form.fields.role_id"
           required
-          name="cms_users_id"
+          name="role_id"
           :toggle-icon="chevronDownOutline"
-          @ion-change="form.validateSelectInput($event)"
+          @ion-change="getRolePermissions($event)"
         >
           <IonSelectOption
             v-for="role in roles"
@@ -82,22 +116,21 @@
             {{ role.name }}</IonSelectOption
           >
         </IonSelect>
-        <h6>{{ $t("profile.team.addNewRole") }}</h6>
-        <IonInput
-          class="kola-input ion-margin-bottom"
-          :class="{ 'ion-invalid ion-touched': form.errors.new_role }"
-          :label="$t('profile.team.addNewRoleNotFoundInOptions')"
-          labelPlacement="stacked"
-          fill="solid"
-          v-model="form.fields.new_role"
-          name="new_role"
-          @ion-input="form.validate($event)"
-          required
-        ></IonInput>
+        <section>
+          <div class="ion-padding ion-text-center" v-show="fetching">
+            <IonSpinner name="crescent"></IonSpinner>
+          </div>
+          <TeamMemberPermissions
+            v-if="!fetching && groupedPermissions.length > 0"
+            :groupedPermissions="groupedPermissions"
+          />
+        </section>
       </form>
     </IonContent>
     <IonFooter class="ion-no-border ion-padding-horizontal">
-      <KolaYellowButton>{{ $t("general.save") }}</KolaYellowButton>
+      <KolaYellowButton :disabled="!canSave" @click="addMember">{{
+        $t("general.save")
+      }}</KolaYellowButton>
       <KolaWhiteButton>{{ $t("general.cancel") }}</KolaWhiteButton>
     </IonFooter>
   </IonPage>
@@ -122,39 +155,89 @@ import {
   IonSelectOption,
   IonSelect,
   IonFooter,
+  modalController,
+  IonSpinner,
 } from "@ionic/vue";
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { arrowBackOutline, chevronDownOutline } from "ionicons/icons";
 import { useForm } from "@/composables/form";
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import AddNewRoleModal from "@/components/modules/team/AddNewRoleModal.vue";
+import TeamMemberPermissions from "@/components/modules/team/TeamMemberPermissions.vue";
+import { useRoleAndPermissionStore } from "@/stores/RoleAndPermissionStore";
+import { useUserStore } from "@/stores/UserStore";
+import { useTeamStore } from "@/stores/TeamStore";
+import { useToastStore } from "@/stores/ToastStore";
+import { useRouter } from "vue-router";
+import { GroupedPermission } from "@/models/Permission";
+
+const router = useRouter();
+const fetching = ref(false);
+const roleAndPermissionStore = useRoleAndPermissionStore();
+const userStore = useUserStore();
+const teamStore = useTeamStore();
+const toastStore = useToastStore();
 
 const form = useForm({
-  profile_picture: "",
+  photo: "",
   name: "",
-  role: "",
-  new_role: "",
+  role_id: "",
+  phone_number: "",
+  description: "New team member",
+  email: "",
 });
-
 const photo = ref();
+const groupedPermissions = ref<GroupedPermission[]>([]);
+const roles = computed(() => roleAndPermissionStore.roles);
+const canSave = computed(
+  () =>
+    form.fields.name.length > 0 &&
+    form.fields.role_id &&
+    form.fields.phone_number.length > 0 &&
+    form.fields.email.length > 0
+);
 
-const roles = ref([
-  {
-    id: 1,
-    name: "Sales agent",
-  },
-  {
-    id: 2,
-    name: "Business analyst",
-  },
-  {
-    id: 3,
-    name: "Content editor",
-  },
-]);
+const addMember = async () => {
+  try {
+    toastStore.blockUI("Hold On As We Associate User and Business");
+    const newForm = {
+      ...form.fields,
+      businesses_id: userStore.activeBusiness?.id,
+      id_cms_privileges: form.fields.role_id,
+      parent_users_id: userStore.user?.parent_users_id,
+    };
+    const res = await teamStore.addTeamMember(newForm);
+    if (res) {
+      toastStore.unblockUI();
+      await toastStore.showSuccess("User and business associated successfully");
+      router.replace("/profile/company/team");
+    } else {
+      toastStore.unblockUI();
+      toastStore.showError(
+        "Failed to associate User and business. Please try again!",
+        "",
+        "bottom",
+        "footer"
+      );
+    }
+  } catch (error) {}
+};
 
-const addTeamMember = () => {};
+const addNewRole = async () => {
+  const modal = await modalController.create({
+    component: AddNewRoleModal,
+  });
+
+  modal.present();
+
+  const { data, role } = await modal.onWillDismiss();
+
+  if (role === "confirm") {
+    // message.value = `Hello, ${data}!`;
+  }
+};
 
 const pickImages = async () => {
   const { takePhoto, photos, pickImages } = usePhotoGallery();
@@ -163,12 +246,41 @@ const pickImages = async () => {
 
     photo.value = photos.value ? photos.value[0] : null;
     if (photo.value) {
-      form.fields.profile_picture = photo.value.base64Data as string;
+      form.fields.photo = photo.value.base64Data as string;
     }
   } catch (e) {
     console.log(e);
   }
 };
+const fetchRoles = async () => {
+  try {
+    // fetching.value = true;
+    const res = await roleAndPermissionStore.fetchRoles(
+      userStore.activeBusiness?.id as number
+    );
+  } catch (error) {
+  } finally {
+    // fetching.value = false;
+  }
+};
+const getRolePermissions = async (event: any) => {
+  try {
+    form.validateSelectInput(event);
+    fetching.value = true;
+    const roleId = event.target.value;
+    const res = await roleAndPermissionStore.fetchRolePermissions(roleId, {
+      grouped: true,
+    });
+    groupedPermissions.value = res;
+  } catch (error) {
+  } finally {
+    fetching.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchRoles();
+});
 </script>
 <style lang="scss" scoped>
 .header {
@@ -190,5 +302,10 @@ h6 {
   color: #74787c;
   font-weight: 400;
   margin-top: 0px;
+}
+.add-new-item {
+  --color: #5260ff;
+  font-size: 12px;
+  font-weight: 400;
 }
 </style>

@@ -4,7 +4,9 @@
       <IonRouterOutlet></IonRouterOutlet>
 
       <AgentTabBar
-        v-if="userStore.activeRole?.isSalesAssociate() || userStore.activeRole?.isSalesManager()"
+        v-if="
+          userStore.activeRole?.isSalesAssociate()
+        "
       ></AgentTabBar>
       <section v-else>
         <ShopperTabBar v-if="userStore.isInShoppingMode()"></ShopperTabBar>
@@ -45,32 +47,8 @@ const cancel = () => {
 };
 
 const askForNotificationPermission = async () => {
-  await storage.init();
-
-  if (Capacitor.isNativePlatform()) {
-    const permission = await PushNotifications.checkPermissions();
-    if (permission.receive == "prompt") {
-      const notification_status = await storage.get("kola.notification-status");
-      if (notification_status != "cancel") {
-        await storage.remove("kola.notification-status");
-        if (userStore.user != null && !notification_status) {
-          showSheet.value = true;
-        }
-      }
-    }
-  }
-  if (!Capacitor.isNativePlatform()) {
-    const permission = Notification.permission;
-    if (permission == "default") {
-      const notification_status = await storage.get("kola.notification-status");
-      if (notification_status != "cancel") {
-        await storage.remove("kola.notification-status");
-        if (userStore.user != null && !notification_status) {
-          showSheet.value = true;
-        }
-      }
-    }
-  }
+  const res = await notificationStore.askForNotificationPermission();
+  if (res) showSheet.value = true;
 };
 
 onMounted(() => {

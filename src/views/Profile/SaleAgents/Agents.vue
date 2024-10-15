@@ -227,7 +227,7 @@ const fetchAgents = async (options = {}) => {
   fetching.value = false;
 };
 
-onMounted(() => {
+onIonViewDidEnter(() => {
   onSegmentChanged(
     new CustomEvent("load", { detail: { value: segment.value } })
   );

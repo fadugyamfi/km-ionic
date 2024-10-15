@@ -57,25 +57,6 @@
             }}</IonLabel>
           </IonItem>
         </IonCard>
-        <!-- <RecycleScroller
-          class="scroller"
-          :items="request?.agent_request_items"
-          :grid-items="2"
-          :item-size="240"
-          :item-secondary-size="cardWidth"
-          :item-class="'product-card-item'"
-          key-field="id"
-          v-slot="{ item }"
-        >
-          <ProductCard
-            :product="item.product"
-            :showDescription="false"
-            :showAddToCart="false"
-            :showAddToFavorites="false"
-            :showAddToSelected="false"
-            :action="'toggleSelect'"
-          ></ProductCard>
-        </RecycleScroller> -->
         <IonLabel class="ion-margin-horizontal fw-semibold font-medium"
           >Items</IonLabel
         >
@@ -116,20 +97,20 @@
       ></ConfirmModal>
     </ion-content>
     <ion-footer class="ion-no-border ion-padding">
-      <section class="ion-text-center" v-if="request?.approved_by">
-        <IonChip color="success" class="font-medium">
+      <section
+        class="ion-text-center ion-margin-bottom"
+        v-if="statusName && !loading"
+      >
+        <IonChip :color="statusColor" class="font-medium">
+          {{ statusName }}
           {{
-            `Approved on ${Filters.date(
-              request?.approved_at as string,
-              "short"
-            )}`
+            statusName == "Approved"
+              ? `on ${Filters.date(request?.approved_at as string, "short")}`
+              : ""
           }}
         </IonChip>
       </section>
-      <KolaYellowButton
-        @click="confirmCancel()"
-        v-if="!canCancel(request) && !loading"
-      >
+      <KolaYellowButton @click="confirmCancel()" v-if="canCancel && !loading">
         <IonSpinner v-if="requestStore?.cancelling" name="crescent"></IonSpinner
         ><IonText>{{ $t("profile.agent.cancelRequest") }}</IonText>
       </KolaYellowButton>
@@ -157,7 +138,7 @@ import {
   IonFooter,
   IonCardTitle,
   IonChip,
-  IonList
+  IonList,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { mapStores } from "pinia";
@@ -173,7 +154,8 @@ import KolaYellowButton from "@/components/KolaYellowButton.vue";
 import ConfirmModal from "@/components/modals/ConfirmModal.vue";
 import AgentRequest from "@/models/AgentRequest";
 import SaleItemView from "@/components/modules/sales/SaleItemView.vue";
-import NoResults from '@/components/layout/NoResults.vue';
+import NoResults from "@/components/layout/NoResults.vue";
+import { RequestStatus } from "@/stores/AgentsStore";
 
 export default defineComponent({
   data() {
@@ -210,13 +192,37 @@ export default defineComponent({
     IonChip,
     SaleItemView,
     NoResults,
-    IonList
+    IonList,
   },
 
   computed: {
     ...mapStores(useRequestStore, useUserStore, useToastStore),
     cardWidth() {
       return window.document.documentElement.clientWidth / 2;
+    },
+
+    statusId() {
+      return this.request?.agent_request_status?.id;
+    },
+
+    statusColor() {
+      return this.statusId == RequestStatus.PLACED
+        ? "danger"
+        : this.statusId == RequestStatus.APPROVED
+        ? "success"
+        : this.statusId == RequestStatus.DELIVERED
+        ? "tertiary"
+        : this.statusId == RequestStatus.REJECTED
+        ? "danger"
+        : "medium";
+    },
+    statusName() {
+      return this.statusId == RequestStatus.PLACED
+        ? this.$t("profile.agent.unapproved")
+        : this.request?.agent_request_status?.name;
+    },
+    canCancel() {
+      return this.statusId == RequestStatus.PLACED;
     },
   },
 
@@ -247,9 +253,6 @@ export default defineComponent({
       if (response !== null) {
         this.$router.replace("/agent/request");
       }
-    },
-    canCancel(request: AgentRequest | null) {
-      return request?.approved_by;
     },
   },
   ionViewDidEnter() {

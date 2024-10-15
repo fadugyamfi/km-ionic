@@ -118,6 +118,7 @@ export const useSaleStore = defineStore("sale", {
         total_sales_price: 0,
         total_discount: 0,
         description: "",
+        due_date: new Date().toISOString()
       });
     },
 
@@ -228,6 +229,7 @@ export const useSaleStore = defineStore("sale", {
         limit: 500,
         sort: "latest",
         stock_quantity_gt: 0,
+        refresh: true,
         ...options,
       };
 
