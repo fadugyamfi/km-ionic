@@ -18,7 +18,7 @@ const storage = new AppStorage();
 
 async function configureAxios() {
   axios.defaults.baseURL =
-    import.meta.env.VITE_API_BASE_URL || "https://api-staging.kola.market/api";
+    import.meta.env.VITE_API_BASE_URL || "https://api.kola.market/api";
   axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
   axios.defaults.headers.common["Content-Type"] = "application/json";
 

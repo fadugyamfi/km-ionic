@@ -1,6 +1,6 @@
 <template>
-  <Swiper
-    :slides-per-view="1.5"
+  <!-- <Swiper
+    :slides-per-view="2"
     v-for="(group, index) in groupedArray"
     :key="index"
     style="margin-bottom: 16px"
@@ -22,7 +22,32 @@
         ></ProductCard>
       </SwiperSlide>
     </template>
-  </Swiper>
+  </Swiper> -->
+  <RecycleScroller
+    class="scroller"
+    :items="products"
+    :grid-items="2"
+    :item-size="410"
+    :item-secondary-size="cardWidth"
+    :item-class="'product-card-item'"
+    key-field="id"
+    v-slot="{ item }"
+  >
+    <GuestProductCard
+      v-if="userStore.isInGuestMode()"
+      :product="item"
+      :showDescription="false"
+      :show-retail-price="showRetailPrices"
+    >
+    </GuestProductCard>
+
+    <ProductCard
+      v-else
+      :product="item"
+      :showDescription="false"
+      :show-retail-price="showRetailPrices"
+    ></ProductCard>
+  </RecycleScroller>
 </template>
 
 <style scoped>
@@ -73,6 +98,4 @@ const groupedArray = computed(() =>
     return result;
   }, [])
 );
-
-console.log(groupedArray);
 </script>

@@ -151,7 +151,7 @@
         @click.prevent=""
         v-model="selected"
       />
-      <div style="position: relative">
+      <div style="position: relative; background-color: #f9fafb">
         <Image
           class="product-image"
           :class="{ float: !imgLoaded }"
@@ -166,8 +166,11 @@
           {{ product?.weight_value
           }}{{ product?.weight_unit?.symbol || "g" }}</WeightChip
         >
-        <DiscountBadge v-if="product?.is_on_sale" class="discount-badge">
-          {{ product?.discountApplied }}%</DiscountBadge
+        <DiscountBadge
+          v-if="product?.is_on_sale && product?.discountApplied > 0"
+          class="discount-badge"
+        >
+          - {{ product?.discountApplied }}%</DiscountBadge
         >
       </div>
       <!-- <IonSkeletonText
@@ -188,7 +191,25 @@
             class="d-flex flex-column ion-align-items-center ion-justify-content-between"
           >
             <aside>
-              <section class="fw-medium main-price">
+              <section
+                class="fw-medium main-price"
+                v-if="product?.is_on_sale && product.sale_price > 0"
+              >
+                {{
+                  Filters.currency(
+                    Number(product?.sale_price),
+                    String(product?.currency?.symbol || "GHS")
+                  ).split(".")[0]
+                }}.<span class="main-sub-price">
+                  {{
+                    Filters.currency(
+                      Number(product?.sale_price),
+                      String(product?.currency?.symbol || "GHS")
+                    ).split(".")[1]
+                  }}
+                </span>
+              </section>
+              <section class="fw-medium main-price" v-else>
                 {{
                   Filters.currency(
                     Number(product?.product_price),
@@ -632,7 +653,6 @@ export default defineComponent({
 }
 
 // old product card design
-
 
 .product-card {
   width: 100%;

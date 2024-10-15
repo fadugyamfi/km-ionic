@@ -12,7 +12,7 @@
             <ProductsLoadingSkeletons></ProductsLoadingSkeletons>
         </section>
 
-        <Swiper v-else :slides-per-view="1.5">
+        <Swiper v-else :slides-per-view="2">
             <SwiperSlide v-for="product of products" :key="product.id">
                 <ProductCard :product="product" :show-description="false"></ProductCard>
             </SwiperSlide>
