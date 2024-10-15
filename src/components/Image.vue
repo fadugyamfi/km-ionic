@@ -53,7 +53,7 @@ export default defineComponent({
 
     computed: {
         url() {
-            let path = this.imageData || this.noImgSrc;
+            let path = this.src || this.noImgSrc;
 
             const urlParams = new URLSearchParams();
 
@@ -209,7 +209,7 @@ export default defineComponent({
     },
 
     mounted() {
-        this.imageData = this.src as string;
+        // this.imageData = this.src as string;
 
         // fetch and cache image behind the scenes
         // if( this.path && this.src && isPlatform("pwa") ) {
