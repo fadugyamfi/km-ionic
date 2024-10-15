@@ -246,12 +246,18 @@
             </section>
             <IonButton
               v-if="showAddToCart"
+              :disabled="isInCart"
               @click.prevent.stop="addToCart()"
               class="add-to-cart-button"
               expand="block"
             >
-              <IonIcon size="meduim" slot="icon-only" :icon="addOutline" />
-              Add to cart
+              <IonIcon
+                size="meduim"
+                slot="icon-only"
+                :icon="addOutline"
+                v-if="!isInCart"
+              />
+              {{ !isInCart ? "Add to cart" : "Added to cart" }}
             </IonButton>
           </section>
         </section>
@@ -299,6 +305,7 @@ import WeightChip from "../modules/products/WeightChip.vue";
 import DiscountBadge from "../modules/products/DiscountBadge.vue";
 import { mapStores } from "pinia";
 import { useUserStore } from "@/stores/UserStore";
+import { OrderItem } from "@/models/OrderItem";
 
 export type ProductSelection = {
   selected: Boolean;
@@ -397,7 +404,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapStores(useUserStore),
+    ...mapStores(useUserStore, useCartStore),
     imageURL: function () {
       if (
         this.product?.product_images &&
@@ -407,6 +414,17 @@ export default defineComponent({
       }
 
       return this.product.image;
+    },
+    isInCart() {
+      let order = this.cartStore?.orders?.find(
+        (order) => order?.businesses_id == this.product?.businesses_id
+      );
+
+      let orderItem = order?.order_items?.find(
+        (item: OrderItem) => item?.products_id == this.product?.id
+      );
+
+      return orderItem ? true : false;
     },
 
     imagePath: function () {
