@@ -50,7 +50,10 @@
         <IonLabel>Stock</IonLabel>
       </IonItem>
       <IonItem
-        v-if="!userStore.activeRole?.isOwner()"
+        v-if="
+          !userStore.activeRole?.isOwner() &&
+          !userStore.activeRole?.isSalesManager()
+        "
         :detail="true"
         :button="true"
         class="profile-item"
@@ -63,7 +66,10 @@
       </IonItem>
 
       <IonItem
-        v-if="userStore.activeRole?.isOwner()"
+        v-if="
+          userStore.activeRole?.isOwner() ||
+          userStore.activeRole?.isSalesManager()
+        "
         :detail="true"
         :button="true"
         class="profile-item"
@@ -203,9 +209,7 @@ export default defineComponent({
     ...mapStores(useUserStore),
 
     canToggleModes() {
-      return (
-        !this.userStore.activeRole?.isSalesAssociate()
-      );
+      return !this.userStore.activeRole?.isSalesAssociate();
     },
 
     hasAppliedToSell() {
