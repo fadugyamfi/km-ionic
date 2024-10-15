@@ -9,8 +9,8 @@ import { IonCard, IonCardContent } from "@ionic/vue";
 <style scoped lang="scss">
 ion-card {
   &.weight {
-    width: 100px !important;
-    min-width: 100px !important;
+    width: auto !important;
+    min-width: 80px !important;
     border-radius: 16px 0px 0px 16px;
     background: #f9fafb;
     border: none;
