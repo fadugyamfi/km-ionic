@@ -33,7 +33,7 @@
           <span class="product-name">
             {{ product?.product_name }}
 
-            <span v-if="product?.is_on_sale">
+            <span v-if="product?.is_on_sale && product?.discountApplied > 0">
               - {{ product?.discountApplied }}% {{ $t("general.discount") }}
             </span>
           </span>
@@ -44,7 +44,10 @@
         >
           <span
             class="price fw-semibold"
-            :class="{ strikethrough: product?.is_on_sale }"
+            :class="{
+              strikethrough:
+                product?.is_on_sale && product?.discountApplied > 0,
+            }"
           >
             {{
               Filters.currency(
@@ -57,7 +60,7 @@
           <IonText
             class="price fw-semibold"
             color="danger"
-            v-if="product?.is_on_sale"
+            v-if="product?.is_on_sale && product?.discountApplied > 0"
           >
             {{
               Filters.currency(
