@@ -313,16 +313,20 @@ export default defineComponent({
   },
 
   ionViewDidEnter() {
-    this.fetchProductDetails();
-  },
-
-  mounted() {
     setTimeout(() => {
       if (!this.product) {
         this.fetchProductDetails();
       }
     }, 100);
   },
+
+  // mounted() {
+  //   setTimeout(() => {
+  //     if (!this.product) {
+  //       this.fetchProductDetails();
+  //     }
+  //   }, 100);
+  // },
 });
 </script>
 
