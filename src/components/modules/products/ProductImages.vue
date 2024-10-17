@@ -7,6 +7,7 @@
             @click="viewImage(image?.image)"
             :src="image?.image"
             :path="image?.image_path"
+            object-fit="contain"
             w="400"
             h="400"
           ></Image>
@@ -18,6 +19,7 @@
             @click="viewImage(product?.image)"
             :src="product?.image"
             style="height: 200px"
+            object-fit="contain"
             w="400"
             h="400"
           ></Image>
@@ -85,7 +87,7 @@ export default defineComponent({
   },
   methods: {
     viewImage(url: any) {
-      if (!url || url.includes('placeholder')) return;
+      if (!url || url.includes("placeholder")) return;
       this.imageUrl = url;
       this.showPhoto = true;
     },
