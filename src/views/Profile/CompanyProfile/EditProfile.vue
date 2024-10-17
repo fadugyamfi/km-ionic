@@ -36,12 +36,15 @@
             @click="viewCoverPhoto(company?.cover_image)"
             id="view-cover-image"
           />
-          <ViewPhotoModal
-            :isOpen="showPhoto"
-            @dismiss="showPhoto = false"
-            :imageUrl="imageUrl"
-          />
-          <aside class="d-flex">
+          <IonButton
+            fill="clear"
+            size="small"
+            class=" ion-float-end"
+            @click="changeCoverPhoto"
+            style="text-transform: none"
+            >Change cover photo
+          </IonButton>
+          <div class="profile-avatar">
             <ProfileAvatar
               font-size="40px"
               custom-size="90px"
@@ -54,11 +57,11 @@
               size="small"
               @click="changePhoto"
               style="text-transform: none"
-              >Change cover & profile photo
+              >Change profile photo
             </IonButton>
-          </aside>
+          </div>
         </section>
-        <form class="ion-padding" v-show="!fetching">
+        <form class="ion-padding" style="margin-top: 60px;" v-show="!fetching">
           <IonInput
             class="kola-input ion-margin-bottom"
             :class="{ 'ion-invalid ion-touched': form.errors.name }"
@@ -191,6 +194,12 @@
               ></IonImg>
               <p class="font-medium">Tap to take photo of ID Card</p>
               <!-- <p class="font-medium">SVG, PNG, JPG or GIF (max. 2048x1080px)</p> -->
+
+              <ViewPhotoModal
+                :isOpen="showPhoto"
+                @dismiss="showPhoto = false"
+                :imageUrl="imageUrl"
+              />
             </IonCardContent>
           </IonCard>
 
@@ -340,6 +349,10 @@ const changePhoto = () => {
   Object.assign(userStore.companyForm, form.fields);
   router.push("/profile/company/change-photo");
 };
+const changeCoverPhoto = () => {
+  Object.assign(userStore.companyForm, form.fields);
+  router.push("/profile/company/change-cover-photo");
+};
 
 const fetchCompany = async () => {
   fetching.value = true;
@@ -370,12 +383,12 @@ const updateProfile = async () => {
   try {
     toastStore.blockUI("Hold On As We Update Company Profile");
 
-    await businessStore.updateBusiness(
+    const res = await businessStore.updateBusiness(
       Number(userStore.activeBusiness?.id),
       form.fields
     );
 
-    if (company.value) {
+    if (res) {
       toastStore.unblockUI();
       toastStore.showSuccess(
         "Company profile has been updated successfully",
@@ -456,11 +469,13 @@ h6 {
     max-height: 200px;
   }
 
-  aside {
+  .profile-avatar {
     position: absolute;
-    bottom: -25%;
-    left: 5%;
+    bottom: -45%;
+    left: 2%;
     align-items: center;
+    display: flex;
+    flex-direction: column;
 
     ion-avatar {
       border-radius: 50%;
@@ -477,7 +492,7 @@ h6 {
       }
     }
     ion-button {
-      margin-top: 30px;
+      margin-bottom: 30px;
       --color: #666eed;
       font-weight: 500;
     }

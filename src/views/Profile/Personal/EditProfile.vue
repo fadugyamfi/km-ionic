@@ -234,6 +234,7 @@ onMounted(() => {
     name: user.value?.name,
     email: user.value?.email,
     phone_number: user.value?.phone_number,
+    photo: user.value?.photo || user?.value?.photo_url
   };
 });
 </script>
