@@ -3,9 +3,15 @@
     <IonIcon
       v-if="!product?.favorited"
       slot="icon-only"
-      :icon="heartOutline"
+      :icon="heart"
+      style="color: #6d7280"
     ></IonIcon>
-    <IonIcon v-else slot="icon-only" :icon="heart"></IonIcon>
+    <IonIcon
+      v-else
+      slot="icon-only"
+      style="color: #ef4444"
+      :icon="heart"
+    ></IonIcon>
     <LoginRequiredSheet
       :isOpen="showFilterSheet"
       @didDismiss="showFilterSheet = false"

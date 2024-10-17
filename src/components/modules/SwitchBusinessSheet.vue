@@ -111,6 +111,7 @@ export default defineComponent({
         }
         if (isPreviousSalesAssociate) {
           if (!this.userStore.activeRole?.isSalesAssociate()) {
+            this.userStore.appMode = 'vendor'
             this.$router.replace("/vendor/home");
           }
         }

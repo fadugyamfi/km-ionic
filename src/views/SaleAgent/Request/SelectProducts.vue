@@ -27,7 +27,7 @@
               :placeholder="$t('vendor.sales.searchProducts') + '...'"
               class="search-input"
               @keyup.enter="onSearch($event)"
-              @ion-change="onSearch($event)"
+              @ion-clear="onClear"
             ></IonSearchbar>
           </IonToolbar>
         </IonHeader>
@@ -54,7 +54,14 @@
     </section>
 
     <IonContent>
-      <div class="ion-text-center" v-if="fetching">
+      <IonRefresher
+        ref="refresher"
+        slot="fixed"
+        @ionRefresh="handleRefresh($event)"
+      >
+        <IonRefresherContent pullingIcon="crescent"></IonRefresherContent>
+      </IonRefresher>
+      <div class="ion-text-center" v-if="fetching && !refreshing">
         <IonSpinner name="crescent"></IonSpinner>
       </div>
 
@@ -118,14 +125,17 @@ import {
   IonList,
   IonListHeader,
   IonPage,
+  IonRefresher,
+  IonRefresherContent,
   IonRow,
   IonSearchbar,
   IonSpinner,
   IonText,
   IonTitle,
   IonToolbar,
+  RefresherCustomEvent,
 } from "@ionic/vue";
-import { arrowBack, search } from "ionicons/icons";
+import { arrowBack, refresh, search } from "ionicons/icons";
 import { defineComponent } from "vue";
 import { useSaleStore } from "@/stores/SaleStore";
 import { mapStores } from "pinia";
@@ -150,6 +160,7 @@ export default defineComponent({
       arrowBack,
       searchEnabled: false,
       fetching: false,
+      refreshing: false,
       products: [] as Product[],
     };
   },
@@ -184,6 +195,8 @@ export default defineComponent({
     IonSpinner,
     NoResults,
     RecycleScroller,
+    IonRefresher,
+    IonRefresherContent,
   },
 
   computed: {
@@ -227,6 +240,13 @@ export default defineComponent({
       }
     },
 
+    async handleRefresh(event: RefresherCustomEvent) {
+      this.refreshing = true;
+      await this.fetchProducts({ refresh: true });
+      event.target.complete();
+      this.refreshing = false;
+    },
+
     isSelected(product: Product): boolean {
       return this.requestStore.isProductSelected(product);
     },
@@ -261,6 +281,13 @@ export default defineComponent({
     onSearch(event: Event) {
       this.fetchProducts({
         product_name_has: (event.target as HTMLIonSearchbarElement).value,
+        refresh: true,
+      });
+    },
+    onClear() {
+      this.fetchProducts({
+        product_name_has: "",
+        refresh: true,
       });
     },
   },

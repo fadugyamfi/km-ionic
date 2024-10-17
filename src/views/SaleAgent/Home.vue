@@ -37,7 +37,7 @@
             customSize="32px"
           ></ProfileAvatar>
         </section>
-        <IonLabel>{{ userStore.activeBusiness?.name }}</IonLabel>
+        <IonLabel class="team">{{ userStore.activeBusiness?.name }}</IonLabel>
         <IonButton
           slot="end"
           fill="clear"
@@ -359,7 +359,9 @@ ion-segment {
     padding-bottom: 0.4em;
   }
 }
-
+.team {
+  font-size: 0.9em !important;
+}
 .sale-filter {
   --background: #fff;
   --border-width: 1px;

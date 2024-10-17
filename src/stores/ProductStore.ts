@@ -10,6 +10,7 @@ import AppStorage from "./AppStorage";
 const storage = new AppStorage();
 const KOLA_TRENDING = "kola.trending";
 const RECENTLY_VIEWED = "kola.recently-viewed";
+const KOLA_INVENTORY = "kola.sales.inventory";
 const SEARCH_TERM = "kola.search-term";
 
 export const useProductStore = defineStore("product", {
@@ -40,11 +41,11 @@ export const useProductStore = defineStore("product", {
       return this.searchTerm;
     },
 
-    async fetchSearchedProducts(limit = 20): Promise<Product[]> {
+    async fetchSearchedProducts(limit = 5000): Promise<Product[]> {
       const userStore = useUserStore();
       const params = {
         product_name_has: await this.getSearchTerm(),
-        approved_only: 1,
+      //  approved_only: 1,
         limit,
       };
 
@@ -85,6 +86,9 @@ export const useProductStore = defineStore("product", {
         if (this.products.length && !this.nextLink && !params?.refresh) {
           return this.products;
         }
+        const userStore = useUserStore();
+        const CACHE_KEY = `${KOLA_INVENTORY}.${userStore.activeBusiness?.id}`;
+
         const link = this.nextLink || "/v2/products";
         const response = await axios.get(link, { params });
         if (response) {
@@ -94,6 +98,7 @@ export const useProductStore = defineStore("product", {
             ...this.products,
             ...this.mapResponseToProducts(response),
           ];
+          storage.set(CACHE_KEY, this.products, 1, "days");
         }
 
         return this.products;

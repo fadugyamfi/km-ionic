@@ -19,7 +19,6 @@
 
 <script setup lang="ts">
 import KolaYellowButton from "@/components/KolaYellowButton.vue";
-import { IonText, IonFooter } from "@ionic/vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();

@@ -4,17 +4,22 @@
       <IonHeader class="inner-header">
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/guest/home" :icon="close"></IonBackButton>
+            <IonBackButton
+              defaultHref="/guest/home"
+              :icon="close"
+            ></IonBackButton>
           </IonButtons>
 
-          <IonTitle >
+          <IonTitle>
             {{ $t("shopper.productDetails.productDetails") }}
           </IonTitle>
 
           <IonButtons slot="end">
             <FavoriteButton :product="product || undefined"></FavoriteButton>
 
-            <CartStatusButton :product="product || undefined"></CartStatusButton>
+            <CartStatusButton
+              :product="product || undefined"
+            ></CartStatusButton>
 
             <ShareButton :title="product?.product_name || ''"></ShareButton>
           </IonButtons>
@@ -30,37 +35,52 @@
           <span class="product-name">
             {{ product?.product_name }}
 
-            <span v-if="product?.is_on_sale">
+            <span v-if="product?.is_on_sale && product?.discountApplied > 0">
               - {{ product?.discountApplied }}% {{ $t("general.discount") }}
             </span>
           </span>
         </section>
 
-        <section class="section d-flex ion-align-items-start ion-justify-content-between">
-          <span class="price fw-semibold" :class="{ strikethrough: product.is_on_sale }">
+        <section
+          class="section d-flex ion-align-items-start ion-justify-content-between"
+        >
+          <span
+            class="price fw-semibold"
+            :class="{
+              strikethrough: product.is_on_sale && product?.discountApplied > 0,
+            }"
+          >
             {{
               Filters.currency(
                 Number(product?.product_price),
-                String(product?.currency?.symbol || 'GHS')
+                String(product?.currency?.symbol || "GHS")
               )
             }}
           </span>
 
-          <IonText class="price fw-semibold" color="danger" v-if="product.is_on_sale">
+          <IonText
+            class="price fw-semibold"
+            color="danger"
+            v-if="product.is_on_sale && product?.discountApplied > 0"
+          >
             {{
               Filters.currency(
                 Number(product?.sale_price),
-                String(product?.currency?.symbol || 'GHS')
+                String(product?.currency?.symbol || "GHS")
               )
             }}
           </IonText>
 
-          <IonText class="price" color="medium" v-if="!product.preferRetailPrice && product?.retail_price as number > 0">
+          <IonText
+            class="price"
+            color="medium"
+            v-if="!product.preferRetailPrice && product?.retail_price as number > 0"
+          >
             MSRP:
             {{
               Filters.currency(
                 Number(product?.retail_price),
-                String(product?.currency?.symbol || 'GHS')
+                String(product?.currency?.symbol || "GHS")
               )
             }}
           </IonText>
@@ -68,8 +88,12 @@
 
         <section class="section business-section">
           <section class="d-flex ion-align-items-center">
-            <ProfileAvatar :image="product?.business?.logo" class="ion-no-margin" :username="product?.business?.name"
-                           customSize="30px"></ProfileAvatar>
+            <ProfileAvatar
+              :image="product?.business?.logo"
+              class="ion-no-margin"
+              :username="product?.business?.name"
+              customSize="30px"
+            ></ProfileAvatar>
 
             <IonLabel>{{ product?.business?.name }}</IonLabel>
           </section>
@@ -85,22 +109,37 @@
         </section>
 
         <section class="section min-order-section">
-          <BusinessMinimumOrder :business="product?.business"></BusinessMinimumOrder>
+          <BusinessMinimumOrder
+            :business="product?.business"
+          ></BusinessMinimumOrder>
         </section>
 
-        <section v-if="!hideCartFunctions" class="section product-quantity-selection">
-          <ProductQuantitySelector :hide-product-unit-selector="true" @change="updateQuantity($event)"></ProductQuantitySelector>
+        <section
+          v-if="!hideCartFunctions"
+          class="section product-quantity-selection"
+        >
+          <ProductQuantitySelector
+            :hide-product-unit-selector="true"
+            @change="updateQuantity($event)"
+          ></ProductQuantitySelector>
         </section>
 
         <section class="section tags">
           <ProductTags :product="product"></ProductTags>
         </section>
       </main>
-      <LoginRequiredSheet :isOpen="showFilterSheet" @didDismiss="showFilterSheet = false">
+      <LoginRequiredSheet
+        :isOpen="showFilterSheet"
+        @didDismiss="showFilterSheet = false"
+      >
       </LoginRequiredSheet>
     </IonContent>
 
-    <IonSkeletonText v-if="!product" style="height: 300px" :animated="true"></IonSkeletonText>
+    <IonSkeletonText
+      v-if="!product"
+      style="height: 300px"
+      :animated="true"
+    ></IonSkeletonText>
 
     <IonFooter class="ion-padding ion-no-border" v-if="!hideCartFunctions">
       <KolaYellowButton @click="buyNow()" class="ion-margin-bottom">
@@ -189,7 +228,7 @@ export default defineComponent({
     LoginRequiredSheet,
     ProfileAvatar,
     ProductImages,
-    ShareButton
+    ShareButton,
   },
 
   data() {
@@ -235,7 +274,7 @@ export default defineComponent({
       const productId = +this.$route.params.id;
 
       try {
-        if( this.productStore.selectedProduct ) {
+        if (this.productStore.selectedProduct) {
           this.product = this.productStore.selectedProduct;
         } else {
           this.product = await this.productStore.fetchGuestProduct(productId);

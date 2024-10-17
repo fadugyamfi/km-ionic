@@ -47,6 +47,10 @@ export default class Product {
       data.currency = data._currency;
     }
 
+    if(data.is_on_sale) {
+      data.preferRetailPrice = true
+    }
+
     Object.assign(this, data);
   }
 
