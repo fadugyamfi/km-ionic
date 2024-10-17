@@ -49,7 +49,10 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <FooterNavigation @continue="updateProfile()" continueText="Save"></FooterNavigation>
+      <FooterNavigation
+        @continue="updateProfile()"
+        continueText="Save"
+      ></FooterNavigation>
     </IonFooter>
   </IonPage>
 </template>
@@ -96,7 +99,7 @@ export default defineComponent({
     HeaderArea,
     IonImg,
     IonButton,
-    KolaYellowButton
+    KolaYellowButton,
   },
 
   data() {
@@ -107,7 +110,10 @@ export default defineComponent({
 
   mounted() {
     // this.businessStore.loadCachedRegistrationInfo();
-    this.photo = { webviewPath: this.userStore.companyForm?.cover_image } as UserPhoto;
+    this.fetchCompany();
+    this.photo = {
+      webviewPath: this.userStore.companyForm?.cover_image,
+    } as UserPhoto;
   },
 
   computed: {
@@ -115,6 +121,23 @@ export default defineComponent({
   },
 
   methods: {
+    fetchCompany() {
+      Object.assign(this.userStore.companyForm, {
+        name: this.userStore.activeBusiness?.name,
+        location: this.userStore.activeBusiness?.location,
+        phone_number: this.userStore.activeBusiness?.phone_number,
+        email: this.userStore.activeBusiness?.email,
+        business_types_id: 1,
+        id_card_number: this.userStore.activeBusiness?.id_card_number,
+        id_card_image: this.userStore.activeBusiness?.id_card_image,
+        country_id: this.userStore.activeBusiness?.country_id,
+        region_id: this.userStore.activeBusiness?.region_id,
+        city: this.userStore.activeBusiness?.city,
+        tax_number: this.userStore.activeBusiness?.tax_number,
+        cover_image: this.userStore.activeBusiness?.cover_image,
+        logo: this.userStore.activeBusiness?.logo,
+      });
+    },
     async pickImages() {
       const { takePhoto, photos, pickImages } = usePhotoGallery();
 
@@ -123,7 +146,8 @@ export default defineComponent({
 
         this.photo = photos.value ? photos.value[0] : null;
         if (this.photo) {
-          this.userStore.companyForm.cover_image = this.photo.base64Data as string;
+          this.userStore.companyForm.cover_image = this.photo
+            .base64Data as string;
         }
       } catch (e) {
         console.log(e);
@@ -138,7 +162,8 @@ export default defineComponent({
 
         this.photo = photos.value ? photos.value[0] : null;
         if (this.photo) {
-          this.userStore.companyForm.cover_image = this.photo.base64Data as string;
+          this.userStore.companyForm.cover_image = this.photo
+            .base64Data as string;
         }
       } catch (e) {
         console.log(e);
@@ -154,7 +179,9 @@ export default defineComponent({
         );
         if (response) {
           this.toastStore.unblockUI();
-          this.toastStore.showSuccess("Company profile has been updated successfully");
+          this.toastStore.showSuccess(
+            "Company profile has been updated successfully"
+          );
           setTimeout(() => {
             this.$router.push("/profile/company/edit-profile");
           }, 500);
