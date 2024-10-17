@@ -136,7 +136,7 @@
   </section>
   <section class="new-product-card" v-else>
     <ion-card @click="doAction()" class="ion-activatable ripple-parent">
-      <IonRippleEffect></IonRippleEffect>
+      <IonRippleEffect style="z-index: 999"></IonRippleEffect>
 
       <FavoriteButton
         v-if="showAddToFavorites"

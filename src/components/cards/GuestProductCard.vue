@@ -1,7 +1,7 @@
 <template>
   <section class="product-card">
     <ion-card @click="doAction()" class="ion-activatable">
-      <IonRippleEffect></IonRippleEffect>
+      <IonRippleEffect style="z-index: 999"></IonRippleEffect>
 
       <FavoriteButton
         v-if="showAddToFavorites"
