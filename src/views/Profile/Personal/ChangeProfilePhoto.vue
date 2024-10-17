@@ -151,6 +151,9 @@ export default defineComponent({
     async updateProfile() {
       try {
         this.toastStore.blockUI("Hold On As We Update Your Profile");
+        if (!this.userStore.userForm.photo.split(",")[0].includes("base64")) {
+          delete this.userStore.userForm.photo;
+        }
         const response = await this.userStore.updateUserInfo();
         if (response) {
           this.toastStore.unblockUI();

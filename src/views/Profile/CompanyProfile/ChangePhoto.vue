@@ -170,6 +170,10 @@ export default defineComponent({
     async updateProfile() {
       try {
         this.toastStore.blockUI("Hold On As We Update Company Profile");
+        delete this.userStore.companyForm.cover_image;
+        if (!this.userStore.companyForm.logo.split(",")[0].includes("base64")) {
+          delete this.userStore.companyForm.logo;
+        }
         const response = await this.businessStore.updateBusiness(
           Number(this.userStore.activeBusiness?.id),
           this.userStore.companyForm
