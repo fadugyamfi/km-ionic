@@ -107,7 +107,7 @@ export default defineComponent({
           return this.quantity >= this.max * this.groupQuantity;
         }
       }
-      return false
+      return false;
     },
   },
 
@@ -167,21 +167,27 @@ ion-segment {
 }
 
 .quantity-selector {
-  background-color: #f5f5f5;
-  border: none;
-  border-radius: 12px;
+  width: auto !important;
+  min-width: 128px !important;
+  border: 1px solid #f1f1f1;
+  border-radius: 4px;
   margin: 10px 0px;
-  padding: 5px 10px;
+  height: 40px !important;
 
   ion-input {
     text-align: center;
     font-size: 16px;
     font-weight: 500;
-    width: 30%;
-    min-height: 32px !important;
-    height: 32px;
-    border-radius: 8px;
-    margin: 0px 15px;
+    // width: 30%;
+    width: 48px;
+    min-height: 40px !important;
+    margin: 0px;
+    --border-color: #f1f1f1;
+    --border-radius: 0px;
+    --highlight-color-focused: #ffd68f;
+  }
+  ion-button {
+    padding: 8px;
   }
 }
 </style>

@@ -19,11 +19,24 @@
     </section>
 
     <ion-content>
-      <section v-if="fetching" class="ion-text-center d-flex ion-justify-content-center ion-padding">
+      <IonRefresher
+        ref="refresher"
+        slot="fixed"
+        @ionRefresh="handleRefresh($event)"
+      >
+        <IonRefresherContent pullingIcon="crescent"></IonRefresherContent>
+      </IonRefresher>
+      <section
+        v-if="fetching"
+        class="ion-text-center d-flex ion-justify-content-center ion-padding"
+      >
         <IonSpinner name="crescent"></IonSpinner>
       </section>
 
-      <ProductGridList :products="products" :show-retail-prices="true" ></ProductGridList>
+      <ProductGridList
+        :products="products"
+        :show-retail-prices="true"
+      ></ProductGridList>
     </ion-content>
   </ion-page>
 </template>
@@ -39,6 +52,9 @@ import {
   IonTitle,
   IonSpinner,
   onIonViewDidEnter,
+  RefresherCustomEvent,
+  IonRefresher,
+  IonRefresherContent,
 } from "@ionic/vue";
 import NotificationButton from "@/components/notifications/NotificationButton.vue";
 import Product from "@/models/Product";
@@ -56,36 +72,52 @@ const route = useRoute();
 const promotion = ref<Promotion | null>();
 const promotionItems = ref<PromotionItem[] | null>();
 const fetching = ref(false);
+const refreshing = ref(false);
 const storage = new AppStorage();
 const cacheKey = "kola.promotion-items";
 
 const products = computed(() => {
-  return promotionItems.value?.filter((item: PromotionItem) => item.product != null)
+  return promotionItems.value
+    ?.filter((item: PromotionItem) => item.product != null)
     .map((item: PromotionItem) => item.product as Product);
-})
+});
 
 const loadPromotionAndItems = async () => {
   fetching.value = true;
 
   let promotionIdOrSlug = route.params.idOrSlug;
 
-  promotion.value = await promotionStore.getGuestPromotion(promotionIdOrSlug as string);
+  promotion.value = await promotionStore.getGuestPromotion(
+    promotionIdOrSlug as string
+  );
   promotionItems.value = promotion.value?.promotion_items;
 
-  if( !promotion.value ) {
+  if (!promotion.value) {
     fetching.value = false;
     return;
   }
 
   setTimeout(async () => {
     try {
-      promotionItems.value = await promotionStore.getGuestPromotionItems(promotion.value?.id as number);
+      promotionItems.value = await promotionStore.getGuestPromotionItems(
+        promotion.value?.id as number,
+        refreshing.value
+      );
     } catch (error) {
       console.log(error);
     } finally {
       fetching.value = false;
+      refreshing.value = false
     }
-  }, 100)
+  }, 100);
+};
+
+const handleRefresh = async (event: RefresherCustomEvent) => {
+  refreshing.value = true;
+  fetching.value = true;
+  await loadPromotionAndItems();
+  fetching.value = false;
+  event.target.complete();
 };
 
 onIonViewDidEnter(() => loadPromotionAndItems());

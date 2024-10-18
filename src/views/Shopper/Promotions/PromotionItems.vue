@@ -20,6 +20,13 @@
     </section>
 
     <ion-content>
+      <IonRefresher
+        ref="refresher"
+        slot="fixed"
+        @ionRefresh="handleRefresh($event)"
+      >
+        <IonRefresherContent pullingIcon="crescent"></IonRefresherContent>
+      </IonRefresher>
       <section
         v-if="fetching"
         class="ion-text-center d-flex ion-justify-content-center ion-padding"
@@ -46,6 +53,9 @@ import {
   IonTitle,
   IonSpinner,
   onIonViewDidEnter,
+  RefresherCustomEvent,
+  IonRefresher,
+  IonRefresherContent,
 } from "@ionic/vue";
 import NotificationButton from "@/components/notifications/NotificationButton.vue";
 import Product from "@/models/Product";
@@ -64,6 +74,7 @@ const route = useRoute();
 const promotion = ref<Promotion | null>();
 const promotionItems = ref<PromotionItem[] | null>();
 const fetching = ref(false);
+const refreshing = ref(false);
 
 const products = computed(() => {
   return promotionItems.value
@@ -71,7 +82,7 @@ const products = computed(() => {
     .map((item: PromotionItem) => item.product as Product);
 });
 
-onIonViewDidEnter(async () => {
+const loadPromotionAndItems = async () => {
   fetching.value = true;
 
   let promotionIdOrSlug: string | string[] = route.params.idOrSlug;
@@ -89,13 +100,25 @@ onIonViewDidEnter(async () => {
   setTimeout(async () => {
     try {
       promotionItems.value = await promotionStore.getPromotionItems(
-        promotion.value?.id as number
+        promotion.value?.id as number,
+        refreshing.value
       );
     } catch (error) {
       console.log(error);
     } finally {
       fetching.value = false;
+      refreshing.value = false;
     }
   }, 100);
-});
+};
+
+const handleRefresh = async (event: RefresherCustomEvent) => {
+  refreshing.value = true;
+  fetching.value = true;
+  await loadPromotionAndItems();
+  fetching.value = false;
+  event.target.complete();
+};
+
+onIonViewDidEnter(() => loadPromotionAndItems());
 </script>

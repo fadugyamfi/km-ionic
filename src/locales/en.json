@@ -181,7 +181,8 @@
     "productDetails": {
       "productDetails": "Product Details",
       "buyNow": "Buy Now",
-      "addToCart": "Add To Cart"
+      "addToCart": "Add To Cart",
+      "addedToCart": "Added To Cart"
     },
     "orders": {
       "orderDetails": "Order Details",
