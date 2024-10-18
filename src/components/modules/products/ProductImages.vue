@@ -96,8 +96,10 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .products-slider {
-  height: 250px;
+  height: 320px;
   margin-bottom: 2em;
+  background: #F9FAFB;
+  border-radius: 16px;
 
   ion-card {
     width: 100%;

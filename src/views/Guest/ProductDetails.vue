@@ -20,7 +20,6 @@
             <CartStatusButton
               :product="product || undefined"
             ></CartStatusButton>
-
             <ShareButton :title="product?.product_name || ''"></ShareButton>
           </IonButtons>
         </IonToolbar>
@@ -29,25 +28,59 @@
 
     <IonContent class="ion-padding" v-if="product">
       <ProductImages :product="product" />
-
       <main>
+        <section class="section business-section ion-margin-top">
+          <section class="d-flex ion-align-items-center">
+            <ion-icon color="medium" :icon="briefcase"></ion-icon>
+
+            <IonLabel>{{ product?.business?.name }}</IonLabel>
+          </section>
+          <!-- <BusinessRatingAndReviews
+            :business="product?.business"
+          ></BusinessRatingAndReviews> -->
+        </section>
         <section class="section title-section d-flex ion-align-items-start">
           <span class="product-name">
             {{ product?.product_name }}
-
-            <span v-if="product?.is_on_sale && product?.discountApplied > 0">
-              - {{ product?.discountApplied }}% {{ $t("general.discount") }}
-            </span>
           </span>
         </section>
-
         <section
-          class="section d-flex ion-align-items-start ion-justify-content-between"
+          class="section product-weight d-flex"
+          v-if="product?.weight_value"
         >
+          <ion-card class="weight">
+            <ion-card-content>
+              {{ product?.weight_value
+              }}{{ product?.weight_unit?.symbol || "g" }}
+            </ion-card-content>
+          </ion-card>
+        </section>
+
+        <section class="section d-flex" style="gap: 8px">
+          <IonText
+            class="price"
+            color="danger"
+            v-if="product?.is_on_sale && product?.discountApplied > 0"
+          >
+            {{
+              Filters.currency(
+                Number(product?.sale_price),
+                String(product?.currency?.symbol || "GHS")
+              ).split(".")[0]
+            }}.<span class="main-sub-price">
+              {{
+                Filters.currency(
+                  Number(product?.sale_price),
+                  String(product?.currency?.symbol || "GHS")
+                ).split(".")[1]
+              }}
+            </span>
+          </IonText>
           <span
-            class="price fw-semibold"
+            class="price"
             :class="{
-              strikethrough: product.is_on_sale && product?.discountApplied > 0,
+              strikethrough:
+                product?.is_on_sale && product?.discountApplied > 0,
             }"
           >
             {{
@@ -57,25 +90,15 @@
               )
             }}
           </span>
-
-          <IonText
-            class="price fw-semibold"
-            color="danger"
-            v-if="product.is_on_sale && product?.discountApplied > 0"
-          >
-            {{
-              Filters.currency(
-                Number(product?.sale_price),
-                String(product?.currency?.symbol || "GHS")
-              )
-            }}
-          </IonText>
-
-          <IonText
-            class="price"
-            color="medium"
-            v-if="!product.preferRetailPrice && product?.retail_price as number > 0"
-          >
+          <ion-badge v-if="product?.is_on_sale && product?.discountApplied > 0">
+            {{ product?.discountApplied }}% off
+          </ion-badge>
+        </section>
+        <section
+          class="section msrp-price"
+          v-if="!product.preferRetailPrice && product?.retail_price as number > 0"
+        >
+          <IonText color="medium">
             MSRP:
             {{
               Filters.currency(
@@ -85,26 +108,17 @@
             }}
           </IonText>
         </section>
-
-        <section class="section business-section">
-          <section class="d-flex ion-align-items-center">
-            <ProfileAvatar
-              :image="product?.business?.logo"
-              class="ion-no-margin"
-              :username="product?.business?.name"
-              customSize="30px"
-            ></ProfileAvatar>
-
-            <IonLabel>{{ product?.business?.name }}</IonLabel>
-          </section>
-          <!-- <BusinessRatingAndReviews
-            :business="product?.business"
-          ></BusinessRatingAndReviews> -->
+        <section
+          v-if="product?.product_description"
+          class="section description-section"
+        >
+          <IonText>
+            {{ product.product_description || "No Description Available" }}
+          </IonText>
         </section>
-
-        <section class="section description-section">
-          <IonText color="medium">
-            {{ product?.product_description || "No Description Available" }}
+        <section class="section delivery-section">
+          <IonText>
+            Delivery: Shipping within Ghana <span>(GHS 10 – 15)</span>
           </IonText>
         </section>
 
@@ -114,18 +128,18 @@
           ></BusinessMinimumOrder>
         </section>
 
+        <section class="section tags">
+          <ProductTags :product="product"></ProductTags>
+        </section>
         <section
           v-if="!hideCartFunctions"
           class="section product-quantity-selection"
         >
+          Qty
           <ProductQuantitySelector
             :hide-product-unit-selector="true"
             @change="updateQuantity($event)"
-          ></ProductQuantitySelector>
-        </section>
-
-        <section class="section tags">
-          <ProductTags :product="product"></ProductTags>
+          />
         </section>
       </main>
       <LoginRequiredSheet
@@ -142,12 +156,25 @@
     ></IonSkeletonText>
 
     <IonFooter class="ion-padding ion-no-border" v-if="!hideCartFunctions">
-      <KolaYellowButton @click="buyNow()" class="ion-margin-bottom">
+      <KolaButton
+        class="ion-margin-bottom"
+        :disabled="cartHasProduct"
+        @click="buyNow()"
+      >
         {{ $t("shopper.productDetails.buyNow") }}
-      </KolaYellowButton>
-      <KolaWhiteButton @click="addToCart()" :disabled="cartHasProduct">
-        {{ $t("shopper.productDetails.addToCart") }}
-      </KolaWhiteButton>
+      </KolaButton>
+      <KolaButton
+        color="light-blue"
+        @click="addToCart()"
+        :disabled="cartHasProduct"
+      >
+        <IonIcon size="meduim" :icon="addOutline" v-if="!cartHasProduct" />
+        {{
+          !cartHasProduct
+            ? $t("shopper.productDetails.addToCart")
+            : $t("shopper.productDetails.addedToCart")
+        }}
+      </KolaButton>
     </IonFooter>
   </IonPage>
 </template>
@@ -168,6 +195,9 @@ import {
   IonToolbar,
   IonLabel,
   IonText,
+  IonCard,
+  IonCardContent,
+  IonBadge,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 
@@ -178,11 +208,13 @@ import {
   cart,
   cartOutline,
   shareOutline,
+  briefcase,
+  addOutline,
 } from "ionicons/icons";
 import Product from "@/models/Product";
 import { mapStores } from "pinia";
 import { useProductStore } from "@/stores/ProductStore";
-import KolaYellowButton from "@/components/KolaYellowButton.vue";
+import KolaButton from "@/components/buttons/KolaButton.vue";
 import KolaWhiteButton from "@/components/KolaWhiteButton.vue";
 import Image from "@/components/Image.vue";
 import BusinessRatingAndReviews from "@/components/modules/business/BusinessRatingAndReviews.vue";
@@ -207,12 +239,15 @@ export default defineComponent({
     IonToolbar,
     IonButtons,
     IonBackButton,
+    IonCard,
+    IonCardContent,
+    IonBadge,
     IonTitle,
     IonButton,
     IonIcon,
     IonContent,
     IonFooter,
-    KolaYellowButton,
+    KolaButton,
     KolaWhiteButton,
     Image,
     IonAvatar,
@@ -234,9 +269,11 @@ export default defineComponent({
   data() {
     return {
       close,
+      briefcase,
       heartOutline,
       cartOutline,
       shareOutline,
+      addOutline,
       cart,
       heart,
       product: null as Product | null,
@@ -318,41 +355,124 @@ main {
   border-radius: 10px;
   background-color: white;
   margin-top: 15px;
-  padding: 10px;
+  padding: 10px 0px;
   color: #111;
 
   .section {
     padding: 4px 5px;
-    font-size: 0.8em;
-  }
-
-  .title-section {
-    font-weight: 500;
-    font-size: 1em;
+    font-size: 0.95em;
 
     .price {
       text-align: right;
       min-width: 80px;
+
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 700;
+      color: #b87c16;
+
+      span.main-sub-price {
+        font-size: 16px;
+        line-height: 32px;
+        font-weight: 600;
+      }
+
+      &.strikethrough {
+        text-decoration: line-through;
+        font-size: 16px;
+        font-weight: 700;
+        color: #f5aa29;
+      }
     }
+    &.msrp-price {
+      ion-text {
+        font-size: 14px;
+        font-weight: 700;
+        color: #6d7280;
+      }
+    }
+    ion-badge {
+      --background: #f1f1f1;
+      --color: #6d7280;
+      --padding-end: 8px;
+      --padding-top: 4px;
+      --padding-bottom: 4px;
+      --padding-start: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      height: 28px;
+    }
+  }
+  .title-section {
+    font-weight: 500;
+    font-size: 1em;
   }
 
   .business-section {
-    margin-left: -3px;
-
-    ion-avatar {
-      height: 24px;
-      width: 24px;
-      margin-right: 5px;
+    ion-icon {
+      margin-right: 8px;
     }
-
-    .rating-and-reviews {
-      padding: 10px 5px;
+    ion-label {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      color: #6d7280;
     }
+  }
+
+  .product-weight {
+    ion-card {
+      margin: 0px;
+      &.weight {
+        width: auto !important;
+        min-width: 40px !important;
+        border-radius: 16px;
+        background: #faf5ff;
+        border: none;
+        padding: 0px;
+
+        ion-card-content {
+          font-size: 12px;
+          font-weight: 700;
+          line-height: 14px;
+          text-align: center;
+          color: #581c87;
+          padding: 4px 8px;
+        }
+      }
+    }
+  }
+
+  .delivery-section {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #6d7280;
+    span {
+      font-weight: 600;
+    }
+  }
+  .description-section {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #6d7280;
+  }
+  .product-quantity-selection {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    color: #6d7280;
   }
 
   .section.tags {
     border-top: solid 1px #f1f1f1;
-    padding-top: 5px;
+    margin-top: 16px;
     padding-left: 0px;
     padding-right: 0px;
   }

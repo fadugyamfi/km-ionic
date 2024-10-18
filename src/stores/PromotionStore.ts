@@ -33,7 +33,7 @@ export const usePromotionStore = defineStore("promotion", {
           el.promotion_items = el._promotion_items;
           el.promotion_items.forEach((i: any) => {
             i.product = i._product;
-            i.product = new Product(i._product)
+            i.product = new Product(i._product);
           });
           return new Promotion(el);
         });
@@ -93,9 +93,13 @@ export const usePromotionStore = defineStore("promotion", {
       return this.promotions;
     },
 
-    async getPromotion(promotionIdOrSlug: number | string): Promise<Promotion | null> {
+    async getPromotion(
+      promotionIdOrSlug: number | string
+    ): Promise<Promotion | null> {
       if (this.promotions.length > 0) {
-        const promotion = this.promotions.find((p) => p.id == promotionIdOrSlug || p.slug == promotionIdOrSlug);
+        const promotion = this.promotions.find(
+          (p) => p.id == promotionIdOrSlug || p.slug == promotionIdOrSlug
+        );
 
         if (promotion) {
           return promotion;
@@ -113,9 +117,13 @@ export const usePromotionStore = defineStore("promotion", {
         });
     },
 
-    async getGuestPromotion(promotionIdOrSlug: number | string): Promise<Promotion | null> {
+    async getGuestPromotion(
+      promotionIdOrSlug: number | string
+    ): Promise<Promotion | null> {
       if (this.promotions.length > 0) {
-        const promotion = this.promotions.find((p) => p.id == promotionIdOrSlug || p.slug == promotionIdOrSlug);
+        const promotion = this.promotions.find(
+          (p) => p.id == promotionIdOrSlug || p.slug == promotionIdOrSlug
+        );
         if (promotion) {
           return promotion;
         }
@@ -133,11 +141,12 @@ export const usePromotionStore = defineStore("promotion", {
     },
 
     async getPromotionItems(
-      promotionId: number
+      promotionId: number,
+      refresh: boolean = false
     ): Promise<PromotionItem[] | null> {
       const storedItems = await this.loadItemsFromStorage(promotionId);
 
-      if( storedItems && storedItems.length > 0 ) {
+      if (!refresh && storedItems && storedItems.length > 0) {
         return storedItems;
       }
 
@@ -148,7 +157,7 @@ export const usePromotionStore = defineStore("promotion", {
       return axios
         .get(`/v2/promotion-items`, { params })
         .then((response) => {
-          return this.mapAndStorePromotionItems(promotionId, response)
+          return this.mapAndStorePromotionItems(promotionId, response);
         })
         .catch((error) => {
           console.log(error);
@@ -157,11 +166,12 @@ export const usePromotionStore = defineStore("promotion", {
     },
 
     async getGuestPromotionItems(
-      promotionId: number
+      promotionId: number,
+      refresh: boolean = false
     ): Promise<PromotionItem[] | null> {
       const storedItems = await this.loadItemsFromStorage(promotionId);
 
-      if( storedItems && storedItems.length > 0 ) {
+      if (!refresh && storedItems && storedItems.length > 0) {
         return storedItems;
       }
 
@@ -185,19 +195,28 @@ export const usePromotionStore = defineStore("promotion", {
         (el: object) => new PromotionItem(el)
       );
 
-      storage.set(`${KOLA_PROMOTION_ITEMS}.${promotionId}`, promotionItems, 2, 'hours');
+      storage.set(
+        `${KOLA_PROMOTION_ITEMS}.${promotionId}`,
+        promotionItems,
+        2,
+        "hours"
+      );
 
       return promotionItems;
     },
 
-    async loadItemsFromStorage(promotionId: number): Promise<PromotionItem[] | null> {
-      const response = await storage.get(`${KOLA_PROMOTION_ITEMS}.${promotionId}`);
+    async loadItemsFromStorage(
+      promotionId: number
+    ): Promise<PromotionItem[] | null> {
+      const response = await storage.get(
+        `${KOLA_PROMOTION_ITEMS}.${promotionId}`
+      );
 
-      if( response ) {
+      if (response) {
         return response.map((el: object) => new PromotionItem(el));
       }
 
       return null;
-    }
+    },
   },
 });
