@@ -6,7 +6,6 @@ import router from "./router";
 // import './registerServiceWorker';
 // import "./setupPushNotification";
 // import "./messaging_init_in_sw";
-import "./register-service-worker"
 
 import { IonicVue } from "@ionic/vue";
 
