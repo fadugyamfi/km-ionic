@@ -45,7 +45,7 @@ export const useProductStore = defineStore("product", {
       const userStore = useUserStore();
       const params = {
         product_name_has: await this.getSearchTerm(),
-        approved_only: 1,
+      //  approved_only: 1,
         limit,
       };
 

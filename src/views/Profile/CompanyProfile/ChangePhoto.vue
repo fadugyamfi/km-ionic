@@ -20,13 +20,13 @@
       <main class="ion-padding-top">
         <IonCard color="light">
           <IonImg
-            v-if="photo"
-            :src="photo.webviewPath"
+            v-if="photo?.webviewPath"
+            :src="photo?.webviewPath"
             @click="pickImages()"
           ></IonImg>
 
           <IonCardContent
-            v-if="!photo"
+            v-if="!photo?.webviewPath"
             @click="pickImages()"
             class="d-flex ion-justify-content-center ion-align-items-center flex-column"
             style="height: 200px"
@@ -49,7 +49,10 @@
     </IonContent>
 
     <IonFooter class="ion-padding ion-no-border">
-      <FooterNavigation @continue="onContinue()"></FooterNavigation>
+      <FooterNavigation
+        @continue="updateProfile()"
+        continueText="Save"
+      ></FooterNavigation>
     </IonFooter>
   </IonPage>
 </template>
@@ -77,6 +80,7 @@ import { mapStores } from "pinia";
 import { useToastStore } from "@/stores/ToastStore";
 import { handleAxiosRequestError } from "@/utilities";
 import { useUserStore } from "@/stores/UserStore";
+import { useBusinessStore } from "@/stores/BusinessStore";
 
 export default defineComponent({
   components: {
@@ -103,14 +107,36 @@ export default defineComponent({
   },
 
   mounted() {
+    // console.log()
     // this.businessStore.loadCachedRegistrationInfo();
+    this.fetchCompany();
+    this.photo = {
+      webviewPath: this.userStore.companyForm?.logo,
+    } as UserPhoto;
   },
 
   computed: {
-    ...mapStores(useUserStore),
+    ...mapStores(useUserStore, useToastStore, useBusinessStore),
   },
 
   methods: {
+    fetchCompany() {
+      Object.assign(this.userStore.companyForm, {
+        name: this.userStore.activeBusiness?.name,
+        location: this.userStore.activeBusiness?.location,
+        phone_number: this.userStore.activeBusiness?.phone_number,
+        email: this.userStore.activeBusiness?.email,
+        business_types_id: 1,
+        id_card_number: this.userStore.activeBusiness?.id_card_number,
+        id_card_image: this.userStore.activeBusiness?.id_card_image,
+        country_id: this.userStore.activeBusiness?.country_id,
+        region_id: this.userStore.activeBusiness?.region_id,
+        city: this.userStore.activeBusiness?.city,
+        tax_number: this.userStore.activeBusiness?.tax_number,
+        cover_image: this.userStore.activeBusiness?.cover_image,
+        logo: this.userStore.activeBusiness?.logo,
+      });
+    },
     async pickImages() {
       const { takePhoto, photos, pickImages } = usePhotoGallery();
 
@@ -141,8 +167,36 @@ export default defineComponent({
       }
     },
 
-    onContinue() {
-      this.$router.push("/profile/company/change-cover-photo");
+    async updateProfile() {
+      try {
+        this.toastStore.blockUI("Hold On As We Update Company Profile");
+        delete this.userStore.companyForm.cover_image;
+        if (!this.userStore.companyForm.logo.split(",")[0].includes("base64")) {
+          delete this.userStore.companyForm.logo;
+        }
+        const response = await this.businessStore.updateBusiness(
+          Number(this.userStore.activeBusiness?.id),
+          this.userStore.companyForm
+        );
+        if (response) {
+          this.toastStore.unblockUI();
+          this.toastStore.showSuccess(
+            "Company profile photo updated successfully"
+          );
+          setTimeout(() => {
+            this.$router.push("/profile/company/edit-profile");
+          }, 500);
+        }
+      } catch (error) {
+        this.toastStore.showError(
+          "Failed to update Company profile photo. Please try again",
+          "",
+          "bottom",
+          "footer"
+        );
+      } finally {
+        this.toastStore.unblockUI();
+      }
     },
   },
 });
