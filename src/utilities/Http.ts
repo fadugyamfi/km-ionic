@@ -28,7 +28,7 @@ export function handleAxiosRequestError(error: any) {
   } else if (error.response?.status >= 500) {
     toastStore.showError(error.response.data.message, "Server Error");
   } else {
-    toastStore.showError("Please try again later", error.message );
+    toastStore.showError("Please try again later", error.message);
   }
 }
 
@@ -62,8 +62,13 @@ export async function refreshAuth() {
     if (json && json.access_token) {
       storage.set("auth", json);
       window.location.reload();
+    } else {
+      storage.clearAll();
+      window.location.href = "/auth/login";
     }
   } catch (e) {
     toastStore.showError("Auth Refresh Failed");
+    storage.clearAll();
+    window.location.href = "/auth/login";
   }
 }
