@@ -44,6 +44,7 @@ import { defineCustomElements } from "@ionic/pwa-elements/loader";
 import { RecycleScroller } from "vue-virtual-scroller";
 import VueGtag from "vue-gtag";
 import { Capacitor } from "@capacitor/core";
+import mixpanel from "mixpanel-browser";
 
 // initialize clarity
 var success = function (message: string) {};
@@ -55,7 +56,43 @@ if (Capacitor.getPlatform() === "android") {
   ClarityPlugin.initialize("lnbp07y1u3", success, failure, {
     logLevel: ClarityPlugin.LogLevel.None,
     allowMeteredNetworkUsage: true,
-    isIonic: true
+    isIonic: true,
+  });
+}
+
+// initialize mixpanel
+mixpanel.init("4001c65a4be2e2aad4ca04eb473f1413", {
+  debug: true,
+  track_pageview: false,
+  persistence: "localStorage",
+  ignore_dnt: true,
+});
+// }
+//
+
+// Function to get URL parameter by name
+function getParameterByName(name: string, url: any = null) {
+  console.log(name);
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)", "i"),
+    results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return "";
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+// Capture UTM parameters
+var utmSource = getParameterByName("utm_source");
+var utmMedium = getParameterByName("utm_medium");
+var utmCampaign = getParameterByName("utm_campaign");
+
+// Send UTM parameters to Mixpanel with an event
+if (window.location.hostname != "localhost") {
+  mixpanel.track("Mobile Page View", {
+    utm_source: utmSource,
+    utm_medium: utmMedium,
+    utm_campaign: utmCampaign,
   });
 }
 
