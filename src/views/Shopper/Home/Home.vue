@@ -11,7 +11,7 @@
 
       <Promotions></Promotions>
 
-      <TopCategories></TopCategories>
+      <!-- <TopCategories></TopCategories> -->
 
       <!-- <TopBrands></TopBrands> -->
 
