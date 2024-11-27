@@ -92,11 +92,11 @@
                 </span>
               </section>
 
-              <section class="product-weight">
+              <!-- <section class="product-weight">
                 <span v-if="product?.group_quantity">
                   {{ product?.group_quantity }} pieces
                 </span>
-              </section>
+              </section> -->
             </aside>
             <IonButton
               v-if="showAddToCart"
