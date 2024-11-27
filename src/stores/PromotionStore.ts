@@ -43,11 +43,11 @@ export const usePromotionStore = defineStore("promotion", {
     },
 
     async fetchPromotions() {
-      await this.loadFromStorage();
+      // await this.loadFromStorage();
 
-      if (this.promotions.length > 0) {
-        return this.promotions;
-      }
+      // if (this.promotions.length > 0) {
+      //   return this.promotions;
+      // }
 
       return axios
         .get("/v2/promotions")
@@ -62,11 +62,11 @@ export const usePromotionStore = defineStore("promotion", {
         });
     },
     async fetchGuestPromotions() {
-      await this.loadFromStorage();
+      // await this.loadFromStorage();
 
-      if (this.promotions.length > 0) {
-        return this.promotions;
-      }
+      // if (this.promotions.length > 0) {
+      //   return this.promotions;
+      // }
 
       return axios
         .get("/v2/guest/promotions")
@@ -81,14 +81,14 @@ export const usePromotionStore = defineStore("promotion", {
         });
     },
 
-    async getPromotions(): Promise<Promotion[]> {
-      if (this.promotions.length == 0) {
-        if (!userStore.isInGuestMode) {
-          await this.fetchPromotions();
-        } else {
-          await this.fetchGuestPromotions();
-        }
+    async getPromotions() {
+      // if (this.promotions.length == 0) {
+      if (!userStore.isInGuestMode) {
+        await this.fetchPromotions();
+      } else {
+        await this.fetchGuestPromotions();
       }
+      // }
 
       return this.promotions;
     },
